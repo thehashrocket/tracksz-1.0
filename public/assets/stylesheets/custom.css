@@ -1,0 +1,59 @@
+/* put your own styles to customize and override the theme */
+
+.fixed-top {
+    background-color: white;
+}
+.required-field::after {
+    content: " *";
+    color: #B76BA3;
+    font-size: 110%;
+}
+
+#card-errors {
+    color: #B76BA3;
+}
+label.error{}
+label.error{
+    color:#B76BA3;
+    font-size: 80%;
+}
+/*parsley js form validation style*/
+input.parsley-error {
+    border: 1px solid #B76BA3 !important;
+}
+input.parsley-error:focus {
+  border: 2px solid #B76BA3 !important;
+  box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
+}
+select.parsley-error {
+  border: 1px solid #B76BA3 !important;
+}
+select.parsley-error:focus {
+  border: 2px solid #B76BA3 !important;
+  box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
+}
+
+.fixed-top.scrolled {
+  background-color: #e9ecef!important;
+  transition: background-color 200ms linear;
+  border-bottom: 1px solid #90add2;
+}
+
+.bg-muted-light {
+  background-color: #E7ECEE !important;
+}
+
+.page-cover {
+   max-height: 600px;
+   background-image: url("../images/inventory.jpg");
+}
+
+.bg-div {
+    background-image: url('../images/plancourse.jpg');
+    background-size: cover;
+}
+
+.bg-thankyou {
+    background-image: url('../images/thankyou.png');
+    background-size: cover;
+}
