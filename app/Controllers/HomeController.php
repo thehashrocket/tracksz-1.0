@@ -37,17 +37,19 @@ class HomeController
         // - Validate Second, if Sanitize empties a field due to
         //   "bad" data that is required then Validate will catch it.
         $validate = new ValidateSanitize();
-        $form = $validate->sanitize($form); // only sanitizes strings (other filters available)
+        $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
     
         $validate->validation_rules(array(
             'FullName'    => 'required|alpha_space|max_len,100|min_len,6',
             'Email'       => 'required|valid_email',
-            'Title'       => 'alpha_space|max_len,25',
-            'Message'     => 'required'
+            'Telephone'   => 'required|integer',
+            'Markets'     => 'alpha_space',
+            'Features'    => 'alpha_space'
         ));
         // Add filters for non-strings (integers, float, emails, etc) ALWAYS Trim
         $validate->filter_rules(array(
             'Email'    => 'trim|sanitize_email',
+            'Telephone'=> 'trim|sanitize_numbers',
         ));
         $validated = $validate->run($form);
     
@@ -61,28 +63,28 @@ class HomeController
         // use validated instead of form now as you see below.
         
         $interest = new Interested($this->db);
-        $found = $interest->findEMail($form['Email']);
+        $found = $interest->findEMail($validated['Email']);
         if ($found) {
-            $form['alert'] = _('That email address has already been submitted.  Thank You for your submission!');
-            $form['alert_type'] = 'warning';
+            $validated['alert'] = _('That email address has already been submitted.  Thank You for your submission!');
+            $validated['alert_type'] = 'warning';
         } else {
-            $interested = $interest->add($form);
+            $interested = $interest->add($validated);
             if (!$interested) {
-                $form['alert'] = _('We encountered an issue adding your form. Please try again.');
-                $form['alert_type'] = 'danger';
+                $validated['alert'] = _('We encountered an issue adding your validated. Please try again.');
+                $validated['alert_type'] = 'danger';
             } else {
-                $form['alert'] = _('Thank you for your interest in Tracksz. We will keep you updated with our progress.');
-                $form['alert_type'] = 'success';
+                $validated['alert'] = _('Thank you for your interest in Tracksz. We will keep you updated with our progress.');
+                $validated['alert_type'] = 'success';
                 
                 $mailer = new Email();
                 $message['html'] = $this->view->make('emails/interested');
                 $message['plain'] = $this->view->make('emails/plain/interested');
-                $mailer->sendEmail($form['Email'], Config::get('company_name'),
-                    _('Interested In Tracksz'), $message, ['fullname' => $form['FullName']]);
+                $mailer->sendEmail($validated['Email'], Config::get('company_name'),
+                    _('Interested In Tracksz'), $message, ['fullname' => $validated['FullName']]);
             }
         }
         
-        $this->view->flash($form);
+        $this->view->flash($validated);
         return $this->view->redirect('/');
     }
 }

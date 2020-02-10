@@ -14,11 +14,11 @@
                  \Delight\Cookie\Cookie::get('tracksz_active_store') > 0 &&
                  \Delight\Cookie\Session::get('current_page') == '/account'): ?>
         <div class="page-message" role="alert">
-            <i class="fa fa-fw fa-shopping-cart"></i> <?=_('Current Active Store')?>: <span class="text-muted-dark"><?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></span> <a href="/account/stores" class="btn btn-sm btn-warning circle ml-3"><?=_('Change Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-warning ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
+            <i class="fa fa-fw fa-shopping-cart"></i> <?=_('Current Active Store')?>: <span class="text-muted-dark"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-warning circle ml-3"><?=_('Change Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-warning ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
         </div><!-- /.page-message -->
         <?php elseif(\Delight\Cookie\Session::get('current_page') == '/account'): ?>
             <div class="page-message" role="alert">
-                <i class="fa fa-fw fa-shopping-cart"></i> <?=_('No Active Store Selected')?>: <span class="text-muted-dark"><?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></span> <a href="/account/stores" class="btn btn-sm btn-danger circle ml-3"><?=_('Select Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-danger ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
+                <i class="fa fa-fw fa-shopping-cart"></i> <?=_('No Active Store Selected')?>: <span class="text-muted-dark"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-danger circle ml-3"><?=_('Select Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-danger ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
             </div><!-- /.page-message -->
         <?php endif; ?>
         <!-- .page-inner -->
@@ -33,7 +33,7 @@
                         <strong>Active Store:</strong>&nbsp;&nbsp;
                         <?php if(\Delight\Cookie\Cookie::exists('tracksz_active_store') &&
                             \Delight\Cookie\Cookie::get('tracksz_active_store') > 0): ?>
-                            <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Change Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></a>
+                            <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Change Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></a>
                         <?php else: ?>
                             <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Select Active Store')?>"><?=_('Select Active Store')?></a>
                         <?php endif; ?>

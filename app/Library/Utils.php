@@ -111,9 +111,9 @@ class Utils
                 Session::set('member_name', 'Tracksz User');
             }
             if ($member['ActiveStore']) {
-                $active = (new Store($db))->findId(Cookie::get('tracksz_active_store'), $member['Id']);
+                Cookie::setcookie('tracksz_active_store', $member['ActiveStore'], time() + 2419200, '/');
+                $active = (new Store($db))->findId($member['ActiveStore'], $member['Id']);
                 if ($active) {
-                    Cookie::setcookie('tracksz_active_store', $member['ActiveStore'], time() + 2419200, '/');
                     Cookie::setcookie('tracksz_active_name', $active['DisplayName'], time() + 2419200, '/');
                 }
             } else {
