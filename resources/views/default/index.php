@@ -56,9 +56,9 @@
                 <p class="lead text-muted text-white">Get exactly what you need with just a little input!</p>
                 <p class="lead text-white"><strong>Tentative Launch Dates</strong></p>
                 <ul class="text-white">
-                    <li>Pre-Launch: April 17, 2020</li>
-                    <li>Soft Launch: May 8, 2020</li>
-                    <li>Full Launch: June 1, 2020</li>
+                    <li>Pre-Launch: May 1, 2020</li>
+                    <li>Soft Launch: May 22, 2020</li>
+                    <li>Full Launch: June 15, 2020</li>
                 </ul>
                 <a id="features"></a>
                 <a href="#interested" class="btn btn-lg btn-primary d-block d-sm-inline-block" data-aos="zoom-in" data-aos-delay="200">Interested?<i class="fa fa-angle-right ml-2"></i></a>

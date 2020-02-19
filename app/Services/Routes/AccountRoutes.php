@@ -30,7 +30,7 @@ class AccountRoutes extends AbstractServiceProvider
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
             $routes   = (new Router)->setStrategy($strategy);
     
-            // stripe connect response uri for setting up new stripe connnect account
+            // stripe connect response uri for setting up new stripe connect account
             $routes->get('/account/connect/{response}', Account\StoreController::class.'::connect')
                 ->middleware($this->container->get('Auth'));
             

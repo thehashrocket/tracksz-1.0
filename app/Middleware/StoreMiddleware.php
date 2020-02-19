@@ -42,7 +42,7 @@ final class StoreMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
         $data = [
-            'alert'     => 'You must have an Active Store Selected to work on Inventory.',
+            'alert'     => _('You must have an Active Store Selected to work on Inventory.'),
             'alert_type'=> 'warning'
         ];
         $this->view->flash($data);

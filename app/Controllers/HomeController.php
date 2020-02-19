@@ -52,6 +52,7 @@ class HomeController
             'Telephone'=> 'trim|sanitize_numbers',
         ));
         $validated = $validate->run($form);
+        // use validated as it is filtered and validated
     
         if ($validated === false) {
             $validated['alert'] = 'Sorry, we could not add your contact message.  Please try again.';

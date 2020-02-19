@@ -1,7 +1,9 @@
 <?php
     $title_meta = 'Panel Dashboard for Tracksz, a Multiple Market Inventory Management Service';
     $description_meta = 'Panel Dashboard for Tracksz, a Multiple Market Inventory Management Service';
-?>
+
+use Delight\Cookie\Cookie;
+use Delight\Cookie\Session; ?>
 <?=$this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta])?>
 
 <?=$this->start('page_content')?>
@@ -10,15 +12,15 @@
 <div class="wrapper">
     <!-- .page -->
     <div class="page">
-        <?php if(\Delight\Cookie\Cookie::exists('tracksz_active_store') &&
-                 \Delight\Cookie\Cookie::get('tracksz_active_store') > 0 &&
-                 \Delight\Cookie\Session::get('current_page') == '/account'): ?>
+        <?php if(Cookie::exists('tracksz_active_store') &&
+                 Cookie::get('tracksz_active_store') > 0 &&
+                 Session::get('current_page') == '/account'): ?>
         <div class="page-message" role="alert">
-            <i class="fa fa-fw fa-shopping-cart"></i> <?=_('Current Active Store')?>: <span class="text-muted-dark"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-warning circle ml-3"><?=_('Change Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-warning ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
+            <i class="fa fa-fw fa-shopping-cart"></i> <?=_('Current Active Store')?>: <span class="text-muted-dark"><?=urldecode(Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-warning circle ml-3"><?=_('Change Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-warning ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
         </div><!-- /.page-message -->
-        <?php elseif(\Delight\Cookie\Session::get('current_page') == '/account'): ?>
+        <?php elseif(Session::get('current_page') == '/account'): ?>
             <div class="page-message" role="alert">
-                <i class="fa fa-fw fa-shopping-cart"></i> <?=_('No Active Store Selected')?>: <span class="text-muted-dark"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-danger circle ml-3"><?=_('Select Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-danger ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
+                <i class="fa fa-fw fa-shopping-cart"></i> <?=_('No Active Store Selected')?>: <span class="text-muted-dark"><?=urldecode(Cookie::get('tracksz_active_name'))?></span> <a href="/account/stores" class="btn btn-sm btn-danger circle ml-3"><?=_('Select Active Store')?></a> <a href="#" class="btn btn-sm btn-icon btn-danger ml-1" aria-label="Close" onclick="$(this).parent().fadeOut()"><span aria-hidden="true"><i class="fa fa-times"></i></span></a>
             </div><!-- /.page-message -->
         <?php endif; ?>
         <!-- .page-inner -->
@@ -27,13 +29,13 @@
             <header class="page-title-bar">
                 <div class="d-flex flex-column flex-md-row">
                     <p class="lead">
-                        <span class="font-weight-bold"><?=\Delight\Cookie\Session::get('member_name')?></span> <span class="d-block text-muted"><?=_('Here’s what’s happening with your business today.')?></span>
+                        <span class="font-weight-bold"><?=Session::get('member_name')?></span> <span class="d-block text-muted"><?=_('Here’s what’s happening with your business today.')?></span>
                     </p>
                     <div class="ml-auto">
                         <strong>Active Store:</strong>&nbsp;&nbsp;
-                        <?php if(\Delight\Cookie\Cookie::exists('tracksz_active_store') &&
-                            \Delight\Cookie\Cookie::get('tracksz_active_store') > 0): ?>
-                            <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Change Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></a>
+                        <?php if(Cookie::exists('tracksz_active_store') &&
+                                 Cookie::get('tracksz_active_store') > 0): ?>
+                            <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Change Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <?=urldecode(Cookie::get('tracksz_active_name'))?></a>
                         <?php else: ?>
                             <a href="/account/stores" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<?=_('Click to Select Active Store')?>"><?=_('Select Active Store')?></a>
                         <?php endif; ?>

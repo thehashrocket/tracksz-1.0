@@ -7,7 +7,7 @@
         <!-- .hamburger -->
         <button class="hamburger hamburger-squeeze hamburger-light d-flex d-lg-none" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> <!-- /.hamburger -->
         <!-- .navbar-brand -->
-        <a class="navbar-brand ml-auto mr-0" href="<?=$base_url?>/" title="Home page link for Tracksz.com Mutlimarket Inventory and Order Management Service"><img src="/assets/images/logo3.png" title="Logo for Tracksz.com Mutlimarket Inventory and Order Management Service"></a><!-- /.navbar-brand -->
+        <a class="navbar-brand ml-auto mr-0" href="<?=$base_url?>/" title="Home page link for Tracksz.com Mutlimarket Inventory and Order Management Service"><img src="/assets/images/logo3.png" title="Logo for Tracksz.com Mutlimarket Inventory and Order Management Service" alt="Logo for Tracksz.com Mutlimarket Inventory and Order Management Service"></a><!-- /.navbar-brand -->
         <?php if(\Delight\Cookie\Session::get('member_id')): ?>
             <a class="nav-link ml-auto order-lg-2" href="<?=$base_url?>/account" title="Login to Tracksz Multimarket Management System">Account</a
         <?php else: ?>

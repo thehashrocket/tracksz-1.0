@@ -36,6 +36,6 @@ $container = new Container();
 $container->delegate(
     new League\Container\ReflectionContainer
 );
-$app       = new Application($container);
+$app = new Application($container);
 
 return $app->run();
