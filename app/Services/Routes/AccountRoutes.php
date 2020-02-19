@@ -44,6 +44,7 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/profile', Account\AccountController::class.'::updateProfile');
                 $route->get('/payment', Account\PaymentController::class.'::payment');
                 $route->get('/stores', Account\StoreController::class.'::stores');
+                $route->get('/marketplaces', Account\MarketplaceController::class.'::marketplaces');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');
