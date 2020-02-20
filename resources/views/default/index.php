@@ -19,7 +19,7 @@
         <!-- .row -->
         <div class="row align-items-center">
             <div class= "col-md-12 text-center">
-                <h1 class="display-4 enable-responsive-font-size mb-4 text-white"><strong>Managing Inventory<br>& Orders Everywhere?</strong></h1>
+                <h1 class="display-4 enable-responsive-font-size mb-4 text-white"><strong><?=_('Managing Inventory<br>& Orders Everywhere')?></strong></h1>
                 <h3 class="display-6 enable-responsive-font-size mb-4 text-white">Stop Wasting Time & Duplicating Effort!</h3>
                 <p class="lead text-muted mb-2 text-white">Tracksz is a MultiMarket Inventory & Order Management Service for one stop management. <br><strong>Reclaim your time now!</strong></p>
                 <a href="#interested" class="btn btn-lg btn-primary d-block d-sm-inline-block" data-aos="zoom-in" data-aos-delay="200">Find Out More<i class="fa fa-angle-right ml-2"></i></a>
