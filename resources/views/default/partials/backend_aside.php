@@ -45,6 +45,9 @@
                         <a href="/account/stores" title="<?=_('Select Store to Work On')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Tracksz Member Account')?>"></span><span class="menu-text"><?=_('Stores')?></span></a>
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
+                    <li class="menu-item<?php if($page == 'account-marketplaces') echo ' has-active';?>">
+                        <a href="/account/marketplaces" title="<?=_('View Marketplaces')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('View Marketplaces')?>"></span><span class="menu-text"><?=_('Marketplaces')?></span></a>
+                    </li>
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $inventory_menu = ['inventory-view','inventory-defaults','inventory-categories'];
