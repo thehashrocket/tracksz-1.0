@@ -41,13 +41,32 @@
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
-                    <li class="menu-item<?php if($page == 'account-stores' || substr($page,0,14) == 'account-stripe') echo ' has-active';?>">
-                        <a href="/account/stores" title="<?=_('Select Store to Work On')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Tracksz Member Account')?>"></span><span class="menu-text"><?=_('Stores')?></span></a>
-                    </li><!-- /.menu-item -->
-                    <!-- .menu-item -->
-                    <li class="menu-item<?php if($page == 'account-marketplaces') echo ' has-active';?>">
-                        <a href="/account/marketplaces" title="<?=_('View Marketplaces')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('View Marketplaces')?>"></span><span class="menu-text"><?=_('Marketplaces')?></span></a>
+                    <li class="menu-item has-child" style="">
+                        <a href="/account/stores" class="menu-link" title="View Stores"><span class="menu-icon oi oi-person" title="View Stores"></span> <span class="menu-text">Stores</span></a>
+                        <ul class="menu">
+                            <li class="menu-item">
+                                <a href="/account/stores" title="View Stores" class="menu-link" tabindex="-1">View Stores</a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="/account/shipping-methods" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
+                            </li>
+                        </ul>
                     </li>
+                    <!-- <li class="menu-item<?php if($page == 'account-stores' || substr($page,0,14) == 'account-stripe') echo ' has-active';?>">
+                        <div class="dropdown show">
+                            <a class="menu-link dropdown-toggle" href="#" role="button" id="storeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="menu-icon fa fa-shopping-cart" title="<?=_('View Stores')?>"></span><span class="menu-text"><?=_('Stores')?></span>
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="storeDropdown">
+                                <a href="/account/stores" title="<?=_('Select Store to Work On')?>" class="menu-link dropdown-item"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Select Store to Work On')?>"></span><span class="menu-text"><?=_('View Stores')?></span></a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+                        
+                    </li> -->
+                    <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $inventory_menu = ['inventory-view','inventory-defaults','inventory-categories'];

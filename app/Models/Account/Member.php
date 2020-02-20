@@ -192,4 +192,13 @@ class Member
         $stmt = null;
         return true;
     }
+
+    public function getActiveStoreId($id)
+    {
+        $query = 'SELECT ActiveStore FROM Member WHERE Id = :id';
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
