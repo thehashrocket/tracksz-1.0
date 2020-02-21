@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.29, for Linux (x86_64)
 --
--- Host: localhost    Database: aFillzService
+-- Host: localhost    Database: Tracksz
 -- ------------------------------------------------------
 -- Server version	5.7.29-0ubuntu0.18.04.1
 
@@ -16,10 +16,10 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `aFillzService`
+-- Current Database: `Tracksz`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `Tracksz` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `Tracksz` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 
 USE `Tracksz`;
 
@@ -139,7 +139,7 @@ CREATE TABLE `Interested` (
   `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`Id`),
   KEY `email` (`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +148,7 @@ CREATE TABLE `Interested` (
 
 LOCK TABLES `Interested` WRITE;
 /*!40000 ALTER TABLE `Interested` DISABLE KEYS */;
-INSERT INTO `Interested` VALUES (4,'Jaymes H Sorbel','6189108968','jim@chrislands.com','','','2019-12-02 10:20:40');
+INSERT INTO `Interested` VALUES (6,'Jaymes H Sorbel','6189108968','jaymes@ordello.com','Test','Test','2020-02-10 16:55:37');
 /*!40000 ALTER TABLE `Interested` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,7 +167,7 @@ CREATE TABLE `Member` (
   `Texts` enum('on','off') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'off',
   `GatewayUserId` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `MemberKey` blob,
-  `ActiveStore` int(11) unsigned NOT NULL DEFAULT '0',
+  `ActiveStore` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `IpAddress` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Status` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'EmailValidated',
   `Avatar` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'defaultavatar.png',
@@ -222,6 +222,30 @@ LOCK TABLES `MemberCard` WRITE;
 /*!40000 ALTER TABLE `MemberCard` DISABLE KEYS */;
 INSERT INTO `MemberCard` VALUES (15,_binary 'AnQUpS6IY2IJGvGdeb9jETVo7zy1ZV7bvmGRq8rRu7w2aZHwf9a1Mg5wyegcjCoticdlJJMutfIvXWDRsqwUYw1H+695','pass','pass','pass',0,23,24,0,'2019-12-15 13:11:06','2019-12-15 13:11:06');
 /*!40000 ALTER TABLE `MemberCard` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Migration`
+--
+
+DROP TABLE IF EXISTS `Migration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Migration` (
+  `Name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Migration`
+--
+
+LOCK TABLES `Migration` WRITE;
+/*!40000 ALTER TABLE `Migration` DISABLE KEYS */;
+INSERT INTO `Migration` VALUES ('2020-02-21-JHS-01-create-test-table.sql','2020-02-21 08:27:26'),('2020-02-21-JHS-02-insert-into-test.sql','2020-02-21 08:27:26');
+/*!40000 ALTER TABLE `Migration` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -370,7 +394,7 @@ CREATE TABLE `session_data` (
 
 LOCK TABLES `session_data` WRITE;
 /*!40000 ALTER TABLE `session_data` DISABLE KEYS */;
-INSERT INTO `session_data` VALUES ('0d8r9dbb8q2ainpuv9isbgkhd7','c06c015fcfa405fa6f344237f89ce1c1',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577220852;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:14:\"/inventory/add\";',1577222296),('3oj53819ia5d44qcm0u15oml3u','9af07fd4d8f2019736502819ed1256d0',_binary 'current_page|s:1:\"/\";',1581294662),('5t5i8e2ccnpu9ghb85beh214jc','9af07fd4d8f2019736502819ed1256d0',_binary 'current_page|s:1:\"/\";',1581294662),('9asdkpqullhk6nkr0uhnc32h8g','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:6:\"/login\";',1581179951),('amamr45of6i05ejv40hv7ebmp4','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577466894;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577468335),('gi32s1pj8uu5cgilujflb85e9s','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577466895;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:14:\"/inventory/add\";',1577468383),('gjl0c67d5lt9b9679oceqjl4ao','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1579278815),('hfg5lctar9h5cfb8pf6ohjrted','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577812764;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577814204),('kn9t5sl1rfcajlhbl2mk6ql21m','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1578411389),('p7le9ouoh57sgaturi1rj4kpup','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1578356528),('pr61gnn92ltsj537bfijqhbetl','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:1:\"/\";',1579288902),('rhnqp493k6nbl70ft265k8uib8','c06c015fcfa405fa6f344237f89ce1c1',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577114323;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577115763),('u96ou7q4h298jvmoucuo2q83j7','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:1:\"/\";',1579287303);
+INSERT INTO `session_data` VALUES ('0d8r9dbb8q2ainpuv9isbgkhd7','c06c015fcfa405fa6f344237f89ce1c1',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577220852;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:14:\"/inventory/add\";',1577222296),('3obbe28v09c1rr2cme1o4f3bq3','9af07fd4d8f2019736502819ed1256d0',_binary 'current_page|s:14:\"/inventory/add\";auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:0;auth_last_resync|i:1581377340;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";',1581378966),('5t5i8e2ccnpu9ghb85beh214jc','9af07fd4d8f2019736502819ed1256d0',_binary 'current_page|s:1:\"/\";',1581294662),('9asdkpqullhk6nkr0uhnc32h8g','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:6:\"/login\";',1581179951),('amamr45of6i05ejv40hv7ebmp4','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577466894;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577468335),('gi32s1pj8uu5cgilujflb85e9s','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577466895;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:14:\"/inventory/add\";',1577468383),('gjl0c67d5lt9b9679oceqjl4ao','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1579278815),('hfg5lctar9h5cfb8pf6ohjrted','547326282f8a570f3ec79c2d26e69ac8',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577812764;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577814204),('kn9t5sl1rfcajlhbl2mk6ql21m','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1578411389),('p7le9ouoh57sgaturi1rj4kpup','547326282f8a570f3ec79c2d26e69ac8',_binary 'current_page|s:1:\"/\";',1578356528),('pr61gnn92ltsj537bfijqhbetl','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:1:\"/\";',1579288902),('q0nuo3309p8egk9apl6nul6o0m','37df1b761130df36e853a318dcec818e',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1582230363;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:15:\"/account/stores\";',1582231813),('rhnqp493k6nbl70ft265k8uib8','c06c015fcfa405fa6f344237f89ce1c1',_binary 'auth_logged_in|b:1;auth_user_id|i:23;auth_email|s:18:\"jim@chrislands.com\";auth_username|s:6:\"admin1\";auth_status|i:0;auth_roles|i:0;auth_force_logout|i:0;auth_remembered|b:1;auth_last_resync|i:1577114323;member_id|s:2:\"23\";member_avatar|s:17:\"23_testavatar.jpg\";member_name|s:15:\"Jaymes H Sorbel\";current_page|s:1:\"/\";',1577115763),('u96ou7q4h298jvmoucuo2q83j7','73af4e8e089bd7d63779dd1f899d5036',_binary 'current_page|s:1:\"/\";',1579287303);
 /*!40000 ALTER TABLE `session_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +429,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (23,'jim@chrislands.com','$2y$10$crPQCGomA6nJ5ijAUWDDYOD4F2Gs4aDdslzoBgte7ZHgD/sOx0nt6','admin1',0,1,1,0,1576436932,1577827756,0);
+INSERT INTO `users` VALUES (23,'jim@chrislands.com','$2y$10$crPQCGomA6nJ5ijAUWDDYOD4F2Gs4aDdslzoBgte7ZHgD/sOx0nt6','admin1',0,1,1,0,1576436932,1582228354,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -455,7 +479,7 @@ CREATE TABLE `users_remembered` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `selector` (`selector`),
   KEY `user` (`user`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -464,7 +488,7 @@ CREATE TABLE `users_remembered` (
 
 LOCK TABLES `users_remembered` WRITE;
 /*!40000 ALTER TABLE `users_remembered` DISABLE KEYS */;
-INSERT INTO `users_remembered` VALUES (48,23,'-_fa3CmuxGQvb8eKC_bl4ZyX','$2y$10$6R4vNEosmOX65SeHkflE1.owKco5B3upYAO9wlGBZB7smiG3DZ8XK',1578343710);
+INSERT INTO `users_remembered` VALUES (48,23,'-_fa3CmuxGQvb8eKC_bl4ZyX','$2y$10$6R4vNEosmOX65SeHkflE1.owKco5B3upYAO9wlGBZB7smiG3DZ8XK',1578343710),(52,23,'buW_E0SahM2ybsYZhwli53QM','$2y$10$lxjUZ3PPXJCbYQnKQRFMV.d/0Ty6Q6UFIg0h1Sa6w6dTIGQlfQI62',1583164215),(53,23,'exrDir0k7WRdUhTHZXilIU9p','$2y$10$qFohdrtl5knY.jdlipIHQO9VSg5mT26QA5CtGxfmfoSSiUWWbR/Oy',1583164241),(56,23,'qQfO0-rzrTzXVTdEU53mjdi6','$2y$10$EMSTBLMZjam92mBVEuriqeM3/NhYZnUsXQqiyuhys6R3Sx/vPwvvK',1584034709);
 /*!40000 ALTER TABLE `users_remembered` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -520,8 +544,32 @@ CREATE TABLE `users_throttling` (
 
 LOCK TABLES `users_throttling` WRITE;
 /*!40000 ALTER TABLE `users_throttling` DISABLE KEYS */;
-INSERT INTO `users_throttling` VALUES ('6XcQIZ5g540blyrJTzL3-rUi3f0q6YGMQEEyBOac8ls',499,1576529162,1576701962),('HIJQJPUQ2qyyTt0Q7_AuZA0pXm27czJnqpJsoA5IFec',49,1576436940,1576508940),('K8A9bYTc8PK4AKmQUU0FLXuLoHry-gQtdxlh5nx1ihM',29,1576436940,1576508940),('kTHKg9ydz-Ly2c28eh5_XbWp8NJ-LERdKjzdmVpljTc',29,1576436941,1576508941),('OMhkmdh1HUEdNPRi-Pe4279tbL5SQ-WMYf551VVvH8U',19,1576529162,1576565162),('PZ3qJtO_NLbJfRIP-8b4ME4WA3xxc6n9nbCORSffyQ0',4,1576436933,1576868933),('QduM75nGblH2CDKFyk0QeukPOwuEVDAUFE54ITnHM38',72.0408,1576529309,1577069309);
+INSERT INTO `users_throttling` VALUES ('6XcQIZ5g540blyrJTzL3-rUi3f0q6YGMQEEyBOac8ls',499,1581295471,1581468271),('HIJQJPUQ2qyyTt0Q7_AuZA0pXm27czJnqpJsoA5IFec',49,1576436940,1576508940),('K8A9bYTc8PK4AKmQUU0FLXuLoHry-gQtdxlh5nx1ihM',29,1576436940,1576508940),('kTHKg9ydz-Ly2c28eh5_XbWp8NJ-LERdKjzdmVpljTc',29,1576436941,1576508941),('OMhkmdh1HUEdNPRi-Pe4279tbL5SQ-WMYf551VVvH8U',19,1581295471,1581331471),('PZ3qJtO_NLbJfRIP-8b4ME4WA3xxc6n9nbCORSffyQ0',4,1576436933,1576868933),('QduM75nGblH2CDKFyk0QeukPOwuEVDAUFE54ITnHM38',73.1575,1582220309,1582760309);
 /*!40000 ALTER TABLE `users_throttling` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `zzTestMigrate`
+--
+
+DROP TABLE IF EXISTS `zzTestMigrate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `zzTestMigrate` (
+  `Name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zzTestMigrate`
+--
+
+LOCK TABLES `zzTestMigrate` WRITE;
+/*!40000 ALTER TABLE `zzTestMigrate` DISABLE KEYS */;
+INSERT INTO `zzTestMigrate` VALUES ('Billy Bob','2020-02-21 08:27:26');
+/*!40000 ALTER TABLE `zzTestMigrate` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -533,4 +581,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-09 18:38:49
+-- Dump completed on 2020-02-21  8:29:10
