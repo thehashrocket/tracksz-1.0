@@ -12,8 +12,9 @@
  * @version     1.5
  */
 
-namespace App\Library;
+namespace App\Library\ValidateSanitize;
 
+use App\Library\ValidateSanitize\ValidateHelpers;
 use Exception;
 
 class ValidateSanitize
@@ -44,7 +45,6 @@ class ValidateSanitize
     
     
     // ** ------------------------- Instance Helper ---------------------------- ** //
-    
     /**
      * Function to create and return previously created instance
      *
@@ -56,9 +56,9 @@ class ValidateSanitize
         if (self::$instance === null) {
             self::$instance = new static();
         }
+        
         return self::$instance;
     }
-    
     
     // ** ------------------------- Validation Data ------------------------------- ** //
     
@@ -84,12 +84,12 @@ class ValidateSanitize
     public function __construct($lang = 'en')
     {
         if ($lang) {
-            $lang_file = __DIR__ . DIRECTORY_SEPARATOR . 'ValidateLang' . DIRECTORY_SEPARATOR . $lang . '.php';
+            $lang_file = __DIR__.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php';
             
             if (file_exists($lang_file)) {
                 $this->lang = $lang;
             } else {
-                throw new \Exception('Language with key "' . $lang . '" does not exist');
+                throw new Exception('Language with key "'.$lang.'" does not exist');
             }
         }
     }
@@ -97,7 +97,7 @@ class ValidateSanitize
     /**
      * Shorthand method for inline validation.
      *
-     * @param array $data The data to be validated
+     * @param array $data       The data to be validated
      * @param array $validators The GUMP validators
      *
      * @return mixed True(boolean) or the array of error messages
@@ -134,6 +134,7 @@ class ValidateSanitize
      * Magic method to generate the validation error messages.
      *
      * @return string
+     * @throws Exception
      */
     public function __toString()
     {
@@ -161,9 +162,9 @@ class ValidateSanitize
     /**
      * Adds a custom validation rule using a callback function.
      *
-     * @param string $rule
+     * @param string   $rule
      * @param callable $callback
-     * @param string $error_message
+     * @param string   $error_message
      *
      * @return bool
      *
@@ -171,7 +172,7 @@ class ValidateSanitize
      */
     public static function add_validator($rule, $callback, $error_message = null)
     {
-        $method = 'validate_' . $rule;
+        $method = 'validate_'.$rule;
         
         if (method_exists(__CLASS__, $method) || isset(self::$validation_methods[$rule])) {
             throw new Exception("Validator rule '$rule' already exists.");
@@ -188,7 +189,7 @@ class ValidateSanitize
     /**
      * Adds a custom filter using a callback function.
      *
-     * @param string $rule
+     * @param string   $rule
      * @param callable $callback
      *
      * @return bool
@@ -197,7 +198,7 @@ class ValidateSanitize
      */
     public static function add_filter($rule, $callback)
     {
-        $method = 'filter_' . $rule;
+        $method = 'filter_'.$rule;
         
         if (method_exists(__CLASS__, $method) || isset(self::$filter_methods[$rule])) {
             throw new Exception("Filter rule '$rule' already exists.");
@@ -265,7 +266,7 @@ class ValidateSanitize
      * Run the filtering and validation after each other.
      *
      * @param array $data
-     * @param bool $check_fields
+     * @param bool  $check_fields
      * @param string $rules_delimiter
      * @param string $parameters_delimiters
      *
@@ -273,7 +274,7 @@ class ValidateSanitize
      *
      * @throws Exception
      */
-    public function run(array $data, $check_fields = false, $rules_delimiter = '|', $parameters_delimiters = ',')
+    public function run(array $data, $check_fields = false, $rules_delimiter='|', $parameters_delimiters=',')
     {
         $data = $this->filter($data, $this->filter_rules(), $rules_delimiter, $parameters_delimiters);
         
@@ -318,15 +319,13 @@ class ValidateSanitize
      * Sanitize the input data.
      *
      * @param array $input
-     * @param null $fields
-     * @param bool $utf8_encode
+     * @param null  $fields
+     * @param bool  $utf8_encode
      *
      * @return array
      */
     public function sanitize(array $input, array $fields = array(), $utf8_encode = true)
     {
-        $magic_quotes = false;
-        
         if (empty($fields)) {
             $fields = array_keys($input);
         }
@@ -342,11 +341,9 @@ class ValidateSanitize
                     $value = $this->sanitize($value);
                 }
                 if (is_string($value)) {
-                    if ($magic_quotes === true) {
-                        $value = stripslashes($value);
+                    if (strpos($value, "\r") !== false) {
+                        $value = trim($value);
                     }
-                    
-                    $value = trim($value);
                     
                     if (function_exists('iconv') && function_exists('mb_detect_encoding') && $utf8_encode) {
                         $current_encoding = mb_detect_encoding($value);
@@ -389,7 +386,7 @@ class ValidateSanitize
      *
      * @throws Exception
      */
-    public function validate(array $input, array $ruleset, $rules_delimiter = '|', $parameters_delimiter = ',')
+    public function validate(array $input, array $ruleset, $rules_delimiter='|', $parameters_delimiter=',')
     {
         $this->errors = array();
         
@@ -397,20 +394,18 @@ class ValidateSanitize
             
             $rules = explode($rules_delimiter, $rules);
             
-            //$look_for = array('required_file', 'required');
-            //if (count(array_intersect($look_for, $rules)) > 0 || (isset($input[$field]))) {
-            if (isset($input[$field])) {
+            $look_for = array('required_file', 'required');
+            
+            if (count(array_intersect($look_for, $rules)) > 0 || (isset($input[$field]))) {
+                
                 if (isset($input[$field])) {
-                    if (is_array($input[$field]) && in_array('required_file', $ruleset)) {
-                        $input_array = $input[$field];
-                    } else {
-                        $input_array = array($input[$field]);
-                    }
+                    $input_array = array($input[$field]);
                 } else {
                     $input_array = array('');
                 }
                 
                 foreach ($input_array as $value) {
+                    
                     $input[$field] = $value;
                     
                     foreach ($rules as $rule) {
@@ -419,21 +414,12 @@ class ValidateSanitize
                         
                         // Check if we have rule parameters
                         if (strstr($rule, $parameters_delimiter) !== false) {
-                            $rule = explode($parameters_delimiter, $rule);
-                            $method = 'validate_' . $rule[0];
-                            $param = $rule[1];
-                            $rule = $rule[0];
-                            
-                            // If there is a reference to a field
-                            if (preg_match('/(?:(?:^|;)_([a-z_]+))/', $param, $matches)) {
-                                
-                                // If provided parameter is a field
-                                if (isset($input[$matches[1]])) {
-                                    $param = str_replace('_' . $matches[1], $input[$matches[1]], $param);
-                                }
-                            }
+                            $rule   = explode($parameters_delimiter, $rule);
+                            $method = 'validate_'.$rule[0];
+                            $param  = $rule[1];
+                            $rule   = $rule[0];
                         } else {
-                            $method = 'validate_' . $rule;
+                            $method = 'validate_'.$rule;
                         }
                         
                         //self::$validation_methods[$rule] = $callback;
@@ -449,11 +435,11 @@ class ValidateSanitize
                                 }
                             }
                             
-                        } elseif (isset(self::$validation_methods[$rule])) {
+                        } elseif(isset(self::$validation_methods[$rule])) {
                             $result = call_user_func(self::$validation_methods[$rule], $field, $input, $param);
                             
-                            if ($result === false) {
-                                if (array_search($result['field'], array_column($this->errors, 'field')) === false) {
+                            if($result === false) {
+                                if (array_search($field, array_column($this->errors, 'field')) === false) {
                                     $this->errors[] = array(
                                         'field' => $field,
                                         'value' => $input[$field],
@@ -542,7 +528,7 @@ class ValidateSanitize
      */
     protected function get_messages()
     {
-        $lang_file = __DIR__ . DIRECTORY_SEPARATOR . 'ValidateLang' . DIRECTORY_SEPARATOR . $this->lang . '.php';
+        $lang_file = __DIR__.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$this->lang.'.php';
         $messages = require $lang_file;
         
         if ($validation_methods_errors = self::$validation_methods_errors) {
@@ -560,6 +546,7 @@ class ValidateSanitize
      *
      * @return array
      * @return string
+     * @throws Exception when validator doesn't have a set error message
      */
     public function get_readable_errors($convert_to_string = false, $field_class = 'gump-field', $error_class = 'gump-error-message')
     {
@@ -591,10 +578,10 @@ class ValidateSanitize
                 if (is_array($param)) {
                     $param = implode(', ', $param);
                 }
-                $message = str_replace('{param}', $param, str_replace('{field}', '<span class="' . $field_class . '">' . $field . '</span>', $messages[$e['rule']]));
+                $message = str_replace('{param}', $param, str_replace('{field}', '<span class="'.$field_class.'">'.$field.'</span>', $messages[$e['rule']]));
                 $resp[] = $message;
             } else {
-                throw new \Exception ('Rule "' . $e['rule'] . '" does not have an error message');
+                throw new Exception ('Rule "'.$e['rule'].'" does not have an error message');
             }
         }
         
@@ -615,6 +602,7 @@ class ValidateSanitize
      * @param $convert_to_string
      *
      * @return array | null (if empty)
+     * @throws Exception
      */
     public function get_errors_array($convert_to_string = null)
     {
@@ -627,7 +615,8 @@ class ValidateSanitize
         // Error messages
         $messages = $this->get_messages();
         
-        foreach ($this->errors as $e) {
+        foreach ($this->errors as $e)
+        {
             $field = ucwords(str_replace(array('_', '-'), chr(32), $e['field']));
             $param = $e['param'];
             
@@ -652,7 +641,7 @@ class ValidateSanitize
                     $resp[$e['field']] = $message;
                 }
             } else {
-                throw new \Exception ('Rule "' . $e['rule'] . '" does not have an error message');
+                throw new Exception ('Rule "'.$e['rule'].'" does not have an error message');
             }
         }
         
@@ -668,13 +657,13 @@ class ValidateSanitize
      * @param string $filters_delimeter
      * @param string $parameters_delimiter
      *
+     * @throws Exception
+     *
      * @return mixed
      *
      * @throws Exception
-     *
-     * @throws Exception
      */
-    public function filter(array $input, array $filterset, $filters_delimeter = '|', $parameters_delimiter = ',')
+    public function filter(array $input, array $filterset, $filters_delimeter='|', $parameters_delimiter=',')
     {
         foreach ($filterset as $field => $filters) {
             if (!array_key_exists($field, $input)) {
@@ -701,8 +690,8 @@ class ValidateSanitize
                 }
                 
                 foreach ($input_array as &$value) {
-                    if (is_callable(array($this, 'filter_' . $filter))) {
-                        $method = 'filter_' . $filter;
+                    if (is_callable(array($this, 'filter_'.$filter))) {
+                        $method = 'filter_'.$filter;
                         $value = $this->$method($value, $params);
                     } elseif (function_exists($filter)) {
                         $value = $filter($value);
@@ -726,7 +715,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'noise_words'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -757,7 +746,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'rmpunctuataion'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -772,7 +761,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'sanitize_string'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -787,7 +776,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'urlencode'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -802,7 +791,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'htmlencode'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -817,7 +806,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'sanitize_email'
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -830,7 +819,7 @@ class ValidateSanitize
      * Sanitize the string by removing illegal characters from numbers.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -843,7 +832,7 @@ class ValidateSanitize
      * Sanitize the string by removing illegal characters from float numbers.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -856,7 +845,7 @@ class ValidateSanitize
      * Filter out all HTML tags except the defined basic tags.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -869,7 +858,7 @@ class ValidateSanitize
      * Convert the provided numeric value to a whole number.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -883,31 +872,31 @@ class ValidateSanitize
      * [“, ”, ‘, ’, –, …] => [", ", ', ', -, ...]
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
     protected function filter_ms_word_characters($value, $params = null)
     {
-        $word_open_double = '“';
+        $word_open_double  = '“';
         $word_close_double = '”';
-        $web_safe_double = '"';
+        $web_safe_double   = '"';
         
         $value = str_replace(array($word_open_double, $word_close_double), $web_safe_double, $value);
         
-        $word_open_single = '‘';
+        $word_open_single  = '‘';
         $word_close_single = '’';
-        $web_safe_single = "'";
+        $web_safe_single   = "'";
         
         $value = str_replace(array($word_open_single, $word_close_single), $web_safe_single, $value);
         
-        $word_em = '–';
+        $word_em     = '–';
         $web_safe_em = '-';
         
         $value = str_replace($word_em, $web_safe_em, $value);
         
         $word_ellipsis = '…';
-        $web_ellipsis = '...';
+        $web_ellipsis  = '...';
         
         $value = str_replace($word_ellipsis, $web_ellipsis, $value);
         
@@ -918,7 +907,7 @@ class ValidateSanitize
      * Converts to lowercase.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -931,7 +920,7 @@ class ValidateSanitize
      * Converts to uppercase.
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -948,15 +937,14 @@ class ValidateSanitize
      * http://cubiq.org/the-perfect-php-clean-url-generator
      *
      * @param string $value
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
     protected function filter_slug($value, $params = null)
     {
         $delimiter = '-';
-        $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $value))))), $delimiter));
-        return $slug;
+        return strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $value))))), $delimiter));
     }
     
     // ** ------------------------- Validators ------------------------------------ ** //
@@ -968,8 +956,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'contains,value value value'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1008,7 +996,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'contains_list,value;value;value'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1045,7 +1033,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'doesnt_contain_list,value;value;value'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1079,8 +1067,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'required'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1104,8 +1092,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_email'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1131,8 +1119,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'max_len,240'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1142,14 +1130,12 @@ class ValidateSanitize
             return;
         }
         
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$field]) <= (int)$param) {
+        if (ValidateHelpers::functionExists('mb_strlen')) {
+            if (mb_strlen($input[$field]) <= (int) $param) {
                 return;
             }
-        } else {
-            if (strlen($input[$field]) <= (int)$param) {
-                return;
-            }
+        } else if (strlen($input[$field]) <= (int) $param) {
+            return;
         }
         
         return array(
@@ -1166,8 +1152,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'min_len,4'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1177,14 +1163,12 @@ class ValidateSanitize
             return;
         }
         
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$field]) >= (int)$param) {
+        if (ValidateHelpers::functionExists('mb_strlen')) {
+            if (mb_strlen($input[$field]) >= (int) $param) {
                 return;
             }
-        } else {
-            if (strlen($input[$field]) >= (int)$param) {
-                return;
-            }
+        } else if (strlen($input[$field]) >= (int) $param) {
+            return;
         }
         
         return array(
@@ -1201,8 +1185,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'exact_len,5'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1212,14 +1196,12 @@ class ValidateSanitize
             return;
         }
         
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$field]) == (int)$param) {
+        if (ValidateHelpers::functionExists('mb_strlen')) {
+            if (mb_strlen($input[$field]) == (int) $param) {
                 return;
             }
-        } else {
-            if (strlen($input[$field]) == (int)$param) {
-                return;
-            }
+        } else if (strlen($input[$field]) == (int) $param) {
+            return;
         }
         
         return array(
@@ -1236,8 +1218,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'alpha'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1247,7 +1229,7 @@ class ValidateSanitize
             return;
         }
         
-        if (!ctype_alpha($input[$field])) {
+        if (!preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i', $input[$field]) !== false) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1263,8 +1245,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'alpha_numeric'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1274,7 +1256,7 @@ class ValidateSanitize
             return;
         }
         
-        if (!preg_match('/^([a-zA-Z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i', $input[$field]) !== false) {
+        if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i', $input[$field]) !== false) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1290,8 +1272,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'alpha_dash'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1301,7 +1283,7 @@ class ValidateSanitize
             return;
         }
         
-        if (!preg_match('/^([a-zA-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $input[$field]) !== false) {
+        if (!preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $input[$field]) !== false) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1317,8 +1299,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'alpha_numeric_space'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1339,13 +1321,13 @@ class ValidateSanitize
     }
     
     /**
-     * Determine if the provided value contains only alpha numeric characters with spaces.
+     * Determine if the provided value contains only alpha characters with spaces.
      *
      * Usage: '<index>' => 'alpha_space'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1355,7 +1337,7 @@ class ValidateSanitize
             return;
         }
         
-        if (!preg_match("/^([0-9a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i", $input[$field]) !== false) {
+        if (!preg_match("/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i", $input[$field]) !== false) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1371,8 +1353,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'numeric'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1398,8 +1380,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'integer'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1409,7 +1391,7 @@ class ValidateSanitize
             return;
         }
         
-        if (filter_var($input[$field], FILTER_VALIDATE_INT) === false) {
+        if (filter_var($input[$field], FILTER_VALIDATE_INT) === false || is_bool($input[$field]) || is_null($input[$field])) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1425,8 +1407,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'boolean'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1436,8 +1418,8 @@ class ValidateSanitize
             return;
         }
         
-        $booleans = array('1', 'true', true, 1, '0', 'false', false, 0, 'yes', 'no', 'on', 'off');
-        if (in_array($input[$field], $booleans, true)) {
+        $booleans = array('1','true',true,1,'0','false',false,0,'yes','no','on','off');
+        if (in_array($input[$field], $booleans, true )) {
             return;
         }
         
@@ -1455,8 +1437,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'float'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1482,8 +1464,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_url'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1509,8 +1491,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'url_exists'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1526,8 +1508,8 @@ class ValidateSanitize
             $url = $url['host'];
         }
         
-        if (function_exists('checkdnsrr') && function_exists('idn_to_ascii')) {
-            if (checkdnsrr(idn_to_ascii($url), 'A') === false) {
+        if (ValidateHelpers::functionExists('checkdnsrr') && ValidateHelpers::functionExists('idn_to_ascii')) {
+            if (ValidateHelpers::checkdnsrr(idn_to_ascii($url, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46), 'A') === false) {
                 return array(
                     'field' => $field,
                     'value' => $input[$field],
@@ -1536,7 +1518,7 @@ class ValidateSanitize
                 );
             }
         } else {
-            if (gethostbyname($url) == $url) {
+            if (ValidateHelpers::gethostbyname($url) == $url) {
                 return array(
                     'field' => $field,
                     'value' => $input[$field],
@@ -1553,7 +1535,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_ip'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1579,7 +1561,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_ipv4'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      *
@@ -1614,7 +1596,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_ipv6'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1641,7 +1623,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_cc'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1653,12 +1635,11 @@ class ValidateSanitize
         
         $number = preg_replace('/\D/', '', $input[$field]);
         
-        if (function_exists('mb_strlen')) {
+        if (ValidateHelpers::functionExists('mb_strlen')) {
             $number_length = mb_strlen($number);
         } else {
             $number_length = strlen($number);
         }
-        
         
         /**
          * Bail out if $number_length is 0.
@@ -1666,7 +1647,7 @@ class ValidateSanitize
          *
          * @since 1.5
          */
-        if ($number_length == 0) {
+        if ($number_length == 0 ) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -1674,7 +1655,6 @@ class ValidateSanitize
                 'param' => $param,
             );
         }
-        
         
         $parity = $number_length % 2;
         
@@ -1713,7 +1693,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_name'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1739,7 +1719,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'street_address'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1772,7 +1752,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'iban'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1800,7 +1780,7 @@ class ValidateSanitize
         }
         
         $iban = str_replace(' ', '', $input[$field]);
-        $iban = substr($iban, 4) . substr($iban, 0, 4);
+        $iban = substr($iban, 4).substr($iban, 0, 4);
         $iban = strtr($iban, $character);
         
         if (bcmod($iban, 97) != 1) {
@@ -1832,26 +1812,29 @@ class ValidateSanitize
         }
         
         // Default
-        if (!$param) {
+        if (!$param)
+        {
             $cdate1 = date('Y-m-d', strtotime($input[$field]));
             $cdate2 = date('Y-m-d H:i:s', strtotime($input[$field]));
             
-            if ($cdate1 != $input[$field] && $cdate2 != $input[$field]) {
+            if ($cdate1 != $input[$field] && $cdate2 != $input[$field])
+            {
                 return array(
-                    'field' => $field,
-                    'value' => $input[$field],
-                    'rule' => __FUNCTION__,
+                    'field'      => $field,
+                    'value'      => $input[$field],
+                    'rule'       => __FUNCTION__,
                     'param' => $param,
                 );
             }
         } else {
             $date = \DateTime::createFromFormat($param, $input[$field]);
             
-            if ($date === false || $input[$field] != date($param, $date->getTimestamp())) {
+            if ($date === false || $input[$field] != date($param, $date->getTimestamp()))
+            {
                 return array(
-                    'field' => $field,
-                    'value' => $input[$field],
-                    'rule' => __FUNCTION__,
+                    'field'      => $field,
+                    'value'      => $input[$field],
+                    'rule'       => __FUNCTION__,
                     'param' => $param,
                 );
             }
@@ -1875,20 +1858,22 @@ class ValidateSanitize
             return;
         }
         
-        $cdate1 = new DateTime(date('Y-m-d', strtotime($input[$field])));
-        $today = new DateTime(date('d-m-Y'));
+        $inputDatetime = new DateTime(ValidateHelpers::date('Y-m-d', strtotime($input[$field])));
+        $todayDatetime = new DateTime(ValidateHelpers::date('Y-m-d'));
         
-        $interval = $cdate1->diff($today);
-        $age = $interval->y;
+        $interval = $todayDatetime->diff($inputDatetime);
+        $yearsPassed = $interval->y;
         
-        if ($age <= $param) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
+        if ($yearsPassed >= $param) {
+            return;
         }
+        
+        return array(
+            'field' => $field,
+            'value' => $input[$field],
+            'rule' => __FUNCTION__,
+            'param' => $param,
+        );
     }
     
     /**
@@ -1897,8 +1882,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'max_numeric,50'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      *
      * @return mixed
      */
@@ -1926,8 +1911,8 @@ class ValidateSanitize
      * Usage: '<index>' => 'min_numeric,1'
      *
      * @param string $field
-     * @param array $input
-     * @param null $param
+     * @param array  $input
+     * @param null   $param
      * @return mixed
      */
     protected function validate_min_numeric($field, $input, $param = null)
@@ -1954,7 +1939,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'starts,Z'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -1979,8 +1964,8 @@ class ValidateSanitize
      *
      * Usage: '<index>' => 'required_file'
      *
-     * @param string $field
-     * @param array $input
+     * @param  string $field
+     * @param  array $input
      *
      * @return mixed
      */
@@ -1990,7 +1975,7 @@ class ValidateSanitize
             return;
         }
         
-        if (is_array($input[$field]) && $input[$field]['error'] !== 4) {
+        if (is_array($input[$field]) && $input[$field]['error'] === 0) {
             return;
         }
         
@@ -2009,7 +1994,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'extension,png;jpg;gif
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -2019,7 +2004,7 @@ class ValidateSanitize
             return;
         }
         
-        if (is_array($input[$field]) && $input[$field]['error'] !== 4) {
+        if (is_array($input[$field]) && $input[$field]['error'] === 0) {
             $param = trim(strtolower($param));
             $allowed_extensions = explode(';', $param);
             
@@ -2029,14 +2014,14 @@ class ValidateSanitize
             if ($extension && in_array(strtolower($extension), $allowed_extensions)) {
                 return;
             }
-            
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
         }
+        
+        return array(
+            'field' => $field,
+            'value' => $input[$field],
+            'rule' => __FUNCTION__,
+            'param' => $param,
+        );
     }
     
     /**
@@ -2076,7 +2061,7 @@ class ValidateSanitize
      *
      * @param string $field
      * @param string $input
-     * @param string $param field to compare with
+     * @param string $param
      * @return mixed
      */
     protected function validate_guidv4($field, $input, $param = null)
@@ -2085,7 +2070,7 @@ class ValidateSanitize
             return;
         }
         
-        if (preg_match("/\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/", $input[$field])) {
+        if (preg_match("/\{?[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}\}?$/", $input[$field])) {
             return;
         }
         
@@ -2098,35 +2083,18 @@ class ValidateSanitize
     }
     
     /**
-     * Trims whitespace only when the value is a scalar.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    private function trimScalar($value)
-    {
-        if (is_scalar($value)) {
-            $value = trim($value);
-        }
-        
-        return $value;
-    }
-    
-    /**
      * Determine if the provided value is a valid phone number.
      *
      * Usage: '<index>' => 'phone_number'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      *
      * Examples:
      *
      *  555-555-5555: valid
-     *  555.555.5555: valid
      *  5555425555: valid
      *  555 555 5555: valid
      *  1(519) 555-4444: valid
@@ -2140,7 +2108,8 @@ class ValidateSanitize
             return;
         }
         
-        $regex = '/^(\d[\s-\.]?)?[\(\[\s-\.]{0,2}?\d{3}[\)\]\s-\.]{0,2}?\d{3}[\s-\.]?\d{4}$/i';
+        $regex = '/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i';
+        
         if (!preg_match($regex, $input[$field])) {
             return array(
                 'field' => $field,
@@ -2157,7 +2126,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'regex,/your-regex-expression/'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -2184,7 +2153,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_json_string'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -2210,7 +2179,7 @@ class ValidateSanitize
      * Usage: '<index>' => 'valid_array_size_greater,1'
      *
      * @param string $field
-     * @param array $input
+     * @param array  $input
      *
      * @return mixed
      */
@@ -2250,7 +2219,7 @@ class ValidateSanitize
             return array(
                 'field' => $field,
                 'value' => $input[$field],
-                'rule' => __FUNCTION__,
+                'rule'  => __FUNCTION__,
                 'param' => $param,
             );
         }
@@ -2272,143 +2241,11 @@ class ValidateSanitize
             return;
         }
         
-        if (!is_array($input[$field]) || sizeof($input[$field]) == (int)$param) {
+        if (!is_array($input[$field]) || sizeof($input[$field]) != (int)$param) {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
-        }
-    }
-    
-    
-    /**
-     * Determine if the input is a valid person name in Persian/Dari or Arabic mainly in Afghanistan and Iran.
-     *
-     * Usage: '<index>' => 'valid_persian_name'
-     *
-     * @param string $field
-     * @param array $input
-     *
-     * @return mixed
-     */
-    protected function validate_valid_persian_name($field, $input, $param = null)
-    {
-        if (!isset($input[$field]) || empty($input[$field])) {
-            return;
-        }
-        
-        if (!preg_match("/^([ا آ أ إ ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ق ک ك گ ل م ن و ؤ ه ة ی ي ئ ء ّ َ ِ ُ ً ٍ ٌ ْ\x{200B}-\x{200D}])+$/u", $input[$field]) !== false) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
-        }
-    }
-    
-    /**
-     * Determine if the input is a valid person name in English, Persian/Dari/Pashtu or Arabic mainly in Afghanistan and Iran.
-     *
-     * Usage: '<index>' => 'valid_eng_per_pas_name'
-     *
-     * @param string $field
-     * @param array $input
-     *
-     * @return mixed
-     */
-    protected function validate_valid_eng_per_pas_name($field, $input, $param = null)
-    {
-        if (!isset($input[$field]) || empty($input[$field])) {
-            return;
-        }
-        
-        if (!preg_match("/^([A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ'\- ا آ أ إ ب پ ت ټ ث څ ج چ ح ځ خ د ډ ذ ر ړ ز ږ ژ س ش ښ ص ض ط ظ ع غ ف ق ک ګ ك گ ل م ن ڼ و ؤ ه ة ی ي ې ۍ ئ ؋ ء ّ َ ِ ُ ً ٍ ٌ ْ \x{200B}-\x{200D} \s])+$/u", $input[$field]) !== false) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
-        }
-    }
-    
-    /**
-     * Determine if the input is valid digits in Persian/Dari, Pashtu or Arabic format.
-     *
-     * Usage: '<index>' => 'valid_persian_digit'
-     *
-     * @param string $field
-     * @param array $input
-     *
-     * @return mixed
-     */
-    protected function validate_valid_persian_digit($field, $input, $param = null)
-    {
-        if (!isset($input[$field]) || empty($input[$field])) {
-            return;
-        }
-        
-        if (!preg_match("/^([۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩])+$/u", $input[$field]) !== false) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
-        }
-    }
-    
-    
-    /**
-     * Determine if the input is a valid text in Persian/Dari or Arabic mainly in Afghanistan and Iran.
-     *
-     * Usage: '<index>' => 'valid_persian_text'
-     *
-     * @param string $field
-     * @param array $input
-     *
-     * @return mixed
-     */
-    protected function validate_valid_persian_text($field, $input, $param = null)
-    {
-        if (!isset($input[$field]) || empty($input[$field])) {
-            return;
-        }
-        
-        if (!preg_match("/^([ا آ أ إ ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ق ک ك گ ل م ن و ؤ ه ة ی ي ئ ء ّ َ ِ ُ ً ٍ ٌ \. \/ \\ = \- \| \{ \} \[ \] ؛ : « » ؟ > < \+ \( \) \* ، × ٪ ٫ ٬ ! ۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩\x{200B}-\x{200D} \x{FEFF} \x{22} \x{27} \x{60} \x{B4} \x{2018} \x{2019} \x{201C} \x{201D} \s])+$/u", $input[$field]) !== false) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
-                'param' => $param,
-            );
-        }
-    }
-    
-    /**
-     * Determine if the input is a valid text in Pashtu mainly in Afghanistan.
-     *
-     * Usage: '<index>' => 'valid_pashtu_text'
-     *
-     * @param string $field
-     * @param array $input
-     *
-     * @return mixed
-     */
-    protected function validate_valid_pashtu_text($field, $input, $param = null)
-    {
-        if (!isset($input[$field]) || empty($input[$field])) {
-            return;
-        }
-        
-        if (!preg_match("/^([ا آ أ ب پ ت ټ ث څ ج چ ح ځ خ د ډ ذ ر ړ ز ږ ژ س ش ښ ص ض ط ظ ع غ ف ق ک ګ ل م ن ڼ و ؤ ه ة ی ې ۍ ي ئ ء ْ ٌ ٍ ً ُ ِ َ ّ ؋ \. \/ \\ = \- \| \{ \} \[ \] ؛ : « » ؟ > < \+ \( \) \* ، × ٪ ٫ ٬ ! ۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩ \x{200B}-\x{200D} \x{FEFF} \x{22} \x{27} \x{60} \x{B4} \x{2018} \x{2019} \x{201C} \x{201D} \s])+$/u", $input[$field]) !== false) {
-            return array(
-                'field' => $field,
-                'value' => $input[$field],
-                'rule' => __FUNCTION__,
+                'rule'  => __FUNCTION__,
                 'param' => $param,
             );
         }
@@ -2418,8 +2255,8 @@ class ValidateSanitize
      * Determine if the provided value is a valid twitter handle.
      *
      * @access protected
-     * @param string $field
-     * @param array $input
+     * @param  string $field
+     * @param  array $input
      * @return mixed
      */
     protected function validate_valid_twitter($field, $input, $param = NULL)
@@ -2427,10 +2264,12 @@ class ValidateSanitize
         if (!isset($input[$field]) || empty($input[$field])) {
             return;
         }
-        $json_twitter = file_get_contents("http://twitter.com/users/username_available?username=" . $input[$field]);
         
-        $twitter_response = json_decode($json_twitter);
-        if ($twitter_response->reason != "taken") {
+        $json = ValidateHelpers::file_get_contents("http://twitter.com/users/username_available?username=".$input[$field]);
+        
+        $result = json_decode($json);
+        
+        if ($result->reason !== "taken") {
             return array(
                 'field' => $field,
                 'value' => $input[$field],
@@ -2439,5 +2278,4 @@ class ValidateSanitize
             );
         }
     }
-    
 }

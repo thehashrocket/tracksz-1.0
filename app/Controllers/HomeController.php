@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Library\Config;
 use App\Library\Email;
-use App\Library\ValidateSanitize;
+use App\Library\ValidateSanitize\ValidateSanitize;
 use App\Library\Views;
 use App\Models\Interested;
 use Laminas\Diactoros\ServerRequest;
