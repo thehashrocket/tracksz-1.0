@@ -30,7 +30,8 @@ Quick Tutorial on Database Migration - Author: Jaymes H. Sorbel
 
    php app/Console/Console.php Migrate
 
-   * you can run from other locatoins in the framework but you'll have to adjust the path to Console.php
+   * you can run from other locations in the framework but you'll have to adjust the path to Console.php
 
    * If your SQL is not valid, you'll receive an error message and your migration will not be saved in the Migrations table.  The Migrations table stores all "completed" migrations.
 
+4. There is no Rollback: If you have to change something you did in a previous migration, create a new migration file with the SQL that makes that change.
