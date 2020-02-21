@@ -4,11 +4,9 @@ namespace App\Controllers\Account;
 
 use App\Library\Utils;
 use App\Library\Views;
-use App\Models\Account\Store;
 use App\Models\Country;
 use App\Models\Account\Member;
 use Delight\Auth\Auth;
-use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use PDO;
 
@@ -59,6 +57,7 @@ class AccountController
         if (!isset($form['Texts'])) {
             $form['Texts'] = 'off';
         }
+        
         $member = (new Member($this->db))->updateColumns($form['Id'], $form);
         if (!$member) {
             $data['alert'] = _('Whoops. There was a problem updating your profile. Please try again.');

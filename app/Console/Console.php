@@ -4,18 +4,22 @@ namespace App\Console;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Dotenv\Dotenv;
 use App\Library\Config;
+use Dotenv\Dotenv;
 
 // Load Application Wide Configurations
 Config::initialize();
+
+// Load environment variables (.env)
+$dotenv = Dotenv::create(__DIR__.'/../../bootstrap');
+$dotenv->load();
 
 $cli = '';
 if (isset($argv[1])) $cli = $argv[1];
 
 if (!$cli) {
-    echo 'Error; Usage is "php Console.php ClassToRun"' . "\n";
-    echo '  With class being the class with the "run" function.';
+    echo 'Error; Usage from framework root is "php app/console/Console.php ClassToRun"' . "\n";
+    echo '  With ClassToRun being the class with the "run" function you wish to execute.';
     exit();
 } else {
     $cli_class = 'App\Console\\'.$cli;

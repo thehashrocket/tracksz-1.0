@@ -26,7 +26,6 @@ class Interested
         $query  = 'INSERT INTO Interested (FullName, Telephone, Email, Features, Markets) ';
         $query .= 'VALUES(:FullName, :Telephone, :Email, :Features, :Markets)';
         $stmt = $this->db->prepare($query);
-        
         if (!$stmt->execute($form)) {
             return false;
         }

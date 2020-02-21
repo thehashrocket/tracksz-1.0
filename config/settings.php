@@ -15,6 +15,10 @@ return [
     // default login remember me time, three weeks
     'default_remember' => 1814400,
     
+    // database migration folder location - from framework root
+    // If used adjest location from the depth you are at
+    'migration_folder'  => '/config/migrations/',
+    
     // currencies used in multiple locations
     'currency'  => [
         'USD'   => 'US Dollar',

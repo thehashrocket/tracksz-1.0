@@ -1,0 +1,1 @@
+INSERT INTO zzTestMigrate (Name) VALUES ('Billy Bob');
