@@ -3,19 +3,19 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
 - Reason: It is the intent that we consider Simplicity when using JIRA Project Planning.  Given the size of our developer team, adding too much complexity at this stage becomes unproductive.
 
-- Usage:  
+- Usage:
 
 1. EPICs: Tracksz uses EPICs to combine like Stories for the project main development areas.
 
-2. Primary Issue Type: Tracksz primary issue type will be the Story.  
+2. Primary Issue Type: Tracksz primary issue type will be the Story.
 
-3. Story Type Issues: For Tracksz purposes, the Story type issue encapsulates all the requirements for that Story issue.  
+3. Story Type Issues: For Tracksz purposes, the Story type issue encapsulates all the requirements for that Story issue.
 
    Due to not having a large team, when a developer is working on a Story issue, the requirements for that developer includes all the Model View Controller (MVC) requirements - database table creating, user interface creation, back end processing, and testing.
 
 4. Sub-Tasks: By default Tracksz does not create sub-tasks when creating a Story issue.  Developers working on a Story are welcome to break it down into sub-tasks to help organize the development process.
 
-5. Story Points: When creating a Story, think of story points as level of complexity for your level of development.  That is how hard you see it for yourself.  These are the break downs for Story Points versus Levels of Complexity Trackzs uses:  
+5. Story Points: When creating a Story, think of story points as level of complexity for your level of development.  That is how hard you see it for yourself.  These are the break downs for Story Points versus Levels of Complexity Trackzs uses:
 
 	1, 2, 3: Levels of Easy
 	5 - Medium
@@ -34,10 +34,10 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 	- Story Points: See Story Points in 5 above.
 
    After creating the Story, if you need to define it better or write an explanation, use the Description field.
-   
+
    * Create a Story whenever you see or think of another requirement for the system.  At the very least tell me so I can add it to the project.  Everyone has a voice in this project.
 
-8. Closing Stories: When moving a Story to "Done" record an estimate of the time spent you spent on it. 
+8. Closing Stories: When moving a Story to "Done" record an estimate of the time spent you spent on it.
 
 9. Sprints:  Not sure how we are going to use Sprints yet. However, I intend to use it for, at least, tracking the current Stories being worked on.
 
