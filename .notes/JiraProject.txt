@@ -1,4 +1,3 @@
-
 Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
 - Reason: It is the intent that we consider Simplicity when using JIRA Project Planning.  Given the size of our developer team, adding too much complexity at this stage becomes unproductive.
@@ -13,18 +12,18 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
    Due to not having a large team, when a developer is working on a Story issue, the requirements for that developer includes all the Model View Controller (MVC) requirements - database table creating, user interface creation, back end processing, and testing.
 
-4. Sub-Tasks: By default Tracksz does not create sub-tasks when creating a Story issue.  Developers working on a Story are welcome to break it down into sub-tasks to help organize the development process.
+4. Sub-Tasks: By default Tracksz does not create sub-tasks when creating a Story issue.  Developers working on a Story are welcome to break it down into sub-tasks to help organize their development process and/or thoughts.
 
 5. Story Points: When creating a Story, think of story points as level of complexity for your level of development.  That is how hard you see it for yourself.  These are the break downs for Story Points versus Levels of Complexity Trackzs uses:
 
-	1, 2, 3: Levels of Easy
+	1, 2, 3 - Levels of Easy
 	5 - Medium
 	8 - Hard
 	13- Advanced
 
    Again, use these points based on how you see the complexity for you if you developed the story.
 
-6. Story Length: A developer should be able to complete a story in two weeks.  If not, break down into smaller Stories.
+6. Story Length: A developer should be able to complete a story in two weeks.  If not, break down that particular Story into smaller Stories.
 
 7. Creating Story Issue:  At present, Tracksz only requirement for creating a Story is:
 
@@ -37,9 +36,9 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
    * Create a Story whenever you see or think of another requirement for the system.  At the very least tell me so I can add it to the project.  Everyone has a voice in this project.
 
-8. Closing Stories: When moving a Story to "Done" record an estimate of the time spent you spent on it.
+8. Closing Stories: When moving a Story to "Done" record an estimate, the best you can, of the time you spent on it.
 
-9. Sprints:  Not sure how we are going to use Sprints yet. However, I intend to use it for, at least, tracking the current Stories being worked on.
+9. Sprints:  Not sure how we are going to use Sprints yet. However, I intend to use it, at least, for tracking the current Stories being worked on.
 
 Finally, the entire purpose is to track work done and NOT become so complex it becomes unproductive.  Always think simplicity when working with JIRA.
 
