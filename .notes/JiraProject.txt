@@ -23,14 +23,30 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
    Again, use these points based on how you see the complexity for you if you developed the story.
 
-6. Story Length: A developer should be able to complete a story in two weeks.  If not, break down that particular Story into smaller Stories.
+6. Story Length: A developer should be able to complete a story in two weeks.  A story should be clear, concise, and easily actionable. If they are overly complicated, are not easily explained, they should be broken up into separate stories.
 
 7. Creating Story Issue:  At present, Tracksz only requirement for creating a Story is:
 
-	- Summary:  As a [user, system, developer, ??], I [want to], [so that].
-	- Labels: 3 or 4 keywords that pertain to the story.
-	- Epic: Select the epic if not already selected.
-	- Story Points: See Story Points in 5 above.
+	a. Summary:  As a [user, system, developer, ??], I [want to], [so that].
+	            * What the user should be able to do when this is completed. i.e., "As a User, I can click on this button, and X will happen (or, I can make payments using Diners Club)."
+                 * Not every story is user-facing. In regards to the backend, it could be "The Store should be able to accept Diners Club as a payment processor."
+
+	b. Labels: 3 or 4 keywords that pertain to the story.
+
+	c. Epic: Select the epic if not already selected.
+
+	d. Story Points: See Story Points in 5 above.
+
+	e. Acceptance Criteria: What are the things that need to be done for this to be considered complete?
+                * Example User-Related:
+                - The User can select Diners Club as a payment option.
+                - An icon for Diners Club is visible on the checkout page.
+                - A transaction must be successful when Diners Club is the payment method.
+
+                * Example Backend:
+                - Diners Club is permitted in the backend as a valid merchant.
+                - The merchant processor recognizes Diners Club as a merchant.
+                - Diners Club authorization codes are returned successfully to the view.
 
    After creating the Story, if you need to define it better or write an explanation, use the Description field.
 
@@ -44,5 +60,3 @@ Finally, the entire purpose is to track work done and NOT become so complex it b
 
 More on Stories:
 https://www.atlassian.com/agile/project-management/user-stories
-
-
