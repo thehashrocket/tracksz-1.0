@@ -2,12 +2,10 @@
 
 namespace App\Controllers\Account;
 
-use App\Controllers\Payments\StripeController;
-use App\Library\Config;
-use App\Library\Encryption;
-use App\Library\Utils;
 use App\Library\Views;
 use App\Models\Account\ShippingMethod;
+use App\Models\Account\Store;
+use App\Models\Account\Member;
 use Delight\Auth\Auth;
 use Delight\Cookie\Cookie;
 use Delight\Cookie\Session;
@@ -36,17 +34,58 @@ class ShippingController
     }
     
     /** 
-     *  shippingMethods - Manage shipping methods
+     *  viewShippingMethods - View shipping methods
      * 
      *  @return view - /account/shipping-methods
      */
-    public function shippingMethods()
+    public function viewShippingMethods()
     {
         $methods = (new ShippingMethod($this->db))->findByMember($this->auth->getUserId());
+        $activeStoreId = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
         return $this->view->buildResponse('/account/shipping_methods', [
-            'shippingMethods' => $methods
+            'shippingMethods' => $methods,
+            'activeStoreId' => $activeStoreId
         ]);
     }
 
-    public function 
+    /**
+     *  viewAddShippingMethod - View form to add a shipping method
+     * 
+     *  @return view - /account/add-shipping-method
+     */
+    public function viewAddShippingMethod()
+    {
+        return $this->view->buildResponse('/account/add_shipping_method', []);
+    }
+
+    /**
+     *  createShippingMethod - Add shipping method and redirect to list of methods
+     * 
+     *  
+     */
+    public function createShippingMethod(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        $methodData['storeId'] = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
+        $methodData['memberId'] = $this->auth->getUserId();
+        $newMethod = (new ShippingMethod($this->db))->addShippingMethod($methodData);
+        if ($newMethod)
+        {
+            $this->view->flash([
+                'alert' => 'Successfully added shipping method "' . $methodData['name'] . '"',
+                'alert_type' => 'success'
+            ]);
+            return $this->view->buildResponse('/account/shipping_methods', [
+                'shippingMethods' => (new ShippingMethod($this->db))->findByMember($this->auth->getUserId())
+            ]);
+        }
+        else
+        {
+            $this->view->flash([
+                'alert' => 'Failed to add shipping method. Please ensure all input is filled out',
+                'alert_type' => 'danger'
+            ]);
+            return $this->view->redirect('/account/add-shipping-method');
+        }
+    }
 }

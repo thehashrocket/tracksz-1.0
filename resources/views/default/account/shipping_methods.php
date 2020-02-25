@@ -38,6 +38,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                             <th>First Item Fee</th>
                             <th>Additional Item Fee</th>
                             <th>Minimum Order Amount</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -48,6 +49,14 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                                 <td><?=$shippingMethod['FirstItemFee']?></td>
                                 <td><?=$shippingMethod['AdditionalItemFee']?></td>
                                 <td><?=$shippingMethod['MinOrderAmount']?></td>
+                                <td class="align-middle text-left">
+                                    <a href="/account/store/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Store"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Store"></i> <span class="sr-only">Edit</span></a>
+                                    <?php if($activeStoreId == $shippingMethod['StoreId']): ?>
+                                        <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="" data-original-title="Cannot delete active store. Change Active store and then delete."> <span class="sr-only">Can't Delete</span></i>
+                                    <?php else: ?>
+                                        <a href="#" data-toggle="modal" data-target="#deleteStoreModal" data-url="/account/store/delete/27" class="btn btn-sm btn-icon btn-secondary" id="delete-store-27" title="Delete this Store." onclick="deleteStore(this)"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Store"></i> <span class="sr-only">Delete</span></a>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -55,16 +64,10 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                 </div>
             </div>
         <?php endif; ?>
-            <a href="#" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
+            <a href="/account/add-shipping-method" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
         </div><!-- /.page-inner -->
     </div><!-- /.page -->
 </div>
-
-<form id="addShippingMethod" name="addShippingMethod" method="POST">
-    <input class="" type="text" name="name" placeholder="Method Name">
-
-    <input type="submit">
-</form>
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>

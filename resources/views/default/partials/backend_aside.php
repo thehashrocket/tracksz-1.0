@@ -22,6 +22,7 @@
                     <?php
                         // determine if sub-menu has active page - set up array for in_array
                         $member_menu = ['account-profile','account-payment','account-invoices','account-activites'];
+                        $store_menu = ['account-stores', 'account-shipping-methods' , 'account-add-shipping-method']
                     ?>
                     <li class="menu-item has-child<?php if(in_array($page, $member_menu)) echo ' has-active';?>">
                         <a href="/account/profile" class="menu-link" title="<?=_('Tracksz Member Account')?>"><span class="menu-icon oi oi-person" title="<?=_('Tracksz Member Account')?>"></span> <span class="menu-text"><?=_('Member Account')?></span></a> <!-- child menu -->
@@ -41,13 +42,13 @@
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
-                    <li class="menu-item has-child" style="">
+                    <li class="menu-item has-child <?php if(in_array($page, $store_menu)) echo 'has-active';?>" style="">
                         <a href="/account/stores" class="menu-link" title="View Stores"><span class="menu-icon oi oi-person" title="View Stores"></span> <span class="menu-text">Stores</span></a>
                         <ul class="menu">
-                            <li class="menu-item">
+                            <li class="menu-item <?php if($page == 'account-stores') echo 'has-active';?>">
                                 <a href="/account/stores" title="View Stores" class="menu-link" tabindex="-1">View Stores</a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item <?php if($page == 'account-shipping-methods' || $page == 'account-add-shipping-method') echo 'has-active';?>">
                                 <a href="/account/shipping-methods" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
                             </li>
                         </ul>

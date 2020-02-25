@@ -196,9 +196,9 @@ class Member
     public function getActiveStoreId($id)
     {
         $query = 'SELECT ActiveStore FROM Member WHERE Id = :id';
-        $query->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['ActiveStore'];
     }
 }

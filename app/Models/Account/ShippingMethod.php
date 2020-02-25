@@ -15,7 +15,7 @@ class ShippingMethod
     }
     
     /**
-     * find - Find all shipping methods tied to store
+     * findByStore - Find all shipping methods tied to store
      *
      * @param  $storeId  - ID of store
      * @return array     - Shipping methods
@@ -30,7 +30,7 @@ class ShippingMethod
     }
 
     /**
-     * find - Find all shipping methods tied to member
+     * findByMember - Find all shipping methods tied to member
      *
      * @param  $memberId  - ID of member
      * @return array      - Shipping methods
@@ -42,5 +42,26 @@ class ShippingMethod
         $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  addShippingMethod - Add shipping method
+     * 
+     *  @param  $data - Array containing method information
+     *  @return bool  - Indicates success
+     */
+    public function addShippingMethod(array $data)
+    {
+        $query =  'INSERT INTO ShippingMethod (StoreId, MemberId, `Name`, DeliveryTime, FirstItemFee, AdditionalItemFee, MinOrderAmount) ';
+        $query .= 'VALUES (:storeId, :memberId, :name, :deliveryTime, :firstItemFee, :additionalItemFee, :minOrderAmount)';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $data['storeId'], PDO::PARAM_INT);
+        $stmt->bindParam(':memberId', $data['memberId'], PDO::PARAM_INT);
+        $stmt->bindParam(':name', $data['name']);
+        $stmt->bindParam(':deliveryTime', $data['deliveryTime']);
+        $stmt->bindParam(':firstItemFee', $data['firstItemFee']);
+        $stmt->bindParam(':additionalItemFee', $data['additionalItemFee']);
+        $stmt->bindParam(':minOrderAmount', $data['minOrderAmount']);
+        return $stmt->execute();
     }
 }
