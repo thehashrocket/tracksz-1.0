@@ -12,7 +12,7 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active">
-                            <a href="/account/shipping-methods"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=_('Shipping Methods')?></a>
+                            <a href="/account/shipping"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=_('Shipping Methods')?></a>
                         </li>
                     </ol>
                 </nav>
@@ -28,19 +28,24 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                 <div class="section-block">
                     <div class="card">
                         <div class="card-body">
-                            <form action="/account/add-shipping-method" method="post" data-parsley-validate>
+                            <?php if(isset($update_name)): ?>
+                            <form action="/account/shipping/edit" method="POST" data-parsley-validate>
+                            <input type="hidden" name="update_id" value="<?=$update_id?>">
+                            <?php else: ?>
+                            <form action="/account/shipping/create" method="POST" data-parsley-validate>
+                            <?php endif; ?>
                                 <div class="content">
                                     <fieldset>
                                         <legend><?=_('Method Information')?></legend>
                                         <div class="form-row mb-2">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="name" class="required-field"><?=_('Method Name')?></label> <input type="text" data-toggle="tooltip" data-placement="left" title="<?=_('Enter a name to identify this shipping method.')?>" class="form-control" id="name" name="name" placeholder="<?=_('Ex. International Standard')?>" data-parsley-required-message="<?=_('Enter a name to identify this shipping method.')?>" data-parsley-group="fieldset01" required maxlength="75">
+                                                    <label for="name" class="required-field"><?=_('Method Name')?></label> <input type="text" data-toggle="tooltip" data-placement="left" title="<?=_('Enter a name to identify this shipping method.')?>" class="form-control" id="Name" name="Name" placeholder="<?=_('Ex. International Standard')?>" data-parsley-required-message="<?=_('Enter a name to identify this shipping method.')?>" data-parsley-group="fieldset01" required maxlength="75" value="<?php echo isset($update_name) ? $update_name : '';?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="deliveryTime" class="required-field"><?=_('Delivery Time')?></label> <input type="text" title="<?=_('Enter the delivery time this method applies to.')?>" class="form-control" id="deliveryTime" name="deliveryTime" placeholder="<?=_('Ex. 21-36 Business Days')?>" maxlength="75">
+                                                    <label for="deliveryTime" class="required-field"><?=_('Delivery Time')?></label> <input type="text" title="<?=_('Enter the delivery time this method applies to.')?>" class="form-control" id="DeliveryTime" name="DeliveryTime" placeholder="<?=_('Ex. 21-36 Business Days')?>" maxlength="75" required data-parsley-required-message="<?=_('Enter the delivery time this method applies to.')?>" value="<?php echo isset($update_delivery) ? $update_delivery : '';?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -51,17 +56,17 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                                         <div class="form-row mb-3">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="firstItemFee" class="required-field"><?=_('First Item Fee')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the fee to be charged on the first item.')?>"></i></label> <input name="firstItemFee" type="number" class="form-control" id="firstItemFee" title="<?=_('Enter the fee to be charged on the first item.')?>" placeholder="Ex. 20.00" data-parsley-required-message="<?=_('Enter the fee to be charged on the first item.')?>" required data-parsley-type="number"  data-parsley-maxlength="10">
+                                                    <label for="firstItemFee" class="required-field"><?=_('First Item Fee')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the fee to be charged on the first item.')?>"></i></label> <input name="InitialFee" type="number" class="form-control" id="initialFee" title="<?=_('Enter the fee to be charged on the first item.')?>" placeholder="Ex. 20.00" data-parsley-required-message="<?=_('Enter the fee to be charged on the first item.')?>" required data-parsley-type="number"  data-parsley-maxlength="10" value="<?php echo isset($update_fee) ? $update_fee : '';?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="additionalItemFee" class="required-field"><?=_('Additional Item Fee')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the fee to be charged on additional items.')?>"></i></label> <input type="number" title="<?=_('Enter the fee to be charged on the first item.')?>" class="form-control" id="additionalItemFee" name="additionalItemFee" placeholder="Ex. 20.00"  data-parsley-required-message="Enter the fee to be charged on the first item." required data-parsley-type="number" data-parsley-maxlength="10">
+                                                    <label for="additionalItemFee" class="required-field"><?=_('Additional Item Fee')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the fee to be charged on additional items.')?>"></i></label> <input type="number" title="<?=_('Enter the fee to be charged on additional items.')?>" class="form-control" id="DiscountFee" name="DiscountFee" placeholder="Ex. 20.00"  data-parsley-required-message="Enter the fee to be charged on additional items." required data-parsley-type="number" data-parsley-maxlength="10" value="<?php echo isset($update_discount_fee) ? $update_discount_fee : '';?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="minOrderAmount" class="required-field"><?=_('Minimum Order Amount')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the minimum cost for this shipping method to apply.')?>"></i></label> <input type="number" title="<?=_('Enter the minimum cost for this shipping method to apply.')?>" class="form-control" id="minOrderAmount" name="minOrderAmount" placeholder="Ex. 20.00"  data-parsley-required-message="Enter the minimum cost for this shipping method to apply." required data-parsley-type="number" data-parsley-maxlength="10">
+                                                    <label for="minOrderAmount" class="required-field"><?=_('Minimum Order Amount')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Enter the minimum cost for this shipping method to apply.')?>"></i></label> <input type="number" title="<?=_('Enter the minimum cost for this shipping method to apply.')?>" class="form-control" id="Minimum" name="Minimum" placeholder="Ex. 20.00"  data-parsley-required-message="Enter the minimum cost for this shipping method to apply." required data-parsley-type="number" data-parsley-maxlength="10" value="<?php echo isset($update_minimum) ? $update_minimum : '';?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -70,8 +75,12 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                                     <fieldset>
                                         <hr class="mt-5">
                                         <div class="d-flex">
-                                            <p><a href="/account/shipping-methods"><?=_('Return to Shipping Methods')?></a> </p>
+                                            <p><a href="/account/shipping"><?=_('Return to Shipping Methods')?></a> </p>
+                                            <?php if(isset($update_name)): ?>
+                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_('Update Method')?></button>
+                                            <?php else: ?>
                                             <button type="submit" class="next btn btn-primary ml-auto"><?=_('Add Method')?></button>
+                                            <?php endif; ?>
                                         </div>
                                     </fieldset>
                                 </div>

@@ -44,8 +44,9 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/profile', Account\AccountController::class.'::updateProfile');
                 $route->get('/payment', Account\PaymentController::class.'::payment');
                 $route->get('/stores', Account\StoreController::class.'::stores');
-                $route->get('/shipping-methods', Account\ShippingController::class.'::viewShippingMethods');
-                $route->get('/add-shipping-method', Account\ShippingController::class.'::viewAddShippingMethod');
+                $route->get('/shipping', Account\ShippingController::class.'::viewShippingMethods');
+                $route->get('/shipping/create', Account\ShippingController::class.'::viewCreate');
+                $route->get('/shipping/edit/{Id:number}', Account\ShippingController::class.'::viewUpdate');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');
@@ -61,7 +62,9 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/store/delete/{Id:number}', Account\StoreController::class.'::delete');
                 $route->post('/store/restore/{Id:number}', Account\StoreController::class.'::restore');
                 $route->post('/store/active/{Id:number}', Account\StoreController::class.'::setActive');
-                $route->post('/add-shipping-method', Account\ShippingController::class.'::createShippingMethod');
+                $route->post('/shipping/create', Account\ShippingController::class.'::create');
+                $route->post('/shipping/delete/{Id:number}', Account\ShippingController::class.'::delete');
+                $route->post('/shipping/edit', Account\ShippingController::class.'::update');
                 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));

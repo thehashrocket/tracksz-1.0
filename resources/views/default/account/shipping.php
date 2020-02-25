@@ -46,16 +46,12 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                             <tr>
                                 <td><?=$shippingMethod['Name']?></td>
                                 <td><?=$shippingMethod['DeliveryTime']?></td>
-                                <td><?=$shippingMethod['FirstItemFee']?></td>
-                                <td><?=$shippingMethod['AdditionalItemFee']?></td>
-                                <td><?=$shippingMethod['MinOrderAmount']?></td>
+                                <td><?=$shippingMethod['InitialFee']?></td>
+                                <td><?=$shippingMethod['DiscountFee']?></td>
+                                <td><?=$shippingMethod['Minimum']?></td>
                                 <td class="align-middle text-left">
-                                    <a href="/account/store/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Store"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Store"></i> <span class="sr-only">Edit</span></a>
-                                    <?php if($activeStoreId == $shippingMethod['StoreId']): ?>
-                                        <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="" data-original-title="Cannot delete active store. Change Active store and then delete."> <span class="sr-only">Can't Delete</span></i>
-                                    <?php else: ?>
-                                        <a href="#" data-toggle="modal" data-target="#deleteStoreModal" data-url="/account/store/delete/27" class="btn btn-sm btn-icon btn-secondary" id="delete-store-27" title="Delete this Store." onclick="deleteStore(this)"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Store"></i> <span class="sr-only">Delete</span></a>
-                                    <?php endif; ?>
+                                    <a href="/account/shipping/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Method."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Method."></i> <span class="sr-only">Edit</span></a>
+                                    <a href="#" data-toggle="modal" data-target="#deleteMethod-<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Method."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Method."></i> <span class="sr-only">Delete</span></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -64,8 +60,33 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                 </div>
             </div>
         <?php endif; ?>
-            <a href="/account/add-shipping-method" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
+            <a href="/account/shipping/create" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
         </div><!-- /.page-inner -->
+
+        <!-- Modals to delete shipping methods -->
+        <?php foreach($shippingMethods as $shippingMethod): ?>
+            <?php if($shippingMethod['StoreId'] == $activeStoreId): ?>
+                <div class="modal fade" id="deleteMethod-<?=$shippingMethod['Id']?>" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Shipping Method</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Are you sure you want to delete this shipping method?</div>
+                        <div class="modal-footer">
+                            <form action="/account/shipping/delete/<?=$shippingMethod['Id']?>" method="POST">
+                                <button type="submit" class="btn btn-primary">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </div><!-- /.page -->
 </div>
 <?=$this->stop()?>
