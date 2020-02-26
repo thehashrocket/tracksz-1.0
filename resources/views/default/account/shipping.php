@@ -65,27 +65,25 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
 
         <!-- Modals to delete shipping methods -->
         <?php foreach($shippingMethods as $shippingMethod): ?>
-            <?php if($shippingMethod['StoreId'] == $activeStoreId): ?>
-                <div class="modal fade" id="deleteMethod-<?=$shippingMethod['Id']?>" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Delete Shipping Method</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Are you sure you want to delete this shipping method?</div>
-                        <div class="modal-footer">
-                            <form action="/account/shipping/delete/<?=$shippingMethod['Id']?>" method="POST">
-                                <button type="submit" class="btn btn-primary">Delete</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            </form>
-                        </div>
-                        </div>
+            <div class="modal fade" id="deleteMethod-<?=$shippingMethod['Id']?>" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Shipping Method</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Are you sure you want to delete this shipping method?</div>
+                    <div class="modal-footer">
+                        <form action="/account/shipping/delete/<?=$shippingMethod['Id']?>" method="POST">
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
                     </div>
                 </div>
-            <?php endif; ?>
+            </div>
         <?php endforeach; ?>
     </div><!-- /.page -->
 </div>

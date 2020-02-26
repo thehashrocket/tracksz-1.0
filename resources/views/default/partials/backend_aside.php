@@ -56,6 +56,9 @@
                             <li class="menu-item <?php if(startsWith($page, 'account-shipping')) echo 'has-active';?>">
                                 <a href="/account/shipping" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
                             </li>
+                            <li class="menu-item <?php if(startsWith($page, 'account-shipping-zones')) echo 'has-active';?>">
+                                <a href="/account/shipping-zones" title="Shipping Zones" class="menu-link" tabindex="-1">Shipping Zones</a>
+                            </li>
                         </ul>
                     </li>
                     <!-- .menu-item -->

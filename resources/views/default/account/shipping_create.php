@@ -28,7 +28,7 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                 <div class="section-block">
                     <div class="card">
                         <div class="card-body">
-                            <?php if(isset($update_name)): ?>
+                            <?php if(isset($update_id)): ?>
                             <form action="/account/shipping/edit" method="POST" data-parsley-validate>
                             <input type="hidden" name="update_id" value="<?=$update_id?>">
                             <?php else: ?>
@@ -76,11 +76,7 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                                         <hr class="mt-5">
                                         <div class="d-flex">
                                             <p><a href="/account/shipping"><?=_('Return to Shipping Methods')?></a> </p>
-                                            <?php if(isset($update_name)): ?>
-                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_('Update Method')?></button>
-                                            <?php else: ?>
-                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_('Add Method')?></button>
-                                            <?php endif; ?>
+                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_(isset($update_id) ? 'Update Method' : 'Create Method')?></button>
                                         </div>
                                     </fieldset>
                                 </div>

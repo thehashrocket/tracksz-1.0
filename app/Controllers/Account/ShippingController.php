@@ -49,22 +49,22 @@ class ShippingController
     }
 
     /**
-     *  viewCreate - View form to create a shipping method
+     *  viewCreateShippingMethod - View form to create a shipping method
      * 
      *  @return view - /account/shipping/create
      */
-    public function viewCreate()
+    public function viewCreateShippingMethod()
     {
         return $this->view->buildResponse('/account/shipping_create', []);
     }
 
     /**
-     *  viewUpdate - View form to update shipping method
+     *  viewUpdateShippingMethod - View form to update shipping method
      * 
      *  @param  $id  - ID of shipping method to update
      *  @return view - Redirect to list of methods on update
      */
-    public function viewUpdate(ServerRequest $request, array $data)
+    public function viewUpdateShippingMethod(ServerRequest $request, array $data)
     {
         $method = (new ShippingMethod($this->db))->find($data['Id']);
         return $this->view->buildResponse('/account/shipping_create', [
@@ -83,7 +83,7 @@ class ShippingController
      *  @param  ServerRequest - To grab form data
      *  @return view - Redirect based on success
      */
-    public function create(ServerRequest $request)
+    public function createShippingMethod(ServerRequest $request)
     {
         $methodData = $request->getParsedBody();
         $methodData['StoreId'] = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
@@ -113,7 +113,7 @@ class ShippingController
      *  @param  $data - Contains ID
      *  @return view  - Redirect based on success
      */
-    public function delete(ServerRequest $request, array $data)
+    public function deleteShippingMethod(ServerRequest $request, array $data)
     {
         $deleted = (new ShippingMethod($this->db))->delete($data['Id']);
         if ($deleted)
@@ -134,7 +134,7 @@ class ShippingController
         return $this->view->redirect('/account/shipping');
     }
 
-    public function update(ServerRequest $request)
+    public function updateShippingMethod(ServerRequest $request)
     {
         $methodData = $request->getParsedBody();
         $updated = (new ShippingMethod($this->db))->update($methodData);
