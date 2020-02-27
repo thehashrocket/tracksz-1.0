@@ -154,7 +154,7 @@ class Member
     }
     
     
-    /*
+    /**
      * gateway - Select GatewayUserId and MemberKey from Member for a member
      *
      * @param  $id  - Member Id from Member table
@@ -170,8 +170,8 @@ class Member
         return $stmt->fetchObject('stdClass');
     }
     
-    /*
-     * add Member - Add member after registration before validate email
+    /**
+     * addGatewayId - Add member after registration before validate email
      *               Just add record for update later.
      *
      * @param  $id  - Provided by AUTH after registration
@@ -191,5 +191,20 @@ class Member
         }
         $stmt = null;
         return true;
+    }
+
+    /**
+     *  getActiveStoreId - Get active store ID with member ID
+     * 
+     *  @param  int - Member ID
+     *  @return int - Active store ID
+     */
+    public function getActiveStoreId($memberId)
+    {
+        $query = 'SELECT ActiveStore FROM Member WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $memberId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['ActiveStore'];
     }
 }
