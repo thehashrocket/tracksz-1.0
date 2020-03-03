@@ -50,7 +50,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                                 <td><?=$shippingMethod['DiscountFee']?></td>
                                 <td><?=$shippingMethod['Minimum']?></td>
                                 <td class="align-middle text-left">
-                                    <a href="/account/shipping/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Method."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Method."></i> <span class="sr-only">Edit</span></a>
+                                    <a href="/account/shipping-methods/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Method."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Method."></i> <span class="sr-only">Edit</span></a>
                                     <a href="#" data-toggle="modal" data-target="#deleteMethod-<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Method."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Method."></i> <span class="sr-only">Delete</span></a>
                                 </td>
                             </tr>
@@ -60,7 +60,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                 </div>
             </div>
         <?php endif; ?>
-            <a href="/account/shipping/create" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
+            <a href="/account/shipping-methods/create" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
         </div><!-- /.page-inner -->
 
         <!-- Modals to delete shipping methods -->
@@ -76,7 +76,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                     </div>
                     <div class="modal-body">Are you sure you want to delete this shipping method?</div>
                     <div class="modal-footer">
-                        <form action="/account/shipping/delete/<?=$shippingMethod['Id']?>" method="POST">
+                        <form action="/account/shipping-methods/delete/<?=$shippingMethod['Id']?>" method="POST">
                             <button type="submit" class="btn btn-primary">Delete</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         </form>
@@ -101,33 +101,4 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
 <script src="/assets/vendor/datatables/extensions/responsive/dataTables.responsive.min.js"></script>
 <script src="/assets/vendor/datatables/extensions/responsive/responsive.bootstrap4.min.js"></script>
 <script src="/assets/javascript/pages/dataTables.bootstrap.js"></script>
-<script>
-    $(document).ready(function() {
-        var table = $('#stores').DataTable( {
-            responsive: true,
-            "ordering": false,
-            "bPaginate": false,
-            "bInfo": false,
-        } );
-    
-        <?php if (is_array($shippingMethods) &&  count($shippingMethods)> 0): ?>
-            new $.fn.dataTable.FixedHeader( table );
-        <?php endif; ?>
-    });
-    
-    function deleteStore(el) {
-        var url = $('#'+el.id).data("url");
-        $('#deleteStoreForm').attr('action', url);
-    };
-
-    function restoreStore(el) {
-        var url = $('#'+el.id).data("url");
-        $('#restoreStoreForm').attr('action', url);
-    };
-
-    function setActiveStore(el) {
-        var url = $('#'+el.id).data("url");
-        $('#setActiveStoreForm').attr('action', url);
-    };
-</script>
 <?php $this->stop() ?>

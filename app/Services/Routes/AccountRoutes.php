@@ -44,9 +44,9 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/profile', Account\AccountController::class.'::updateProfile');
                 $route->get('/payment', Account\PaymentController::class.'::payment');
                 $route->get('/stores', Account\StoreController::class.'::stores');
-                $route->get('/shipping', Account\ShippingController::class.'::viewShippingMethods');
-                $route->get('/shipping/create', Account\ShippingController::class.'::viewCreateShippingMethod');
-                $route->get('/shipping/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateShippingMethod');
+                $route->get('/shipping-methods', Account\ShippingController::class.'::viewMethods');
+                $route->get('/shipping-methods/create', Account\ShippingController::class.'::viewCreateMethod');
+                $route->get('/shipping-methods/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
                 $route->get('/shipping-zones', Account\ShippingController::class.'::viewZones');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
@@ -63,9 +63,9 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/store/delete/{Id:number}', Account\StoreController::class.'::delete');
                 $route->post('/store/restore/{Id:number}', Account\StoreController::class.'::restore');
                 $route->post('/store/active/{Id:number}', Account\StoreController::class.'::setActive');
-                $route->post('/shipping/create', Account\ShippingController::class.'::createShippingMethod');
-                $route->post('/shipping/delete/{Id:number}', Account\ShippingController::class.'::deleteShippingMethod');
-                $route->post('/shipping/edit', Account\ShippingController::class.'::updateShippingMethod');
+                $route->post('/shipping-methods/create', Account\ShippingController::class.'::createMethod');
+                $route->post('/shipping-methods/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
+                $route->post('/shipping-methods/edit', Account\ShippingController::class.'::updateMethod');
                 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));

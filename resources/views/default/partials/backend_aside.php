@@ -19,7 +19,6 @@
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
                     <?php
-                        // I can't believe PHP doesn't have a built in function for this...
                         function startsWith($haystack, $needle)
                         {
                              $length = strlen($needle);
@@ -47,14 +46,14 @@
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
-                    <li class="menu-item has-child <?php if(startsWith($page, 'account-stores') || startsWith($page, 'account-shipping')) echo 'has-active';?>" style="">
+                    <li class="menu-item has-child <?php if(startsWith($page, 'account')) echo 'has-active';?>" style="">
                         <a href="/account/stores" class="menu-link" title="View Stores"><span class="menu-icon oi oi-person" title="View Stores"></span> <span class="menu-text">Stores</span></a>
                         <ul class="menu">
                             <li class="menu-item <?php if($page == 'account-stores') echo 'has-active';?>">
                                 <a href="/account/stores" title="View Stores" class="menu-link" tabindex="-1">View Stores</a>
                             </li>
-                            <li class="menu-item <?php if(startsWith($page, 'account-shipping')) echo 'has-active';?>">
-                                <a href="/account/shipping" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
+                            <li class="menu-item <?php if(startsWith($page, 'account-shipping-methods')) echo 'has-active';?>">
+                                <a href="/account/shipping-methods" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
                             </li>
                             <li class="menu-item <?php if(startsWith($page, 'account-shipping-zones')) echo 'has-active';?>">
                                 <a href="/account/shipping-zones" title="Shipping Zones" class="menu-link" tabindex="-1">Shipping Zones</a>

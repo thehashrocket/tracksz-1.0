@@ -4,6 +4,7 @@ namespace App\Controllers\Account;
 
 use App\Library\Views;
 use App\Models\Account\ShippingMethod;
+use App\Models\Account\ShippingZone;
 use App\Models\Account\Store;
 use App\Models\Account\Member;
 use Delight\Auth\Auth;
@@ -34,40 +35,40 @@ class ShippingController
     }
     
     /** 
-     *  viewShippingMethods - View shipping methods
+     *  viewMethods - View shipping methods
      * 
      *  @return view - /account/shipping
      */
-    public function viewShippingMethods()
+    public function viewMethods()
     {
         $methods = (new ShippingMethod($this->db))->findByMember($this->auth->getUserId());
         $activeStoreId = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
-        return $this->view->buildResponse('/account/shipping', [
+        return $this->view->buildResponse('/account/shipping_method', [
             'shippingMethods' => $methods,
             'activeStoreId' => $activeStoreId
         ]);
     }
 
     /**
-     *  viewCreateShippingMethod - View form to create a shipping method
+     *  viewCreateMethod - View form to create a shipping method
      * 
      *  @return view - /account/shipping/create
      */
-    public function viewCreateShippingMethod()
+    public function viewCreateMethod()
     {
-        return $this->view->buildResponse('/account/shipping_create', []);
+        return $this->view->buildResponse('/account/shipping_method_create', []);
     }
 
     /**
-     *  viewUpdateShippingMethod - View form to update shipping method
+     *  viewUpdateMethod - View form to update shipping method
      * 
      *  @param  $id  - ID of shipping method to update
      *  @return view - Redirect to list of methods on update
      */
-    public function viewUpdateShippingMethod(ServerRequest $request, array $data)
+    public function viewUpdateMethod(ServerRequest $request, array $data)
     {
         $method = (new ShippingMethod($this->db))->find($data['Id']);
-        return $this->view->buildResponse('/account/shipping_create', [
+        return $this->view->buildResponse('/account/shipping_method_create', [
             'update_id' => $data['Id'],
             'update_name' => $method['Name'],
             'update_delivery' => $method['DeliveryTime'],
@@ -77,13 +78,26 @@ class ShippingController
         ]);
     }
 
+    /** 
+     *  viewZones - View shipping zones
+     * 
+     *  @return view - /account/shipping-zones
+     */
+    public function viewZones()
+    {
+        $zones = (new ShippingZone($this->db))->findByMember($this->auth->getUserId());
+        return $this->view->buildResponse('/account/shipping_zone', [
+            'shippingZones' => $zones
+        ]);
+    }
+
     /**
-     *  create - Add shipping method and redirect to list of methods
+     *  createMethod - Add shipping method and redirect to list of methods
      * 
      *  @param  ServerRequest - To grab form data
      *  @return view - Redirect based on success
      */
-    public function createShippingMethod(ServerRequest $request)
+    public function createMethod(ServerRequest $request)
     {
         $methodData = $request->getParsedBody();
         $methodData['StoreId'] = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
@@ -95,7 +109,7 @@ class ShippingController
                 'alert' => 'Successfully created shipping method.',
                 'alert_type' => 'success'
             ]);
-            return $this->view->redirect('/account/shipping');
+            return $this->view->redirect('/account/shipping-methods');
         }
         else
         {
@@ -103,17 +117,17 @@ class ShippingController
                 'alert' => 'Failed to add shipping method. Please ensure all input is filled out',
                 'alert_type' => 'danger'
             ]);
-            return $this->view->redirect('/account/shipping/create');
+            return $this->view->redirect('/account/shipping-methods/create');
         }
     }
 
     /**
-     *  delete - Delete shipping method via ID
+     *  deleteMethod - Delete shipping method via ID
      * 
      *  @param  $data - Contains ID
      *  @return view  - Redirect based on success
      */
-    public function deleteShippingMethod(ServerRequest $request, array $data)
+    public function deleteMethod(ServerRequest $request, array $data)
     {
         $deleted = (new ShippingMethod($this->db))->delete($data['Id']);
         if ($deleted)
@@ -131,10 +145,16 @@ class ShippingController
             ]);
         }
 
-        return $this->view->redirect('/account/shipping');
+        return $this->view->redirect('/account/shipping-methods');
     }
 
-    public function updateShippingMethod(ServerRequest $request)
+    /**
+     *  updateMethod  - Update shipping method
+     * 
+     *  @param  $request - To extract method data
+     *  @return view  - Redirect based on success
+     */
+    public function updateMethod(ServerRequest $request)
     {
         $methodData = $request->getParsedBody();
         $updated = (new ShippingMethod($this->db))->update($methodData);
@@ -144,7 +164,7 @@ class ShippingController
                 'alert' => 'Successfully created shipping method.',
                 'alert_type' => 'success'
             ]);
-            return $this->view->redirect('/account/shipping');
+            return $this->view->redirect('/account/shipping-methods');
         }
         else
         {
