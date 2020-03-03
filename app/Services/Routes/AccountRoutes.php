@@ -48,6 +48,8 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/shipping-methods/create', Account\ShippingController::class.'::viewCreateMethod');
                 $route->get('/shipping-methods/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
                 $route->get('/shipping-zones', Account\ShippingController::class.'::viewZones');
+                $route->get('/shipping-zones/create', Account\ShippingController::class.'::viewCreateZone');
+                $route->get('/shipping-zones/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');
@@ -66,6 +68,8 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/shipping-methods/create', Account\ShippingController::class.'::createMethod');
                 $route->post('/shipping-methods/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
                 $route->post('/shipping-methods/edit', Account\ShippingController::class.'::updateMethod');
+                $route->post('/shipping-zones/create', Account\ShippingController::class.'::createZone');
+                $route->post('/shipping-zones/edit', Account\ShippingController::class.'::updateZone');
                 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));

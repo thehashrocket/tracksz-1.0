@@ -37,7 +37,7 @@ class ShippingController
     /** 
      *  viewMethods - View shipping methods
      * 
-     *  @return view - /account/shipping
+     *  @return view - /account/shipping-methods
      */
     public function viewMethods()
     {
@@ -52,7 +52,7 @@ class ShippingController
     /**
      *  viewCreateMethod - View form to create a shipping method
      * 
-     *  @return view - /account/shipping/create
+     *  @return view - /account/shipping-methods/create
      */
     public function viewCreateMethod()
     {
@@ -75,6 +75,31 @@ class ShippingController
             'update_fee' => $method['InitialFee'],
             'update_discount_fee' => $method['DiscountFee'],
             'update_minimum' => $method['Minimum']
+        ]);
+    }
+
+    /**
+     *  viewCreateZone - View form to create a shipping zone
+     * 
+     *  @return view - /account/shipping-zones/create
+     */
+    public function viewCreateZone()
+    {
+        return $this->view->buildResponse('/account/shipping_zone_create', []);
+    }
+
+    /**
+     *  viewUpdateZone - View form to update shipping zone
+     * 
+     *  @param  $id  - ID of shipping method to update
+     *  @return view - Redirect to list of methods on update
+     */
+    public function viewUpdateZone(ServerRequest $request, array $data)
+    {
+        $zone = (new ShippingZone($this->db))->find($data['Id']);
+        return $this->view->buildResponse('/account/shipping_zone_create', [
+            'update_id' => $data['Id'],
+            'update_name' => $zone['Name']
         ]);
     }
 
@@ -106,7 +131,7 @@ class ShippingController
         if ($newMethod)
         {
             $this->view->flash([
-                'alert' => 'Successfully created shipping method.',
+                'alert' => 'Successfully created new shipping method.',
                 'alert_type' => 'success'
             ]);
             return $this->view->redirect('/account/shipping-methods');
@@ -114,10 +139,70 @@ class ShippingController
         else
         {
             $this->view->flash([
-                'alert' => 'Failed to add shipping method. Please ensure all input is filled out',
+                'alert' => 'Failed to create shipping method. Please ensure all input is filled out',
                 'alert_type' => 'danger'
             ]);
             return $this->view->redirect('/account/shipping-methods/create');
+        }
+    }
+
+     /**
+     *  createZone - Add shipping zone and redirect to list of zones
+     * 
+     *  @param  ServerRequest - To grab form data
+     *  @return view - Redirect based on success
+     */
+    public function createZone(ServerRequest $request)
+    {
+        $zoneData = $request->getParsedBody();
+        $zoneData['MemberId'] = $this->auth->getUserId();
+        $newZone = (new ShippingZone($this->db))->create($zoneData);
+        if ($newZone)
+        {
+            $this->view->flash([
+                'alert' => 'Successfully created new shipping zone.',
+                'alert_type' => 'success'
+            ]);
+            return $this->view->redirect('/account/shipping-zones');
+        }
+        else
+        {
+            $this->view->flash([
+                'alert' => 'Failed to add shipping zone. Please ensure name is filled out.',
+                'alert_type' => 'danger'
+            ]);
+            return $this->view->redirect('/account/shipping-zones/create');
+        }
+    }
+
+    /**
+     *  updateZone  - Update shipping zone
+     * 
+     *  @param  $request - To extract zone name
+     *  @return view  - Redirect based on success
+     */
+    public function updateZone(ServerRequest $request)
+    {
+        $zoneData = $request->getParsedBody();
+        $updated = (new ShippingZone($this->db))->update($zoneData);
+        if ($updated)
+        {
+            $this->view->flash([
+                'alert' => 'Successfully updated shipping zone.',
+                'alert_type' => 'success'
+            ]);
+            return $this->view->redirect('/account/shipping-zones');
+        }
+        else
+        {
+            $this->view->flash([
+                'alert' => 'Failed to update shipping zone. Please ensure all input is filled out correctly.',
+                'alert_type' => 'danger'
+            ]);
+            return $this->view->buildResponse('/account/shipping-zones/create', [
+                'update_id' => $methodData['update_id'],
+                'update_name' => $methodData['Name']
+            ]);
         }
     }
 
@@ -161,7 +246,7 @@ class ShippingController
         if ($updated)
         {
             $this->view->flash([
-                'alert' => 'Successfully created shipping method.',
+                'alert' => 'Successfully updated shipping method.',
                 'alert_type' => 'success'
             ]);
             return $this->view->redirect('/account/shipping-methods');

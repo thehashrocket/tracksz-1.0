@@ -40,7 +40,7 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                         <tbody>
                         <?php foreach($shippingZones as $shippingZone): ?>
                             <tr>
-                                <td><?=$shippingZone['Name']?></td>
+                                <td width="60%"><?=$shippingZone['Name']?></td>
                                 <td class="align-middle text-left">
                                     <a href="/account/shipping-zones/edit/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Zone."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Zone."></i> <span class="sr-only">Edit</span></a>
                                     <a href="#" data-toggle="modal" data-target="#deleteZone-<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Zone."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Zone."></i> <span class="sr-only">Delete</span></a>
@@ -61,7 +61,7 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Delete Shipping Method</h5>
+                        <h5 class="modal-title">Delete Shipping Zone</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
