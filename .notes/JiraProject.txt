@@ -14,18 +14,9 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
 4. Sub-Tasks: By default Tracksz does not create sub-tasks when creating a Story issue.  Developers working on a Story are welcome to break it down into sub-tasks to help organize their development process and/or thoughts.
 
-5. Story Points: When creating a Story, think of story points as level of complexity for your level of development.  That is how hard you see it for yourself.  These are the break downs for Story Points versus Levels of Complexity Trackzs uses:
+5. Story Length: A developer should be able to complete a story in two weeks.  A story should be clear, concise, and easily actionable. If they are overly complicated, are not easily explained, they should be broken up into separate stories.
 
-	1, 2, 3 - Levels of Easy
-	5 - Medium
-	8 - Hard
-	13- Advanced
-
-   Again, use these points based on how you see the complexity for you if you developed the story.
-
-6. Story Length: A developer should be able to complete a story in two weeks.  A story should be clear, concise, and easily actionable. If they are overly complicated, are not easily explained, they should be broken up into separate stories.
-
-7. Creating Story Issue:  At present, Tracksz only requirement for creating a Story is:
+6. Creating Story Issue:  At present, Tracksz only requirement for creating a Story is:
 
 	a. Summary:  As a [user, system, developer, ??], I [want to], [so that].
 	            * What the user should be able to do when this is completed. i.e., "As a User, I can click on this button, and X will happen (or, I can make payments using Diners Club)."
@@ -35,9 +26,7 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
 	c. Epic: Select the epic if not already selected.
 
-	d. Story Points: See Story Points in 5 above.
-
-	e. Acceptance Criteria: What are the things that need to be done for this to be considered complete?
+	d. Acceptance Criteria: What are the things that need to be done for this to be considered complete?
                 * Example User-Related:
                 - The User can select Diners Club as a payment option.
                 - An icon for Diners Club is visible on the checkout page.
@@ -52,9 +41,9 @@ Summary of Using JIRA at Tracksz - Author: Jaymes H. Sorbel
 
    * Create a Story whenever you see or think of another requirement for the system.  At the very least tell me so I can add it to the project.  Everyone has a voice in this project.
 
-8. Closing Stories: When moving a Story to "Done" record an estimate, the best you can, of the time you spent on it.
+7. Closing Stories: When moving a Story to "Done" record an estimate, the best you can, of the time you spent on it.
 
-9. Sprints:  Not sure how we are going to use Sprints yet. However, I intend to use it, at least, for tracking the current Stories being worked on.
+8. Sprints:  Not sure how we are going to use Sprints yet. However, I intend to use it, at least, for tracking the current Stories being worked on.
 
 Finally, the entire purpose is to track work done and NOT become so complex it becomes unproductive.  Always think simplicity when working with JIRA.
 
