@@ -42,7 +42,8 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                             <tr>
                                 <td width="60%"><?=$shippingZone['Name']?></td>
                                 <td class="align-middle text-left">
-                                    <a href="/account/shipping-zones/edit/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Zone."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Zone."></i> <span class="sr-only">Edit</span></a>
+                                    <a href="/account/shipping-zones/manage/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Assign shipping methods to this zone."><i class="fa fa-cog" data-toggle="tooltip" data-placement="left" title="Assign shipping methods to this zone." data-original-title="Assign shipping methods to this zone."></i> <span class="sr-only">Manage</span></a>
+                                    <a href="/account/shipping-zones/edit/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Zone."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="Edit this Shipping Zone." data-original-title="Edit this Shipping Zone."></i> <span class="sr-only">Edit</span></a>
                                     <a href="#" data-toggle="modal" data-target="#deleteZone-<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Zone."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Zone."></i> <span class="sr-only">Delete</span></a>
                                 </td>
                             </tr>

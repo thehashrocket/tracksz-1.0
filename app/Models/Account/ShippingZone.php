@@ -82,9 +82,9 @@ class ShippingZone
      */
     public function update($data)
     {
-        $query = 'UPDATE ShippingZone SET `Name` = :_name';
-        $query .= 'WHERE Id = ' . $data['update_id'];
+        $query = 'UPDATE ShippingZone SET `Name` = :_name WHERE Id = :id';
         $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $data['update_id']);
         $stmt->bindParam(':_name', $data['Name']);
         return $stmt->execute();
     }

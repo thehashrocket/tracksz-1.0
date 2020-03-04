@@ -233,6 +233,33 @@ class ShippingController
         return $this->view->redirect('/account/shipping-methods');
     }
 
+     /**
+     *  deleteZone - Delete shipping zone via ID
+     * 
+     *  @param  $data - Contains ID
+     *  @return view  - Redirect based on success
+     */
+    public function deleteZone(ServerRequest $request, array $data)
+    {
+        $deleted = (new ShippingZone($this->db))->delete($data['Id']);
+        if ($deleted)
+        {
+            $this->view->flash([
+                'alert' => 'Successfully deleted shipping zone.',
+                'alert_type' => 'success'
+            ]);
+        }
+        else
+        {
+            $this->view->flash([
+                'alert' => 'Failed to delete shipping zone.',
+                'alert_type' => 'danger'
+            ]);
+        }
+
+        return $this->view->redirect('/account/shipping-zones');
+    }
+
     /**
      *  updateMethod  - Update shipping method
      * 
