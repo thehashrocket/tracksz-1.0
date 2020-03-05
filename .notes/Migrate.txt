@@ -1,0 +1,37 @@
+
+Quick Tutorial on Database Migration - Author: Jaymes H. Sorbel
+
+- Purpose: To provide other developers updates you made to the base database required for your development within the framework.
+
+- Base Database:  The base database is located at config/Tracksz-2020-02-21.sql.  This must
+  already created on your local development database system before you use Migrate.
+
+- Migration Folder: Migration files are located in the folder config/migrations
+
+- Steps.
+
+1. Create a new file in the Migration Folder with the following naming convention
+
+   YYYY-MM-DD-sss-nn-short-description.sql
+
+   - sss: Developers initials. For instance Jaymes H. Sorbel = JHS
+   - nn:  Count of migrations files you created that day, such as 01, 02, 03...
+          The first one of the day should always start with 01, don't leave it out.
+   - short-description: What the SQL is doing to the database.  For instance create-marketplace
+                        or create-shipping-tables.
+
+   ** Naming convention is important as it sorts the files and executes them in that order.
+
+   An example file name: 2020-02-21-JHS-01-add-key-member-table.sql
+
+2. Add valid SQL to the file and save it.
+
+3. Run Migrate command located in app/Console.  The syntax from the framework root is:
+
+   php app/Console/Console.php Migrate
+
+   * you can run from other locations in the framework but you'll have to adjust the path to Console.php
+
+   * If your SQL is not valid, you'll receive an error message and your migration will not be saved in the Migrations table.  The Migrations table stores all "completed" migrations.
+
+4. There is no Rollback: If you have to change something you did in a previous migration, create a new migration file with the SQL that makes that change.

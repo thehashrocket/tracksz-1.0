@@ -1,0 +1,10 @@
+USE `Tracksz`;
+
+DROP TABLE IF EXISTS `ShippingZone`;
+CREATE TABLE `ShippingZone` (
+	`Id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `MemberId` INT(11) UNSIGNED NOT NULL,
+	`Name` VARCHAR(255) NOT NULL,
+	KEY (`MemberId`),
+	PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

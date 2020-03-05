@@ -1,0 +1,14 @@
+USE `Tracksz`;
+
+DROP TABLE IF EXISTS `ShippingMethod`;
+CREATE TABLE `ShippingMethod` (
+	`Id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`MemberId` INT(11) UNSIGNED NOT NULL,
+	`Name` VARCHAR(255) NOT NULL,
+	`DeliveryTime` VARCHAR(255) NOT NULL,
+	`InitialFee` DECIMAL(10,2) NOT NULL,
+	`DiscountFee` DECIMAL(10,2) NOT NULL,
+	`Minimum` DECIMAL(10,2) NOT NULL,
+	INDEX (`MemberId`),
+	PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

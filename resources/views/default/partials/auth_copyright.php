@@ -1,0 +1,2 @@
+<p class="py-3"> © <?=date('Y')?> <?=_('Tracksz All Rights Reserved')?><br><a href="#"  title="Tracksz Privacy Policy"><?=_('Privacy')?></a> <?=_('and')?> <a href="#" title="Tracksz Terms of Service"><?=_('Terms')?></a></p>
+        <p class="mb-0 px-3 text-muted text-center"><a href="<?=\App\Library\Config::get('company_url')?>" class="btn btn-warning mt-2"  title="<?=_('Return to Tracksz home page.')?>"><i class="fa fa-fw fa-home"></i> <?=('Return Home')?></a></p>

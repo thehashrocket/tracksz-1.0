@@ -1,0 +1,4 @@
+.idea/
+vendor/
+bootstrap/.env
+!public/assets/vendor

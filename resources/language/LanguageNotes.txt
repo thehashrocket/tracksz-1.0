@@ -1,0 +1,15 @@
+Using PHP gettext extension for Language translation
+
+PLEASE NOTE:
+gettext is very picky and does not provide any real error messages.  The directory structure is the important.  The operating system needs to support the language, and the directory for that language may need to be named exactly as provided in the following command.
+
+"use less /usr/share/i18n/SUPPORTED"
+
+If it says es_ES.UTF-8
+
+The directory for the language may need to be name exactly es_ES.UTF-8
+
+Each operating system may handle this differently.  Ubuntu is case sensitive and the folder must be as found in SUPPORTED
+
+If you do not find the language support with the above command you may need to install it.
+

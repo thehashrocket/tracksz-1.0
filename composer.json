@@ -1,0 +1,30 @@
+{
+    "name": "clsearch/base-framework",
+    "description": "ChrisLands Search",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Jaymes H. Sorbel",
+            "email": "info@chrislands.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "filp/whoops": "^2.4",
+        "league/route": "^4.3",
+        "league/container": "^3.3",
+        "league/plates": "^3.3",
+        "gettext/gettext": "^4.6",
+        "vlucas/phpdotenv": "^3.6",
+        "delight-im/auth": "^8.1",
+        "phpmailer/phpmailer": "^6.1",
+        "stripe/stripe-php": "^7.13",
+        "laminas/laminas-diactoros": "^2.2",
+        "laminas/laminas-httphandlerrunner": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
