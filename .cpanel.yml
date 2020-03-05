@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/trackszdevsinelo/public_html/
-    - /bin/cp $DEPLOYPATH    
+    - /bin/cp info.php $DEPLOYPATH    
