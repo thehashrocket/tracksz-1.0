@@ -2,12 +2,10 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/trackszdevsinelo/public_html/
-        - /bin/cp .cpanel.yml $DEPLOYPATH                 #Copy specific file to destination from root
-        - /bin/cp info.php $DEPLOYPATH                 #Copy specific file to destination from root        
         - /bin cp * $DEPLOYPATH                           #copy all from root 
-        - /bin cp /app/* $DEPLOYPATH             #copy all from sub folder root
-        - /bin cp /bootstrap/* $DEPLOYPATH             #copy all from sub folder root
-        - /bin cp /config/* $DEPLOYPATH             #copy all from sub folder root
-        - /bin cp /public/* $DEPLOYPATH             #copy all from sub folder root
-        - /bin cp /resources/* $DEPLOYPATH             #copy all from sub folder root
         - /bin/cp -r * $DEPLOYPATH                        #copy all recursively to $DEPLOYPATH
+        - /bin/cp -R app $DEPLOYPATH
+        - /bin/cp -R bootstrap $DEPLOYPATH
+        - /bin/cp -R config $DEPLOYPATH
+        - /bin/cp -R public $DEPLOYPATH
+        - /bin/cp -R resources $DEPLOYPATH

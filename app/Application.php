@@ -46,6 +46,7 @@ class Application
         'Ajax'      =>  Services\Routes\AjaxRoutes::class,
         'Api'       =>  Services\Routes\ApiRoutes::class,
         'Inventory' =>  Services\Routes\InventoryRoutes::class,
+        'Product' =>  Services\Routes\ProductRoutes::class,
     ];
     
     /**
