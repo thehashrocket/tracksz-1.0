@@ -50,6 +50,8 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/shipping-zones', Account\ShippingController::class.'::viewZones');
                 $route->get('/shipping-zones/create', Account\ShippingController::class.'::viewCreateZone');
                 $route->get('/shipping-zones/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
+                $route->get('/shipping-zones/manage/{Id:number}', Account\ShippingController::class.'::viewManageZone');
+                $route->get('/shipping-zones/assign/{MethodId:number}/{ZoneId:number}', Account\ShippingController::class.'::assignMethodToZone');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');

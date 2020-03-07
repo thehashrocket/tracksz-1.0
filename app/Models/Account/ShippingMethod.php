@@ -29,16 +29,16 @@ class ShippingMethod
     }
 
     /**
-     * findByMember - Find all shipping methods tied to member
+     * findByStore - Find all shipping methods tied to store
      *
-     * @param  $memberId  - ID of member
+     * @param  $storeId   - ID of store
      * @return array      - Shipping methods
     */
-    public function findByMember($memberId)
+    public function findByStore($storeId)
     {
-        $query = 'SELECT * FROM ShippingMethod WHERE MemberId = :memberId';
+        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -51,10 +51,10 @@ class ShippingMethod
      */
     public function create(array $data)
     {
-        $query =  'INSERT INTO ShippingMethod (MemberId, `Name`, DeliveryTime, InitialFee, DiscountFee, Minimum) ';
-        $query .= 'VALUES (:memberId, :name, :deliveryTime, :initialFee, :discountFee, :minimum)';
+        $query =  'INSERT INTO ShippingMethod (StoreId, `Name`, DeliveryTime, InitialFee, DiscountFee, Minimum) ';
+        $query .= 'VALUES (:storeId, :name, :deliveryTime, :initialFee, :discountFee, :minimum)';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $data['MemberId'], PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $data['StoreId'], PDO::PARAM_INT);
         $stmt->bindParam(':name', $data['Name']);
         $stmt->bindParam(':deliveryTime', $data['DeliveryTime']);
         $stmt->bindParam(':initialFee', $data['InitialFee']);
@@ -94,5 +94,44 @@ class ShippingMethod
         $stmt->bindParam(':discount', $data['DiscountFee']);
         $stmt->bindParam(':minimum', $data['Minimum']);
         return $stmt->execute();
+    }
+
+    public function assign($methodId, $zoneId)
+    {
+        $query = 'INSERT INTO ShippingZoneFee (ZoneId, ShippingMethodId) VALUES (:zoneId, :shippingMethodId)';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->bindParam(':shippingMethodId', $methodId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    /**
+     *  getUnassignedByStore - Get unassigned shipping methods under a store
+     * 
+     *  @param $storeId - Store ID
+     *  @return list - Shipping methods 
+     */
+    public function getUnassignedByStore($storeId)
+    {
+        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId AND ShippingMethod.Id NOT IN (SELECT ShippingMethodId FROM ShippingZoneFee)';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getAssignedByStore - Get shipping methods assigned to store
+     * 
+     *  @param $storeId - Store ID
+     *  @return list - Shipping methods 
+     */
+    public function getAssignedByStore($storeId)
+    {
+        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId INNER JOIN ShippingMethodFee ON ShippingMethod.Id = ShippingMethodFee.ShippingMethodId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

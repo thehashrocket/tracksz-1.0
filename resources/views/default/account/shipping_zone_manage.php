@@ -16,7 +16,7 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
                         </li>
                     </ol>
                 </nav>
-                <h1 class="page-title"> <?=_('Manage a Shipping Zone')?> </h1>
+                <h1 class="page-title"> <?=_('Manage Shipping Methods for <em>' . $zone['Name'] . '</em>')?> </h1>
             </header>
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">
@@ -25,36 +25,73 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
             <?php endif ?>
             <div class="page-section">
                 <div class="section-block">
+                    <?php if($assignedMethods): ?>
                     <div class="card">
+                        <h6 class="card-header"><?=_('Assigned')?></h6>
                         <div class="card-body">
-                            <?php if(isset($update_id)): ?>
-                            <form action="/account/shipping-zones/edit" method="POST" data-parsley-validate>
-                            <input type="hidden" name="update_id" value="<?=$update_id?>">
-                            <?php else: ?>
-                            <form action="/account/shipping-zones/create" method="POST" data-parsley-validate>
-                            <?php endif; ?>
-                                <div class="content">
-                                    <fieldset>
-                                        <div class="form-row mb-2">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="Name" class="required-field"><?=_('Zone Name')?></label> <input type="text" data-toggle="tooltip" data-placement="left" title="<?=_('Enter a name to identify this shipping zone.')?>" class="form-control" id="Name" name="Name" placeholder="<?=_('Ex. International Zone 1')?>" data-parsley-required-message="<?=_('Enter a name to identify this shipping zone.')?>" required maxlength="75" value="<?php echo isset($update_name) ? $update_name : '';?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <hr class="mb-3">
-                                    <fieldset>
-                                        <hr class="mt-5">
-                                        <div class="d-flex">
-                                            <p><a href="/account/shipping-zones"><?=_('Return to Shipping Zones')?></a> </p>
-                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_(isset($update_id) ? 'Update Zone' : 'Create Zone')?></button>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </form>
+                            <table id="stores" class="table table-striped table-bordered nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Delivery Time</th>
+                                    <th>First Item Fee</th>
+                                    <th>Additional Item Fee</th>
+                                    <th>Minimum Order Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($assignedMethods as $shippingMethod): ?>
+                                    <tr>
+                                        <td><?=$shippingMethod['Name']?></td>
+                                        <td><?=$shippingMethod['DeliveryTime']?></td>
+                                        <td><?=$shippingMethod['InitialFee']?></td>
+                                        <td><?=$shippingMethod['DiscountFee']?></td>
+                                        <td><?=$shippingMethod['Minimum']?></td>
+                                        <td class="align-middle text-left">
+                                            <a href="/account/shipping-methods/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Method."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Method."></i> <span class="sr-only">Edit</span></a>
+                                            <a href="#" data-toggle="modal" data-target="#deleteMethod-<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Method."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Method."></i> <span class="sr-only">Delete</span></a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                    <?php endif; ?>
+                    <?php if($unassignedMethods): ?>
+                    <div class="card">
+                        <h6 class="card-header"><?=_('Unassigned')?></h6>
+                        <div class="card-body">
+                            <table id="stores" class="table table-striped table-bordered nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Delivery Time</th>
+                                    <th>First Item Fee</th>
+                                    <th>Additional Item Fee</th>
+                                    <th>Minimum Order Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($unassignedMethods as $shippingMethod): ?>
+                                    <tr>
+                                        <td><?=$shippingMethod['Name']?></td>
+                                        <td><?=$shippingMethod['DeliveryTime']?></td>
+                                        <td><?=$shippingMethod['InitialFee']?></td>
+                                        <td><?=$shippingMethod['DiscountFee']?></td>
+                                        <td><?=$shippingMethod['Minimum']?></td>
+                                        <td class="align-middle text-left">
+                                            <a href="/account/shipping-zones/assign/<?=$shippingMethod['Id']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Assign this Shipping Method."><i class="fa fa-plus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Assign this Shipping Method."></i> <span class="sr-only">Assign</span></a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
