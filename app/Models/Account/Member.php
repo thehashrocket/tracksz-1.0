@@ -207,19 +207,4 @@ class Member
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['ActiveStore'];
     }
-
-    /**
-     *  hasStore - Return whether a member owns a store
-     * 
-     *  @return bool
-     */
-    public function hasStore($memberId, $storeId)
-    {
-        $query = 'SELECT IsActive FROM Store WHERE Id = :storeId AND MemberId = :memberId';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
-        $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
-        $stmt->execute();
-        return count($stmt->fetch(PDO::FETCH_ASSOC)) == 1;
-    }
 }

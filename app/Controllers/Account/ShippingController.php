@@ -253,29 +253,59 @@ class ShippingController
      *  deleteZone - Delete shipping zone via ID
      * 
      *  @param  $data - Contains ID
-     *  @return view  - Redirect based on success
+     *  @return view  - Redirect with success/fail message
      */
     public function deleteZone(ServerRequest $request, array $data)
     {
-        // TODO: Make sure user actually owns store
-        $deleted = (new ShippingZone($this->db))->delete($data['Id']);
-        $this->view->flash([
-            'alert' => $deleted ? 'Successfully deleted shipping zone.' : 'Failed to delete shipping zone.',
-            'alert_type' => $deleted ? 'success' : 'danger'
-        ]);
+        $shippingZoneObj = new ShippingZone($this->db);
+        if ($shippingZoneObj->getStoreId($data['Id']) === (new Member($this->db))->getActiveStoreId($this->auth->getUserId()))
+        {
+            $deleted = $shippingZoneObj->delete($data['Id']);
+            $this->view->flash([
+                'alert' => $deleted ? 'Successfully deleted shipping zone.' : 'Failed to delete shipping zone.',
+                'alert_type' => $deleted ? 'success' : 'danger'
+            ]);
+        }
 
         return $this->view->redirect('/account/shipping-zones');
     }
 
+    /**
+     *  assignMethodToZone - Assign shipping method to zone
+     *  @param $data - Contains method and zone IDs
+     *  @return view - Redirect with success/fail message
+     */
     public function assignMethodToZone(ServerRequest $request, array $data)
     {
-        // TODO: Make sure user actually owns store
-        // Active store = store of zone?
-        $assigned = (new ShippingMethod($this->db))->assign($data['MethodId'], $data['ZoneId']);
-        $this->view->flash([
-            'alert' => $assigned ? 'Successfully assigned shipping method.' : 'Failed to assign shipping method.',
-            'alert_type' => $assigned ? 'success' : 'danger'
-        ]);
+        $shippingMethodObj = new ShippingMethod($this->db);
+        if ($shippingMethodObj->getStoreId($data['MethodId']) === (new Member($this->db))->getActiveStoreId($this->auth->getUserId()))
+        {
+            $assigned = $shippingMethodObj->assign($data['MethodId'], $data['ZoneId']);
+            $this->view->flash([
+                'alert' => $assigned ? 'Successfully assigned shipping method.' : 'Failed to assign shipping method.',
+                'alert_type' => $assigned ? 'success' : 'danger'
+            ]);
+        }
+
+        return $this->view->redirect('/account/shipping-zones/manage/'.$data['ZoneId']);
+    }
+
+    /**
+     *  unassignMethodFromZone - Unassign shipping method from zone
+     *  @param $data - Contains method and zone IDs
+     *  @return view - Redirect with success/fail message
+     */
+    public function unassignMethodFromZone(ServerRequest $request, array $data)
+    {
+        $shippingMethodObj = new ShippingMethod($this->db);
+        if ($shippingMethodObj->getStoreId($data['MethodId']) === (new Member($this->db))->getActiveStoreId($this->auth->getUserId()))
+        {
+            $assigned = $shippingMethodObj->unassign($data['MethodId'], $data['ZoneId']);
+            $this->view->flash([
+                'alert' => $assigned ? 'Successfully unassigned shipping method.' : 'Failed to unassign shipping method.',
+                'alert_type' => $assigned ? 'success' : 'danger'
+            ]);
+        }
 
         return $this->view->redirect('/account/shipping-zones/manage/'.$data['ZoneId']);
     }

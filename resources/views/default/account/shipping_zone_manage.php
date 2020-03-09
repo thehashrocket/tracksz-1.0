@@ -49,8 +49,7 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
                                         <td><?=$shippingMethod['DiscountFee']?></td>
                                         <td><?=$shippingMethod['Minimum']?></td>
                                         <td class="align-middle text-left">
-                                            <a href="/account/shipping-methods/edit/<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Method."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Method."></i> <span class="sr-only">Edit</span></a>
-                                            <a href="#" data-toggle="modal" data-target="#deleteMethod-<?=$shippingMethod['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Method."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Method."></i> <span class="sr-only">Delete</span></a>
+                                            <a href="/account/shipping-zones/unassign/<?=$shippingMethod['ShippingMethodId']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Unassign this Shipping Method."><i class="fa fa-minus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Unassign this Shipping Method."></i> <span class="sr-only">Unassign</span></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

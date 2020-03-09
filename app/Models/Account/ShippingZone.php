@@ -33,7 +33,7 @@ class ShippingZone
      * findByStore - Find all shipping zones tied to store
      *
      * @param  $storeId  - ID of zone
-     * @return array      - Shipping zones
+     * @return array     - Shipping zones
     */
     public function findByStore($storeId)
     {
@@ -42,6 +42,21 @@ class ShippingZone
         $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getStoreId - Get store tied to shipping zone
+     * 
+     *  @param  $id - ID of shipping zone
+     *  @return int - Store ID
+     */
+    public function getStoreId($id)
+    {
+        $query = 'SELECT StoreId FROM ShippingZone WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return intval($stmt->fetch(PDO::FETCH_ASSOC)['StoreId']);
     }
 
     /**

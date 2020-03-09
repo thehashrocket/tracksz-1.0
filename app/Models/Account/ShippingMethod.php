@@ -31,8 +31,8 @@ class ShippingMethod
     /**
      * findByStore - Find all shipping methods tied to store
      *
-     * @param  $storeId   - ID of store
-     * @return array      - Shipping methods
+     * @param  $storeId - ID of store
+     * @return array    - Shipping methods
     */
     public function findByStore($storeId)
     {
@@ -41,6 +41,21 @@ class ShippingMethod
         $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getStoreId - Get store tied to shipping method
+     * 
+     *  @param  $id - ID of shipping method
+     *  @return int - Store ID
+     */
+    public function getStoreId($id)
+    {
+        $query = 'SELECT StoreId FROM ShippingMethod WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return intval($stmt->fetch(PDO::FETCH_ASSOC)['StoreId']);
     }
 
     /**
@@ -96,9 +111,32 @@ class ShippingMethod
         return $stmt->execute();
     }
 
+    /**
+     *  assign - Assign a shipping method to a zone
+     * 
+     *  @param $methodId - Shipping method ID
+     *  @param $zoneId - Shipping zone ID
+     *  @return bool - Indicates success
+     */
     public function assign($methodId, $zoneId)
     {
         $query = 'INSERT INTO ShippingZoneFee (ZoneId, ShippingMethodId) VALUES (:zoneId, :shippingMethodId)';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->bindParam(':shippingMethodId', $methodId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    /**
+     *  unassign - Unassign a shipping method from a zone
+     * 
+     *  @param $methodId - Shipping method ID
+     *  @param $zoneId - Shipping zone ID
+     *  @return bool - Indicates success
+     */
+    public function unassign($methodId, $zoneId)
+    {
+        $query = 'DELETE FROM ShippingZoneFee WHERE ZoneId = :zoneId AND ShippingMethodId = :shippingMethodId';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
         $stmt->bindParam(':shippingMethodId', $methodId, PDO::PARAM_INT);
@@ -128,7 +166,7 @@ class ShippingMethod
      */
     public function getAssignedByStore($storeId)
     {
-        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId INNER JOIN ShippingMethodFee ON ShippingMethod.Id = ShippingMethodFee.ShippingMethodId';
+        $query = 'SELECT * FROM ShippingMethod INNER JOIN ShippingZoneFee ON (ShippingMethod.StoreId = :storeId AND ShippingMethod.Id = ShippingZoneFee.ShippingMethodId)';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
