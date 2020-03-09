@@ -37,6 +37,7 @@ class ProductRoutes extends AbstractServiceProvider
                 $route->get('/defaults', Product\ProductController::class . '::defaults');
     
                 $route->post('/defaults', Product\ProductController::class . '::updateDefaults');
+                $route->post('/place_market', Product\ProductController::class . '::map_market_products');
                 
                 
             })->middleware($this->container->get('Csrf'))              
