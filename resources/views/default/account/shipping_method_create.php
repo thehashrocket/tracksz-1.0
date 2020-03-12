@@ -16,8 +16,8 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
                         </li>
                     </ol>
                 </nav>
-                <h1 class="page-title"> <?=_('Add a Shipping Method')?> </h1>
-                <p class="text-muted"> <?=_('Here you can define shipping methods which can be applied to regional zones.')?></p>
+                <h1 class="page-title"> <?=_(isset($updateName) ? 'Update <em>' . $updateName . '</em>' : 'Add a Shipping Method')?> </h1>
+                <p class="text-muted"> <?=_('Here you can define/edit shipping methods which can be applied to regional zones.')?></p>
             </header>
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">

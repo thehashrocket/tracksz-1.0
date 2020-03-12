@@ -16,7 +16,7 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                         </li>
                     </ol>
                 </nav>
-                <h1 class="page-title"> <?=_('Add a Shipping Zone')?> </h1>
+                <h1 class="page-title"> <?=_(isset($updateName) ? 'Update <em>' . $updateName . '</em>' : 'Add a Shipping Zone')?> </h1>
             </header>
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">
