@@ -46,17 +46,25 @@
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
-                    <li class="menu-item has-child <?php if(startsWith($page, 'account-store') || startsWith($page, 'account-shipping')) echo 'has-active';?>" style="">
-                        <a href="/account/stores" class="menu-link" title="View Stores"><span class="menu-icon oi oi-person" title="View Stores"></span> <span class="menu-text">Stores</span></a>
+                    <li class="menu-item has-child <?php if(startsWith($page, 'account-store')) echo 'has-active';?>" style="">
+                        <a href="/account/stores" class="menu-link" title="<?=_('View Stores')?>"><span class="menu-icon oi oi-cart" title="<?=_('View Stores')?>"></span> <span class="menu-text"><?=_('Stores')?></span></a>
                         <ul class="menu">
                             <li class="menu-item <?php if(startsWith($page, 'account-store')) echo 'has-active';?>">
-                                <a href="/account/stores" title="View Stores" class="menu-link" tabindex="-1">View Stores</a>
+                                <a href="/account/stores" title="View Stores" class="menu-link" tabindex="-1"><?=_('View Stores')?></a>
                             </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item has-child <?php if(startsWith($page, 'account-shipping') || startsWith($page, 'account-shipping')) echo 'has-active';?>" style="">
+                        <a href="/account/shipping-methods" class="menu-link" title="<?=_('Shipping')?>"><span class="menu-icon oi oi-globe" title="<?=_('Shipping')?>"></span> <span class="menu-text"><?=_('Shipping')?></span></a>
+                        <ul class="menu">
                             <li class="menu-item <?php if(startsWith($page, 'account-shipping-methods')) echo 'has-active';?>">
-                                <a href="/account/shipping-methods" title="Shipping Methods" class="menu-link" tabindex="-1">Shipping Methods</a>
+                                <a href="/account/shipping-methods" title="<?=_('View Shipping Methods')?>" class="menu-link" tabindex="-1"><?=_('Shipping Methods')?></a>
                             </li>
-                            <li class="menu-item <?php if(startsWith($page, 'account-shipping-zones')) echo 'has-active';?>">
-                                <a href="/account/shipping-zones" title="Shipping Zones" class="menu-link" tabindex="-1">Shipping Zones</a>
+                            <li class="menu-item <?php if(startsWith($page, 'account-shipping-zones') && !startsWith($page, 'account-shipping-zones-region')) echo 'has-active';?>">
+                                <a href="/account/shipping-zones" title="<?=_('View Shipping Zones')?>" class="menu-link" tabindex="-1"><?=_('Shipping Zones')?></a>
+                            </li>
+                            <li class="menu-item <?php if(startsWith($page, 'account-shipping-zones-region')) echo 'has-active';?>">
+                                <a href="/account/shipping-zones/region" title="<?=_('Assign Shipping Zones')?>" class="menu-link" tabindex="-1"><?=_('Assign Shipping Zones')?></a>
                             </li>
                         </ul>
                     </li>

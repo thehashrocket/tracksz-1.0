@@ -54,8 +54,6 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
             </div>
         <?php endif; ?>
             <a href="/account/shipping-zones/create" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Zone')?>"><?=_('Add Shipping Zone')?></a>
-            <br><br>
-            <a href="/account/shipping-zones/region" class="btn btn-sm btn-primary" title="<?=_('Assign a Shipping Zone')?>"><?=_('Assign Shipping Zones')?></a>
         </div><!-- /.page-inner -->
 
         <!-- Modals to delete shipping zones -->
