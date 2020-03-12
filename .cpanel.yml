@@ -4,3 +4,8 @@ deployment:
     - export DEPLOYPATH=/home/trackszdevsinelo/public_html/
         - /bin cp * $DEPLOYPATH                        
         - /bin/cp -r * $DEPLOYPATH
+        - /bin cp /bootstrap/startapp.php $DEPLOYPATH
+        - /bin cp /app/* $DEPLOYPATH
+        - /bin cp /config/* $DEPLOYPATH
+        - /bin cp /public/* $DEPLOYPATH
+        - /bin cp /resources/* $DEPLOYPATH

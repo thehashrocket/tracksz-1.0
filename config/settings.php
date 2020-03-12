@@ -5,9 +5,13 @@ return [
     'company_name' => 'Tracksz',
     'company_moto' => 'Tracksz Inventory and Order Tracking',
     'company_phone' => '(314) 390-1696',
+    // Local Environment
     'company_url' => 'http://localhost:8000',
     'web_dir' => 'D:\xampp\htdocs\tracksz\public',
-
+    // Live Environment
+    // 'company_url' => 'http://tracksz.dev.sinelogix.co.in',
+    // 'web_dir' => 'http://tracksz.dev.sinelogix.co.in/public',
+ 
     // form country/state
     'default_country' => 223,
     'default_zone' => 3648,
