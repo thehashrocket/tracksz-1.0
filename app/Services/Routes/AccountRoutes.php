@@ -75,6 +75,7 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/shipping-zones/create', Account\ShippingController::class.'::createZone');
                 $route->post('/shipping-zones/edit', Account\ShippingController::class.'::updateZone');
                 $route->post('/shipping-zones/delete/{Id:number}', Account\ShippingController::class.'::deleteZone');
+                $route->post('/shipping-zones/region/bulk-assign', Account\ShippingController::class.'::bulkAssign');
                 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));

@@ -373,4 +373,27 @@ class ShippingController
 
         return $this->view->redirect('/account/shipping-zones/manage/'.$data['ZoneId']);
     }
+
+    public function bulkAssign(ServerRequest $request)
+    {
+        $countries = ['US', 'GB', 'CA', 'US_CA', 'AU', '*'];
+        $data = $request->getParsedBody();
+        if (!in_array($data['Country'], $countries))
+        {
+            $this->view->flash([
+                'alert' => 'Invalid country code, please try again.',
+                'alert_type' => 'danger'
+            ]);
+        }
+        else
+        {
+            $assignSuccess = (new ShippingZone($this->db))->bulkAssign($data['Country'], $data['ZoneId']);
+            $this->view->flash([
+                'alert' => $assignSuccess ? 'Successfully bulk assigned zone.' : 'Failed to bulk assign zone, please try again.',
+                'alert_type' => $assignSuccess ? 'success' : 'danger'
+            ]);
+        }
+
+        return $this->viewZoneRegions();
+    }
 }
