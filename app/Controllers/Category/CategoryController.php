@@ -9,6 +9,7 @@ use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use PDO;
 use App\Library\Config;
+use Laminas\Diactoros\UploadedFile;
 
 class CategoryController
 {
