@@ -97,6 +97,27 @@
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
+
+
+                    <!-- .menu-item -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $category_menu = ['category-view','category-defaults','category-categories','category-add'];
+                    ?>
+                    <li class="menu-item has-child<?php if(in_array($page, $inventory_menu)) echo ' has-active';?>">
+                        <a href="#" class="menu-link" title="<?=_('Active Store Product')?>"><span class="menu-icon fas fa-list" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Category')?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
+                                <a href="/product/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
+                            </li> -->
+                            <li class="menu-item<?php if($page == 'category-add') echo ' has-active';?>">
+                                <a href="/category/add" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('Add')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'category-defaults') echo ' has-active';?>">
+                                <a href="/category/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
                 </ul><!-- /.menu -->
             </nav><!-- /.stacked-menu -->
         </div><!-- /.aside-menu -->
