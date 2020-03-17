@@ -25,9 +25,10 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                 <?php endif?>
             </header><!-- /.page-title-bar -->
             <div class="card-body">
-                <form name="category_market_request" id="category_market_request" action="/category/place_market"
+                <form name="category_market_request" id="category_market_request" action="/category/insert_category"
                     method="POST" enctype="multipart/form-data">
                     <div class="container">
+
                         <div class="row">
                             <div class="col-sm">
                                 <div class="form-group">
@@ -44,15 +45,20 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                         rows="3"></textarea>
                                 </div>
 
-                                <div class="input-group mb-3 ">
+                                <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="parentCategory">Parent Category</label>
                                     </div>
-                                    <select class="custom-select" id="parentCategory">
-                                        <option selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
 
+                                    <select class="custom-select" id="parentCategory" name="parentCategory">
+                                    <option selected>Select Category...</option>
+                                    <?php
+if (isset($all_category) && !empty($all_category)) {
+    foreach ($all_category as $cat_key => $cat_val) { ?>                                  
+                                        <option value="<?php echo $cat_val['Id']; ?>"><?php echo $cat_val['Name']; ?></option>
+                                    <?php }} else {?>
+                                        <option selected>No Category found...</option>
+                                    <?php }?>
                                     </select>
                                 </div>
 

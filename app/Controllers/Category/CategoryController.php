@@ -27,8 +27,10 @@ class CategoryController
     }
     
     public function add()
-    {        
-        return $this->view->buildResponse('category/add', []);
+    {       
+        $cat_obj = new Category($this->db);
+        $all_category = $cat_obj->all();  
+        return $this->view->buildResponse('category/add', ['all_category' => $all_category]);
     }
     
     public function defaults()
@@ -45,6 +47,33 @@ class CategoryController
             'settings'  => $settings,
             'defaults'  => $defaults
         ]);
+    }
+
+    public function add_Category(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do every time.
+             $cat_name = (isset($form['categoryNameInput']) && !empty($form['categoryNameInput']))?$form['categoryNameInput']:null;
+             $cat_desc = (isset($form['categoryDesc']) && !empty($form['categoryDesc']))?$form['categoryDesc']:null;
+             $parent_cat = (isset($form['parentCategory']) && !empty($form['parentCategory']))?$form['parentCategory']:null;
+             $cat_level = (isset($form['categoryLevel']) && !empty($form['categoryLevel']))?$form['categoryLevel']:null;
+        $cat_obj = new Category($this->db);
+        $all_category = $cat_obj->insert_category($parent_cat, $cat_level, $cat_name, $cat_desc,null,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'));       
+        if (isset($all_category['status']) && $all_category['status'] == true)  {
+            $this->view->flash([
+                'alert'     => _('Category added successfully..!'),
+                'alert_type'=> 'success',
+                'defaults'  => $form,
+            ]);
+        }else{
+            $this->view->flash([
+                'alert'     => _('Sorry we encountered an issue.  Please try again.'),
+                'alert_type'=> 'danger',
+                'defaults'  => $form,
+            ]);            
+        }
+        return $this->view->redirect('/category/add');
+        exit();
     }
     
     public function updateDefaults(ServerRequest $request)

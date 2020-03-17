@@ -37,7 +37,7 @@ class CategoryRoutes extends AbstractServiceProvider
                 $route->get('/defaults', Category\CategoryController::class . '::defaults');
     
                 $route->post('/defaults', Category\CategoryController::class . '::updateDefaults');
-                $route->post('/place_market', Category\CategoryController::class . '::map_market_products');
+                $route->post('/insert_category', Category\CategoryController::class . '::add_Category');
                 
                 
             })->middleware($this->container->get('Csrf'))              
