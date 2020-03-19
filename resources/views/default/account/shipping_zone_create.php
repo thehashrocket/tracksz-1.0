@@ -16,7 +16,7 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                         </li>
                     </ol>
                 </nav>
-                <h1 class="page-title"> <?=_(isset($updateName) ? 'Update <em>' . $updateName . '</em>' : 'Add a Shipping Zone')?> </h1>
+                <h1 class="page-title"> <?=_('Add a Shipping Zone')?> </h1>
             </header>
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">
@@ -27,9 +27,9 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                 <div class="section-block">
                     <div class="card">
                         <div class="card-body">
-                            <?php if(isset($updateId)): ?>
+                            <?php if(isset($update_id)): ?>
                             <form action="/account/shipping-zones/edit" method="POST" data-parsley-validate>
-                            <input type="hidden" name="updateId" value="<?=$updateId?>">
+                            <input type="hidden" name="update_id" value="<?=$update_id?>">
                             <?php else: ?>
                             <form action="/account/shipping-zones/create" method="POST" data-parsley-validate>
                             <?php endif; ?>
@@ -38,7 +38,7 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                                         <div class="form-row mb-2">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="Name" class="required-field"><?=_('Zone Name')?></label> <input type="text" data-toggle="tooltip" data-placement="left" title="<?=_('Enter a name to identify this shipping zone.')?>" class="form-control" id="Name" name="Name" placeholder="<?=_('Ex. International Zone 1')?>" data-parsley-required-message="<?=_('Enter a name to identify this shipping zone.')?>" required maxlength="75" value="<?php echo isset($updateName) ? $updateName : '';?>">
+                                                    <label for="Name" class="required-field"><?=_('Zone Name')?></label> <input type="text" data-toggle="tooltip" data-placement="left" title="<?=_('Enter a name to identify this shipping zone.')?>" class="form-control" id="Name" name="Name" placeholder="<?=_('Ex. International Zone 1')?>" data-parsley-required-message="<?=_('Enter a name to identify this shipping zone.')?>" required maxlength="75" value="<?php echo isset($update_name) ? $update_name : '';?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -48,7 +48,7 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                                         <hr class="mt-5">
                                         <div class="d-flex">
                                             <p><a href="/account/shipping-zones"><?=_('Return to Shipping Zones')?></a> </p>
-                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_(isset($updateId) ? 'Update Zone' : 'Create Zone')?></button>
+                                            <button type="submit" class="next btn btn-primary ml-auto"><?=_(isset($update_id) ? 'Update Zone' : 'Create Zone')?></button>
                                         </div>
                                     </fieldset>
                                 </div>

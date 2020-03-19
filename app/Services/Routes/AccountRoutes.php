@@ -50,10 +50,6 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/shipping-zones', Account\ShippingController::class.'::viewZones');
                 $route->get('/shipping-zones/create', Account\ShippingController::class.'::viewCreateZone');
                 $route->get('/shipping-zones/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
-                $route->get('/shipping-zones/manage/{Id:number}', Account\ShippingController::class.'::viewManageZone');
-                $route->get('/shipping-zones/assign/{MethodId:number}/{ZoneId:number}', Account\ShippingController::class.'::assignMethodToZone');
-                $route->get('/shipping-zones/unassign/{MethodId:number}/{ZoneId:number}', Account\ShippingController::class.'::unassignMethodFromZone');
-                $route->get('/shipping-zones/region', Account\ShippingController::class.'::viewZoneRegions');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');
@@ -74,8 +70,6 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/shipping-methods/edit', Account\ShippingController::class.'::updateMethod');
                 $route->post('/shipping-zones/create', Account\ShippingController::class.'::createZone');
                 $route->post('/shipping-zones/edit', Account\ShippingController::class.'::updateZone');
-                $route->post('/shipping-zones/delete/{Id:number}', Account\ShippingController::class.'::deleteZone');
-                $route->post('/shipping-zones/region/bulk-assign', Account\ShippingController::class.'::bulkAssign');
                 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));

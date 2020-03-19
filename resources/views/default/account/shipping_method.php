@@ -20,7 +20,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?=_('Shipping Methods')?> </h1>
                 </div>
-                <p class="text-muted"> <?=_('This page provides you with an opportunity to edit or create a set of shipping methods. You may use these methods when assigning methods to shipping zones. <strong>However, shipping methods are not automatically assigned to shipping zones.</strong>')?></p>
+                <p class="text-muted"> <?=_('This page provides you with an opportunity to edit or create a set of shipping methods. You may use these methods when assigning methods to shipping zones. However, shipping methods are not automatically assigned to shipping zones.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
