@@ -113,6 +113,9 @@
                             <li class="menu-item<?php if($page == 'category-add') echo ' has-active';?>">
                                 <a href="/category/add" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('Add')?></a>
                             </li>
+                            <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
+                                <a href="/category/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
+                            </li>
                             <li class="menu-item<?php if($page == 'category-defaults') echo ' has-active';?>">
                                 <a href="/category/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
                             </li>

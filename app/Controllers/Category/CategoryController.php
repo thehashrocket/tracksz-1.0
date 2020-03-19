@@ -35,6 +35,11 @@ class CategoryController
         return $this->view->buildResponse('category/add', ['all_category' => $all_category]);
     }
 
+    public function get_list_records()
+    {
+       	
+    }
+
     public function defaults()
     {
         $settings = require __DIR__ . '/../../../config/category.php';

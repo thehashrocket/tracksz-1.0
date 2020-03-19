@@ -25,6 +25,19 @@ class Category
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    /*
+    * initial category - Get all Zomnes
+    *
+    * @return array of arrays
+    */
+    public function get_list_first()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM Category ORDER BY `Name`');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
     /*
     * all - Get all Zomnes

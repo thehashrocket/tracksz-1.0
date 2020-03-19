@@ -35,6 +35,7 @@ class CategoryRoutes extends AbstractServiceProvider
                 $route->get('/view', Category\CategoryController::class . '::view');
                 $route->get('/add', Category\CategoryController::class . '::add');
                 $route->get('/defaults', Category\CategoryController::class . '::defaults');
+                $route->get('/lists', Category\CategoryController::class . '::get_list_records');
     
                 $route->post('/defaults', Category\CategoryController::class . '::updateDefaults');
                 $route->post('/insert_category', Category\CategoryController::class . '::add_Category');
