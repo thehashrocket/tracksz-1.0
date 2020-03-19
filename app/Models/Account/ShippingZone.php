@@ -30,33 +30,18 @@ class ShippingZone
     }
 
     /**
-     * findByStore - Find all shipping zones tied to store
+     * findByMember - Find all shipping zones tied to member
      *
-     * @param  $storeId  - ID of zone
-     * @return array     - Shipping zones
+     * @param  $memberId  - ID of zone
+     * @return array      - Shipping zones
     */
-    public function findByStore($storeId)
+    public function findByMember($memberId)
     {
-        $query = 'SELECT * FROM ShippingZone WHERE StoreId = :storeId';
+        $query = 'SELECT * FROM ShippingZone WHERE MemberId = :memberId';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     *  getStoreId - Get store tied to shipping zone
-     * 
-     *  @param  $id - ID of shipping zone
-     *  @return int - Store ID
-     */
-    public function getStoreId($id)
-    {
-        $query = 'SELECT StoreId FROM ShippingZone WHERE Id = :id';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return intval($stmt->fetch(PDO::FETCH_ASSOC)['StoreId']);
     }
 
     /**
@@ -67,10 +52,10 @@ class ShippingZone
      */
     public function create(array $data)
     {
-        $query =  'INSERT INTO ShippingZone (StoreId, `Name`) ';
-        $query .= 'VALUES (:storeId, :name)';
+        $query =  'INSERT INTO ShippingZone (MemberId, `Name`) ';
+        $query .= 'VALUES (:memberId, :name)';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':storeId', $data['StoreId'], PDO::PARAM_INT);
+        $stmt->bindParam(':memberId', $data['MemberId'], PDO::PARAM_INT);
         $stmt->bindParam(':name', $data['Name']);
         return $stmt->execute();
     }
@@ -97,48 +82,10 @@ class ShippingZone
      */
     public function update($data)
     {
-        $query = 'UPDATE ShippingZone SET `Name` = :_name WHERE Id = :id';
+        $query = 'UPDATE ShippingZone SET `Name` = :_name';
+        $query .= 'WHERE Id = ' . $data['update_id'];
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $data['update_id']);
         $stmt->bindParam(':_name', $data['Name']);
-        return $stmt->execute();
-    }
-
-    /**
-     *  bulkAssign - Assign a shipping zone to a whole country
-     * 
-     *  @param $country - Shorthand country code
-     *  @param $zoneId - Shipping zone ID
-     *  @return bool - Indicates success
-     */
-    public function bulkAssign($country, $zoneId)
-    {
-        $countryIDs = ['US' => 223, 'CA' => 38, 'AU' => 13, 'GB' => 222];
-
-        if ($country === '*') {
-            $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId) VALUES ';
-            $query .= '(:zoneId, :US), (:zoneId, :CA), (:zoneId, :AU), (:zoneId, :GB)';
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
-            $stmt->bindParam(':US', $countryIDs['US'], PDO::PARAM_INT);
-            $stmt->bindParam(':CA', $countryIDs['CA'], PDO::PARAM_INT);
-            $stmt->bindParam(':AU', $countryIDs['AU'], PDO::PARAM_INT);
-            $stmt->bindParam(':GB', $countryIDs['GB'], PDO::PARAM_INT);
-        }
-        else if ($country === 'US_CA') {
-            $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId) VALUES (:zoneId, :US), (:zoneId, :CA)';
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
-            $stmt->bindParam(':US', $countryIDs['US'], PDO::PARAM_INT);
-            $stmt->bindParam(':CA', $countryIDs['CA'], PDO::PARAM_INT);
-        }
-        else {
-            $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId) VALUES (:zoneId, :country)';
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
-            $stmt->bindParam(':country', $countryIDs[$country], PDO::PARAM_INT);
-        }
-
         return $stmt->execute();
     }
 }
