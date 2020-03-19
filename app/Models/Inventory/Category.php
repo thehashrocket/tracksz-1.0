@@ -65,7 +65,7 @@ class Category
         $res['status'] = false;
         $res['message'] = 'record not inserted';
         $res['data'] = array();
-        $stmt = $this->db->prepare("INSERT INTO `category` (`Id`, `ParentId`, `Level`, `Name`, `Description`, `Image`, `Created`, `Update`) VALUES (NULL, $ParentId, $Level, '$Name', '$Description', '$Image', '$Created', '$Update')");        
+        $stmt = $this->db->prepare("INSERT INTO `category` (`Id`, `ParentId`, `Level`, `Name`, `Description`, `Image`, `Created`, `Update`) VALUES (NULL, $ParentId, $Level, '$Name', '$Description', '$Image', '$Created', '$Update')");                  
         $stmt->execute();
         if($stmt){
             $res['status'] = true;

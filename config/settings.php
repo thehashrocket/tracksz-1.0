@@ -22,6 +22,7 @@ return [
     // database migration folder location - from framework root
     // If used adjest location from the depth you are at
     'migration_folder' => '/config/migrations/',
+    'public_folder' => getcwd(),
 
     // currencies used in multiple locations
     'currency' => [

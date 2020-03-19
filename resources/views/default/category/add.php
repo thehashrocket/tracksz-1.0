@@ -64,9 +64,9 @@ if (isset($all_category) && !empty($all_category)) {
 
                                 <div class="form-group">
                                     <label for="categoryLevel">Category Level</label>
-                                    <input type="text" class="form-control" id="categoryLevel"
+                                    <input type="number" class="form-control" id="categoryLevel"
                                         name="categoryLevel" aria-describedby="catlevelHelp"
-                                        placeholder="Enter Category Level">
+                                        placeholder="Enter Category Level" value="0"  min="0">
                                     <small id="catlevelHelp" class="form-text text-muted">You have to Type your category
                                         level here</small>
                                 </div>

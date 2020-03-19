@@ -54,24 +54,26 @@ class CategoryController
     public function add_Category(ServerRequest $request)
     {
         $form = $request->getParsedBody();
-        $files = $request->getUploadedFiles();                       
+        // $files = $request->getUploadedFiles(); 
         $file_stream = $_FILES['productImage']['tmp_name'];
-        $file_size = $files['productImage']->getSize();
-        $file_client_name = $files['productImage']->getClientFilename();
-        $file_client_media_type = $files['productImage']->getClientMediaType();
-        $file_get_error = $files['productImage']->getError();
-        $upload_file = new UploadedFile($file_stream,$file_size,$file_get_error,$file_client_name, $file_client_media_type);       
-        $path = realpath(dirname(__FILE__));
-        // $publicDir = getcwd() . '/assets/images/product/';
-       $publicDir = 'D:\xampp\htdocs\tracksz\public\assets\images\product\\'.$file_client_name;
-       $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);
+        $file_name = $_FILES['productImage']['name'];
+        // $file_size = $files['productImage']->getSize();
+        // $file_client_name = $files['productImage']->getClientFilename();
+        // $file_client_media_type = $files['productImage']->getClientMediaType();
+        // $file_get_error = $files['productImage']->getError();
+        // $upload_file = new UploadedFile($file_stream,$file_size,$file_get_error,$file_client_name, $file_client_media_type);       
+        $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));        
+        //$publicDir = 'D:\xampp\htdocs\tracksz\public\assets\images\product\\'.$file_encrypt_name;
+        $publicDir = getcwd().'\assets\images\product\\'.$file_encrypt_name.strstr($file_name,'.');                
+        $cat_img = $file_encrypt_name.strstr($file_name,'.');
+        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);       
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do every time.
         $cat_name = (isset($form['categoryNameInput']) && !empty($form['categoryNameInput'])) ? $form['categoryNameInput'] : null;
         $cat_desc = (isset($form['categoryDesc']) && !empty($form['categoryDesc'])) ? $form['categoryDesc'] : null;
         $parent_cat = (isset($form['parentCategory']) && !empty($form['parentCategory'])) ? $form['parentCategory'] : null;
-        $cat_level = (isset($form['categoryLevel']) && !empty($form['categoryLevel'])) ? $form['categoryLevel'] : null;
+        $cat_level = (isset($form['categoryLevel']) && !empty($form['categoryLevel'])) ? $form['categoryLevel'] : 0;
         $cat_obj = new Category($this->db);
-        $all_category = $cat_obj->insert_category($parent_cat, $cat_level, $cat_name, $cat_desc, null, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $all_category = $cat_obj->insert_category($parent_cat, $cat_level, $cat_name, $cat_desc, $cat_img, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
         if (isset($all_category['status']) && $all_category['status'] == true) {
             $this->view->flash([
                 'alert' => _('Category added successfully..!'),
