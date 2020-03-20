@@ -34,21 +34,20 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Market P
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Image</th>
-                                <th>Parent Category Name</th>
-                                <th>Status</th>                                
+                                <!-- <th>Parent Category Name</th>
+                                <th>Status</th>                                 -->
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>                                
-                            </tbody>
+                            <!-- <tfoot>
+                                    <tr>
+                                        <th style="width:20%">Chassis Number</th>
+                                         <th style="width:20%">Customer Name</th>
+                                         <th style="width:20%">Policy Number</th>
+                                         <th style="width:20%">vehicle_details</th>
+                                         <th style="width:15%">View</th>
+                                    </tr>
+                                </tfoot>                            -->
                         </table>
                     </div>
                 </div>
