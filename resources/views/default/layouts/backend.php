@@ -81,7 +81,6 @@
 <script src="/assets/vendor/jquery/jquery.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/popper.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-<script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
 <!-- END BASE JS -->
 
 <!-- BEGIN PLUGINS JS -->

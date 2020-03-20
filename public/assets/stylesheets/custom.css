@@ -8,9 +8,7 @@
     color: #B76BA3;
     font-size: 110%;
 }
-.input-group:not(.input-group-alt) .input-group-prepend .input-group-text {
-  padding-right: 10px;
-}
+
 #card-errors {
     color: #B76BA3;
 }
