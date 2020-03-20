@@ -35,38 +35,9 @@ class CategoryController
         return $this->view->buildResponse('category/add', ['all_category' => $all_category]);
     }
 
-    public function get_list_records(ServerRequest $request)
-    {   
-        $params = $request->getQueryParams();
-
-        // TDS :: Server side processing starts  
-        $cat_obj = new Category($this->db);
-        $totalData = $cat_obj->count_all_records();   
-        $totalFiltered = (is_array($totalData) && !empty($totalData))?$totalData['total_records']:0;
-           
-        $search_params['search'] = $params['search']['value'];        
-        $search_params['start'] = $params['start'];
-        $search_params['limit'] = $params['length'];
-        $search_params['order'] = $params['columns'][$params['order'][0]['column']]['data'];    
-        $search_params['dir'] = $params['order'][0]['dir'];
-
-        $cat_result = $cat_obj->get_all_records($search_params);
-        
-        if(isset($cat_result) && !empty($cat_result)){
-            $res['status'] = true;
-            $res['message']['success'] = "Policy result get successfully..!";
-            $res['message']['error'] = "";
-            $res['data'] = $cat_result; 
-            $res['dir_path'] = getcwd().'\assets\images\product\\';
-            $res['recordsFiltered'] = $totalFiltered;
-        }else{
-            $res['status'] = false;
-            $res['message']['success'] = "Policy result get successfully..!";
-            $res['message']['error'] = "";
-            $res['data'] = array(); 
-            $res['recordsFiltered'] = $totalFiltered;
-        }
-        return die(json_encode($res));      
+    public function get_list_records()
+    {
+       	
     }
 
     public function defaults()
@@ -196,24 +167,6 @@ class CategoryController
         // [4] => getError
         // [5] => getClientFilename
         // [6] => getClientMediaType
-
-
-        // [0] => __construct
-        // [1] => setArrayObjectPrototype
-        // [2] => getArrayObjectPrototype
-        // [3] => getReturnType
-        // [4] => current
-        // [5] => initialize
-        // [6] => buffer
-        // [7] => isBuffered
-        // [8] => getDataSource
-        // [9] => getFieldCount
-        // [10] => next
-        // [11] => key
-        // [12] => valid
-        // [13] => rewind
-        // [14] => count
-        // [15] => toArray
     }
 
     public function map_market_products(ServerRequest $request)
