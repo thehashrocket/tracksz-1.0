@@ -374,6 +374,12 @@ class ShippingController
         return $this->view->redirect('/account/shipping-zones/manage/'.$data['ZoneId']);
     }
 
+    /**
+     *  bulkAssign - Assign shipping zone to a whole region
+     * 
+     *  @param $request - Contains country and zone data
+     *  @return view - Redirect with success/fail message
+     */
     public function bulkAssign(ServerRequest $request)
     {
         $countries = ['US', 'GB', 'CA', 'US_CA', 'AU', '*'];
