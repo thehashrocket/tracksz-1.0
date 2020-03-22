@@ -1,2 +1,0 @@
-# trackz
-Trackz NPM

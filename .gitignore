@@ -1,3 +1,8 @@
+.cpanel.yml
+.htaccess
+info.php
+.README.md
+.env
 .idea/
 vendor/
 bootstrap/.env
