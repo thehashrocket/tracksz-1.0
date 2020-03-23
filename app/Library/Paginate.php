@@ -38,13 +38,16 @@ class Paginate
      *                   Config::$get['listing_limit'] for first page
      * @return boolean - Initialized object
      */
-    public static function initialize($total_count, $data=[], $pgnow=null, $perpage=null)
+    public static function initialize($db, $query, $data=[], $pgnow=null, $perpage=null)
     {
         if (self::$initialized)
             return;
         // Do We Need to Paginate?
-        if ($total_count > $perpage) {
-            self::setup($total_count, $pgnow,$perpage);
+        $stmt = $db->prepare($query);
+        $stmt->execute($data);
+        $row = $stmt->fetch(PDO::FETCH_NAMED);
+        if ($row['count'] > $perpage) {
+            self::setup($row['count'], $pgnow,$perpage);
             self::$paginate = true;
         }
         self::$initialized = true;
@@ -96,9 +99,9 @@ class Paginate
                 echo '<li class="page-item"><span class="page-link">...</span></li>';
                 for ($i=self::$pgall-1; $i<=self::$pgall; $i++) { self::cell($i); }
             }
-    
+            
             // CURRENT PAGE SOMEWHERE IN THE MIDDLE
-            else if (self::$pgall - (self::$pgadj*2) > self::$pgnow && self::$pgnow > (self::$pgadj*2)) {
+            elseif (self::$pgall - (self::$pgadj*2) > self::$pgnow && self::$pgnow > (self::$pgadj*2)) {
                 for ($i=1; $i<3; $i++) { self::cell($i); }
                 echo '<li class="page-item"><span class="page-link">...</span></li>';
                 for ($i=self::$pgnow-self::$pgadj; $i<=self::$pgnow+self::$pgadj; $i++) { self::cell($i); }

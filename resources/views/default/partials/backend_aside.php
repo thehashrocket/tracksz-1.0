@@ -2,6 +2,13 @@
     // get current page for active menu link
     $page = \Delight\Cookie\Session::get('current_page');
     $page = str_replace('/', '-', ltrim($page, '/'));
+    
+    // trim page for pages with pagination urls, for example
+    // page = example-page-2-30  (2 = page number, 30 = rows per page)
+    // clean to example-page
+    if(substr($page,0,12) == 'example-page') {
+        $page = substr($page,0,12);
+    }
 ?>
 <!-- .app-aside -->
 <aside class="app-aside app-aside-expand-md app-aside-light">
@@ -57,6 +64,25 @@
                             </li>
                             <li class="menu-item<?php if($page == 'inventory-defaults') echo ' has-active';?>">
                                 <a href="/inventory/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+
+                    <!-- .menu-header -->
+                    <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $example_menu = ['example-page', 'example-find'];
+                    ?>
+                    <li class="menu-item has-child<?php if(in_array($page, $example_menu)) echo ' has-active';?>">
+                        <a href="#" class="menu-link" title="<?=_('Example Data List')?>"><span class="menu-icon fas fa-list" title="<?=_('Example Data')?>"></span> <span class="menu-text"><?=_('Example')?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if($page == 'example-page') echo ' has-active';?>">
+                                <a href="/example/page" title="<?=_('View Example Data')?>" class="menu-link"><?=_('List')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'example-find') echo ' has-active';?>">
+                                <a href="/example/find" title="<?=_('Find Example Data')?>" class="menu-link"><?=_('Find Example')?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->

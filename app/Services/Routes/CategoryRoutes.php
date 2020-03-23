@@ -9,7 +9,6 @@ use App\Controllers\Category;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
-// use Stripe\Product;
 
 class CategoryRoutes extends AbstractServiceProvider
 {
@@ -29,7 +28,7 @@ class CategoryRoutes extends AbstractServiceProvider
         // Bind a route collection to the container.
         $this->container->add(Router::class, function () {
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
-            $routes   = (new Router)->setStrategy($strategy);            	
+            $routes   = (new Router)->setStrategy($strategy);
             // Main Inventory routes.  Must have a selected store
             $routes->group('/category', function (\League\Route\RouteGroup $route) {
                 $route->get('/view', Category\CategoryController::class . '::view');
@@ -41,7 +40,7 @@ class CategoryRoutes extends AbstractServiceProvider
                 $route->post('/insert_category', Category\CategoryController::class . '::add_Category');
                 
                 
-            })->middleware($this->container->get('Csrf'))              
+            })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));
             
             return $routes;
