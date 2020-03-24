@@ -66,7 +66,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                         </div> <!-- Row -->
                     </div> <!-- Container -->
 
-                    <button type="submit" class="btn btn-primary">Next</button>
+                    <button type="submit" class="btn btn-primary">Next <i class="fa fa-arrow-right"></i></button>
                 </form>
             </div> <!-- Card Body -->
 
