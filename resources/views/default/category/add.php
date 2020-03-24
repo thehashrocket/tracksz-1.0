@@ -26,58 +26,46 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
             </header><!-- /.page-title-bar -->
             <div class="card-body">
                 <form name="category_market_request" id="category_market_request" action="/category/insert_category"
-                    method="POST" enctype="multipart/form-data">
+                    method="POST" enctype="multipart/form-data" data-parsley-validate>
                     <div class="container">
 
                         <div class="row">
                             <div class="col-sm">
                                 <div class="form-group">
-                                    <label for="ProductNameInput">Category Name</label>
-                                    <input type="text" class="form-control" id="categoryNameInput"
-                                        name="categoryNameInput" aria-describedby="nameHelp"
-                                        placeholder="Enter Category Name">
-                                    <small id="nameHelp" class="form-text text-muted">You have to Type your category
-                                        name here</small>
+                                    <label for="CategoryName">Category Name</label>
+                                    <input type="text" class="form-control" id="CategoryName" name="CategoryName" placeholder="Enter Category Name" data-parsley-required-message="<?=_('Enter Category Name')?>" data-parsley-group="fieldset01" required <?php if (isset($store['CategoryName'])) echo ' value="' . $store['CategoryName'] .'"' ?>>
                                 </div>
                                 <div class="form-group">
-                                    <label for="categoryProduct">Category Description</label>
-                                    <textarea class="form-control" id="categoryDesc" name="categoryDesc"
-                                        rows="3"></textarea>
+                                    <label for="CategoryDescription">Category Description</label>
+                                    <textarea class="form-control" id="CategoryDescription" name="CategoryDescription"
+                                        rows="3" data-parsley-required-message="<?=_('Enter Category Description')?>" placeholder="Enter Category Description" data-parsley-group="fieldset01" required></textarea>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" for="parentCategory">Parent Category</label>
+                                        <label class="input-group-text" for="ParentCategory">Parent Category</label>
                                     </div>
 
-                                    <select class="custom-select" id="parentCategory" name="parentCategory">
-                                    <option selected>Select Category...</option>
+                                    <select class="custom-select" id="ParentCategory" name="ParentCategory" data-parsley-required-message="<?=_('Select Parent Category')?>" data-parsley-group="fieldset01" required>
+                                        <option selected>Select Category...</option>
                                     <?php
-if (isset($all_category) && !empty($all_category)) {
-    foreach ($all_category as $cat_key => $cat_val) { ?>                                  
+                                    if (isset($all_category) && !empty($all_category)) {
+                                        foreach ($all_category as $cat_key => $cat_val) { ?>                                  
                                         <option value="<?php echo $cat_val['Id']; ?>"><?php echo $cat_val['Name']; ?></option>
                                     <?php }} else {?>
                                         <option selected>No Category found...</option>
                                     <?php }?>
                                     </select>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="categoryLevel">Category Level</label>
-                                    <input type="number" class="form-control" id="categoryLevel"
-                                        name="categoryLevel" aria-describedby="catlevelHelp"
-                                        placeholder="Enter Category Level" value="0"  min="0">
-                                    <small id="catlevelHelp" class="form-text text-muted">You have to Type your category
-                                        level here</small>
-                                </div>
+                                                                
                                 <div class="form-group">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="productImage">Upload</span>
+                                            <span class="input-group-text" id="ProductImage">Upload</span>
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="productImage"
-                                                name="productImage" aria-describedby="productImage">
+                                                name="ProductImage" aria-describedby="productImage" data-parsley-required-message="<?=_('Upload Product Image')?>" data-parsley-group="fieldset01" required>
                                             <label class="custom-file-label" for="image">Choose Product Image</label>
                                         </div>
                                     </div>
@@ -111,5 +99,6 @@ if (isset($all_category) && !empty($all_category)) {
 <?php $this->start('page_js')?>
 <?=$this->stop()?>
 
-<?php $this->start('footer_extras')?>
-<?=$this->stop()?>
+<?php $this->start('footer_extras') ?>
+<script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
+<?php $this->stop() ?>

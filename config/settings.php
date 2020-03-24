@@ -40,4 +40,24 @@ return [
         4   => 'Twitter',
         5   => 'Pinterest',
     ],
+'asset_path' => '/public/assets/',
+    'image_path' => '/public/assets/images/',
+    // Market Places
+    'market_places' => ['AbeBooks','Alibris','Amazon','Amazon', 'Amazon Europe','Barnes and Noble',
+    'Biblio',
+    'Chrislands.com',
+    'eBay',
+    'eCampus',
+    'TextbookRush.com',
+    'TextbookX',
+    'Valore'
+],
+
+      // Market Price
+      'market_price' => ['USD' =>'US Dollars',
+       'CAD' => 'Canadian Dollars',
+       'GBP' => 'British Pounds',
+       'EUR' => 'Euros',
+       'MXN' => 'Mexican Pesos',
+      ]
 ];

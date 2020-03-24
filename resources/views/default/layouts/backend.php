@@ -82,7 +82,7 @@
 <script src="/assets/vendor/bootstrap/js/popper.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!-- END BASE JS -->
-
+<script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
 <!-- BEGIN PLUGINS JS -->
 <?=$this->section('plugin_js')?>
 <!-- END PLUGINS JS -->

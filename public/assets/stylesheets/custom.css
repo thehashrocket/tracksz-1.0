@@ -22,35 +22,39 @@ input.parsley-error {
     border: 1px solid #B76BA3 !important;
 }
 input.parsley-error:focus {
-  border: 2px solid #B76BA3 !important;
-  box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
+    border: 2px solid #B76BA3 !important;
+    box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
 }
 select.parsley-error {
-  border: 1px solid #B76BA3 !important;
+    border: 1px solid #B76BA3 !important;
 }
 select.parsley-error:focus {
-  border: 2px solid #B76BA3 !important;
-  box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
+    border: 2px solid #B76BA3 !important;
+    box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
 }
 
 .fixed-top.scrolled {
-  background-color: #e9ecef!important;
-  transition: background-color 200ms linear;
-  border-bottom: 1px solid #90add2;
+    background-color: #e9ecef!important;
+    transition: background-color 200ms linear;
+    border-bottom: 1px solid #90add2;
 }
 
 .bg-muted-light {
-  background-color: #E7ECEE !important;
+    background-color: #E7ECEE !important;
 }
 
 .page-cover {
-   max-height: 600px;
-   background-image: url("../images/inventory.jpg");
+    max-height: 600px;
+    background-image: url("../images/inventory.jpg");
 }
 
 .bg-div {
     background-image: url('../images/plancourse.jpg');
     background-size: cover;
+}
+
+.market_price.custom-select {
+    width: 35% !important;
 }
 
 .bg-thankyou {
