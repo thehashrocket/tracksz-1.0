@@ -22,6 +22,7 @@ if (!$cli) {
     echo '  With ClassToRun being the class with the "run" function you wish to execute.';
     exit();
 } else {
+    $cli = str_replace(':', '\\', $cli);
     $cli_class = 'App\Console\\'.$cli;
 }
 

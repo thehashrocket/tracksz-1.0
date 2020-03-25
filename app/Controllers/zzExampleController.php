@@ -21,23 +21,29 @@ class zzExampleController
         $this->db   = $db;
     }
     
+    /**
+     * Find - Display the find a name form
+     *
+     * @return view views/default/zzFind
+     */
     public function zzFind()
     {
         return $this->view->buildResponse('zzFind', []);
     }
     
     /**
-     * Just an example for Pagination
+     * zzPage - Finds example data, displays a view, uses pagination
      *
-     * @param $form - holds the pg and per (per page listing) in the url .../pg/per
-     * @return Sends to Profile page.
+     * @param ServerRequest $request - sent by default. Not used in this function
+     * @param array $arguments - Contains pg = current page, per = rows per page for pagination
+     * @return view views/default/zzPage, array of names
      */
     public function zzPage(ServerRequest $request, $arguments=[])
     {
         // When $arguments are in the path example: /example/page/argument1/argument2
         // In most cases, you do not need to $request->getParsedBody();
         // $form = $request->getParsedBody();
-        // unset($form['__token']); // remove CSRF token, PDO bind fails, Need to do everytime.
+        // unset($form['__token']); // remove CSRF token, PDO bind fails, Need to do every time.
         
         // Sanitize and Validate
         // - Sanitize First to Remove "bad" input
@@ -73,10 +79,10 @@ class zzExampleController
     
     
     /**
-     * Just an example for Pagination
+     * findExample
      *
-     * @param $form - holds the pg and per (per page listing) in the url .../pg/per
-     * @return Sends to Profile page.
+     * @param ServerRequest $request - contains an array of form fields submitted
+     * @return view views/default/zzExample, array of names found
      */
     public function findExample(ServerRequest $request)
     {

@@ -8,17 +8,20 @@ use PDO;
 
 class zzExampleModel
 {
-    // Contains Resources
-    private $db;
+    private $db; // Contains DB resource
     
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
     
-    /*
-    * @return array of arrays
-    */
+    /**
+     * all - Get all records
+     *
+     * @param integer current - The current page
+     * @param integer perpage - Number of listings per page
+     * @return mixed array - Returns rows from table
+     */
     public function all($current, $perpage)
     {
         // prepare pagination if necessary
@@ -31,7 +34,10 @@ class zzExampleModel
     }
     
     /*
-     * @return array of arrays
+     * find - Find one record based on Name
+     *
+     * @param string name - A name to search for
+     * @return mixed array - Returns one row or false
     */
     public function find($name)
     {
@@ -44,6 +50,7 @@ class zzExampleModel
             // often used to debug
             var_dump($stmt->debugDumpParams());
             exit();
+            
             // not debugging
             // return false;
         }

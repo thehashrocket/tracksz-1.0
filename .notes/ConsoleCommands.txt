@@ -1,0 +1,57 @@
+
+Quick Tutorial on Console.php for command line processes - Author: Jaymes H. Sorbel
+
+- Purpose: To provide other developers information on how to develop and run command line processes
+
+- Creating a command line process class.
+
+1. Create a new command class inside the app\Console folder. To group logical command line processes you may create a folder under Console to place your class.
+
+2.  The command line class would have a minimum of this structure:
+
+        <?php declare(strict_types = 1);
+
+        namespace App\Console;
+
+        // include use path\to\class here
+        class zzExample
+        {
+            // private variables for this class
+            private $variables;
+
+            public function __construct()
+            {
+                // The class has getenv and the app\Library\Config class access
+                // Config is initialized with config\settings.php data
+
+                /* you must initialize anything else you need here */
+
+            }
+
+            /* This is the function that is called by Console.php */
+            /* it must be present in the class
+            public function run ()
+            {
+                /* run your commands */
+            }
+
+            /* create more private functions as needed */
+
+        } // end zzExample
+
+3.  To run your command line process
+
+    php path/to/app/Console/Console.php ClassName
+
+    For example:
+    php path/to/app/Console/Console.php Migrate
+
+    If you created a sub-folder in Console for like command line class files.  Use this format:
+
+    php path/to/app/Console/Console.php SubFolder:ClassName
+
+    The : (colon) is the folder delimeter.  For Example:
+    php path/to/app/Console/Console.php zzExample:zzExample
+
+4.  An example command line process class can be found in app\Console\zzExample\zzExample.php
+
