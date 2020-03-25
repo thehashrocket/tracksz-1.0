@@ -67,8 +67,8 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                                 <div class="input-group-text">
                                                     <input type="checkbox" id="productActive" name="productActive" aria-label="Checkbox for following text input"> &nbsp;&nbsp;
                                                     <small id="activeHelp" class="form-text text-muted">Make Product Active</small>
-                                                </div>                                                
-                                            </div>                                            
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="input-group mb-3">
@@ -76,8 +76,8 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                                 <div class="input-group-text">
                                                     <input type="checkbox" id="productinternationalShip" name="productinternationalShip" aria-label="Checkbox for following text input"> &nbsp;&nbsp;
                                                     <small id="shipHelp" class="form-text text-muted">International Shipping</small>
-                                                </div>                                                
-                                            </div>                                            
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="input-group mb-3">
@@ -85,8 +85,8 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                                 <div class="input-group-text">
                                                     <input type="checkbox" id="productExpectedShip" name="productExpectedShip" aria-label="Checkbox for following text input"> &nbsp;&nbsp;
                                                     <small id="expectedHelp" class="form-text text-muted">Expected Shipping</small>
-                                                </div>                                                
-                                            </div>                                            
+                                                </div>
+                                            </div>
                                         </div>
                                 </div>  <!-- col-sm -->
 
@@ -132,9 +132,9 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js')?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/pace/pace.min.js"></script>
+<script src="/stacked-menu/stacked-menu.min.js"></script>
+<script src="/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js')?>

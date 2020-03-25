@@ -64,4 +64,61 @@ class InventoryController
         var_dump($updated);
         exit();
     }
+    
+    
+    
+    /*********** Save for Review - Delete if Not Used ************/
+    /***********        Keep at End of File           ************/
+    /*
+    public function map_market_products(ServerRequest $request)
+    {
+        
+        $form = $request->getParsedBody();
+        $form_files = $request->getUploadedFiles();
+        $files_handle = get_class_methods(get_class($form_files['productImage']));
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do every time.
+        $market_stores = Config::get('market_stores');
+        $market_attributes = Config::get('market_attributes');
+        
+        
+        if(is_array($market_stores) && (count($market_stores)>0 || !empty($market_stores))) {
+            foreach($market_stores as $store_value ) {
+                $market_wise_data = $this->map_market_attributes($form,$market_attributes,$store_value);
+                echo '<pre>';
+                print_r($market_wise_data);
+                echo '</pre>';
+                
+            } // Loops Ends
+        }
+        
+        die('result ends');
+    }
+    */
+    
+    /*
+     @author    :: Tejas
+     @task_id   :: product attributes map
+     @task_desc :: product attributes mapping for different market stores
+     @params    :: product details array
+    */
+    /* public function map_market_attributes($product_details = array(), $predefined_attr = array(), $store_name = ''){
+        $res['status'] = false;
+        $res['data'] = null;
+        $res['store'] = $store_name;
+        $res['message'] = 'Market attributes is not set..!';
+        if((is_array($product_details) && is_array($predefined_attr)) &&
+            (!empty($product_details) && !empty($predefined_attr) &&
+                !empty($store_name))){
+            $set_attr = array();
+            $set_mrg_attr = array();
+            foreach($product_details as $prod_key=>$prod_val) {
+                $set_attr[$predefined_attr[$prod_key][$store_name]] = $prod_val;
+            } // Loops Ends
+            $res['status'] = true;
+            $res['data'] = $set_attr;
+            $res['message'] = 'Market attributes is set successfully..!';
+        }
+        return $res;
+    } */
+    /*********** End Save for Review Delete ************/
 }

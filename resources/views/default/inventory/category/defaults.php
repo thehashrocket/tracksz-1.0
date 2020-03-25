@@ -269,14 +269,14 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/pace/pace.min.js"></script>
+<script src="/stacked-menu/stacked-menu.min.js"></script>
+<script src="/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js') ?>
 <?=$this->stop()?>
 
 <?php $this->start('footer_extras') ?>
-<script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
+<script src="/parsleyjs/parsley.min.js"></script>
 <?=$this->stop()?>
