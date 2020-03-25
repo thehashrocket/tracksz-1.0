@@ -43,7 +43,7 @@ return [
 'asset_path' => '/public/assets/',
     'image_path' => '/public/assets/images/',
     // Market Places
-    'market_places' => ['AbeBooks','Alibris','Amazon','Amazon', 'Amazon Europe','Barnes and Noble',
+    'market_places' => ['AbeBooks','Alibris','Amazon','Amazon Europe','Barnes and Noble',
     'Biblio',
     'Chrislands.com',
     'eBay',

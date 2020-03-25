@@ -39,15 +39,13 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 </div>
 <!-- /.Horizontal Steppers -->
             <div class="card-body">
-                <form name="category_market_request" id="category_market_request" action="dashboard/step2/tejas"
+                <form name="category_market_request" id="category_market_request" action="dashboard/step2"
                     method="POST" enctype="multipart/form-data" data-parsley-validate>
                     <div class="container">
-                        
-
                         <div class="row">
                             <div class="col-sm">
                             <div class="form-group">
-                                <select class="browser-default custom-select">
+                                <select name="market_stores" id="market_stores" class="browser-default custom-select market_stores_select">
                                 <option selected>Select Marketplace...</option>
                                     <?php
                                     if (isset($market_places) && !empty($market_places)) {
@@ -79,6 +77,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/javascript/pages/market_place.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js')?>
