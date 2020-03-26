@@ -11,7 +11,7 @@ return [
     // form country/state
     'default_country' => 223,
     'default_zone'    => 3648,
-
+    'migration_folder' => '/config/migrations/',
     // default login remember me time, three weeks
     'default_remember' => 1814400,
     

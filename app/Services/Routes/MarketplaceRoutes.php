@@ -35,6 +35,7 @@ class MarketplaceRoutes extends AbstractServiceProvider
             $routes->group('/marketplace', function (\League\Route\RouteGroup $route) {
                 $route->get('/dashboard', Marketplace\MarketplaceController::class . '::add');
                 $route->post('/dashboard/step2', Marketplace\MarketplaceController::class . '::addSecond');
+                $route->get('/dashboard/step2', Marketplace\MarketplaceController::class . '::addSecond');
                 $route->post('/dashboard/step3', Marketplace\MarketplaceController::class . '::addThree');
 
             })->middleware($this->container->get('Csrf'))

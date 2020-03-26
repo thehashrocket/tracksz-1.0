@@ -49,7 +49,7 @@ class MarketplaceController
             $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard');
+            return $this->view->redirect('/marketplace/dashboard/step2/tejas');
         }
 
         $market_price = Config::get('market_price');
@@ -86,21 +86,19 @@ class MarketplaceController
             'MarketAcceptPriceValMulti2'    => 'required',
         ));
 
-
-          // Add filters for non-strings (integers, float, emails, etc) ALWAYS Trim
+        // Add filters for non-strings (integers, float, emails, etc) ALWAYS Trim
           $validate->filter_rules(array(
             'EmailAddress'    => 'trim|sanitize_email',            
         ));
         
         $validated = $validate->run($form);
-
+      
         // use validated as it is filtered and validated        
-        if ($validated === false) {  
-                   
+        if ($validated === false) {                     
             $validated['alert'] = 'Sorry, Please fill marketplace data.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard/step2');
+            return $this->view->redirect('/marketplace/dashboard');
         }
 
         $form_insert_data = array(
@@ -124,9 +122,9 @@ class MarketplaceController
             'MarketAcceptPriceVal2' => (isset($form['MarketAcceptPriceVal2']) && !empty($form['MarketAcceptPriceVal2']))?$form['MarketAcceptPriceVal2']:null,
             'MarketAcceptPriceValMulti2' => (isset($form['MarketAcceptPriceValMulti2']) && !empty($form['MarketAcceptPriceValMulti2']))?$form['MarketAcceptPriceValMulti2']:null,
         );
-      
+
         $inserted_result = (new Marketplace($this->db))->addMarketplace($form_insert_data);
-        var_dump($inserted_result);
+
         if(isset($inserted_result) && $inserted_result){
             return $this->view->buildResponse('marketplace/add_step_three');
         }else{
