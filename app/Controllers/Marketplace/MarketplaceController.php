@@ -21,8 +21,9 @@ class MarketplaceController
     }
 
     public function view()
-    {
-        return $this->view->buildResponse('marketplace/view', []);
+    {   
+        $result_data = (new Marketplace($this->db))->get_all();
+        return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
     }
 
     public function add()
@@ -136,6 +137,78 @@ class MarketplaceController
         
         $this->view->flash($validated);
         return $this->view->redirect('/marketplace/dashboard/step2');
+    }
+
+    public function editMarketplace(ServerRequest $request, $Id = [])
+    {          
+        $form = (new Marketplace($this->db))->findById($Id['Id']);
+        if(is_array($form) && !empty($form)){
+            $market_price = Config::get('market_price');            
+            return $this->view->buildResponse('/marketplace/edit', [
+                'form' => $form,'market_price' => $market_price
+            ]);
+        }else{
+            $this->view->flash([
+                        'alert' => 'Failed to fetch markerplace details. Please try again.',
+                        'alert_type' => 'danger'
+                    ]);
+                    return $this->view->buildResponse('/marketplace/list');
+        }
+    }
+
+
+    public function updateMarketplace(ServerRequest $request, $Id = [])
+    {      
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+
+        $form_udpate_data = array(
+            'Id' => (isset($methodData['Id']) && !empty($methodData['Id']))?$methodData['Id']:null,
+            'EmailAddress' => (isset($methodData['EmailAddress']) && !empty($methodData['EmailAddress']))?$methodData['EmailAddress']:null,
+           'MarketName' => (isset($methodData['MarketName']) && !empty($methodData['MarketName']))?$methodData['MarketName']:null,           
+            'SellerID' => (isset($methodData['SellerID']) && !empty($methodData['SellerID']))?$methodData['SellerID']:null,
+            'Password' => (isset($methodData['Password']) && !empty($methodData['Password']))?$methodData['Password']:null,
+            'FtpUserId' => (isset($methodData['FtpId']) && !empty($methodData['FtpId']))?$methodData['FtpId']:null,
+            'FtpPassword' => (isset($methodData['FtpPwd']) && !empty($methodData['FtpPwd']))?$methodData['FtpPwd']:null,
+            'PrependVenue' => (isset($methodData['PrependVenue']) && !empty($methodData['PrependVenue']))?$methodData['PrependVenue']:null,
+            'AppendVenue' => (isset($methodData['AppendVenue']) && !empty($methodData['AppendVenue']))?$methodData['AppendVenue']:null,
+            'IncreaseMinMarket' => (isset($methodData['IncreaseMinMarket']) && !empty($methodData['IncreaseMinMarket']))?$methodData['IncreaseMinMarket']:null,
+            'FileFormat' => (isset($methodData['FileFormat']) && !empty($methodData['FileFormat']))?$methodData['FileFormat']:null,
+            'FtpAppendVenue' => (isset($methodData['FtpAppendVenue']) && !empty($methodData['FtpAppendVenue']))?$methodData['FtpAppendVenue']:null,
+            'SuspendExport' => (isset($methodData['SuspendExport']) && !empty($methodData['SuspendExport']))?$methodData['SuspendExport']:null,
+            'SendDeletes' => (isset($methodData['SendDeletes']) && !empty($methodData['SendDeletes']))?$methodData['SendDeletes']:null,
+            'MarketAcceptPrice' => (isset($methodData['MarketAcceptPrice']) && !empty($methodData['MarketAcceptPrice']))?$methodData['MarketAcceptPrice']:null,
+            'MarketAcceptPriceVal' => (isset($methodData['MarketAcceptPriceVal']) && !empty($methodData['MarketAcceptPriceVal']))?$methodData['MarketAcceptPriceVal']:null,
+            'MarketAcceptPriceValMulti' => (isset($methodData['MarketAcceptPriceValMulti']) && !empty($methodData['MarketAcceptPriceValMulti']))?$methodData['MarketAcceptPriceValMulti']:null,
+            'MarketSpecificPrice' => (isset($methodData['MarketSpecificPrice']) && !empty($methodData['MarketSpecificPrice']))?$methodData['MarketSpecificPrice']:null,
+            'MarketAcceptPriceVal2' => (isset($methodData['MarketAcceptPriceVal2']) && !empty($methodData['MarketAcceptPriceVal2']))?$methodData['MarketAcceptPriceVal2']:null,
+            'MarketAcceptPriceValMulti2' => (isset($methodData['MarketAcceptPriceValMulti2']) && !empty($methodData['MarketAcceptPriceValMulti2']))?$methodData['MarketAcceptPriceValMulti2']:null,
+            'Updated' => date('Y-m-d H:i:s')
+        );  
+
+        $is_updated = (new Marketplace($this->db))->editMarket($form_udpate_data);
+        if(isset($is_updated) && !empty($is_updated)){
+            $this->view->flash([
+                'alert' => 'Marketplace record updated successfully..!',
+                'alert_type' => 'success'
+            ]);
+            $result_data = (new Marketplace($this->db))->get_all();
+            return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
+        }else{
+            $this->view->flash([
+                        'alert' => 'Failed to update marketplace. Please ensure all input is filled out correctly.',
+                        'alert_type' => 'danger'
+                    ]);
+                    return $this->view->buildResponse('/marketplace/edit', [
+                        'update_id' => $methodData['update_id'],
+                        'update_name' => $methodData['Name'],
+                        'update_delivery' => $methodData['DeliveryTime'],
+                        'update_fee' => $methodData['InitialFee'],
+                        'update_discount_fee' => $methodData['DiscountFee'],
+                        'update_minimum' => $methodData['Minimum']
+                    ]);
+
+        }
     }
 
 }

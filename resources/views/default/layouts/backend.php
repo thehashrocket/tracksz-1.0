@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="/assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.css">
     <link rel="stylesheet" href="/assets/vendor/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="/assets/vendor/datatables/css/jquery.dataTables.min.css">
     <!-- END PLUGINS STYLES -->
     
     <!-- BEGIN THEME STYLES -->

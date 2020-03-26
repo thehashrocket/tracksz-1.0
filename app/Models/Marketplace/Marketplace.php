@@ -23,18 +23,35 @@ class Marketplace
             'password' => getenv('DB_PASSWORD')
         ]);   
     }  
+
+
+      /*
+    * all records - get all marketplace records
+    *
+    * @param  
+    * @return associative array.
+    */
+    public function get_all()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM Marketplace');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+   
  
     
     /*
-    * find - Find address by marketplace record Id
+    * find - Find Marketplace by marketplace record Id
     *
     * @param  Id  - Table record Id of marketplace to find
     * @return associative array.
     */
     public function findById($Id)
     {
-        $stmt = $this->db->prepare('SELECT * FROM Marketplace WHERE Id = :Id AND IsDeleted = :Value');
-        $stmt->execute(['Id' => $Id, 'Value' => 0]);
+        $stmt = $this->db->prepare('SELECT * FROM Marketplace WHERE Id = :Id');
+        $stmt->execute(['Id' => $Id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
@@ -73,30 +90,38 @@ class Marketplace
     *                  Form Field Names MUST MATCH Database Column Names
     * @return boolean
     */
-    public function editAddress($form)
+    public function editMarket($form)
     {
-        $query  = 'UPDATE Address SET ';
-        $query .= 'FullName = :FullName, ';
-        $query .= 'Address1 = :Address1, ';
-        $query .= 'Address2 = :Address2, ';
-        $query .= 'Company = :Company, ';
-        $query .= 'City = :City, ';
-        $query .= 'PostCode = :PostCode, ';
-        $query .= 'CountryId = :CountryId, ';
-        $query .= 'ZoneId = :ZoneId, ';
-        $query .= 'IsDeleted = 0, ';
-        $query .= 'MemberId = :MemberId, ';
+        $query  = 'UPDATE marketplace SET ';
+        $query .= 'MarketName = :MarketName, ';
+        $query .= 'EmailAddress = :EmailAddress, ';
+        $query .= 'SellerID = :SellerID, ';
+        $query .= 'Password = :Password, ';
+        $query .= 'FtpUserId = :FtpUserId, ';
+        $query .= 'FtpPassword = :FtpPassword, ';
+        $query .= 'PrependVenue = :PrependVenue, ';
+        $query .= 'AppendVenue = :AppendVenue, ';
+        $query .= 'IncreaseMinMarket = :IncreaseMinMarket,';
+        $query .= 'FileFormat = :FileFormat, ';
+        $query .= 'FtpAppendVenue = :FtpAppendVenue, ';
+        $query .= 'SuspendExport = :SuspendExport, ';
+        $query .= 'SendDeletes = :SendDeletes, ';
+        $query .= 'MarketAcceptPrice = :MarketAcceptPrice, ';
+        $query .= 'MarketAcceptPriceVal = :MarketAcceptPriceVal, ';
+        $query .= 'MarketAcceptPriceValMulti = :MarketAcceptPriceValMulti, ';
+        $query .= 'MarketSpecificPrice = :MarketSpecificPrice, ';
+        $query .= 'MarketAcceptPriceVal2 = :MarketAcceptPriceVal2, ';
+        $query .= 'MarketAcceptPriceValMulti2 = :MarketAcceptPriceValMulti2, ';
         $query .= 'Updated = :Updated ';
-        $query .= 'WHERE Id = :Id';
-        $form['Updated'] = date('Y-m-d H:i:s');
-        $stmt = $this->db->prepare($query);
-        
+        $query .= 'WHERE Id = :Id ';    
+                
+        $stmt = $this->db->prepare($query);  
         if (!$stmt->execute($form)) {
             return 0;
         }
         $stmt = null;
         return $form['Id'];
-    }
+    }  
     
  
     

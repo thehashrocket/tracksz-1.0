@@ -13,5 +13,5 @@
             <a class="text-muted" href="#">Terms of Service</a>
         </li>
     </ul>
-    <div class="copyright"> Copyright © 2018. All right reserved. </div>
+    <div class="copyright"> Copyright © <?php echo date('Y'); ?>. All right reserved. </div>
 </footer><!-- /.app-footer -->
