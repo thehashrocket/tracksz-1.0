@@ -31,7 +31,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 
   <div class="progress">
   <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-    Step 3 Of 3
+        <?=_('Step 3 Of 3')?>
   </div>
 </div>
 
@@ -45,7 +45,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                             <div class="col-sm">
                             <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Marketplace Add Successfully..!</h5>
+                                <h5 class="card-title"><?=_('Marketplace Add Successfully..!')?></h5>
                             </div>
                             </div>
                         </div>

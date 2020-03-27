@@ -31,7 +31,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 
   <div class="progress">
   <div class="progress-bar" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style="width: 35%;">
-    Step 1 Of 3
+    <?=_('Step 1 Of 3')?>
   </div>
 </div>
 
@@ -45,14 +45,14 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                         <div class="row">
                             <div class="col-sm">
                             <div class="form-group">
-                                <select name="market_stores" id="market_stores" class="browser-default custom-select market_stores_select">
-                                <option selected>Select Marketplace...</option>
+                                <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
+                                <option selected><?=_('Select Marketplace...')?></option>
                                     <?php
                                     if (isset($market_places) && !empty($market_places)) {
                                         foreach ($market_places as $mar_key => $mar_val) { ?>                                  
                                         <option value="<?php echo $mar_val; ?>"><?php echo $mar_val; ?></option>
                                     <?php }} else {?>
-                                        <option selected>No Marketplace found...</option>
+                                        <option selected><?=_('No Marketplace found...')?></option>
                                     <?php }?>
                                 </select>
                                 </div>
@@ -64,7 +64,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                         </div> <!-- Row -->
                     </div> <!-- Container -->
 
-                    <button type="submit" class="btn btn-primary">Next <i class="fa fa-arrow-right"></i></button>
+                    <button type="submit" class="btn btn-primary"><?=_('Next')?> <i class="fa fa-arrow-right"></i></button>
                 </form>
             </div> <!-- Card Body -->
 
@@ -77,7 +77,6 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/javascript/pages/market_place.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js')?>

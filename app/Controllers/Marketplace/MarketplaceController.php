@@ -36,12 +36,19 @@ class MarketplaceController
     { 
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-       
+        // echo "<pre> test";
+        // print_r($form);
+        // exit;
+
+        if(is_array($form) && $form['MarketName'] == 'Select Marketplace...'){
+            $form['MarketName'] = '';
+        }
+
         $validate = new ValidateSanitize();
         $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
       
         $validate->validation_rules(array(
-            'market_stores'    => 'required'
+            'MarketName'    => 'required'
         ));
 
         $validated = $validate->run($form,true);
@@ -50,11 +57,11 @@ class MarketplaceController
             $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard/step2/tejas');
+            return $this->view->redirect('/marketplace/dashboard');
         }
 
         $market_price = Config::get('market_price');
-        return $this->view->buildResponse('marketplace/add_step_second', ['market_stores' => $form['market_stores'],'market_price' => $market_price]);
+        return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);
     }
 
     public function addThree(ServerRequest $request)
@@ -64,7 +71,7 @@ class MarketplaceController
      
         $validate = new ValidateSanitize();
         $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
-    
+      
         $validate->validation_rules(array(
             'EmailAddress'    => 'required|valid_email',
             'MarketName'    => 'required',
@@ -77,8 +84,8 @@ class MarketplaceController
             'IncreaseMinMarket'    => 'required',
             'FileFormat'    => 'required',
             'FtpAppendVenue'    => 'required',
-            'SuspendExport'    => 'required',
-            'SendDeletes'    => 'required',
+            // 'SuspendExport'    => 'required',
+            // 'SendDeletes'    => 'required',
             'MarketAcceptPrice'    => 'required',
             'MarketAcceptPriceVal'    => 'required',
             'MarketAcceptPriceValMulti'    => 'required',
@@ -93,15 +100,15 @@ class MarketplaceController
         ));
         
         $validated = $validate->run($form);
-      
         // use validated as it is filtered and validated        
         if ($validated === false) {                     
             $validated['alert'] = 'Sorry, Please fill marketplace data.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard');
+            $market_price = Config::get('market_price');
+            return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);            
         }
-
+      
         $form_insert_data = array(
             'EmailAddress' => (isset($form['EmailAddress']) && !empty($form['EmailAddress']))?$form['EmailAddress']:null,
             'MarketName' => (isset($form['MarketName']) && !empty($form['MarketName']))?$form['MarketName']:null,
@@ -114,8 +121,8 @@ class MarketplaceController
             'IncreaseMinMarket' => (isset($form['IncreaseMinMarket']) && !empty($form['IncreaseMinMarket']))?$form['IncreaseMinMarket']:null,
             'FileFormat' => (isset($form['FileFormat']) && !empty($form['FileFormat']))?$form['FileFormat']:null,
             'FtpAppendVenue' => (isset($form['FtpAppendVenue']) && !empty($form['FtpAppendVenue']))?$form['FtpAppendVenue']:null,
-            'SuspendExport' => (isset($form['SuspendExport']) && !empty($form['SuspendExport']))?$form['SuspendExport']:null,
-            'SendDeletes' => (isset($form['SendDeletes']) && !empty($form['SendDeletes']))?$form['SendDeletes']:null,
+            'SuspendExport' => (isset($form['SuspendExport']) && !empty($form['SuspendExport']))?1:null,
+            'SendDeletes' => (isset($form['SendDeletes']) && !empty($form['SendDeletes']))?1:null,
             'MarketAcceptPrice' => (isset($form['MarketAcceptPrice']) && !empty($form['MarketAcceptPrice']))?$form['MarketAcceptPrice']:null,
             'MarketAcceptPriceVal' => (isset($form['MarketAcceptPriceVal']) && !empty($form['MarketAcceptPriceVal']))?$form['MarketAcceptPriceVal']:null,
             'MarketAcceptPriceValMulti' => (isset($form['MarketAcceptPriceValMulti']) && !empty($form['MarketAcceptPriceValMulti']))?$form['MarketAcceptPriceValMulti']:null,
@@ -175,8 +182,8 @@ class MarketplaceController
             'IncreaseMinMarket' => (isset($methodData['IncreaseMinMarket']) && !empty($methodData['IncreaseMinMarket']))?$methodData['IncreaseMinMarket']:null,
             'FileFormat' => (isset($methodData['FileFormat']) && !empty($methodData['FileFormat']))?$methodData['FileFormat']:null,
             'FtpAppendVenue' => (isset($methodData['FtpAppendVenue']) && !empty($methodData['FtpAppendVenue']))?$methodData['FtpAppendVenue']:null,
-            'SuspendExport' => (isset($methodData['SuspendExport']) && !empty($methodData['SuspendExport']))?$methodData['SuspendExport']:null,
-            'SendDeletes' => (isset($methodData['SendDeletes']) && !empty($methodData['SendDeletes']))?$methodData['SendDeletes']:null,
+            'SuspendExport' => (isset($methodData['SuspendExport']) && !empty($methodData['SuspendExport']))?1:null,
+            'SendDeletes' => (isset($methodData['SendDeletes']) && !empty($methodData['SendDeletes']))?1:null,
             'MarketAcceptPrice' => (isset($methodData['MarketAcceptPrice']) && !empty($methodData['MarketAcceptPrice']))?$methodData['MarketAcceptPrice']:null,
             'MarketAcceptPriceVal' => (isset($methodData['MarketAcceptPriceVal']) && !empty($methodData['MarketAcceptPriceVal']))?$methodData['MarketAcceptPriceVal']:null,
             'MarketAcceptPriceValMulti' => (isset($methodData['MarketAcceptPriceValMulti']) && !empty($methodData['MarketAcceptPriceValMulti']))?$methodData['MarketAcceptPriceValMulti']:null,
