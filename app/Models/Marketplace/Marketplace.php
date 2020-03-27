@@ -126,22 +126,17 @@ class Marketplace
  
     
     /*
-    * delete - delete a members address, by Address Table ID and User Id
+    * delete - delete a Marketplace records
     *
-    * @param  $id = table record numbver of card
-    * @param $memberId - member Id of Logged in User
+    * @param  $id = table record ID   
     * @return boolean
     */
-    public function delete($Id, $memberId)
+    public function delete($Id = null)
     {
-        $query  = 'UPDATE Address SET IsDeleted = :Value WHERE Id = :Id AND MemberId = :MemberId';
+        $query = 'DELETE FROM marketplace WHERE Id = :Id';
         $stmt = $this->db->prepare($query);
-        
-        if (!$stmt->execute(['Value' => 1, 'Id' => $Id, 'MemberId' => $memberId])) {
-            return false;
-        }
-        $stmt = null;
-        return true;
+        $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     /********************************* */

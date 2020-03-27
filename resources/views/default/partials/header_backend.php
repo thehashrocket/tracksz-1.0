@@ -1,5 +1,8 @@
 <!-- .app-header -->
 <header class="app-header app-header-dark">
+    <script>
+        var BASE_URL = '<?php echo \App\Library\Config::get('company_url'); ?>';
+    </script>
     <!-- .top-bar -->
     <div class="top-bar">
         <!-- .top-bar-brand -->

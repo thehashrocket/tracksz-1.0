@@ -218,4 +218,33 @@ class MarketplaceController
         }
     }
 
+
+    public function deleteMarketData(ServerRequest $request){
+        $form = $request->getParsedBody();
+        $result_data = (new Marketplace($this->db))->delete($form['Id']);        
+        if(isset($result_data) && !empty($result_data)){
+
+            $validated['alert'] = 'Marketplace record deleted successfully..!';
+            $validated['alert_type'] = 'success';
+            $this->view->flash($validated);
+
+            $res['status'] = true;
+            $res['data'] = array();
+            $res['message'] = 'Records deleted successfully..!';                
+            echo json_encode($res);
+            exit;
+        }else{
+            $validated['alert'] = 'Sorry, Marketplace records not deleted..! Please try again.';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+
+            $res['status'] = false;
+            $res['data'] = array();
+            $res['message'] = 'Records not Deleted..!';                
+            echo json_encode($res);
+            exit;
+
+        }
+    }
+
 }

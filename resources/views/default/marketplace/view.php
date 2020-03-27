@@ -43,8 +43,8 @@ $description_meta = 'Marketplace Listing for your Tracksz Store, a Multiple Mark
                                                         <td><?=$market['FtpUserId']?></td>
                                                         <td> <?php 
                                                             $button = '';   
-                                                            $edit_button = '<a href="'.\App\Library\Config::get('company_url').'/marketplace/edit/'.$market['Id'].'" class="btn btn-xs btn-warning"><i class="far fa-edit"></i> Edit</a> &nbsp;';
-                                                            $delete_button = '<a href="#delete-'.$market['Id'].'" delete_id="'.$market['Id'].'" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i> Delete</a>';
+                                                            $edit_button = '<a href="'.\App\Library\Config::get('company_url').'/marketplace/edit/'.$market['Id'].'" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
+                                                            $delete_button = '<a href="#delete-'.$market['Id'].'" delete_id="'.$market['Id'].'" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
                                                             $button .= $edit_button;
                                                             $button .= $delete_button;
                                                             echo $button;

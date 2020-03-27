@@ -41,6 +41,8 @@ class MarketplaceRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Marketplace\MarketplaceController::class . '::editMarketplace');
                 $route->post('/update', Marketplace\MarketplaceController::class . '::updateMarketplace');
 
+                $route->post('/delete', Marketplace\MarketplaceController::class . '::deleteMarketData');
+
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
 
