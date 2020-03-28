@@ -26,33 +26,53 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                 <?php endif?>
             </header><!-- /.page-title-bar -->
             <!-- Horizontal Steppers -->
-<div class="row">
-  <div class="col-md-12">
+              <!--  <div class="row">  row Starts -->
+                   <!-- <div class="col-md-12">  col-md-12 Starts -->
+                         <!-- <div class="progress">  progress Starts -->
+                           <!--  <div class="progress-bar" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style="width: 35%;">
+                           <?=_('Step 1 Of 3')?>  progress-bar Starts -->
+                        <!--    </div>  progress-bar Ends -->
+                     <!--     </div> progress Ends -->
+                <!--   </div> col-md-12 Ends -->
+              <!--  </div>  row Ends -->
+            <!-- /.Horizontal Steppers -->
 
-  <div class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-        <?=_('Step 3 Of 3')?>
-  </div>
-</div>
-
-  </div>
-</div>
-<!-- /.Horizontal Steppers -->
-            <div class="card-body">
-                    <div class="container">
-
-                        <div class="row">
-                            <div class="col-sm">
-                            <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"><?=_('Marketplace Add Successfully..!')?></h5>
-                            </div>
-                            </div>
-                        </div>
-                        </div> <!-- Row -->
-                    </div> <!-- Container -->
-               
-            </div> <!-- Card Body -->
+            <!-- Steppers Starts -->
+            <div class="card">
+                    <!-- .card-body -->
+                    <div class="card-body">
+                      <!-- .progress-list -->
+                      <ol class="progress-list mb-0 mb-sm-4">
+                        <li class="success">
+                          <button type="button">
+                            <!-- progress indicator -->
+                            <span class="progress-indicator"></span></button> <span class="progress-label d-none d-sm-inline-block">Step 1</span>
+                        </li>
+                        <li class="success">
+                          <button type="button">
+                            <!-- progress indicator -->
+                            <span class="progress-indicator"></span></button> <span class="progress-label d-none d-sm-inline-block">Step 2</span>
+                        </li>
+                        <li class="success">
+                          <button type="button">
+                            <!-- progress indicator -->
+                            <span class="progress-indicator"></span></button> <span class="progress-label d-none d-sm-inline-block">Step 3</span>
+                        </li>
+                      </ol><!-- /.progress-list -->
+                    </div><!-- /.card-body -->
+                    <!-- .card-body -->
+            </div>
+            <!-- Steppers Ends -->
+            <div class="section-block">
+                  <div class="alert alert-success has-icon alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <div class="alert-icon">
+                      <span class="oi oi-flag"></span>
+                    </div>
+                    <h4 class="alert-heading"> <?=_('Success!')?> </h4>
+                    <p class="mb-0"> <?=_('Marketplace Added successfully...!')?></a>. </p>
+                  </div><!-- grid row -->
+                </div>
 
         </div><!-- /.page-inner -->
     </div><!-- /.page -->

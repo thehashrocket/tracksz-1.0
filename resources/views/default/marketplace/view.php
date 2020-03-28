@@ -22,40 +22,46 @@ $description_meta = 'Marketplace Listing for your Tracksz Store, a Multiple Mark
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
-              <!-- .card -->                     
-                    <?php if (is_array($marketplace) &&  count($marketplace)> 0): ?>
-                                        <table id="marketplace_table" name="marketplace_table" class="table table-striped table-bordered nowrap" style="width:100%">
-                                                <thead>
-                                                <tr>
-                                                    <th><?=_('MarketName')?></th>
-                                                    <th><?=_('EmailAddress')?></th>
-                                                    <th><?=_('SellerID')?></th>
-                                                    <th><?=_('FtpUserId')?></th>
-                                                    <th><?=_('Action')?></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php foreach($marketplace as $market): ?>
-                                                    <tr>                                                     
-                                                        <td><?=$market['MarketName']?></td>  
-                                                        <td><?=$market['EmailAddress']?></td>  
-                                                        <td><?=$market['SellerID']?></td>  
-                                                        <td><?=$market['FtpUserId']?></td>
-                                                        <td> <?php 
-                                                            $button = '';   
-                                                            $edit_button = '<a href="'.\App\Library\Config::get('company_url').'/marketplace/edit/'.$market['Id'].'" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
-                                                            $delete_button = '<a href="#delete-'.$market['Id'].'" delete_id="'.$market['Id'].'" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
-                                                            $button .= $edit_button;
-                                                            $button .= $delete_button;
-                                                            echo $button;
-                                                        
-                                                            ?></td>                                                        
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                <?php endif; ?>
-                             
+            <div class="page-section"> <!-- .page-section starts -->
+                <div class="card card-fluid">   <!-- .card card-fluid starts -->
+                    <div class="card-body"> <!-- .card-body starts -->
+                      <?php if (is_array($marketplace) &&  count($marketplace)> 0): ?>
+                        <table id="marketplace_table" name="marketplace_table" class="table table-striped table-bordered nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th><?=_('MarketName')?></th>
+                                    <th><?=_('EmailAddress')?></th>
+                                    <th><?=_('SellerID')?></th>
+                                    <th><?=_('FtpUserId')?></th>
+                                    <th><?=_('Action')?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($marketplace as $market): ?>
+                                    <tr>                                                     
+                                        <td><?=$market['MarketName']?></td>  
+                                        <td><?=$market['EmailAddress']?></td>  
+                                        <td><?=$market['SellerID']?></td>  
+                                        <td><?=$market['FtpUserId']?></td>
+                                        <td> <?php 
+                                            $button = '';   
+                                            $edit_button = '<a href="'.\App\Library\Config::get('company_url').'/marketplace/edit/'.$market['Id'].'" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
+                                            $delete_button = '<a href="#delete-'.$market['Id'].'" delete_id="'.$market['Id'].'" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
+                                            $button .= $edit_button;
+                                            $button .= $delete_button;
+                                            echo $button;
+                                        
+                                            ?></td>                                                        
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endif; ?>
+                        
+                    </div><!-- card-body ends --> 
+                </div><!-- /.card card-fluid ends --> 
+             </div><!-- /.page-section ends -->  
+
         </div><!-- /.page-inner -->
     </div><!-- /.page -->
 </div><!-- /.wrapper -->

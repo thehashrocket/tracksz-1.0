@@ -22,7 +22,7 @@ class MarketplaceController
 
     public function view()
     {   
-        $result_data = (new Marketplace($this->db))->get_all();
+        $result_data = (new Marketplace($this->db))->getAll();
         return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
     }
 
@@ -36,10 +36,7 @@ class MarketplaceController
     { 
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-        // echo "<pre> test";
-        // print_r($form);
-        // exit;
-
+      
         if(is_array($form) && $form['MarketName'] == 'Select Marketplace...'){
             $form['MarketName'] = '';
         }
@@ -199,7 +196,7 @@ class MarketplaceController
                 'alert' => 'Marketplace record updated successfully..!',
                 'alert_type' => 'success'
             ]);
-            $result_data = (new Marketplace($this->db))->get_all();
+            $result_data = (new Marketplace($this->db))->getAll();
             return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
         }else{
             $this->view->flash([
