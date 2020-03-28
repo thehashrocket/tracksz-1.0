@@ -14,7 +14,6 @@
 <aside class="app-aside app-aside-expand-md app-aside-light">
     <!-- .aside-content -->
     <div class="aside-content">
-
         <!-- .aside-menu -->
         <div class="aside-menu overflow-hidden">
             <!-- .stacked-menu -->
@@ -67,6 +66,77 @@
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
+
+         
+                    <!-- .menu-item -->
+                        <!-- <li class="menu-item<?php if($page == 'marketplace-dashboard') echo ' has-active';?>">
+                            <a href="/marketplace/dashboard" title="<?=_('Martketplace Module')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Marketplace Module')?>"></span><span class="menu-text"><?=_('Marketplace')?></span></a>
+                        </li>-->
+                     <!-- .menu-item -->
+
+
+                     <!-- .menu-item -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $marketplace_menu = ['marketplace-dashboard','marketplace-list'];                    ?>
+                    <li class="menu-item has-child<?php if(in_array($page, $marketplace_menu)) echo ' has-active';?>">
+                        <a href="#" class="menu-link" title="<?=_('Martketplace Module')?>"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Marketplace')?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <li class="menu-item<?php if($page == 'marketplace-dashboard') echo ' has-active';?>">
+                                <a href="/marketplace/dashboard" title="<?=_('Add Marketplace')?>" class="menu-link"><?=_('Add')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'marketplace-list') echo ' has-active';?>">
+                                <a href="/marketplace/list" title="<?=_('Marketplace List')?>" class="menu-link"><?=_('List')?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+                     
+                  
+
+                    <!-- .menu-item -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $product_menu = ['product-view','product-defaults','product-categories','product-add'];
+                    ?>
+                    <li class="menu-item has-child<?php if(in_array($page, $inventory_menu)) echo ' has-active';?>">
+                        <a href="#" class="menu-link" title="<?=_('Active Store Product')?>"><span class="menu-icon fas fa-list" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Product')?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- <li class="menu-item<?php if($page == 'product-view') echo ' has-active';?>">
+                                <a href="/product/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
+                            </li> -->
+                            <li class="menu-item<?php if($page == 'product-add') echo ' has-active';?>">
+                                <a href="/product/add" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('Add')?></a>
+                            </li>
+                            <!-- <li class="menu-item<?php if($page == 'product-defaults') echo ' has-active';?>">
+                                <a href="/product/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
+                            </li> -->
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+
+
+                    <!-- .menu-item -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $category_menu = ['category-view','category-defaults','category-categories','category-add'];
+                    ?>
+                    <li class="menu-item has-child<?php if(in_array($page, $inventory_menu)) echo ' has-active';?>">
+                        <a href="#" class="menu-link" title="<?=_('Active Store Product')?>"><span class="menu-icon fas fa-list" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Category')?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
+                                <a href="/product/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
+                            </li> -->
+                            <li class="menu-item<?php if($page == 'category-add') echo ' has-active';?>">
+                                <a href="/category/add" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('Add')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
+                                <a href="/category/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
+                            </li>
+                            <!-- <li class="menu-item<?php if($page == 'category-defaults') echo ' has-active';?>">
+                                <a href="/category/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
+                            </li> -->
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item --> 
+
 
                     <!-- .menu-header -->
                     <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
