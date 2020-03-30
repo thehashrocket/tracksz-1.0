@@ -11,6 +11,7 @@ return [
     // form country/state
     'default_country' => 223,
     'default_zone'    => 3648,
+    'migration_folder' => '/config/migrations/',
     
     // default page list rows
     'page_rows' => '30',
@@ -43,4 +44,86 @@ return [
         4   => 'Twitter',
         5   => 'Pinterest',
     ],
+    'market_stores' => [
+       'amazon','ebay','flipkart'
+    ],
+    'market_attributes' => [
+        'productNameInput' => [
+            'amazon' => 'name',
+            'ebay' => 'prod_name',
+            'flipkart' => 'flip_prod_name'
+        ],
+        'productSKUInput' => [
+            'amazon' => 'sku',
+            'ebay' => 'prod_sku',
+            'flipkart' => 'flip_prod_sku'
+        ],
+        'productIdInput' => [
+            'amazon' => 'id',
+            'ebay' => 'prod_id',
+            'flipkart' => 'flip_prod_id'
+        ],
+        'productBasePriceInput' => [
+            'amazon' => 'price',
+            'ebay' => 'prod_price',
+            'flipkart' => 'flip_prod_price'
+        ],
+        'productCondition' => [
+            'amazon' => 'condition',
+            'ebay' => 'prod_condition',
+            'flipkart' => 'flip_prod_condition'
+        ],
+        'productActive' => [
+            'amazon' => 'active',
+            'ebay' => 'prod_active',
+            'flipkart' => 'flip_prod_active'
+        ],
+        'productinternationalShip' => [
+            'amazon' => 'internation_shipping',
+            'ebay' => 'prod_internation_shipping',
+            'flipkart' => 'flip_prod_internation_shipping'
+        ],
+        'productExpectedShip' => [
+            'amazon' => 'expected_shipping',
+            'ebay' => 'prod_internation_shipping',
+            'flipkart' => 'flip_prod_internation_shipping'
+        ],
+        'productTitleeBayInput' => [
+            'amazon' => 'title',
+            'ebay' => 'prod_ebay_title',
+            'flipkart' => 'flip_prod_ebay_title'
+        ],
+        'productQtyInput' => [
+            'amazon' => 'qty',
+            'ebay' => 'prod_qty',
+            'flipkart' => 'flip_prod_qty'
+        ],
+        'productNote' => [
+            'amazon' => 'note',
+            'ebay' => 'prod_note',
+            'flipkart' => 'flip_prod_note'
+        ]
+    ],
+'asset_path' => '/public/assets/',
+    'image_path' => '/public/assets/images/',
+    // Market Places
+    'market_places' => ['AbeBooks','Alibris','Amazon','Amazon Europe','Barnes and Noble',
+    'Biblio',
+    'Chrislands.com',
+    'eBay',
+    'eCampus',
+    'TextbookRush.com',
+    'TextbookX',
+    'Valore'
+],
+
+      // Market Price
+      'market_price' => ['USD' =>'US Dollars',
+       'CAD' => 'Canadian Dollars',
+       'GBP' => 'British Pounds',
+       'EUR' => 'Euros',
+       'MXN' => 'Mexican Pesos',
+      ]
+
+
 ];

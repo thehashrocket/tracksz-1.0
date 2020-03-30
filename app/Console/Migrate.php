@@ -18,8 +18,7 @@ class Migrate
     
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $this->db->query('CREATE TABLE IF NOT EXISTS `Migration` (`Name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL, `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`Name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
-    
+        $this->db->query('CREATE TABLE IF NOT EXISTS `Migration` (`Name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL, `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`Name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');        
         $this->migration_folder = __DIR__.'/../..'.Config::get('migration_folder');
     }
     
