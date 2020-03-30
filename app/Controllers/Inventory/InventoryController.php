@@ -3,10 +3,11 @@
 namespace App\Controllers\Inventory;
 
 use App\Library\Views;
-use App\Models\Account\Store;
 use App\Models\Inventory\Category;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
+use App\Library\ValidateSanitize\ValidateSanitize;
+use Exception;
 use PDO;
 
 class InventoryController
@@ -15,11 +16,97 @@ class InventoryController
     private $db;
     
     public function __construct(Views $view, PDO $db)
-    {
+    {   
+       
         $this->view = $view;
         $this->db   = $db;
     }
-    
+
+     /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function uploadInventory()
+    {
+        return $this->view->buildResponse('inventory/upload', []);
+    }
+
+    public function uploadInventoryFTP(ServerRequest $request)
+    { 
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        try{
+            $ftp_connect = ftp_connect("ftp.valorebooks.com");
+            $ftp_username = "chrislands_348442";
+            $ftp_password = "F23MRTJ8";
+
+            $ftp_login = ftp_login($ftp_connect, $ftp_username, $ftp_password);
+
+            if(!$ftp_login)
+                    throw new Exception("Ftp Server connection fails...!", 400);
+            
+            $file_stream = $_FILES['InventoryUpload']['tmp_name'];
+            $file_name = $_FILES['InventoryUpload']['name'];
+
+            $is_file_upload = ftp_put($ftp_connect, 'Inventory/'.$file_name, $file_stream, FTP_ASCII);
+
+            if(!$is_file_upload)
+                    throw new Exception("Ftp File upload fails...! Please try again", 651);
+
+            
+            $validated['alert'] = 'Inventory File is uploaded into FTP Server successully..!';
+            $validated['alert_type'] = 'success';
+            $this->view->flash($validated);
+            return $this->view->redirect('/inventory/upload');
+
+        }catch (Exception $e){
+            
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = 'Inventory File not uploaded into server...!';
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();            
+
+            $validated['alert'] = 'Sorry, Inventory File is uploaded into FTP Server..! Please try again.';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/inventory/upload');
+        }
+        
+        
+
+        if($ftp_login){
+            echo "Ftp Connection successfully..!";
+        }else{
+            echo "Ftp Connection fails..!";
+        }
+        exit;
+        
+        $validate = new ValidateSanitize();
+        $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
+      
+        $validate->validation_rules(array(
+            'MarketName'    => 'required'
+        ));
+
+        $validated = $validate->run($form,true);
+        // use validated as it is filtered and validated        
+        if ($validated === false) {
+            $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/marketplace/dashboard');
+        }
+
+        $market_price = Config::get('market_price');
+        return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);
+    }
+   
     public function view()
     {
         return $this->view->buildResponse('inventory/view', []);
