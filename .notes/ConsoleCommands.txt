@@ -50,7 +50,7 @@ Quick Tutorial on Console.php for command line processes - Author: Jaymes H. Sor
 
     php path/to/app/Console/Console.php SubFolder:ClassName
 
-    The : (colon) is the folder delimeter.  For Example:
+    The : (colon) is the folder delimiter.  For Example:
     php path/to/app/Console/Console.php zzExample:zzExample
 
 4.  An example command line process class can be found in app\Console\zzExample\zzExample.php
