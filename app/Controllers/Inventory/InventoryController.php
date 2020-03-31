@@ -7,6 +7,8 @@ use App\Models\Inventory\Category;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use App\Library\ValidateSanitize\ValidateSanitize;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\Extension;
 use Exception;
 use PDO;
 
@@ -36,9 +38,28 @@ class InventoryController
 
     public function uploadInventoryFTP(ServerRequest $request)
     { 
-        $form = $request->getParsedBody();
+        $form = $request->getUploadedFiles();       
+        // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         try{
+
+            $validator = new FilesSize([
+                'min' => '1kB',  // minimum of 1kB
+                'max' => '10MB', // maximum of 10MB
+            ]);             
+    
+            // if false than throw Size error 
+            if (!$validator->isValid($_FILES)) {
+                throw new Exception("File upload size is too large...!", 301);
+            }
+           
+            // Using an options array:
+            $validator2 = new Extension(['docs,jpg,xlsx']);            
+            // if false than throw type error
+            if (!$validator2->isValid($_FILES['InventoryUpload'])) {
+                throw new Exception("Please upload valid file type docs, jpg and xlsx...!", 301);
+            }
+        
             $ftp_connect = ftp_connect("ftp.valorebooks.com");
             $ftp_username = "chrislands_348442";
             $ftp_password = "F23MRTJ8";
@@ -60,10 +81,9 @@ class InventoryController
             $validated['alert'] = 'Inventory File is uploaded into FTP Server successully..!';
             $validated['alert_type'] = 'success';
             $this->view->flash($validated);
-            return $this->view->redirect('/inventory/upload');
+            return $this->view->redirect('/inventory/upload');           
 
-        }catch (Exception $e){
-            
+        }catch (Exception $e){            
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = 'Inventory File not uploaded into server...!';
@@ -72,39 +92,13 @@ class InventoryController
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();            
 
-            $validated['alert'] = 'Sorry, Inventory File is uploaded into FTP Server..! Please try again.';
+            $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
             return $this->view->redirect('/inventory/upload');
         }
-        
-        
-
-        if($ftp_login){
-            echo "Ftp Connection successfully..!";
-        }else{
-            echo "Ftp Connection fails..!";
-        }
+        ftp_close($ftp_connect);
         exit;
-        
-        $validate = new ValidateSanitize();
-        $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
-      
-        $validate->validation_rules(array(
-            'MarketName'    => 'required'
-        ));
-
-        $validated = $validate->run($form,true);
-        // use validated as it is filtered and validated        
-        if ($validated === false) {
-            $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
-            $validated['alert_type'] = 'danger';
-            $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard');
-        }
-
-        $market_price = Config::get('market_price');
-        return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);
     }
    
     public function view()
