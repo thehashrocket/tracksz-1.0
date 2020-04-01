@@ -1,7 +1,8 @@
 $(document).ready(function () {  
     console.log('marketplace loads')
     $('#marketplace_table').DataTable( {
-        responsive: true
+        responsive: true,
+        "order": [[ 0, "desc" ]]
     });
         
     $(document).on("click","#SuspendExport, #SendDeletes",function() {

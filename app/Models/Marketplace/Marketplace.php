@@ -33,7 +33,7 @@ class Marketplace
     */
     public function getAll()
     {
-        $stmt = $this->db->prepare('SELECT * FROM marketplace');
+        $stmt = $this->db->prepare('SELECT * FROM marketplace ORDER BY `Id` DESC');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -51,6 +51,34 @@ class Marketplace
         $stmt->execute(['Id' => $Id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /*
+    * find - Find Marketplace by marketplace record UserId and Status
+    *
+    * @param  UserId  - Table record Id of marketplace to find
+    * @param  Status  - Table record Status of marketplace to find
+    * @return associative array.
+    */
+    public function findByUserId($UserId , $Status = 0)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM marketplace WHERE UserId = :UserId AND Status = :Status');
+        $stmt->execute(['UserId' => $UserId,'Status' => $Status]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /*
+    * find - Find Marketplace by marketplace record UserId and Status
+    *
+    * @param  UserId  - Table record Id of marketplace to find
+    * @param  Status  - Table record Status of marketplace to find
+    * @return associative array.
+    */
+    public function findFtpDetails($MarketName , $UserId = 0 ,  $Status = 0)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM marketplace WHERE MarketName = :MarketName AND UserId = :UserId AND Status = :Status');
+        $stmt->execute(['MarketName' => $MarketName, 'UserId' => $UserId,'Status' => $Status]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
     /*
     * addMarketplace - add a new marketplace for a user
@@ -61,15 +89,15 @@ class Marketplace
     */
     public function addMarketplace($form = array())
     {          
-        $query  = 'INSERT INTO marketplace (MarketName, EmailAddress, SellerID, Password,FtpUserId,';
+        $query  = 'INSERT INTO marketplace (MarketName, EmailAddress, SellerID, Password,FtpAddress,FtpUserId,';
         $query .= 'FtpPassword, PrependVenue,AppendVenue,IncreaseMinMarket,FileFormat,';
         $query .= 'FtpAppendVenue, SuspendExport,SendDeletes,MarketAcceptPrice,MarketAcceptPriceVal,';
-        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2';                
+        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2, Status, UserId';                
         $query .= ') VALUES (';
-        $query .= ':MarketName, :EmailAddress, :SellerID, :Password, :FtpUserId,';
+        $query .= ':MarketName, :EmailAddress, :SellerID, :Password,:FtpAddress, :FtpUserId,';
         $query .= ':FtpPassword, :PrependVenue, :AppendVenue, :IncreaseMinMarket, :FileFormat,';
         $query .= ':FtpAppendVenue, :SuspendExport, :SendDeletes, :MarketAcceptPrice, :MarketAcceptPriceVal,';
-        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2';        
+        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2, :Status, :UserId';        
         $query .= ')';
 
         $stmt = $this->db->prepare($query);
@@ -94,7 +122,8 @@ class Marketplace
         $query .= 'EmailAddress = :EmailAddress, ';
         $query .= 'SellerID = :SellerID, ';
         $query .= 'Password = :Password, ';
-        $query .= 'FtpUserId = :FtpUserId, ';
+        $query .= 'FtpAddress = :FtpAddress, ';
+        $query .= 'FtpUserId = :FtpUserId, ';        
         $query .= 'FtpPassword = :FtpPassword, ';
         $query .= 'PrependVenue = :PrependVenue, ';
         $query .= 'AppendVenue = :AppendVenue, ';
@@ -109,6 +138,7 @@ class Marketplace
         $query .= 'MarketSpecificPrice = :MarketSpecificPrice, ';
         $query .= 'MarketAcceptPriceVal2 = :MarketAcceptPriceVal2, ';
         $query .= 'MarketAcceptPriceValMulti2 = :MarketAcceptPriceValMulti2, ';
+        $query .= 'Status = :Status, ';
         $query .= 'Updated = :Updated ';
         $query .= 'WHERE Id = :Id ';    
                 

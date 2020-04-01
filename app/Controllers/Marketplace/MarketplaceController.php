@@ -7,6 +7,8 @@ use App\Library\Views;
 use App\Models\Marketplace\Marketplace;
 use App\Library\ValidateSanitize\ValidateSanitize;
 use Laminas\Diactoros\ServerRequest;
+use Delight\Auth\Auth;
+use Delight\Cookie\Session;
 use PDO;
 
 class MarketplaceController
@@ -36,7 +38,7 @@ class MarketplaceController
     { 
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-      
+     
         if(is_array($form) && $form['MarketName'] == 'Select Marketplace...'){
             $form['MarketName'] = '';
         }
@@ -74,7 +76,8 @@ class MarketplaceController
             'MarketName'    => 'required',
             'SellerID'    => 'required',
             'Password'    => 'required',
-            'FtpId'    => 'required',
+            'FtpAddress'    => 'required',
+            'FtpId'    => 'required',            
             'FtpPwd'    => 'required',
             'PrependVenue'    => 'required',
             'AppendVenue'    => 'required',
@@ -111,6 +114,7 @@ class MarketplaceController
             'MarketName' => (isset($form['MarketName']) && !empty($form['MarketName']))?$form['MarketName']:null,
             'SellerID' => (isset($form['SellerID']) && !empty($form['SellerID']))?$form['SellerID']:null,
             'Password' => (isset($form['Password']) && !empty($form['Password']))?$form['Password']:null,
+            'FtpAddress' => (isset($form['FtpAddress']) && !empty($form['FtpAddress']))?$form['FtpAddress']:null,
             'FtpUserId' => (isset($form['FtpId']) && !empty($form['FtpId']))?$form['FtpId']:null,
             'FtpPassword' => (isset($form['FtpPwd']) && !empty($form['FtpPwd']))?$form['FtpPwd']:null,
             'PrependVenue' => (isset($form['PrependVenue']) && !empty($form['PrependVenue']))?$form['PrependVenue']:null,
@@ -126,6 +130,8 @@ class MarketplaceController
             'MarketSpecificPrice' => (isset($form['MarketSpecificPrice']) && !empty($form['MarketSpecificPrice']))?$form['MarketSpecificPrice']:null,
             'MarketAcceptPriceVal2' => (isset($form['MarketAcceptPriceVal2']) && !empty($form['MarketAcceptPriceVal2']))?$form['MarketAcceptPriceVal2']:null,
             'MarketAcceptPriceValMulti2' => (isset($form['MarketAcceptPriceValMulti2']) && !empty($form['MarketAcceptPriceValMulti2']))?$form['MarketAcceptPriceValMulti2']:null,
+            'Status' => (isset($form['MarketStatus']) && $form['MarketStatus'] == 1)?$form['MarketStatus']:0,
+            'UserId' => Session::get('auth_user_id'),
         );
 
         $inserted_result = (new Marketplace($this->db))->addMarketplace($form_insert_data);
@@ -172,6 +178,7 @@ class MarketplaceController
            'MarketName' => (isset($methodData['MarketName']) && !empty($methodData['MarketName']))?$methodData['MarketName']:null,           
             'SellerID' => (isset($methodData['SellerID']) && !empty($methodData['SellerID']))?$methodData['SellerID']:null,
             'Password' => (isset($methodData['Password']) && !empty($methodData['Password']))?$methodData['Password']:null,
+            'FtpAddress' => (isset($methodData['FtpAddress']) && !empty($methodData['FtpAddress']))?$methodData['FtpAddress']:null,
             'FtpUserId' => (isset($methodData['FtpId']) && !empty($methodData['FtpId']))?$methodData['FtpId']:null,
             'FtpPassword' => (isset($methodData['FtpPwd']) && !empty($methodData['FtpPwd']))?$methodData['FtpPwd']:null,
             'PrependVenue' => (isset($methodData['PrependVenue']) && !empty($methodData['PrependVenue']))?$methodData['PrependVenue']:null,
@@ -187,6 +194,7 @@ class MarketplaceController
             'MarketSpecificPrice' => (isset($methodData['MarketSpecificPrice']) && !empty($methodData['MarketSpecificPrice']))?$methodData['MarketSpecificPrice']:null,
             'MarketAcceptPriceVal2' => (isset($methodData['MarketAcceptPriceVal2']) && !empty($methodData['MarketAcceptPriceVal2']))?$methodData['MarketAcceptPriceVal2']:null,
             'MarketAcceptPriceValMulti2' => (isset($methodData['MarketAcceptPriceValMulti2']) && !empty($methodData['MarketAcceptPriceValMulti2']))?$methodData['MarketAcceptPriceValMulti2']:null,
+            'Status' => (isset($methodData['MarketStatus']) && $methodData['MarketStatus'] == 1)?$methodData['MarketStatus']:0,
             'Updated' => date('Y-m-d H:i:s')
         );  
 

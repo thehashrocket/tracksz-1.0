@@ -56,6 +56,12 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                     </div> <!-- col-sm -->
 
                                     <div class="col-sm mt-3 pt-3"> <!-- col-sm Group Right Starts -->                                    
+
+                                        <div class="form-group"> <!-- form-group starts -->
+                                            <label for="FtpAddress"><?=_('FTP Address')?></label>
+                                                <input type="text" class="form-control" id="FtpAddress" name="FtpAddress" placeholder="Enter Ftp Address" data-parsley-required-message="<?=_('Enter Ftp Address')?>" data-parsley-group="fieldset01" required
+                                                    value="<?php echo (isset($form['FtpAddress']) && !empty($form['FtpAddress'])) ? $form['FtpAddress'] : ''; ?>">
+                                        </div> <!-- form-group ends -->
                                             <div class="form-group">
                                                 <label for="FtpId"><?=_('FTP ID')?></label>
                                                 <input type="text" class="form-control" id="FtpId" name="FtpId" placeholder="Enter Ftp Id" data-parsley-required-message="<?=_('Enter Ftp Id')?>" data-parsley-group="fieldset01" required
@@ -160,6 +166,15 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                                 <select id="MarketAcceptPrice" name="MarketAcceptPrice" class="browser-default custom-select market_place_dollar">
                                                     <option value="USD" selected><?=_('US Dollars')?></option>
                                                 </select>
+                                        </div>
+                                        <div class="form-group">
+                                                <label class="d-block"><?=_('MarketPlace Status:')?></label>
+                                                    <div class="custom-control custom-control-inline custom-radio">
+                                                        <input type="radio" class="custom-control-input" name="MarketStatus" id="MarketStatusActive" value="1" <?php echo (isset($form['Status']) && $form['Status'] == 1) ? 'checked' : ''; ?>> <label class="custom-control-label" for="MarketStatusActive"><?=_('Active')?></label>
+                                                    </div>
+                                                    <div class="custom-control custom-control-inline custom-radio">
+                                                        <input type="radio" class="custom-control-input" name="MarketStatus" id="MarketStatusInActive" value="0" <?php echo (isset($form['Status']) && $form['Status'] == 0) ? 'checked' : ''; ?>> <label class="custom-control-label" for="MarketStatusInActive"><?=_('In-Active')?></label>
+                                                    </div>
                                         </div>
                                     </div>
                                     <div class="col-6">
