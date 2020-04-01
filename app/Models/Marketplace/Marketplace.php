@@ -15,20 +15,14 @@ class Marketplace
     
     public function __construct(PDO $db,Adapter $adapter = null)
     {
-        $this->db = $db;  
-        $this->adapter = new Adapter([
-            'driver'   => 'Mysqli',
-            'database' => getenv('DATABASE'),
-            'username' => getenv('DB_USERNAME'),
-            'password' => getenv('DB_PASSWORD')
-        ]);   
-    }  
+        $this->db = $db;
+    }
 
 
       /*
     * all records - get all marketplace records
     *
-    * @param  
+    * @param
     * @return associative array.
     */
     public function getAll()
@@ -60,26 +54,26 @@ class Marketplace
     * @return boolean
     */
     public function addMarketplace($form = array())
-    {          
+    {
         $query  = 'INSERT INTO marketplace (MarketName, EmailAddress, SellerID, Password,FtpUserId,';
         $query .= 'FtpPassword, PrependVenue,AppendVenue,IncreaseMinMarket,FileFormat,';
         $query .= 'FtpAppendVenue, SuspendExport,SendDeletes,MarketAcceptPrice,MarketAcceptPriceVal,';
-        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2';                
+        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2';
         $query .= ') VALUES (';
         $query .= ':MarketName, :EmailAddress, :SellerID, :Password, :FtpUserId,';
         $query .= ':FtpPassword, :PrependVenue, :AppendVenue, :IncreaseMinMarket, :FileFormat,';
         $query .= ':FtpAppendVenue, :SuspendExport, :SendDeletes, :MarketAcceptPrice, :MarketAcceptPriceVal,';
-        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2';        
+        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2';
         $query .= ')';
 
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
             return false;
-        }        
+        }
         return true;
     }
     
-      
+    
     /*
     * editAddress - Find address by address record Id
     *
@@ -110,22 +104,22 @@ class Marketplace
         $query .= 'MarketAcceptPriceVal2 = :MarketAcceptPriceVal2, ';
         $query .= 'MarketAcceptPriceValMulti2 = :MarketAcceptPriceValMulti2, ';
         $query .= 'Updated = :Updated ';
-        $query .= 'WHERE Id = :Id ';    
-                
-        $stmt = $this->db->prepare($query);  
+        $query .= 'WHERE Id = :Id ';
+        
+        $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
             return 0;
         }
         $stmt = null;
         return $form['Id'];
-    }  
+    }
     
  
     
     /*
     * delete - delete a Marketplace records
     *
-    * @param  $id = table record ID   
+    * @param  $id = table record ID
     * @return boolean
     */
     public function delete($Id = null)
@@ -153,5 +147,5 @@ class Marketplace
         // [13] => quote
         // [14] => __wakeup
         // [15] => __sleep
-        // [16] => getAvailableDrivers  
+        // [16] => getAvailableDrivers
 }

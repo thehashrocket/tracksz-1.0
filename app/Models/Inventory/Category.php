@@ -1,9 +1,6 @@
 <?php declare(strict_types = 1);
 
 namespace App\Models\Inventory;
-use Laminas\Db\Sql\Sql;
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\ResultSet\ResultSet;
 use PDO;
 
 class Category
@@ -15,12 +12,6 @@ class Category
     public function __construct(PDO $db,Adapter $adapter = null)
     {
         $this->db = $db;
-        $this->adapter = new Adapter([
-            'driver'   => 'Mysqli',
-            'database' => getenv('DATABASE'),
-            'username' => getenv('DB_USERNAME'),
-            'password' => getenv('DB_PASSWORD')
-        ]);   
     }
 
 
@@ -135,11 +126,11 @@ class Category
      * @return array of arrays
     */
     public function insert_category($ParentId = null, $Name= null, $Description= null, $Image= null,$Created= null, $Update= null)
-    {   
+    {
         $res['status'] = false;
         $res['message'] = 'record not inserted';
         $res['data'] = array();
-        $stmt = $this->db->prepare("INSERT INTO `category` (`Id`, `ParentId`,`Name`, `Description`, `Image`, `Created`, `Update`) VALUES (NULL, $ParentId, '$Name', '$Description', '$Image', '$Created', '$Update')");                  
+        $stmt = $this->db->prepare("INSERT INTO `category` (`Id`, `ParentId`,`Name`, `Description`, `Image`, `Created`, `Update`) VALUES (NULL, $ParentId, '$Name', '$Description', '$Image', '$Created', '$Update')");
         $stmt->execute();
         if($stmt){
             $res['status'] = true;

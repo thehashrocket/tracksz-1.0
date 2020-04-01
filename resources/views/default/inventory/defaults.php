@@ -13,21 +13,37 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <!-- title -->
-                <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Inventory Default Settings')?> </h1>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse"><?=('Inventory')?></a>
+                            </li>
+                            <li class="breadcrumb-item active">                                                             <?=('Defaults')?>
+                            </li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
                 </div>
-                <p class="text-muted"> <?=_('Configure default settings for your Active Store: ')?><strong> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></strong></p>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
+                <?php endif ?>
+                <!-- title -->
+                <h1 class="page-title"> <?=_('Inventory Default Settings')?> </h1>
+                <p class="text-muted"> <?=_('Configure default settings for your Active Store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
                 <p class="text-muted"> <?=_('Default settings are used to pre-fill certain form fields when you add new inventory.  They are also used on items in an upload file that do not contain certain data values.')?> <i><?=_('Form fields with default values can be changed when adding inventory.')?> </i></p>
-            <?php if(isset($alert) && $alert):?>
-                 <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
-            <?php endif ?>
             </header><!-- /.page-title-bar -->
             <!-- .page-section -->
             <div class="page-section">
                 <!-- .card -->
                 <div class="card card-fluid">
-                    <h6 class="card-header"><?=\Delight\Cookie\Cookie::get('tracksz_active_name')?> - <?=_('Inventory Defaults')?></h6><!-- .card-body -->
+                    <h6 class="card-header"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?> - <?=_('Inventory Defaults')?></h6><!-- .card-body -->
                     <div class="card-body">
                         <!-- form -->
                         <form method="post" action="/inventory/defaults" id="inventory-defaults" data-parsley-validate="">
@@ -40,7 +56,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="producttype" class="form-label required-field"><?=_('Main Product Type')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Product type determines the use and labeling of some fields and if any other fields are required. You may select different product types when adding a product.')?>"></i></label>
-                                        <select name="Type" class="custom-select form-control" id="producttype" title="<?=_('What is your main product type for this store.')?>" data-parsley-required-message="<?=_('Please select main product type.')?>" required>
+                                        <select name="Type" class="custom-select form-control" id="producttype" title="<?=_('What is your main product type for this store.')?>" data-parsley-required-message="<?=_('Please select main product type.')?>">
                                             <?php if(!isset($defaults['Type'])): ?>
                                                 <option value="" selected><?=_('Select one...')?></option>
                                             <?php endif; ?>
@@ -59,7 +75,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="taxclass" class="form-label required-field"><?=_('Main Product Tax Class')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('What tax class applies to most of your inventory items? Default is taxable Product.')?>"></i></label>
-                                        <select name="TaxClassId" class="custom-select form-control" id="taxclass" title="<?=_('What is your main product tax class for this store.')?>" data-parsley-required-message="<?=_('Please select main product tax class.')?>" required>
+                                        <select name="TaxClassId" class="custom-select form-control" id="taxclass" title="<?=_('What is your main product tax class for this store.')?>" data-parsley-required-message="<?=_('Please select main product tax class.')?>">
                                             <?php
                                                 $tax = 1;
                                                 if(isset($defaults['TaxClassId'])) {
@@ -84,7 +100,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="subtractstock" class="form-label required-field"><?=_('Subtract Stock')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('When an item is ordered, subtract the order quantity from your inventory.  The default is Yes.')?>"></i></label>
-                                        <select name="Subtract" class="custom-select form-control" id="subtractstock" title="<?=_('Subtract Quantity from Order.')?>" data-parsley-required-message="<?=_('Subtract Quantity from Order.')?>" required>
+                                        <select name="Subtract" class="custom-select form-control" id="subtractstock" title="<?=_('Subtract Quantity from Order.')?>" data-parsley-required-message="<?=_('Subtract Quantity from Order.')?>">
                                             <?php
                                                 $subtract_option = ['Yes' => 1, 'No' => 0];
                                                 $subtract = 1;
@@ -106,7 +122,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="zeroquantity" class="form-label required-field"><?=_('Delete Zero Quantity')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('When an item\'s quantity reaches 0 (zero) delete it from inventory? Default is Delete.')?>"></i></label>
-                                        <select name="DeleteZero" class="custom-select form-control" id="zeroquantity" title="<?=_('Delete Zero Quantity Inventory Items.')?>" data-parsley-required-message="<?=_('Delete Zero Quantity Inventoy Items.')?>" required>
+                                        <select name="DeleteZero" class="custom-select form-control" id="zeroquantity" title="<?=_('Delete Zero Quantity Inventory Items.')?>" data-parsley-required-message="<?=_('Delete Zero Quantity Inventoy Items.')?>">
                                             <?php
                                             $delete_option = ['Yes' => 1, 'No' => 0];
                                             $delete = 1;
@@ -131,7 +147,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="stockstatus" class="form-label required-field"><?=_('Out of Stock Status')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Only applies if you do not delete 0 (zero) quantity inventory.  If an item\'s quantity is zero what default Status do you want displayed.')?>"></i></label>
-                                        <select name="StockStatusId" class="custom-select form-control" id="stockstatus" title="<?=_('Out of stock status.')?>" data-parsley-required-message="<?=_('Out of Stock Status')?>" required>
+                                        <select name="StockStatusId" class="custom-select form-control" id="stockstatus" title="<?=_('Out of stock status.')?>" data-parsley-required-message="<?=_('Out of Stock Status')?>">
                                         <?php
                                             $stock_status = 1;
                                             if(isset($defaults['StockStatusId'])) {
@@ -152,7 +168,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="condition" class="form-label required-field"><?=_('Default Condition')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('What condition does your inventory items primarily meet.')?>"></i></label>
-                                        <select name="Condition" class="custom-select form-control" id="condition" title="<?=_('Inventory Item Condition')?>" data-parsley-required-message="<?=_('Inventory Item Condition')?>" required>
+                                        <select name="Condition" class="custom-select form-control" id="condition" title="<?=_('Inventory Item Condition')?>" data-parsley-required-message="<?=_('Inventory Item Condition')?>">
                                             <?php
                                             $condition = 1;
                                             if(isset($defaults['Condition'])) {
@@ -183,7 +199,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="lengthuom" class="form-label required-field"><?=_('Length Unit of Measure')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('What unit of measure do you use for your length measurements.')?>"></i></label>
-                                        <select name="LengthClassId" class="custom-select form-control" id="lengthuom" title="<?=_('Length Unit of Measure')?>" data-parsley-required-message="<?=_('Length Unit of Measure')?>" required>
+                                        <select name="LengthClassId" class="custom-select form-control" id="lengthuom" title="<?=_('Length Unit of Measure')?>" data-parsley-required-message="<?=_('Length Unit of Measure')?>">
                                             <?php
                                                 $length = 1;
                                                 if(isset($defaults['LengthClassId'])) {
@@ -230,7 +246,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                                     <!-- .form-group -->
                                     <div class="form-group">
                                         <label for="weightuom" class="form-label required-field"><?=_('Weight Unit of Measure')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('What unit of measure do you use for your weights.')?>"></i></label>
-                                        <select name="WeightClassId" class="custom-select form-control" id="weightuom" title="<?=_('Weight Unit of Measure')?>" data-parsley-required-message="<?=_('Weight Unit of Measure')?>" required>
+                                        <select name="WeightClassId" class="custom-select form-control" id="weightuom" title="<?=_('Weight Unit of Measure')?>" data-parsley-required-message="<?=_('Weight Unit of Measure')?>">
                                             <?php
                                             $weight = 4;
                                             if(isset($defaults['WeightClassId'])) {

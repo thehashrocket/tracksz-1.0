@@ -20,9 +20,9 @@ class InventoryController
         $this->db   = $db;
     }
     
-    public function view()
+    public function browse()
     {
-        return $this->view->buildResponse('inventory/view', []);
+        return $this->view->buildResponse('inventory/browse', []);
     }
     
     public function add()

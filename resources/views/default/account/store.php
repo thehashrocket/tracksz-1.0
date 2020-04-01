@@ -13,21 +13,30 @@ $description_meta = 'Add/Edit Stores at Tracksz, a Multiple Market Inventory Man
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">
-                            <a href="/account/stores"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=_('Stores')?></a>
-                        </li>
-                    </ol>
-                </nav>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/account/stores"><?=('Stores')?></a>
+                            </li>
+                            <li class="breadcrumb-item active">                                                             <?=('Add')?>
+                            </li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
+                <?php endif ?>
                 <h1 class="page-title"> <?=_('Store')?> </h1>
                 <p class="text-muted"> <?=_('Adding a store changes the "Active" store to the new store added. If this is not what you want, you will have to change the Active in the Stores listing after you add this store.')?></p>
             </header><!-- /.page-title-bar -->
-            <?php if(isset($alert) && $alert):?>
-                <div class="row text-center">
-                    <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
-                </div>
-            <?php endif ?>
             <!-- .page-section -->
             <div class="page-section">
                 <!-- .section-block -->
@@ -542,7 +551,7 @@ $description_meta = 'Add/Edit Stores at Tracksz, a Multiple Market Inventory Man
     <div class="modal-dialog modal-dialog-centered" role="document">
         <!-- .modal-content -->
         <div class="modal-content">
-            <!-- .modal-header -->
+            <!-- .modal-header -->fg
             <div class="modal-header">
                 <h5 id="stripeModalCenterLabel" class="modal-title"> Stripe Connect & Tracksz </h5>
             </div><!-- /.modal-header -->

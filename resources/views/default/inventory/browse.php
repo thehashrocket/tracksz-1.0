@@ -13,15 +13,33 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <!-- title -->
-                <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Inventory Listing')?> </h1>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse"><?=('Inventory')?></a>
+                            </li>
+                            <li class="breadcrumb-item active">                                                             <?=('Browse')?>
+                            </li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
                 </div>
-                <p class="text-muted"> <?=_('This is where you can add, modify, and delete inventory for the current Active Store: ')?><strong> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></strong></p>
                 <?php if(isset($alert) && $alert):?>
-                    <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
                 <?php endif ?>
+                <h1 class="page-title"> <?=_('Inventory Listing')?> </h1>
+                <p class="text-muted"> <?=_('Browse, add, edit, or delete Inventory attached to the current store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
+                <a href="/inventory/add" class="btn btn-sm btn-primary" title="<?=_('Add Inventory Item to Your Active Store')?>"><?=_('Add Inventory Item')?></a>
+
             </header><!-- /.page-title-bar -->
+
             <?php if (isset($stores) && is_array($stores) &&  count($stores)> 0): ?>
                 <!-- .card -->
                 <div class="card card-fluid">
@@ -73,7 +91,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                     </div>
                 </div>
             <?php endif; ?>
-            <a href="/inventory/add" class="btn btn-sm btn-primary" title="<?=_('Add Inventory Item to Your Active Store')?>"><?=_('Add Inventory Item')?></a>
+
             <?php if (isset($deleted) &&  count($deleted)> 0): ?>
                 <p></p><a href="#" data-toggle="collapse" data-target="#deleted-stores" title="<?=_('View Deleted Stores')?>"><small><?=_('View Deleted Stores.')?></small></a></p>
                 <!-- .card -->

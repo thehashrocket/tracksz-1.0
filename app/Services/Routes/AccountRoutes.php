@@ -44,12 +44,6 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/profile', Account\AccountController::class.'::updateProfile');
                 $route->get('/payment', Account\PaymentController::class.'::payment');
                 $route->get('/stores', Account\StoreController::class.'::stores');
-                $route->get('/shipping-methods', Account\ShippingController::class.'::viewMethods');
-                $route->get('/shipping-methods/create', Account\ShippingController::class.'::viewCreateMethod');
-                $route->get('/shipping-methods/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
-                $route->get('/shipping-zones', Account\ShippingController::class.'::viewZones');
-                $route->get('/shipping-zones/create', Account\ShippingController::class.'::viewCreateZone');
-                $route->get('/shipping-zones/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
                 $route->get('/store', Account\StoreController::class.'::store');
                 $route->get('/store/edit/{Id:number}', Account\StoreController::class.'::edit');
                 $route->get('/stripe/connect/{Id:number}', Account\StoreController::class.'::stripeConnect');
@@ -65,15 +59,36 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/store/delete/{Id:number}', Account\StoreController::class.'::delete');
                 $route->post('/store/restore/{Id:number}', Account\StoreController::class.'::restore');
                 $route->post('/store/active/{Id:number}', Account\StoreController::class.'::setActive');
-                $route->post('/shipping-methods/create', Account\ShippingController::class.'::createMethod');
-                $route->post('/shipping-methods/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
-                $route->post('/shipping-methods/edit', Account\ShippingController::class.'::updateMethod');
-                $route->post('/shipping-zones/create', Account\ShippingController::class.'::createZone');
-                $route->post('/shipping-zones/edit', Account\ShippingController::class.'::updateZone');
-                
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));
     
+    
+            // Shipping Methods for a Spefic Store
+            $routes->group('/account/shipping-methods', function (\League\Route\RouteGroup $route) {
+                $route->get('/', Account\ShippingController::class.'::viewMethods');
+                $route->get('/add', Account\ShippingController::class.'::viewAddMethod');
+                $route->get('/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
+        
+                $route->post('/create', Account\ShippingController::class.'::createMethod');
+                $route->post('/{Id:number}', Account\ShippingController::class.'::deleteMethod');
+                $route->post('/edit', Account\ShippingController::class.'::updateMethod');
+        
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Store'))
+                ->middleware($this->container->get('Auth'));
+    
+            // Shipping zones
+            $routes->group('/account/shipping-zones', function (\League\Route\RouteGroup $route) {
+                $route->get('/', Account\ShippingController::class.'::viewZones');
+                $route->get('/create', Account\ShippingController::class.'::viewCreateZone');
+                $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
+    
+                $route->post('/create', Account\ShippingController::class.'::createZone');
+                $route->post('/edit', Account\ShippingController::class.'::updateZone');
+            })->middleware($this->container->get('Csrf'))
+              ->middleware($this->container->get('Store'))
+              ->middleware($this->container->get('Auth'));
+            
             return $routes;
         })->setShared(true);
     }

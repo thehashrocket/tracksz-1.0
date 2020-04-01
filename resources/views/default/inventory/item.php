@@ -13,15 +13,29 @@ $description_meta = 'Add/Edit Inventory Item at your Tracksz Store, a Multiple M
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">
-                            <a href="/inventory/view"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=_('Inventory')?></a>
-                        </li>
-                    </ol>
-                </nav>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse"><?=('Inventory')?></a>
+                            </li>
+                            <li class="breadcrumb-item active">                                                             <?=('Add')?>
+                            </li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
+                <?php endif ?>
                 <h1 class="page-title"> <?=_('Inventory Item')?> </h1>
-                
+                <p class="text-muted"> <?=_('Add a New Inventory Items')?></p>
             </header><!-- /.page-title-bar -->
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">

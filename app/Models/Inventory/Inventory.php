@@ -4,7 +4,7 @@ namespace App\Models\Product;
 
 use PDO;
 
-class product
+class Inventory
 {
     // Contains Resources
     private $db;
@@ -21,7 +21,7 @@ class product
     */
     public function all()
     {
-        $stmt = $this->db->prepare('SELECT Id, `Name` FROM product ORDER BY `Name`');
+        $stmt = $this->db->prepare('SELECT Id, `Name` FROM Product ORDER BY `Name`');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

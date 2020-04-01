@@ -31,7 +31,7 @@ class InventoryRoutes extends AbstractServiceProvider
     
             // Main Inventory routes.  Must have a selected store
             $routes->group('/inventory', function (\League\Route\RouteGroup $route) {
-                $route->get('/view', Inventory\InventoryController::class . '::view');
+                $route->get('/browse', Inventory\InventoryController::class . '::browse');
                 $route->get('/add', Inventory\InventoryController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
     

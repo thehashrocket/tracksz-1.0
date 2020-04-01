@@ -17,13 +17,13 @@ class MarketplaceController
     public function __construct(Views $view, PDO $db)
     {
         $this->view = $view;
-        $this->db = $db;    
+        $this->db = $db;
     }
 
-    public function view()
-    {   
+    public function browse()
+    {
         $result_data = (new Marketplace($this->db))->getAll();
-        return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
+        return $this->view->buildResponse('marketplace/browse', ['marketplace' => $result_data]);
     }
 
     public function add()
@@ -33,7 +33,7 @@ class MarketplaceController
     }
 
     public function addSecond(ServerRequest $request)
-    { 
+    {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
       
@@ -49,12 +49,12 @@ class MarketplaceController
         ));
 
         $validated = $validate->run($form,true);
-        // use validated as it is filtered and validated        
+        // use validated as it is filtered and validated
         if ($validated === false) {
             $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/marketplace/dashboard');
+            return $this->view->redirect('/marketplace/add');
         }
 
         $market_price = Config::get('market_price');
@@ -62,7 +62,7 @@ class MarketplaceController
     }
 
     public function addThree(ServerRequest $request)
-    {   
+    {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
      
@@ -93,17 +93,17 @@ class MarketplaceController
 
         // Add filters for non-strings (integers, float, emails, etc) ALWAYS Trim
           $validate->filter_rules(array(
-            'EmailAddress'    => 'trim|sanitize_email',            
+            'EmailAddress'    => 'trim|sanitize_email',
         ));
         
         $validated = $validate->run($form);
-        // use validated as it is filtered and validated        
-        if ($validated === false) {                     
+        // use validated as it is filtered and validated
+        if ($validated === false) {
             $validated['alert'] = 'Sorry, Please fill marketplace data.  Please try again.';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
             $market_price = Config::get('market_price');
-            return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);            
+            return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form,'market_price' => $market_price]);
         }
       
         $form_insert_data = array(
@@ -144,10 +144,10 @@ class MarketplaceController
     }
 
     public function editMarketplace(ServerRequest $request, $Id = [])
-    {          
+    {
         $form = (new Marketplace($this->db))->findById($Id['Id']);
         if(is_array($form) && !empty($form)){
-            $market_price = Config::get('market_price');            
+            $market_price = Config::get('market_price');
             return $this->view->buildResponse('/marketplace/edit', [
                 'form' => $form,'market_price' => $market_price
             ]);
@@ -162,14 +162,14 @@ class MarketplaceController
 
 
     public function updateMarketplace(ServerRequest $request, $Id = [])
-    {      
+    {
         $methodData = $request->getParsedBody();
         unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
 
         $form_udpate_data = array(
             'Id' => (isset($methodData['Id']) && !empty($methodData['Id']))?$methodData['Id']:null,
             'EmailAddress' => (isset($methodData['EmailAddress']) && !empty($methodData['EmailAddress']))?$methodData['EmailAddress']:null,
-           'MarketName' => (isset($methodData['MarketName']) && !empty($methodData['MarketName']))?$methodData['MarketName']:null,           
+           'MarketName' => (isset($methodData['MarketName']) && !empty($methodData['MarketName']))?$methodData['MarketName']:null,
             'SellerID' => (isset($methodData['SellerID']) && !empty($methodData['SellerID']))?$methodData['SellerID']:null,
             'Password' => (isset($methodData['Password']) && !empty($methodData['Password']))?$methodData['Password']:null,
             'FtpUserId' => (isset($methodData['FtpId']) && !empty($methodData['FtpId']))?$methodData['FtpId']:null,
@@ -188,7 +188,7 @@ class MarketplaceController
             'MarketAcceptPriceVal2' => (isset($methodData['MarketAcceptPriceVal2']) && !empty($methodData['MarketAcceptPriceVal2']))?$methodData['MarketAcceptPriceVal2']:null,
             'MarketAcceptPriceValMulti2' => (isset($methodData['MarketAcceptPriceValMulti2']) && !empty($methodData['MarketAcceptPriceValMulti2']))?$methodData['MarketAcceptPriceValMulti2']:null,
             'Updated' => date('Y-m-d H:i:s')
-        );  
+        );
 
         $is_updated = (new Marketplace($this->db))->editMarket($form_udpate_data);
         if(isset($is_updated) && !empty($is_updated)){
@@ -218,7 +218,7 @@ class MarketplaceController
 
     public function deleteMarketData(ServerRequest $request){
         $form = $request->getParsedBody();
-        $result_data = (new Marketplace($this->db))->delete($form['Id']);        
+        $result_data = (new Marketplace($this->db))->delete($form['Id']);
         if(isset($result_data) && !empty($result_data)){
 
             $validated['alert'] = 'Marketplace record deleted successfully..!';
@@ -227,7 +227,7 @@ class MarketplaceController
 
             $res['status'] = true;
             $res['data'] = array();
-            $res['message'] = 'Records deleted successfully..!';                
+            $res['message'] = 'Records deleted successfully..!';
             echo json_encode($res);
             exit;
         }else{
@@ -237,7 +237,7 @@ class MarketplaceController
 
             $res['status'] = false;
             $res['data'] = array();
-            $res['message'] = 'Records not Deleted..!';                
+            $res['message'] = 'Records not Deleted..!';
             echo json_encode($res);
             exit;
 
