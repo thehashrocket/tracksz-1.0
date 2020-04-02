@@ -63,3 +63,7 @@ select.parsley-error:focus {
     background-image: url('../images/thankyou.png');
     background-size: cover;
 }
+
+.inventory_csv .fa-file-csv:before{
+    font-size: 32px;
+}
