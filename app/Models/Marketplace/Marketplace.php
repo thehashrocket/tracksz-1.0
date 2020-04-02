@@ -37,6 +37,21 @@ class Marketplace
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+     /*
+    * all records - get all marketplace records
+    *
+    * @param  
+    * @return associative array.
+    */
+    public function getActiveUserAll($UserId = 0, $Status = array())
+    {
+        $Status = implode(',', $Status); // WITHOUT WHITESPACES BEFORE AND AFTER THE COMMA
+        $stmt = $this->db->prepare("SELECT * FROM marketplace WHERE UserId = :UserId AND Status IN ($Status) ORDER BY `Id` DESC");
+        $stmt->execute(['UserId' => $UserId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
  
     
     /*
