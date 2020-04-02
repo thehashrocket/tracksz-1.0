@@ -33,11 +33,14 @@ class InventoryRoutes extends AbstractServiceProvider
             $routes->group('/inventory', function (\League\Route\RouteGroup $route) {
             
                 $route->get('/upload', Inventory\InventoryController::class . '::uploadInventory');
+                $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');                
+
                 $route->get('/view', Inventory\InventoryController::class . '::view');
                 $route->get('/add', Inventory\InventoryController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
                 
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::uploadInventoryFTP');
+                $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 
                 /*********** Save for Review - Delete if Not Used ************/

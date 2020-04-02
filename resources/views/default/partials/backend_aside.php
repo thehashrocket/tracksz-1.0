@@ -53,13 +53,16 @@
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['inventory-view','inventory-defaults','inventory-categories','inventory-upload'];
+                    $inventory_menu = ['inventory-view','inventory-defaults','inventory-categories','inventory-upload','inventory-upload'];
                     ?>
                     <li class="menu-item has-child<?php if(in_array($page, $inventory_menu)) echo ' has-active';?>">
                         <a href="#" class="menu-link" title="<?=_('Active Store Inventory')?>"><span class="menu-icon fas fa-list" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Inventory')?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <li class="menu-item<?php if($page == 'inventory-upload') echo ' has-active';?>">
                                 <a href="/inventory/upload" title="<?=_('Inventory File Upload')?>" class="menu-link"><?=_('Upload')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'inventory-update') echo ' has-active';?>">
+                                <a href="/inventory/update" title="<?=_('Inventory Update')?>" class="menu-link"><?=_('Update')?></a>
                             </li>
                             <li class="menu-item<?php if($page == 'inventory-view') echo ' has-active';?>">
                                 <a href="/inventory/view" title="<?=_('View, Add, Edit, Delete Inventory')?>" class="menu-link"><?=_('View')?></a>
