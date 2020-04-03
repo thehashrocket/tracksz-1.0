@@ -31,7 +31,8 @@ class InventoryRoutes extends AbstractServiceProvider
     
             // Main Inventory routes.  Must have a selected store
             $routes->group('/inventory', function (\League\Route\RouteGroup $route) {
-            
+                
+                /* Inventory Routes */
                 $route->get('/upload', Inventory\InventoryController::class . '::uploadInventory');
                 $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');                
 
@@ -42,31 +43,11 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::uploadInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
-                
-                /*********** Save for Review - Delete if Not Used ************/
-                // $route->get('/add', Product\ProductController::class . '::add'); InventoryController?
-                /*$route->post('/place_market', Product\ProductController::class . InventoryController?
-'::map_market_products'); */
-                /*********** End Save for Review Delete ************/
+                /* Inventory Routes */                
+               
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Auth'));
-    
-    
-            /*********** Save for Review - Delete if Not Used ************/
-            // Main CATEGORY routes.  Must have a selected store
-            /* $routes->group('/inventory/category', function (\League\Route\RouteGroup $route) {
-                $route->get('/view', Category\CategoryController::class . '::view');
-                $route->get('/add', Category\CategoryController::class . '::add');
-                $route->get('/defaults', Category\CategoryController::class . '::defaults');
-                $route->get('/lists', Category\CategoryController::class . '::get_list_records');
-        
-                $route->post('/defaults', Category\CategoryController::class . '::updateDefaults');
-                $route->post('/insert_category', Category\CategoryController::class . '::add_Category');
-        
-            })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth')); */
-            /*********** End Save for Review Delete ************/
-            
+               
             return $routes;
         })->setShared(true);
     }
