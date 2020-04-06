@@ -87,7 +87,7 @@ class CategoryController
         $validate->validation_rules(array(
             'CategoryName'    => 'required',
             'CategoryDescription'       => 'required',            
-            'ParentCategory'     => 'required'
+            // 'ParentCategory'     => 'required'
         ));
 
         $validated = $validate->run($form);
@@ -98,7 +98,7 @@ class CategoryController
        
         /* File upload validation starts */
         if(isset($_FILES['CategoryImage']['error']) && $_FILES['CategoryImage']['error'] > 0){
-            throw new Exception("Please Upload Inventory file...!", 301);
+            throw new Exception("Please Upload Category Image...!", 301);
         }
        
         $validator = new FilesSize([
@@ -122,12 +122,13 @@ class CategoryController
         $file_stream = $_FILES['CategoryImage']['tmp_name'];
         $file_name = $_FILES['CategoryImage']['name'];
         $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));                
-        $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');                
+        // $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');                
+        $publicDir = getcwd()."/assets/images/category/".$file_encrypt_name.strstr($file_name,'.');
         $cat_img = $file_encrypt_name.strstr($file_name,'.');
         $is_file_uploaded = move_uploaded_file($file_stream,$publicDir); 
 
         $insert_data = $this->PrepareInsertData($form);         
-        $insert_data['Image'] = $cat_img;         
+        $insert_data['Image'] = $cat_img;          
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->addCateogry($insert_data);
 
@@ -173,7 +174,7 @@ class CategoryController
         $form_data = array();        
         $form_data['Name'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : null;
         $form_data['Description'] = (isset($form['CategoryDescription']) && !empty($form['CategoryDescription'])) ? $form['CategoryDescription'] : null;
-        $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : null;      
+        $form_data['ParentId'] = $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : 0;
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;      
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');      
         return $form_data;
@@ -195,7 +196,7 @@ class CategoryController
         $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : 0; 
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;      
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
-                     return $form_data;
+        return $form_data;
     }
 
     public function deleteCategoryData(ServerRequest $request){
@@ -270,33 +271,40 @@ class CategoryController
         }  
         /* File upload validation ends */ 
         
+  
+
      
         $file_stream = $_FILES['CategoryImage']['tmp_name'];
         $file_name = $_FILES['CategoryImage']['name'];
         $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));                
-        $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');                
+        $publicDir = getcwd()."/assets/images/category/".$file_encrypt_name.strstr($file_name,'.');
         $cat_img = $file_encrypt_name.strstr($file_name,'.');
-        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);        
+       
+        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);  
+           
         }
 
+       
+
         $update_data = $this->PrepareUpdateData($methodData);
+
+      
         $update_data['Updated'] = date('Y-m-d H:i:s');     
         $update_data['Image'] = $cat_img;     
-       
         $is_updated = (new Category($this->db))->editCategory($update_data);
-        if(isset($is_updated) && !empty($is_updated)){            
+
+        if(isset($is_updated) && !empty($is_updated)){ 
             $this->view->flash([
                 'alert' => 'Category record updated successfully..!',
                 'alert_type' => 'success'
             ]);
-            unlink(getcwd().'\assets\images\category\\'.$methodData['CategoryImageHidden']);
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
             return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+            unlink(getcwd()."/assets/images/category/".$methodData['CategoryImageHidden']);
         }else{
             throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
         }
-
 
     }catch (Exception $e){    
 
