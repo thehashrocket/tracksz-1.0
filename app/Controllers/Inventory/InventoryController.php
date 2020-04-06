@@ -13,8 +13,6 @@ use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use Exception;
 use PDO;
-
-
 class InventoryController
 {
     private $view;

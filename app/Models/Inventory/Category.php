@@ -60,7 +60,6 @@ class Category
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     /*
     * all records - get all marketplace records
     *
@@ -74,7 +73,6 @@ class Category
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     
     /*
      * findParents - get top level categories
@@ -109,7 +107,14 @@ class Category
     }
 
 
-     /*
+
+
+
+
+
+
+    
+ /*
     * addCateogry - add a new cateogry for a user
     *
     * @param  $form  - Array of form fields, name match Database Fields
