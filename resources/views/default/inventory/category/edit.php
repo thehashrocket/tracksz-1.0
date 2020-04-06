@@ -70,8 +70,16 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                 <div class="form-group">
                                     <label for="CategoryImage"><?=_('Category Image')?></label>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="CategoryImage" name="CategoryImage" multiple="" value="<?php echo (isset($form['Image']) && !empty($form['Image'])) ? $form['Image'] : ''; ?>"> <label class="custom-file-label" for="CategoryImage" data-parsley-required-message="<?=_('Select Inventory File Upload')?>" data-parsley-group="fieldset01"><?php echo (isset($form['Image']) && !empty($form['Image'])) ? $form['Image'] : _('Choose file'); ?></label>                                        
+                                        <input type="file" class="custom-file-input" id="CategoryImage" name="CategoryImage" multiple=""> <label class="custom-file-label" for="CategoryImage" data-parsley-required-message="<?=_('Select Inventory File Upload')?>" data-parsley-group="fieldset01"><?= _('Choose file'); ?></label>                                        
+                                        <input type="hidden" class="form-control" id="CategoryImageHidden" name="CategoryImageHidden" value="<?php echo (isset($form['Image']) && !empty($form['Image'])) ? $form['Image'] : ''; ?>">
                                     </div>
+                                </div>
+                                <?php
+                                    $img_path = '';
+                                    $img_path = \App\Library\Config::get('company_url').'/assets/images/category/'.$form['Image'];
+                                ?>
+                                <div class="form-group">
+                                    <img src="<?php echo $img_path; ?>" width="100" width="100" />
                                 </div>
 
                             </div> <!-- col-sm -->

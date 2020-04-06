@@ -244,40 +244,78 @@ class CategoryController
 
     public function updateCategory(ServerRequest $request, $Id = [])
     {      
+        try{
         $methodData = $request->getParsedBody();
         unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        
+        $cat_img = $methodData['CategoryImageHidden'];
+        /* File upload validation starts */
+        if(isset($_FILES['CategoryImage']['error']) && $_FILES['CategoryImage']['error'] == 0){
+   
+        $validator = new FilesSize([
+            'min' => '0kB',  // minimum of 1kB
+            'max' => '10MB', // maximum of 10MB
+        ]);
+    
+        // if false than throw Size error 
+        if (!$validator->isValid($_FILES)) {
+            throw new Exception("File upload size is too large...!", 301);
+        }
+       
+        // Using an options array:
+        $validator_ext = new Extension(['png,jpg']);         
+        // if false than throw type error
+        if (!$validator_ext->isValid($_FILES['CategoryImage'])) {
+            throw new Exception("Please upload valid file type JPG & PNG...!", 301);
+        }  
+        /* File upload validation ends */ 
+        
      
         $file_stream = $_FILES['CategoryImage']['tmp_name'];
         $file_name = $_FILES['CategoryImage']['name'];
         $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));                
         $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');                
         $cat_img = $file_encrypt_name.strstr($file_name,'.');
-        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir); 
+        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);        
+        }
 
         $update_data = $this->PrepareUpdateData($methodData);
         $update_data['Updated'] = date('Y-m-d H:i:s');     
         $update_data['Image'] = $cat_img;     
        
         $is_updated = (new Category($this->db))->editCategory($update_data);
-        if(isset($is_updated) && !empty($is_updated)){
+        if(isset($is_updated) && !empty($is_updated)){            
             $this->view->flash([
                 'alert' => 'Category record updated successfully..!',
                 'alert_type' => 'success'
             ]);
+            unlink(getcwd().'\assets\images\category\\'.$methodData['CategoryImageHidden']);
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
             return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
         }else{
-            $this->view->flash([
-                        'alert' => 'Failed to update category. Please ensure all input is filled out correctly.',
-                        'alert_type' => 'danger'
-                    ]);
+            throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
+        }
+
+
+    }catch (Exception $e){    
+
+        $res['status'] = false;
+        $res['data'] = [];
+        $res['message'] = $e->getMessage();
+        $res['ex_message'] = $e->getMessage();
+        $res['ex_code'] = $e->getCode();
+        $res['ex_file'] = $e->getFile();
+        $res['ex_line'] = $e->getLine();            
+
+        $validated['alert'] = $e->getMessage();
+        $validated['alert_type'] = 'danger';
+        $this->view->flash($validated);
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
         return $this->view->buildResponse('inventory/category/edit', [
             'form' => $methodData,'all_category' => $all_category]);
-
-        }
+    }
     }
 
     /*
