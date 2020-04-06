@@ -42,14 +42,14 @@ class Application
     // becomes Keyherelowercase (ie customer = Customer)
     protected $routeProviders = [
         'Default'   =>  Services\Routes\DefaultRoutes::class,
-        'Account'   =>  Services\Routes\AccountRoutes::class,
+        'Order'     =>  Services\Routes\OrderRoutes::class,
+        'Report'    =>  Services\Routes\ReportRoutes::class,
         'Inventory' =>  Services\Routes\InventoryRoutes::class,
+        'Marketplace' =>  Services\Routes\MarketplaceRoutes::class,
+        'Account'   =>  Services\Routes\AccountRoutes::class,
+        
         'Ajax'      =>  Services\Routes\AjaxRoutes::class,
         'Api'       =>  Services\Routes\ApiRoutes::class,
-        'Inventory' =>  Services\Routes\InventoryRoutes::class,
-        'Product' =>  Services\Routes\ProductRoutes::class,
-        'Category' =>  Services\Routes\CategoryRoutes::class,   
-        'Marketplace' =>  Services\Routes\MarketplaceRoutes::class,        
         
         // example Rooutes file
         'Example'   =>  Services\Routes\zzExampleRoutes::class,

@@ -27,5 +27,8 @@ class OrderController
         $this->db   = $db;
     }
     
-    
+    public function browse()
+    {
+        return $this->view->buildResponse('order/browse', []);
+    }
 }

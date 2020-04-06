@@ -17,25 +17,24 @@ $description_meta = 'Add/Edit Inventory Item at your Tracksz Store, a Multiple M
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/inventory/browse"><?=('Inventory')?></a>
+                                <a href="/inventory/browse" title="Browse Store's Inventory"><?=('Inventory')?></a>
                             </li>
-                            <li class="breadcrumb-item active">                                                             <?=('Add')?>
-                            </li>
+                            <li class="breadcrumb-item active"><?=('Add')?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
+                <h1 class="page-title"> <?=_('Inventory Item')?> </h1>
+                <p class="text-muted"> <?=_('Add a New Inventory Items')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                     </div>
                 <?php endif ?>
-                <h1 class="page-title"> <?=_('Inventory Item')?> </h1>
-                <p class="text-muted"> <?=_('Add a New Inventory Items')?></p>
             </header><!-- /.page-title-bar -->
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">

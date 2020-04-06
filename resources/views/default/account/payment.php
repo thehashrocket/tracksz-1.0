@@ -9,20 +9,34 @@ $description_meta = 'Member Payment Methods for Tracksz, a Multiple Market Inven
 <div class="wrapper">
     <!-- .page -->
     <div class="page">
-        <?php $this->insert('partials/account_header', ['page' => 'payment']) ?>
         <!-- .page-inner -->
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/account/profile" title="Tracksz Member's Profile"><?=('Profile')?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?=('Payment Methods')?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <h1 class="page-title"> <?=_('Payment Information')?> </h1>
                 <p class="text-muted"> <?=_('This is where you\'ll manage all your payment details. You can add or delete payment methods as needed.  Later when editing your stores you may choose from one of these listed below for the monthly fee payments.')?>. </p><!-- /title -->
-            </header><!-- /.page-title-bar -->
-            <?php if(isset($alert) && $alert):?>
-                <div class="row text-center">
-                    <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
-                </div>
-            <?php endif ?>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
+                <?php endif ?>
+            </header>
             
         <?php if (is_array($cards) &&  count($cards)> 0): ?>
             <!-- .card -->

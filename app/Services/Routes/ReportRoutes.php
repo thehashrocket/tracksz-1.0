@@ -3,14 +3,14 @@
 namespace App\Services\Routes;
 
 // Use to shorten controller paths in route definitions
-use App\Controllers\Order;
+use App\Controllers\Report;
 
 // For functionality
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
 
-class OrderRoutes extends AbstractServiceProvider
+class ReportRoutes extends AbstractServiceProvider
 {
     /**
      * @type array
@@ -30,10 +30,10 @@ class OrderRoutes extends AbstractServiceProvider
             $routes   = (new Router)->setStrategy($strategy);
             
             // Use for AJAX Calls for Logged in Users, Need Json results
-            $routes->group('/order', function (\League\Route\RouteGroup $route) {
+            $routes->group('/report', function (\League\Route\RouteGroup $route) {
                 
-                $route->get('/browse', Order\OrderController::class . '::browse');
-    
+                $route->get('/sales', Report\ReportController::class . '::sales');
+                
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));

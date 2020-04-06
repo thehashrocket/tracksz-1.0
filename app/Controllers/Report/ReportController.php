@@ -27,5 +27,9 @@ class ReportController
         $this->db   = $db;
     }
     
+    public function sales()
+    {
+        return $this->view->buildResponse('report/sales', []);
+    }
     
 }

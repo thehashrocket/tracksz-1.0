@@ -17,14 +17,12 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/marketplace/browse"><?=('Marketplaces')?></a>
+                                <a href="/marketplace/browse" title="Manage Store's Marketplaces"><?=('Marketplaces')?></a>
                             </li>
-                            <li class="breadcrumb-item active">
-                                <?=('Add')?>
-                            </li>
+                            <li class="breadcrumb-item active"><?=('Add')?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->

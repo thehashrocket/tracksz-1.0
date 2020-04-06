@@ -26,15 +26,27 @@
         <?php endif; ?>
         <!-- .page-inner -->
         <div class="page-inner">
-    
             <header class="page-title-bar">
                 <div class="d-flex flex-column flex-md-row">
-                    <p class="lead">
-                        <span class="font-weight-bold"><?=Session::get('member_name')?></span> <span class="d-block text-muted"><?=_('Here’s what’s happening with your business today.')?></span>
-                    </p>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                        </ol>
+                    </nav>
                     <!-- Insert Active Store Header -->
-                     <?php $this->insert('partials/active_store'); ?>
+                    <?php $this->insert('partials/active_store'); ?>
                 </div>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
+                <?php endif ?>
+                <!-- title -->
+                <p class="lead">
+                        <span class="font-weight-bold"><?=Session::get('member_name')?></span> <span class="d-block text-muted"><?=_('Here’s what’s happening with your business today.')?></span>
+                </p>
             <?php if(isset($alert) && $alert):?>
                 <div class="row text-center">
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>

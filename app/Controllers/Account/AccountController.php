@@ -41,6 +41,17 @@ class AccountController
         $member  = (new Member($this->db))->find($this->auth->getUserId());
         $countries = (new Country($this->db))->all();
         return $this->view->buildResponse('account/profile', [
+            'countries' => $countries,
+            'member'    => $member,
+            'current_email' => $this->auth->getEmail()
+        ]);
+    }
+    
+    public function editProfile()
+    {
+        $member  = (new Member($this->db))->find($this->auth->getUserId());
+        $countries = (new Country($this->db))->all();
+        return $this->view->buildResponse('account/profile_edit', [
                 'countries' => $countries,
                 'member'    => $member,
                 'current_email' => $this->auth->getEmail()

@@ -20,21 +20,14 @@ $description_meta = 'Member Stores at Tracksz, a Multiple Market Inventory Manag
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
                             </li>
-                            <li class="breadcrumb-item active">
-                                <a href="/account/stores"><?=('Stores')?></a>
-                            </li>
+                            <li class="breadcrumb-item active"><?=('Stores')?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
-                <?php if(isset($alert) && $alert):?>
-                    <div class="row text-center">
-                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
-                    </div>
-                <?php endif ?>
                 <!-- title -->
                 <h1 class="page-title"> <?=_('Store Information')?> </h1>
                 <p class="text-muted"> <?=_('Stores are where you maintain your inventory and where you receive your orders from the marketplaces a store uses. This feature is useful if you have multiple retail locations and want to keep them separate or several different retail locations under various names.')?></p>
@@ -43,6 +36,11 @@ $description_meta = 'Member Stores at Tracksz, a Multiple Market Inventory Manag
                 <a href="/account/store" class="btn btn-sm btn-primary" title="<?=_('Add Store to Your Tracksz Account')?>"><?=_('Add Store')?></a>
                 <?php if (is_array($cards) &&  count($cards)<=0): ?>
                     <div class="col-sm-12 alert alert-warning text-center"><?=_('You have not defined any <strong>Payment Cards</strong> in the Member Account area. You may still add and edit your Stores.  However, a Payment Card <u>must</u> be attached to a store before it\'s first billing date. You may define cards in the <a href="/account/payment">Member Area.')?></a></div>
+                <?php endif ?>
+                <?php if(isset($alert) && $alert):?>
+                    <div class="row text-center">
+                        <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
+                    </div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
         <?php if (is_array($stores) &&  count($stores)> 0): ?>

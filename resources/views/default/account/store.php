@@ -17,25 +17,24 @@ $description_meta = 'Add/Edit Stores at Tracksz, a Multiple Market Inventory Man
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/account/stores"><?=('Stores')?></a>
+                                <a href="/account/stores" title="Tracksz Member's Stores"><?=('Stores')?></a>
                             </li>
-                            <li class="breadcrumb-item active">                                                             <?=('Add')?>
-                            </li>
+                            <li class="breadcrumb-item active"><?=('Add')?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
+                <h1 class="page-title"> <?=_('Store')?> </h1>
+                <p class="text-muted"> <?=_('Adding a store changes the "Active" store to the new store added. If this is not what you want, you will have to change the Active in the Stores listing after you add this store.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                     </div>
                 <?php endif ?>
-                <h1 class="page-title"> <?=_('Store')?> </h1>
-                <p class="text-muted"> <?=_('Adding a store changes the "Active" store to the new store added. If this is not what you want, you will have to change the Active in the Stores listing after you add this store.')?></p>
             </header><!-- /.page-title-bar -->
             <!-- .page-section -->
             <div class="page-section">

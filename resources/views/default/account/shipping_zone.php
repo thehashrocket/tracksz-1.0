@@ -16,6 +16,21 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
         <!-- .page-inner -->
         <div class="page-inner">
             <header class="page-title-bar">
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/account/stores" title="Tracksz Member's Stores"><?=('Stores')?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?=('Shipping Zones')?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?=_('Shipping Zones')?> </h1>
@@ -25,6 +40,7 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
+            <a href="/account/shipping-zones/add" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Zone')?>"><?=_('Add Shipping Zone')?></a>
         <?php if (is_array($shippingZones) &&  count($shippingZones)> 0): ?>
             <!-- .card -->
             <div class="card card-fluid">
@@ -52,7 +68,6 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                 </div>
             </div>
         <?php endif; ?>
-            <a href="/account/shipping-zones/create" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Zone')?>"><?=_('Add Shipping Zone')?></a>
         </div><!-- /.page-inner -->
 
         <!-- Modals to delete shipping methods -->

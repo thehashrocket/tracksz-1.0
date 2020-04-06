@@ -56,7 +56,7 @@ class ShippingController
      */
     public function viewAddMethod()
     {
-        return $this->view->buildResponse('/account/shipping_method_create', []);
+        return $this->view->buildResponse('/account/shipping_method_add', []);
     }
 
     /**
@@ -68,7 +68,7 @@ class ShippingController
     public function viewUpdateMethod(ServerRequest $request, array $data)
     {
         $method = (new ShippingMethod($this->db))->find($data['Id']);
-        return $this->view->buildResponse('/account/shipping_method_create', [
+        return $this->view->buildResponse('/account/shipping_method_add', [
             'update_id' => $data['Id'],
             'update_name' => $method['Name'],
             'update_delivery' => $method['DeliveryTime'],
@@ -83,9 +83,9 @@ class ShippingController
      *
      *  @return view - /account/shipping-zones/create
      */
-    public function viewCreateZone()
+    public function viewAddZone()
     {
-        return $this->view->buildResponse('/account/shipping_zone_create', []);
+        return $this->view->buildResponse('/account/shipping_zone_add', []);
     }
 
     /**
@@ -97,7 +97,7 @@ class ShippingController
     public function viewUpdateZone(ServerRequest $request, array $data)
     {
         $zone = (new ShippingZone($this->db))->find($data['Id']);
-        return $this->view->buildResponse('/account/shipping_zone_create', [
+        return $this->view->buildResponse('/account/shipping_zone_add', [
             'update_id' => $data['Id'],
             'update_name' => $zone['Name']
         ]);

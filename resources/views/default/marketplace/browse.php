@@ -16,27 +16,26 @@ $description_meta = 'Marketplace Listing for your Tracksz Store, a Multiple Mark
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/account/panel"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/marketplace/browse"><?=('Marketplaces')?></a>
+                                <a href="/marketplace/browse" title="Manage Store's Marketplaces"><?=('Marketplaces')?></a>
                             </li>
-                            <li class="breadcrumb-item active">                                                             <?=('Browse')?>
-                            </li>
+                            <li class="breadcrumb-item active"><?=('Browse')?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
+                <!-- title -->
+                <h1 class="page-title"> <?=_('Marketplace Listing')?> </h1>
+                <p class="text-muted"> <?=_('Browse, add, edit, or disable Markeplaces attached to the current store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
+                <a href="/marketplace/add" class="btn btn-sm btn-primary" title="<?=_('Add Inventory Item to Your Active Store')?>"><?=_('Add Marketplace')?></a>
                 <?php if(isset($alert) && $alert):?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                     </div>
                 <?php endif ?>
-                <!-- title -->
-                <h1 class="page-title"> <?=_('Marketplace Listing')?> </h1>
-                <p class="text-muted"> <?=_('Browse, add, edit, or disable Markeplaces attached to the current store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
-                <a href="/marketplace/add" class="btn btn-sm btn-primary" title="<?=_('Add Inventory Item to Your Active Store')?>"><?=_('Add Marketplace')?></a>
             </header><!-- /.page-title-bar -->
 
             <div class="page-section"> <!-- .page-section starts -->
