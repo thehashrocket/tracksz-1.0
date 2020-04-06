@@ -24,3 +24,7 @@ CREATE TABLE `marketplace` (
   `Updated` datetime DEFAULT CURRENT_TIMESTAMP,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `marketplace` ADD `FtpAddress` VARCHAR(150) NULL DEFAULT NULL AFTER `Password`;
+ALTER TABLE `marketplace` ADD `Status` TINYINT(1) NULL DEFAULT '0' AFTER `MarketAcceptPriceValMulti2`;
+ALTER TABLE `marketplace` ADD `UserId` INT(11) NULL AFTER `Status`;

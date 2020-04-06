@@ -38,6 +38,11 @@ $description_meta = _('Register for Tracksz, a Multiple Market Inventory Managem
                 </div>
                 <div id="psm-feedback" class="text-muted font-italic"></div>
             </div><!-- /.form-group -->
+
+            <div class="form-group mb-4">
+                <label class="required-field d-block text-left" for="userPasswordConfirm"><?=_('Confirm Password')?> <i class="far fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="<?=_('Your Confirm password must be same as Password field')?>"></i></label>
+                <input name="userPasswordConfirm" type="password" id="userPasswordConfirm" class="form-control form-control-lg form-strength-meter mb-1" title="<?=_('Enter a Confirm password, It Must be same as Password')?>">                               
+            </div><!-- /.form-group -->
             <!-- .form-group -->
             <div class="form-group text-center">
                 <div class="custom-control custom-control-inline custom-checkbox">
@@ -84,6 +89,9 @@ $description_meta = _('Register for Tracksz, a Multiple Market Inventory Managem
                         pwcheck: true,
                         required: true
                     },
+                    userPasswordConfirm: {
+                        equalTo: "#userPassword"                
+                    },
                     user_agrees: {
                         required: true
                     }
@@ -102,6 +110,9 @@ $description_meta = _('Register for Tracksz, a Multiple Market Inventory Managem
                     userName: {
                         required: "Your username must be at least 6 characters long.",
                         minlength:  "Your username must be at least 6 characters long."
+                    },
+                    userPasswordConfirm:{
+                        required: "Confirm Password required.",
                     },
                     user_agrees: {
                         required: ""
