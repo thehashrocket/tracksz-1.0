@@ -24,7 +24,7 @@ class MarketplaceController
 
     public function view()
     {   
-        $result_data = (new Marketplace($this->db))->getAll();
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
         return $this->view->buildResponse('marketplace/view', ['marketplace' => $result_data]);
     }
 

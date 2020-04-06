@@ -1,5 +1,5 @@
 <?php
-$title_meta = 'Inventory File Upload for Your Tracksz Store, a Multiple Market Inventory Management Service';
+$title_meta = 'Inventory File Update for Your Tracksz Store, a Multiple Market Inventory Management Service';
 $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market Inventory Management Service';
 ?>
 <?=$this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta])?>
@@ -15,9 +15,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
             <header class="page-title-bar">
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Inventory File Upload')?> </h1>
+                    <h1 class="page-title"> <?=_('Inventory Update')?> </h1>
                 </div>
-                <p class="text-muted"> <?=_('This is where upload inventory for the current Active Store: ')?><strong> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></strong></p>
+                <p class="text-muted"> <?=_('This is where update inventory for the current Active Store: ')?><strong> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></strong></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
@@ -27,7 +27,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
     <div class="card-deck-xl"> <!-- .card-deck-xl starts -->                
             <div class="card card-fluid">   <!-- .card card-fluid starts -->
                 <div class="card-body"> <!-- .card-body starts -->                  
-                    <form name="inventory_ftp_request" id="inventory_ftp_request" action="/inventory/ftpupload"
+                    <form name="inventory_csv_update" id="inventory_csv_update" action="/inventory/csvupload"
                         method="POST" enctype="multipart/form-data" data-parsley-validate> <!-- form starts -->
                        
                         <div class="container"> <!-- Container Starts -->
@@ -49,9 +49,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                      </div>
 
                                 <div class="form-group">
-                                    <label for="InventoryUpload"><?=_('Inventory File Upload')?></label>
+                                    <label for="InventoryUpload"><?=_('Sample CSV File')?> &nbsp;&nbsp; <a href="<?=\App\Library\Config::get('company_url').'/assets/inventory/inventory_update.csv'; ?>" class="inventory_csv"><i class="fas fa-file-csv"></i></a></label>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?=_('Select Inventory File Upload')?>" data-parsley-group="fieldset01" required><?=_('Choose file')?></label>
+                                        <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?=_('Select Inventory CSV File Upload')?>" data-parsley-group="fieldset01" required><?=_('Choose Inventory CSV File')?></label> 
                                     </div>
                                 </div>
                                 </div> <!-- col-sm Group Left Ends -->                                
