@@ -73,14 +73,6 @@
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
 
-         
-                    <!-- .menu-item -->
-                        <!-- <li class="menu-item<?php if($page == 'marketplace-dashboard') echo ' has-active';?>">
-                            <a href="/marketplace/dashboard" title="<?=_('Martketplace Module')?>" class="menu-link"><span class="menu-icon fa fa-shopping-cart" title="<?=_('Marketplace Module')?>"></span><span class="menu-text"><?=_('Marketplace')?></span></a>
-                        </li>-->
-                     <!-- .menu-item -->
-
-
                      <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
@@ -105,7 +97,7 @@
                     $product_menu = ['product-view','product-defaults','product-categories','product-add'];
                     ?>
                     <li class="menu-item has-child<?php if(in_array($page, $product_menu)) echo ' has-active';?>">
-                        <a href="/product/add" class="menu-link" title="<?=_('Active Store Product')?>"><span class="menu-icon fas fa-list" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Product')?></span></a> <!-- child menu -->
+                        <a href="/product/add" class="menu-link" title="<?=_('Active Store Product')?>"><span class="menu-icon oi oi-list-rich" title="<?=_('Active Store Inventory')?>"></span> <span class="menu-text"><?=_('Product')?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <!-- <li class="menu-item<?php if($page == 'product-view') echo ' has-active';?>">
                                 <a href="/product/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>

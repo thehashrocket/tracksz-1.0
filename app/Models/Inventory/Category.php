@@ -85,36 +85,8 @@ class Category
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    /*
-     * findParents - get top level categories
-     *
-     * @return array of arrays
-    */
-    public function insert_category($ParentId = null, $Name= null, $Description= null, $Image= null,$Created= null, $Update= null)
-    {   
-        $res['status'] = false;
-        $res['message'] = 'record not inserted';
-        $res['data'] = array();
-        $stmt = $this->db->prepare("INSERT INTO `category` (`Id`, `ParentId`,`Name`, `Description`, `Image`, `Created`, `Update`) VALUES (NULL, $ParentId, '$Name', '$Description', '$Image', '$Created', '$Update')");                  
-        $stmt->execute();
-        if($stmt){
-            $res['status'] = true;
-            $res['message'] = 'insert success';
-            $res['data'] = array();
-        }
-        return $res;
-    }
-
-
-
-
-
-
-
-
     
- /*
+    /*
     * addCateogry - add a new cateogry for a user
     *
     * @param  $form  - Array of form fields, name match Database Fields
