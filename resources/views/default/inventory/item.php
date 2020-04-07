@@ -189,9 +189,6 @@ $description_meta = 'Add/Edit Inventory Item at your Tracksz Store, a Multiple M
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/vendor/bs-stepper/js/bs-stepper.min.js"></script> <!-- END PLUGINS JS -->
 <?=$this->stop()?>
 

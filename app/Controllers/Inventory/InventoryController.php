@@ -254,7 +254,6 @@ class InventoryController
         return $this->view->buildResponse('inventory/view', []);
     }
     
-    
 
     /*
     * updateInventoryView - Load inventory update view file

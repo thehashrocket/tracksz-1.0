@@ -4,13 +4,11 @@ namespace App\Controllers\Inventory;
 
 use App\Library\Config;
 use App\Library\Views;
-use App\Models\Account\Store;
 use App\Library\ValidateSanitize\ValidateSanitize;
 use Delight\Cookie\Session;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use App\Models\Inventory\Category;
-use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use PDO;
 use Exception;
@@ -21,16 +19,16 @@ class CategoryController
     private $db;
 
     public function __construct(Views $view, PDO $db)
-    {   
+    {
         $this->view = $view;
-        $this->db = $db;    
+        $this->db = $db;
     }
 
-    public function view()
+    public function browse()
     {
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
-        return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+        return $this->view->buildResponse('inventory/category/browse', ['all_category' => $all_category]);
     }
 
     public function add()
@@ -41,17 +39,17 @@ class CategoryController
     }
 
     public function get_list_records(ServerRequest $request)
-    {   
+    {
 
         $params = $request->getQueryParams();
-        // TDS :: Server side processing starts  
+        // TDS :: Server side processing starts
         $cat_obj = new Category($this->db);
-        $totalData = $cat_obj->count_all_records();   
+        $totalData = $cat_obj->count_all_records();
         $totalFiltered = (is_array($totalData) && !empty($totalData))?$totalData['total_records']:0;
-        $search_params['search'] = $params['search']['value'];        
+        $search_params['search'] = $params['search']['value'];
         $search_params['start'] = $params['start'];
         $search_params['limit'] = $params['length'];
-        $search_params['order'] = $params['columns'][$params['order'][0]['column']]['data'];    
+        $search_params['order'] = $params['columns'][$params['order'][0]['column']]['data'];
         $search_params['dir'] = $params['order'][0]['dir'];
 
         $cat_result = $cat_obj->get_all_records($search_params);
@@ -60,7 +58,7 @@ class CategoryController
             $res['status'] = true;
             $res['message']['success'] = "Policy result get successfully..!";
             $res['message']['error'] = "";
-            $res['data'] = $cat_result; 
+            $res['data'] = $cat_result;
            // $res['dir_path'] = Config::get('company_url').Config::get('image_path').'product/';
            $res['dir_path'] = Config::get('company_url').'/assets/images/product/';
             $res['recordsFiltered'] = $totalFiltered;
@@ -68,15 +66,15 @@ class CategoryController
             $res['status'] = false;
             $res['message']['success'] = "Policy result get successfully..!";
             $res['message']['error'] = "";
-            $res['data'] = array(); 
+            $res['data'] = array();
             $res['recordsFiltered'] = $totalFiltered;
         }
-        return die(json_encode($res));      
-    } 
+        return die(json_encode($res));
+    }
   
     public function addCategory(ServerRequest $request)
     {
-        $form = $request->getParsedBody();        
+        $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
       
         try{
@@ -86,12 +84,12 @@ class CategoryController
       
         $validate->validation_rules(array(
             'CategoryName'    => 'required',
-            'CategoryDescription'       => 'required',            
+            'CategoryDescription'       => 'required',
             // 'ParentCategory'     => 'required'
         ));
 
         $validated = $validate->run($form);
-        // use validated as it is filtered and validated        
+        // use validated as it is filtered and validated
         if ($validated === false) {
             throw new Exception("Please enter required fields...!", 301);
         }
@@ -106,29 +104,29 @@ class CategoryController
             'max' => '10MB', // maximum of 10MB
         ]);
     
-        // if false than throw Size error 
+        // if false than throw Size error
         if (!$validator->isValid($_FILES)) {
             throw new Exception("File upload size is too large...!", 301);
         }
        
         // Using an options array:
-        $validator_ext = new Extension(['png,jpg']);         
+        $validator_ext = new Extension(['png,jpg']);
         // if false than throw type error
         if (!$validator_ext->isValid($_FILES['CategoryImage'])) {
             throw new Exception("Please upload valid file type JPG & PNG...!", 301);
-        }  
-        /* File upload validation ends */    
+        }
+        /* File upload validation ends */
 
         $file_stream = $_FILES['CategoryImage']['tmp_name'];
         $file_name = $_FILES['CategoryImage']['name'];
-        $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));                
-        // $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');                
+        $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));
+        // $publicDir = getcwd().'\assets\images\category\\'.$file_encrypt_name.strstr($file_name,'.');
         $publicDir = getcwd()."/assets/images/category/".$file_encrypt_name.strstr($file_name,'.');
         $cat_img = $file_encrypt_name.strstr($file_name,'.');
-        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir); 
+        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);
 
-        $insert_data = $this->PrepareInsertData($form);         
-        $insert_data['Image'] = $cat_img;          
+        $insert_data = $this->PrepareInsertData($form);
+        $insert_data['Image'] = $cat_img;
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->addCateogry($insert_data);
 
@@ -140,9 +138,9 @@ class CategoryController
             return $this->view->redirect('/category/add');
         } else {
             throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
-        }               
+        }
 
-    }catch (Exception $e){    
+    }catch (Exception $e){
 
         $res['status'] = false;
         $res['data'] = [];
@@ -150,7 +148,7 @@ class CategoryController
         $res['ex_message'] = $e->getMessage();
         $res['ex_code'] = $e->getCode();
         $res['ex_file'] = $e->getFile();
-        $res['ex_line'] = $e->getLine();            
+        $res['ex_line'] = $e->getLine();
 
         $validated['alert'] = $e->getMessage();
         $validated['alert_type'] = 'danger';
@@ -164,44 +162,44 @@ class CategoryController
     }
 
     /*
-    * PrepareInsertData - Assign Value to new array and prepare insert data    
+    * PrepareInsertData - Assign Value to new array and prepare insert data
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return boolean
     */
     private function PrepareInsertData($form = array())
-    {   
-        $form_data = array();        
+    {
+        $form_data = array();
         $form_data['Name'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : null;
         $form_data['Description'] = (isset($form['CategoryDescription']) && !empty($form['CategoryDescription'])) ? $form['CategoryDescription'] : null;
         $form_data['ParentId'] = $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : 0;
-        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;      
-        $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');      
+        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
+        $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
     }
 
 
      /*
-    * PrepareUpdateData - Assign Value to new array and prepare update data    
+    * PrepareUpdateData - Assign Value to new array and prepare update data
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return boolean
     */
     private function PrepareUpdateData($form = array())
-    {   
-        $form_data = array();   
-        $form_data['Id'] = (isset($form['Id']) && !empty($form['Id']))?$form['Id']:null;     
+    {
+        $form_data = array();
+        $form_data['Id'] = (isset($form['Id']) && !empty($form['Id']))?$form['Id']:null;
         $form_data['Name'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : null;
         $form_data['Description'] = (isset($form['CategoryDescription']) && !empty($form['CategoryDescription'])) ? $form['CategoryDescription'] : null;
-        $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : 0; 
-        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;      
+        $form_data['ParentId'] = (isset($form['ParentCategory']) && !empty($form['ParentCategory'])) ? $form['ParentCategory'] : 0;
+        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
     }
 
     public function deleteCategoryData(ServerRequest $request){
         $form = $request->getParsedBody();
-        $result_data = (new Category($this->db))->delete($form['Id']);        
+        $result_data = (new Category($this->db))->delete($form['Id']);
         if(isset($result_data) && !empty($result_data)){
 
             $validated['alert'] = 'Marketplace record deleted successfully..!';
@@ -210,7 +208,7 @@ class CategoryController
 
             $res['status'] = true;
             $res['data'] = array();
-            $res['message'] = 'Records deleted successfully..!';                
+            $res['message'] = 'Records deleted successfully..!';
             echo json_encode($res);
             exit;
         }else{
@@ -220,18 +218,18 @@ class CategoryController
 
             $res['status'] = false;
             $res['data'] = array();
-            $res['message'] = 'Records not Deleted..!';                
+            $res['message'] = 'Records not Deleted..!';
             echo json_encode($res);
             exit;
         }
     }
 
     public function editCategory(ServerRequest $request, $Id = [])
-    {          
-        $form = (new Category($this->db))->findById($Id['Id']);        
+    {
+        $form = (new Category($this->db))->findById($Id['Id']);
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
-        if(is_array($form) && !empty($form)){       
+        if(is_array($form) && !empty($form)){
             return $this->view->buildResponse('inventory/category/edit', [
                 'form' => $form,'all_category' => $all_category]);
         }else{
@@ -244,86 +242,79 @@ class CategoryController
     }
 
     public function updateCategory(ServerRequest $request, $Id = [])
-    {      
+    {
         try{
-        $methodData = $request->getParsedBody();
-        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-        
-        $cat_img = $methodData['CategoryImageHidden'];
-        /* File upload validation starts */
-        if(isset($_FILES['CategoryImage']['error']) && $_FILES['CategoryImage']['error'] == 0){
-   
-        $validator = new FilesSize([
-            'min' => '0kB',  // minimum of 1kB
-            'max' => '10MB', // maximum of 10MB
-        ]);
-    
-        // if false than throw Size error 
-        if (!$validator->isValid($_FILES)) {
-            throw new Exception("File upload size is too large...!", 301);
-        }
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+            
+            $cat_img = $methodData['CategoryImageHidden'];
+            /* File upload validation starts */
+            if(isset($_FILES['CategoryImage']['error']) && $_FILES['CategoryImage']['error'] == 0){
        
-        // Using an options array:
-        $validator_ext = new Extension(['png,jpg']);         
-        // if false than throw type error
-        if (!$validator_ext->isValid($_FILES['CategoryImage'])) {
-            throw new Exception("Please upload valid file type JPG & PNG...!", 301);
-        }  
-        /* File upload validation ends */ 
-        
-  
-
-     
-        $file_stream = $_FILES['CategoryImage']['tmp_name'];
-        $file_name = $_FILES['CategoryImage']['name'];
-        $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));                
-        $publicDir = getcwd()."/assets/images/category/".$file_encrypt_name.strstr($file_name,'.');
-        $cat_img = $file_encrypt_name.strstr($file_name,'.');
-       
-        $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);  
-           
-        }
-
-       
-
-        $update_data = $this->PrepareUpdateData($methodData);
-
-      
-        $update_data['Updated'] = date('Y-m-d H:i:s');     
-        $update_data['Image'] = $cat_img;     
-        $is_updated = (new Category($this->db))->editCategory($update_data);
-
-        if(isset($is_updated) && !empty($is_updated)){ 
-            $this->view->flash([
-                'alert' => 'Category record updated successfully..!',
-                'alert_type' => 'success'
+            $validator = new FilesSize([
+                'min' => '0kB',  // minimum of 1kB
+                'max' => '10MB', // maximum of 10MB
             ]);
+        
+            // if false than throw Size error
+            if (!$validator->isValid($_FILES)) {
+                throw new Exception("File upload size is too large...!", 301);
+            }
+           
+            // Using an options array:
+            $validator_ext = new Extension(['png,jpg']);
+            // if false than throw type error
+            if (!$validator_ext->isValid($_FILES['CategoryImage'])) {
+                throw new Exception("Please upload valid file type JPG & PNG...!", 301);
+            }
+    
+            /* File upload validation ends */
+            $file_stream = $_FILES['CategoryImage']['tmp_name'];
+            $file_name = $_FILES['CategoryImage']['name'];
+            $file_encrypt_name = strtolower(str_replace(" ","_",strstr($file_name,'.',true).date('Ymd_his')));
+            $publicDir = getcwd()."/assets/images/category/".$file_encrypt_name.strstr($file_name,'.');
+            $cat_img = $file_encrypt_name.strstr($file_name,'.');
+           
+            $is_file_uploaded = move_uploaded_file($file_stream,$publicDir);
+            
+            }
+    
+            $update_data = $this->PrepareUpdateData($methodData);
+            $update_data['Updated'] = date('Y-m-d H:i:s');
+            $update_data['Image'] = $cat_img;
+            $is_updated = (new Category($this->db))->editCategory($update_data);
+    
+            if(isset($is_updated) && !empty($is_updated)){
+                $this->view->flash([
+                    'alert' => 'Category record updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $cat_obj = new Category($this->db);
+                $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
+                return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+                unlink(getcwd()."/assets/images/category/".$methodData['CategoryImageHidden']);
+            } else {
+                throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
+            }
+    
+        } catch (Exception $e){
+    
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+    
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
-            return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
-            unlink(getcwd()."/assets/images/category/".$methodData['CategoryImageHidden']);
-        }else{
-            throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
+            return $this->view->buildResponse('inventory/category/edit', [
+                'form' => $methodData,'all_category' => $all_category]);
         }
-
-    }catch (Exception $e){    
-
-        $res['status'] = false;
-        $res['data'] = [];
-        $res['message'] = $e->getMessage();
-        $res['ex_message'] = $e->getMessage();
-        $res['ex_code'] = $e->getCode();
-        $res['ex_file'] = $e->getFile();
-        $res['ex_line'] = $e->getLine();            
-
-        $validated['alert'] = $e->getMessage();
-        $validated['alert_type'] = 'danger';
-        $this->view->flash($validated);
-        $cat_obj = new Category($this->db);
-        $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'),[0,1]);
-        return $this->view->buildResponse('inventory/category/edit', [
-            'form' => $methodData,'all_category' => $all_category]);
-    }
     }
 
     /*

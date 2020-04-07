@@ -29,7 +29,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <h1 class="page-title"> <?=_('Sales Listing')?> </h1>
-                <p class="text-muted"> <?=_('Browse, add, edit, or delete Inventory attached to the current store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
+                <p class="text-muted"> <?=_('Sales Reports for your stores.')?></p>
                 <a href="/inventory/add" class="btn btn-sm btn-primary" title="<?=_('Add Inventory Item to Your Active Store')?>"><?=_('Add Inventory Item')?></a>
                 <?php if(isset($alert) && $alert):?>
                     <div class="row text-center">
@@ -44,9 +44,6 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js') ?>

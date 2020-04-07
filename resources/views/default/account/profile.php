@@ -56,9 +56,6 @@ $description_meta = 'Member Profile for Tracksz, a Multiple Market Inventory Man
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-    <script src="/assets/vendor/pace/pace.min.js"></script>
-    <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-    <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/vendor/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
     <script src="/assets/vendor/blueimp-load-image/load-image.all.min.js"></script>
     <script src="/assets/vendor/blueimp-canvas-to-blob/canvas-to-blob.min.js"></script>

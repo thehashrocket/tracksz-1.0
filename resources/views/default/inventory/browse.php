@@ -131,9 +131,6 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js') ?>

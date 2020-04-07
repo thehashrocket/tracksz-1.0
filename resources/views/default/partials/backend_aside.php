@@ -53,7 +53,7 @@
                     
                     <?php
                         // determine if sub-menu has active page - set up array for in_array
-                        $inventory_menu = ['inventory-browse','inventory-add', 'inventory-defaults','inventory-categories'];
+                        $inventory_menu = ['inventory-browse','inventory-add', 'inventory-defaults','inventory-categories','inventory-upload','inventory-update','inventory-category','inventory-category-add'];
                     ?>
                     <li class="menu-item has-child<?php if(in_array($page, $inventory_menu)) echo ' has-active';?>">
                         <a href="/inventory/browse" class="menu-link menu-item" title="<?=_('Active Store Inventory')?>"><span class="menu-icon fas fa-list"></span> <span class="menu-text"><?=_('Inventory')?></span></a> <!-- child menu -->
@@ -64,25 +64,18 @@
                             <li class="menu-item<?php if($page == 'inventory-defaults') echo ' has-active';?>">
                                 <a href="/inventory/defaults" title="<?=_('Active Store Inventory Default Settings')?>" class="menu-link"><?=_('Defaults')?></a>
                             </li>
-                            
+                            <li class="menu-item<?php if($page == 'inventory-upload') echo ' has-active';?>">
+                                <a href="/inventory/upload" title="<?=_('Inventory File Upload')?>" class="menu-link"><?=_('Upload')?></a>
+                            </li>
+                            <li class="menu-item<?php if($page == 'inventory-update') echo ' has-active';?>">
+                                <a href="/inventory/update" title="<?=_('Inventory Update')?>" class="menu-link"><?=_('Update')?></a>
+                            </li>
                             <?php
-                                // NOT EDITED/CLEANED UP YET
-                            
                                 // determine if sub-menu has active page - set up array for in_array
-                                $category_menu = ['category-view','category-defaults','category-categories','category-add'];
+                                $category_menu = ['inventory-category','inventory-category-add'];
                             ?>
-                            <li class="menu-item has-child<?php if(in_array($page, $category_menu)) echo ' has-active';?>"><a href="#" class="menu-link" title="<?=_('Active Store Inventory Area')?>"><small><span class="menu-icon fas fa-chart-pie"></span></small>  <span class="menu-text"><?=_('Category')?></span></a> <!-- child menu -->
-                                <ul class="menu">
-                                    <!-- <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
-                                <a href="/product/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
-                            </li> -->
-                                    <li class="menu-item<?php if($page == 'category-add') echo ' has-active';?>">
-                                        <a href="/category/add" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('Add')?></a>
-                                    </li>
-                                    <li class="menu-item<?php if($page == 'category-view') echo ' has-active';?>">
-                                        <a href="/category/view" title="<?=_('View, Add, Edit, Delete product')?>" class="menu-link"><?=_('View')?></a>
-                                    </li>
-                                </ul><!-- /child menu -->
+                            <li class="menu-item<?php if(in_array($page, $category_menu)) echo ' has-active';?>"><a href="/inventory/category" class="menu-link" title="<?=_('Active Store Inventory Area')?>"><small><span class="menu-icon fas fa-chart-pie"></span></small>  <span class="menu-text"><?=_('Categories')?></span></a> <!-- child menu -->
+                            
                             </li><!-- /.menu-item -->
                             
                         </ul><!-- /child menu -->

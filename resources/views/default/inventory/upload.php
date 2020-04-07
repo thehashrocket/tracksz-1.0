@@ -13,20 +13,32 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <!-- title -->
-                <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Inventory File Upload')?> </h1>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse" title="Browse Store Inventory"><?=('Inventory')?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?=('Upload')?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
                 </div>
-                <p class="text-muted"> <?=_('This is where upload inventory for the current Active Store: ')?><strong> <?=\Delight\Cookie\Cookie::get('tracksz_active_name')?></strong></p>
+                <!-- title -->
+                <h1 class="page-title"> <?=_('Inventory File Upload')?> </h1>
+                <p class="text-muted"> <?=_('This is where upload inventory for the current Active Store: ')?><strong> <?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></strong></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
-            
             <div class="page-section"> <!-- .page-section starts -->
-    <div class="card-deck-xl"> <!-- .card-deck-xl starts -->                
+    <div class="card-deck-xl"> <!-- .card-deck-xl starts -->
             <div class="card card-fluid">   <!-- .card card-fluid starts -->
-                <div class="card-body"> <!-- .card-body starts -->                  
+                <div class="card-body"> <!-- .card-body starts -->
                     <form name="inventory_ftp_request" id="inventory_ftp_request" action="/inventory/ftpupload"
                         method="POST" enctype="multipart/form-data" data-parsley-validate> <!-- form starts -->
                        
@@ -40,7 +52,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                 <option value="" selected><?=_('Select Marketplace...')?></option>
                                                 <?php
                                                 if (isset($market_places) && is_array($market_places) && !empty($market_places)) {
-                                                    foreach ($market_places as $mar_key => $mar_val) { ?>                                  
+                                                    foreach ($market_places as $mar_key => $mar_val) { ?>
                                                     <option value="<?php echo $mar_val['MarketName']; ?>"><?php echo $mar_val['MarketName']; ?></option>
                                                 <?php }} else {?>
                                                 <option selected><?=_('No Marketplace found...')?></option>
@@ -54,7 +66,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                         <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?=_('Select Inventory File Upload')?>" data-parsley-group="fieldset01" required><?=_('Choose file')?></label>
                                     </div>
                                 </div>
-                                </div> <!-- col-sm Group Left Ends -->                                
+                                </div> <!-- col-sm Group Left Ends -->
 
                                 <div class="col-sm mt-3 pt-3"> <!-- col-sm Group Right Starts -->
                                 </div> <!-- col-sm Group Right Ends -->
@@ -67,9 +79,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                     </form> <!-- form ends -->
                 </div> <!-- Card Body ends -->
         </div> <!-- .card card-fluid ends -->
-    </div> <!-- .card-deck-xl ends --> 
+    </div> <!-- .card-deck-xl ends -->
 </div> <!-- .page-section ends -->
-            
+        
 
         </div><!-- /.page-inner -->
     </div><!-- /.page -->
@@ -77,9 +89,6 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('page_js') ?>

@@ -6,8 +6,8 @@ use App\Library\Config;
 use App\Library\Views;
 use App\Models\Marketplace\Marketplace;
 use App\Library\ValidateSanitize\ValidateSanitize;
+use App\Models\Marketplace\StoreHasMarketplace;
 use Laminas\Diactoros\ServerRequest;
-use Delight\Auth\Auth;
 use Delight\Cookie\Session;
 use PDO;
 
@@ -24,7 +24,9 @@ class MarketplaceController
 
     public function browse()
     {
-        $result_data = (new Marketplace($this->db))->getAll();
+        $result_data = (new StoreHasMarketplace($this->db))->getAll();
+        var_dump($result_data);
+        
         return $this->view->buildResponse('marketplace/browse', ['marketplace' => $result_data]);
     }
 

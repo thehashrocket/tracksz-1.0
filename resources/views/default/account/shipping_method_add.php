@@ -119,10 +119,6 @@ $description_meta = 'Add a Shipping Method at Tracksz, a Multiple Market Invento
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/vendor/bs-stepper/js/bs-stepper.min.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('footer_extras') ?>
