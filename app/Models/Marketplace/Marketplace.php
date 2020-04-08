@@ -100,7 +100,7 @@ class Marketplace
         $query .= 'FtpAppendVenue, SuspendExport,SendDeletes,MarketAcceptPrice,MarketAcceptPriceVal,';
         $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2, Status, UserId';
         $query .= ') VALUES (';
-        $query .= ':MarketName, :EmailAddress, :SellerID, :Password, :FtpUserId,';
+        $query .= ':MarketName, :EmailAddress, :SellerID, :Password,:FtpAddress,:FtpUserId,';
         $query .= ':FtpPassword, :PrependVenue, :AppendVenue, :IncreaseMinMarket, :FileFormat,';
         $query .= ':FtpAppendVenue, :SuspendExport, :SendDeletes, :MarketAcceptPrice, :MarketAcceptPriceVal,';
         $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2, :Status, :UserId';
