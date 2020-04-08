@@ -32,12 +32,14 @@ class ProductRoutes extends AbstractServiceProvider
             $routes   = (new Router)->setStrategy($strategy);            	
             // Main Inventory routes.  Must have a selected store
             $routes->group('/product', function (\League\Route\RouteGroup $route) {
+              
+
                 $route->get('/view', Product\ProductController::class . '::view');
                 $route->get('/add', Product\ProductController::class . '::add');
                 $route->get('/defaults', Product\ProductController::class . '::defaults');
     
                 $route->post('/defaults', Product\ProductController::class . '::updateDefaults');
-                $route->post('/place_market', Product\ProductController::class . '::map_market_products');
+                $route->post('/place_market', Product\ProductController::class . '::MapMarketProducts');
                 
                 
             })->middleware($this->container->get('Csrf'))              
