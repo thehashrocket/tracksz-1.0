@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `zzExample`;
 CREATE TABLE `zzExample` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `ExampleName` varchar(255) NOT NULL,
