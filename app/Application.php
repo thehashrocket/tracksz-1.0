@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App;
 
@@ -22,7 +24,6 @@ class Application
      * @type ContainerInterface
      */
     private $container;
-    
     /**
      * @type string[]
      */
@@ -30,13 +31,11 @@ class Application
         // add services required by other services first
         //Services\SphinxServiceProvider::class,
         Services\PDOServiceProvider::class,
-        
         // rest of services
         Services\AuthServiceProvider::class,
         Services\ErrorServiceProvider::class,
         Services\ViewServiceProvider::class,
     ];
-    
     // separate routes by task/location
     // determined by URI /keyherelowercase/what/ever/else
     // becomes Keyherelowercase (ie customer = Customer)
@@ -45,19 +44,15 @@ class Application
         'Order'     =>  Services\Routes\OrderRoutes::class,
         'Report'    =>  Services\Routes\ReportRoutes::class,
         'Inventory' =>  Services\Routes\InventoryRoutes::class,
-        'Marketplace' =>  Services\Routes\MarketplaceRoutes::class,
         'Account'   =>  Services\Routes\AccountRoutes::class,
-        
         'Ajax'      =>  Services\Routes\AjaxRoutes::class,
         'Api'       =>  Services\Routes\ApiRoutes::class,
-        'Product' =>  Services\Routes\ProductRoutes::class,
-        'Category' =>  Services\Routes\CategoryRoutes::class,   
-        'Marketplace' =>  Services\Routes\MarketplaceRoutes::class,        
-        
+        'Marketplace' =>  Services\Routes\MarketplaceRoutes::class,
+        'Category' =>  Services\Routes\InventoryRoutes::class,
+        'Product' =>  Services\Routes\InventoryRoutes::class,
         // example Rooutes file
         'Example'   =>  Services\Routes\zzExampleRoutes::class,
     ];
-    
     /**
      * @param Container $container
      */
@@ -65,7 +60,6 @@ class Application
     {
         $this->container = $container;
         $this->setupProviders();
-    
         // check to make sure session is updated after Delight/Auth service provider
         // is constructed. If user is logged in and avatar not Saved then
         // login is NOT synced - sync it
@@ -78,7 +72,6 @@ class Application
             );
         }
     }
-    
     /**
      * Run the application.
      */
@@ -87,9 +80,12 @@ class Application
         /** @type Dispatcher $dispatcher */
         /* @type Request $request */
         $request = ServerRequestFactory::fromGlobals(
-            $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+            $_SERVER,
+            $_GET,
+            $_POST,
+            $_COOKIE,
+            $_FILES
         );
-        
         // Add Routes file based on Location
         Session::set('current_page', $request->getUri()->getPath());
         $path = explode('/', trim($request->getUri()->getPath(), '/'));
@@ -100,10 +96,8 @@ class Application
         $routeProvider = new $this->routeProviders[$route_service]();
         $routeProvider->setContainer($this->container);
         $this->container->addServiceProvider($routeProvider);
-        
         (new SapiEmitter)->emit($this->container->get(Router::class)->dispatch($request));
     }
-    
     /**
      * Register the providers with the container.
      */
@@ -114,21 +108,17 @@ class Application
             $serviceProvider = new $serviceProvider();
             $serviceProvider->setContainer($this->container);
         }
-        
         // Register the service providers.
         array_walk($this->serviceProviders, function (AbstractServiceProvider $serviceProvider) {
             $this->container->addServiceProvider($serviceProvider);
         });
-    
         // add some middleware
         $this->container->add('Csrf',  Middleware\CsrfMiddleware::class)
             ->addArguments([new StreamFactory(), session_id()])
             ->setShared(true);
-    
         $this->container->add('Auth',  Middleware\AuthMiddleware::class)
             ->addArguments([$this->container->get(Auth::class), $this->container->get(Views::class)])
             ->setShared(true);
-    
         $this->container->add('Store',  Middleware\StoreMiddleware::class)
             ->addArguments([$this->container->get(Views::class)])
             ->setShared(true);
