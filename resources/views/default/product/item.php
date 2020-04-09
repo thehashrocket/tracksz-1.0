@@ -13,21 +13,13 @@ $description_meta = 'Add/Edit Inventory Item at your Tracksz Store, a Multiple M
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <div class="d-flex flex-column flex-md-row">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=('Dashboard')?></a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="/inventory/browse" title="Browse Store's Inventory"><?=('Inventory')?></a>
-                            </li>
-                            <li class="breadcrumb-item active"><?=('Add')?></li>
-                        </ol>
-                    </nav>
-                    <!-- Insert Active Store Header -->
-                    <?php $this->insert('partials/active_store'); ?>
-                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">
+                            <a href="/inventory/view"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?=_('Inventory')?></a>
+                        </li>
+                    </ol>
+                </nav>
                 <h1 class="page-title"> <?=_('Inventory Item')?> </h1>
                 
             </header><!-- /.page-title-bar -->
@@ -184,6 +176,9 @@ $description_meta = 'Add/Edit Inventory Item at your Tracksz Store, a Multiple M
 <?=$this->stop()?>
 
 <?php $this->start('plugin_js') ?>
+<script src="/assets/vendor/pace/pace.min.js"></script>
+<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
+<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/vendor/bs-stepper/js/bs-stepper.min.js"></script> <!-- END PLUGINS JS -->
 <?=$this->stop()?>
 

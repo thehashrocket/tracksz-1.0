@@ -31,21 +31,20 @@ class MarketplaceRoutes extends AbstractServiceProvider
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
             $routes = (new Router)->setStrategy($strategy);
             // Main Inventory routes.  Must have a selected store
-            
+                       
             $routes->group('/marketplace', function (\League\Route\RouteGroup $route) {
-                $route->get('/add', Marketplace\MarketplaceController::class . '::add');
-                $route->get('/browse', Marketplace\MarketplaceController::class . '::browse');
-                $route->post('/add/step2', Marketplace\MarketplaceController::class . '::addSecond');
-                $route->get('/add/step2', Marketplace\MarketplaceController::class . '::addSecond');
-                $route->post('/add/step3', Marketplace\MarketplaceController::class . '::addThree');
+                $route->get('/dashboard', Marketplace\MarketplaceController::class . '::add');
+                $route->get('/list', Marketplace\MarketplaceController::class . '::view');
+                $route->post('/dashboard/step2', Marketplace\MarketplaceController::class . '::addSecond');
+                $route->get('/dashboard/step2', Marketplace\MarketplaceController::class . '::addSecond');
+                $route->post('/dashboard/step3', Marketplace\MarketplaceController::class . '::addThree');
                 $route->get('/edit/{Id:number}', Marketplace\MarketplaceController::class . '::editMarketplace');
                 $route->post('/update', Marketplace\MarketplaceController::class . '::updateMarketplace');
 
                 $route->post('/delete', Marketplace\MarketplaceController::class . '::deleteMarketData');
 
             })->middleware($this->container->get('Csrf'))
-              ->middleware($this->container->get('Store'))
-              ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'));
 
             return $routes;
         })->setShared(true);

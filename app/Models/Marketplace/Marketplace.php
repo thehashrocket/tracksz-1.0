@@ -1,6 +1,9 @@
 <?php declare(strict_types = 1);
 
 namespace App\Models\Marketplace;
+use Laminas\Db\Sql\Sql;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\ResultSet\ResultSet;
 use PDO;
 
 class Marketplace
@@ -12,19 +15,25 @@ class Marketplace
     
     public function __construct(PDO $db,Adapter $adapter = null)
     {
-        $this->db = $db;
-    }
+        $this->db = $db;  
+        $this->adapter = new Adapter([
+            'driver'   => 'Mysqli',
+            'database' => getenv('DATABASE'),
+            'username' => getenv('DB_USERNAME'),
+            'password' => getenv('DB_PASSWORD')
+        ]);   
+    }  
 
 
       /*
     * all records - get all marketplace records
     *
-    * @param
+    * @param  
     * @return associative array.
     */
     public function getAll()
     {
-        $stmt = $this->db->prepare('SELECT * FROM MarketPlace ORDER BY MarketName');
+        $stmt = $this->db->prepare('SELECT * FROM marketplace ORDER BY `Id` DESC');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -33,7 +42,7 @@ class Marketplace
      /*
     * all records - get all marketplace records
     *
-    * @param
+    * @param  
     * @return associative array.
     */
     public function getActiveUserAll($UserId = 0, $Status = array())
@@ -94,26 +103,26 @@ class Marketplace
     * @return boolean
     */
     public function addMarketplace($form = array())
-    {
+    {          
         $query  = 'INSERT INTO marketplace (MarketName, EmailAddress, SellerID, Password,FtpAddress,FtpUserId,';
         $query .= 'FtpPassword, PrependVenue,AppendVenue,IncreaseMinMarket,FileFormat,';
         $query .= 'FtpAppendVenue, SuspendExport,SendDeletes,MarketAcceptPrice,MarketAcceptPriceVal,';
-        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2, Status, UserId';
+        $query .= 'MarketAcceptPriceValMulti, MarketSpecificPrice, MarketAcceptPriceVal2,MarketAcceptPriceValMulti2, Status, UserId';                
         $query .= ') VALUES (';
-        $query .= ':MarketName, :EmailAddress, :SellerID, :Password,:FtpAddress,:FtpUserId,';
+        $query .= ':MarketName, :EmailAddress, :SellerID, :Password,:FtpAddress, :FtpUserId,';
         $query .= ':FtpPassword, :PrependVenue, :AppendVenue, :IncreaseMinMarket, :FileFormat,';
         $query .= ':FtpAppendVenue, :SuspendExport, :SendDeletes, :MarketAcceptPrice, :MarketAcceptPriceVal,';
-        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2, :Status, :UserId';
+        $query .= ':MarketAcceptPriceValMulti, :MarketSpecificPrice, :MarketAcceptPriceVal2, :MarketAcceptPriceValMulti2, :Status, :UserId';        
         $query .= ')';
 
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
             return false;
-        }
+        }        
         return true;
     }
     
-    
+      
     /*
     * editAddress - Find address by address record Id
     *
@@ -129,7 +138,7 @@ class Marketplace
         $query .= 'SellerID = :SellerID, ';
         $query .= 'Password = :Password, ';
         $query .= 'FtpAddress = :FtpAddress, ';
-        $query .= 'FtpUserId = :FtpUserId, ';
+        $query .= 'FtpUserId = :FtpUserId, ';        
         $query .= 'FtpPassword = :FtpPassword, ';
         $query .= 'PrependVenue = :PrependVenue, ';
         $query .= 'AppendVenue = :AppendVenue, ';
@@ -146,22 +155,22 @@ class Marketplace
         $query .= 'MarketAcceptPriceValMulti2 = :MarketAcceptPriceValMulti2, ';
         $query .= 'Status = :Status, ';
         $query .= 'Updated = :Updated ';
-        $query .= 'WHERE Id = :Id ';
-        
-        $stmt = $this->db->prepare($query);
+        $query .= 'WHERE Id = :Id ';    
+                
+        $stmt = $this->db->prepare($query);  
         if (!$stmt->execute($form)) {
             return 0;
         }
         $stmt = null;
         return $form['Id'];
-    }
+    }  
     
  
     
     /*
     * delete - delete a Marketplace records
     *
-    * @param  $id = table record ID
+    * @param  $id = table record ID   
     * @return boolean
     */
     public function delete($Id = null)
@@ -189,5 +198,5 @@ class Marketplace
         // [13] => quote
         // [14] => __wakeup
         // [15] => __sleep
-        // [16] => getAvailableDrivers
+        // [16] => getAvailableDrivers  
 }

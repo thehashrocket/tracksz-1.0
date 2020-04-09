@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Services\Routes;
 
@@ -29,22 +31,20 @@ class ProductRoutes extends AbstractServiceProvider
         // Bind a route collection to the container.
         $this->container->add(Router::class, function () {
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
-            $routes   = (new Router)->setStrategy($strategy);            	
+            $routes   = (new Router)->setStrategy($strategy);
             // Main Inventory routes.  Must have a selected store
             $routes->group('/product', function (\League\Route\RouteGroup $route) {
-              
-
                 $route->get('/view', Product\ProductController::class . '::view');
                 $route->get('/add', Product\ProductController::class . '::add');
                 $route->get('/defaults', Product\ProductController::class . '::defaults');
-    
                 $route->post('/defaults', Product\ProductController::class . '::updateDefaults');
                 $route->post('/place_market', Product\ProductController::class . '::MapMarketProducts');
-                
-                
-            })->middleware($this->container->get('Csrf'))              
-              ->middleware($this->container->get('Auth'));
-            
+                $route->post('/delete', Product\ProductController::class . '::DeleteProductData');
+                $route->get('/edit/{Id:number}', Product\ProductController::class . '::EditProduct');
+                $route->post('/update', Product\ProductController::class . '::updateProduct');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+
             return $routes;
         })->setShared(true);
     }

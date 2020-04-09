@@ -9,6 +9,7 @@ $description_meta = 'Member Profile for Tracksz, a Multiple Market Inventory Man
 <div class="wrapper">
     <!-- .page -->
     <div class="page">
+
         <!-- .page-inner -->
         <div class="page-inner">
             <header class="page-title-bar">

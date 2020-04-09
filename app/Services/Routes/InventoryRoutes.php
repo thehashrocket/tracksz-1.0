@@ -35,7 +35,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 
                 /* Inventory Routes */
                 $route->get('/upload', Inventory\InventoryController::class . '::uploadInventory');
-                $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');
+                $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');                
 
                 $route->get('/view', Inventory\InventoryController::class . '::view');
                 $route->get('/add', Inventory\InventoryController::class . '::add');
@@ -46,22 +46,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 
             })->middleware($this->container->get('Csrf'))
-              ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
-    
-            // Main CATEGORY routes.  Must have a selected store
-            $routes->group('/inventory/category', function (\League\Route\RouteGroup $route) {
-                $route->get('/', Inventory\CategoryController::class . '::browse');
-                $route->get('/add', Inventory\CategoryController::class . '::add');
-                $route->get('/defaults', Category\CategoryController::class . '::defaults');
-                $route->get('/lists', Category\CategoryController::class . '::get_list_records');
-        
-                $route->post('/defaults', Category\CategoryController::class . '::updateDefaults');
-                $route->post('/insert_category', Category\CategoryController::class . '::add_Category');
-            })->middleware($this->container->get('Csrf'))
-              ->middleware($this->container->get('Store'))
-              ->middleware($this->container->get('Auth'));
-            
+               
             return $routes;
         })->setShared(true);
     }

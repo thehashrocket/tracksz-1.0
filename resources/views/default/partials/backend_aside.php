@@ -145,22 +145,30 @@
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-                    
                     <!-- .menu-header -->
                     <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $example_menu = ['example-page', 'example-find'];
                     ?>
-                    <li class="menu-item has-child<?php if(in_array($page, $example_menu)) echo ' has-active';?>">
-                        <a href="#" class="menu-link" title="<?=_('Example Data List')?>"><span class="menu-icon fa fa-bath" title="<?=_('Example Data')?>"></span> <span class="menu-text"><?=_('Example')?></span></a> <!-- child menu -->
+                    <li class="menu-item has-child<?php if (in_array($page, $example_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Example Data List') ?>"><span class="menu-icon fas fa-list" title="<?= _('Example Data') ?>"></span> <span class="menu-text"><?= _('Example') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <!-- Notice the use of substr because of pagination urls -->
-                            <li class="menu-item<?php if($page == 'example-page') echo ' has-active';?>">
-                                <a href="/example/page" title="<?=_('View Example Data')?>" class="menu-link"><?=_('List')?></a>
+                            <li class="menu-item<?php if ($page == 'example-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/example/page" title="<?= _('View Example Data') ?>" class="menu-link"><?= _('List') ?></a>
                             </li>
-                            <li class="menu-item<?php if($page == 'example-find') echo ' has-active';?>">
-                                <a href="/example/find" title="<?=_('Find Example Data')?>" class="menu-link"><?=_('Find Example')?></a>
+                            <li class="menu-item<?php if ($page == 'example-find') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/example/find" title="<?= _('Find Example Data') ?>" class="menu-link"><?= _('Find Example') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
@@ -169,11 +177,13 @@
         </div><!-- /.aside-menu -->
         <!-- Skin changer -->
         <footer class="aside-footer border-top p-2">
-            <?php if(\Delight\Cookie\Cookie::exists('tracksz_active_store') &&
-                     \Delight\Cookie\Cookie::get('tracksz_active_store') > 0): ?>
-                <a class="btn btn-light btn-block text-primary" href="/account/stores" data-toggle="tooltip" data-placement="bottom" title="<?=_('Current Active Store: ')?><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?><?=_('. Click to Change Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <span class="d-compact-menu-none"><?=urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name'))?></span></a>
-            <?php else: ?>
-                <a class="btn btn-light btn-block text-primary" href="/account/stores" data-toggle="tooltip" data-placement="bottom" title="<?=_('No Active Store Selected. Click to Selet Active Store')?>"><i class="fas fa-shopping-cart ml-1"></i> <span class="d-compact-menu-none"><?=_('No Acive Store')?></span></a>
+            <?php if (
+                \Delight\Cookie\Cookie::exists('tracksz_active_store') &&
+                \Delight\Cookie\Cookie::get('tracksz_active_store') > 0
+            ) : ?>
+                <a class="btn btn-light btn-block text-primary" href="/account/stores" data-toggle="tooltip" data-placement="bottom" title="<?= _('Current Active Store: ') ?><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?><?= _('. Click to Change Active Store') ?>"><i class="fas fa-shopping-cart ml-1"></i> <span class="d-compact-menu-none"><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></span></a>
+            <?php else : ?>
+                <a class="btn btn-light btn-block text-primary" href="/account/stores" data-toggle="tooltip" data-placement="bottom" title="<?= _('No Active Store Selected. Click to Selet Active Store') ?>"><i class="fas fa-shopping-cart ml-1"></i> <span class="d-compact-menu-none"><?= _('No Acive Store') ?></span></a>
             <?php endif; ?>
         </footer><!-- /Skin changer -->
     </div><!-- /.aside-content -->

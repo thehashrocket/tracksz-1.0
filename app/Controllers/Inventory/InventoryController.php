@@ -3,7 +3,6 @@
 namespace App\Controllers\Inventory;
 
 use App\Library\Views;
-use App\Models\Account\Store;
 use App\Models\Inventory\Category;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
@@ -14,21 +13,16 @@ use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use Exception;
 use PDO;
-
 class InventoryController
 {
     private $view;
     private $db;
     
     public function __construct(Views $view, PDO $db)
-    {
+    {   
+       
         $this->view = $view;
         $this->db   = $db;
-    }
-    
-    public function browse()
-    {
-        return $this->view->buildResponse('inventory/browse', []);
     }
 
      /*
@@ -39,15 +33,15 @@ class InventoryController
     * @return boolean
     */
     public function uploadInventory()
-    {
+    {   
         $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'),1);
         return $this->view->buildResponse('inventory/upload', ['market_places' => $market_places]);
     }
 
     public function uploadInventoryFTP(ServerRequest $request)
-    {
-        $form = $request->getUploadedFiles();
-        $form_2 = $request->getParsedBody();
+    { 
+        $form = $request->getUploadedFiles();   
+        $form_2 = $request->getParsedBody();       
         // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         unset($form_2['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
@@ -62,7 +56,7 @@ class InventoryController
     
             $validated = $validate2->run($form_2,true);
 
-            // use validated as it is filtered and validated
+            // use validated as it is filtered and validated        
             if ($validated === false) {
                 throw new Exception("Please Select Marketplace...!", 301);
             }
@@ -74,25 +68,25 @@ class InventoryController
             $validator = new FilesSize([
                 'min' => '1kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
-            ]);
+            ]);             
     
-            // if false than throw Size error
+            // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
            
             // Using an options array:
-            $validator2 = new Extension(['docs,jpg,xlsx']);
+            $validator2 = new Extension(['docs,jpg,xlsx']);            
             // if false than throw type error
             if (!$validator2->isValid($_FILES['InventoryUpload'])) {
                 throw new Exception("Please upload valid file type docs, jpg and xlsx...!", 301);
-            }
+            }           
             
             $ftp_details = (new Marketplace($this->db))->findFtpDetails($form_2['MarketName'], Session::get('auth_user_id'),1);
            
             if(is_array($ftp_details) && empty($ftp_details)){
                 throw new Exception("Ftp Details are not available in database...!", 301);
-            }
+            }       
 
             $ftp_connect = ftp_connect($ftp_details['FtpAddress']);
             $ftp_username = $ftp_details['FtpUserId'];
@@ -119,16 +113,16 @@ class InventoryController
             $validated['alert'] = 'Inventory File is uploaded into FTP Server successully..!';
             $validated['alert_type'] = 'success';
             $this->view->flash($validated);
-            return $this->view->redirect('/inventory/upload');
+            return $this->view->redirect('/inventory/upload');           
 
-        }catch (Exception $e){
+        }catch (Exception $e){            
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = 'Inventory File not uploaded into server...!';
             $res['ex_message'] = $e->getMessage();
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
-            $res['ex_line'] = $e->getLine();
+            $res['ex_line'] = $e->getLine();            
 
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
@@ -148,8 +142,8 @@ class InventoryController
     */
     public function updateCsvInventory(ServerRequest $request)
     {
-        $form = $request->getUploadedFiles();
-        $form_2 = $request->getParsedBody();
+        $form = $request->getUploadedFiles();   
+        $form_2 = $request->getParsedBody();       
         // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         unset($form_2['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
@@ -164,7 +158,7 @@ class InventoryController
     
             $validated = $validate2->run($form_2,true);
 
-            // use validated as it is filtered and validated
+            // use validated as it is filtered and validated        
             if ($validated === false) {
                 throw new Exception("Please Select Marketplace...!", 301);
             }
@@ -176,15 +170,15 @@ class InventoryController
             $validator = new FilesSize([
                 'min' => '0kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
-            ]);
+            ]);             
     
-            // if false than throw Size error
+            // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
            
             // Using an options array:
-            $validator2 = new Extension(['csv']);
+            $validator2 = new Extension(['csv']);            
             // if false than throw type error
             if (!$validator2->isValid($_FILES['InventoryUpload'])) {
                 throw new Exception("Please upload valid file type csv...!", 301);
@@ -192,11 +186,11 @@ class InventoryController
             
             $check_priority = $this->CheckPriorityUpdate();
             
-            $ftp_details = (new Marketplace($this->db))->findFtpDetails($form_2['MarketName'], Session::get('auth_user_id'),1);
+            $ftp_details = (new Marketplace($this->db))->findFtpDetails($form_2['MarketName'], Session::get('auth_user_id'),1);           
 
             if(is_array($ftp_details) && empty($ftp_details)){
                 throw new Exception("Ftp Details are not available in database...!", 301);
-            }
+            }       
 
             $ftp_connect = ftp_connect($ftp_details['FtpAddress']);
             $ftp_username = $ftp_details['FtpUserId'];
@@ -223,16 +217,16 @@ class InventoryController
             $validated['alert'] = 'Inventory File is uploaded into FTP Server successully..!';
             $validated['alert_type'] = 'success';
             $this->view->flash($validated);
-            return $this->view->redirect('/inventory/update');
+            return $this->view->redirect('/inventory/update');           
 
-        }catch (Exception $e){
+        }catch (Exception $e){            
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = 'Inventory File not uploaded into server...!';
             $res['ex_message'] = $e->getMessage();
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
-            $res['ex_line'] = $e->getLine();
+            $res['ex_line'] = $e->getLine();            
 
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
@@ -242,7 +236,7 @@ class InventoryController
         ftp_close($ftp_connect);
         exit;
     }
-    
+
     
     /*
     * CheckPriorityUpdate - Check Inventory Table IsUpdating Status
@@ -253,6 +247,18 @@ class InventoryController
     {
         return $this->view->buildResponse('inventory/view', []);
     }
+
+    /*
+    * view - Load inventory view file
+    * @param  - none
+    * @return view
+    */
+    public function view()
+    {
+        return $this->view->buildResponse('inventory/view', []);
+    }
+
+
     
 
     /*
