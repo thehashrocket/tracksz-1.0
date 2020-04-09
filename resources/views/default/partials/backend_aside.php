@@ -24,7 +24,6 @@ if (substr($page, 0, 12) == 'example-page') {
                     <li class="menu-item<?php if ($page == 'account-panel') echo ' has-active'; ?>">
                         <a href="/account/panel" class="menu-link" title="<?= _('Tracksz Account Dashboard') ?>"><span class="menu-icon fas fa-home"></span> <span class="menu-text"><?= ('Dashboard') ?></span></a>
                     </li><!-- /.menu-item -->
-    
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $orders_menu = ['order-browse'];
@@ -37,7 +36,6 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-    
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $reports_menu = ['report-sales'];
@@ -50,7 +48,7 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-                     <!-- .menu-item -->
+                    <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $inventory_menu = ['inventory-view', 'inventory-defaults', 'inventory-categories', 'inventory-upload', 'inventory-update'];
@@ -106,11 +104,10 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-
-                    <!-- .menu-item -->
+                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $product_menu = ['product-view', 'product-defaults', 'product-categories', 'product-add', 'product-place_market'];
+                    $product_menu = ['product-view', 'product-defaults', 'product-categories', 'product-add', 'product-place_market', 'product-upload'];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $product_menu)) {
                                                         echo ' has-active';
@@ -128,13 +125,19 @@ if (substr($page, 0, 12) == 'example-page') {
                                                     echo ' has-active';
                                                 }
                                                 ?>">
+                                <a href="/product/upload" title="<?= _('FTP Product Upload') ?>" class="menu-link"><?= _('Upload') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'product-view') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
                                 <a href="/product/view" title="<?= _('View, Edit, Delete Product') ?>" class="menu-link"><?= _('View') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
 
 
-                    <!-- .menu-item -->
+			<!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $category_menu = ['category-view', 'category-add'];
@@ -193,7 +196,6 @@ if (substr($page, 0, 12) == 'example-page') {
                         </ul>
                     </li><!-- /.menu-item -->
                     <!-- .menu-item -->
-                    
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array

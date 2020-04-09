@@ -38,9 +38,10 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/view', Inventory\InventoryController::class . '::view');
                 $route->get('/add', Inventory\InventoryController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
-                $route->post('/ftpupload', Inventory\InventoryController::class . '::uploadInventoryFTP');
+                $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
+                
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Inventory routes.  Must have a selected store
@@ -50,12 +51,12 @@ class InventoryRoutes extends AbstractServiceProvider
             $routes->group('/product', function (\League\Route\RouteGroup $route) {
                 $route->get('/view', Inventory\ProductController::class . '::view');
                 $route->get('/add', Inventory\ProductController::class . '::add');
-                $route->get('/defaults', Inventory\ProductController::class . '::defaults');
-                $route->post('/defaults', Inventory\ProductController::class . '::updateDefaults');
                 $route->post('/place_market', Inventory\ProductController::class . '::MapMarketProducts');
                 $route->post('/delete', Inventory\ProductController::class . '::DeleteProductData');
                 $route->get('/edit/{Id:number}', Inventory\ProductController::class . '::EditProduct');
                 $route->post('/update', Inventory\ProductController::class . '::updateProduct');
+                $route->get('/upload', Inventory\ProductController::class . '::UploadProduct');
+                $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Product routes.  Must have a selected store    

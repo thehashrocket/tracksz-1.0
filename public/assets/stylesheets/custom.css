@@ -9,14 +9,16 @@
     font-size: 110%;
 }
 .input-group:not(.input-group-alt) .input-group-prepend .input-group-text {
-  padding-right: 10px;
+    padding-right: 10px;
 }
 #card-errors {
     color: #B76BA3;
 }
-label.error{}
-label.error{
-    color:#B76BA3;
+
+label.error {}
+
+label.error {
+    color: #B76BA3;
     font-size: 80%;
 }
 /*parsley js form validation style*/
@@ -64,6 +66,7 @@ select.parsley-error:focus {
     background-size: cover;
 }
 
-.inventory_csv .fa-file-csv:before{
+.inventory_csv .fa-file-csv:before,
+.product_csv .fa-file-csv:before {
     font-size: 32px;
 }
