@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Middleware;
 
@@ -35,18 +37,17 @@ final class StoreMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface The response
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
 
-        if(Cookie::exists('tracksz_active_store') && Cookie::get('tracksz_active_store') > 0) {
+        if (Cookie::exists('tracksz_active_store') && Cookie::get('tracksz_active_store') > 0) {
             return $handler->handle($request);
         }
         $data = [
             'alert'     => _('You must have an Active Store Selected to work in this Area.'),
-            'alert_type'=> 'warning'
+            'alert_type' => 'warning'
         ];
         $this->view->flash($data);
         return $this->view->redirect('/account/stores');
     }
-    
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Middleware;
 
@@ -37,18 +39,16 @@ final class AuthMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface The response
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        
         if ($this->auth->isLoggedIn()) {
             return $handler->handle($request);
         }
         $data = [
             'alert'     => 'You must login to proceed. Please register if you do not have an account.',
-            'alert_type'=> 'warning'
+            'alert_type' => 'warning'
         ];
         $this->view->flash($data);
         return $this->view->redirect('/login');
     }
-    
 }
