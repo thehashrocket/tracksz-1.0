@@ -5,7 +5,7 @@ Quick Tutorial on Console.php for command line processes - Author: Jaymes H. Sor
 
 - Creating a command line process class.
 
-1. Create a new command class inside the app\Console folder. To group logical command line processes you may create a folder under Console to place your class.
+1. Create a new command class inside the app\Console folder. To group logical command line processes you may create a folder under Console to place your class or classes.
 
 2.  The command line class would have a minimum of this structure:
 
@@ -41,17 +41,43 @@ Quick Tutorial on Console.php for command line processes - Author: Jaymes H. Sor
 
 3.  To run your command line process
 
-    php path/to/app/Console/Console.php ClassName
+    php path/to/framework/app/Console/Console.php ClassName
 
     For example:
-    php path/to/app/Console/Console.php Migrate
+    php path/to/framework/app/Console/Console.php Migrate
 
-    If you created a sub-folder in Console for like command line class files.  Use this format:
+4.  If you created a sub-folder in Console for command line class files.  Use this format:
 
-    php path/to/app/Console/Console.php SubFolder:ClassName
+    php path/to/framework/app/Console/Console.php SubFolder:ClassName
 
     The : (colon) is the folder delimiter.  For Example:
-    php path/to/app/Console/Console.php zzExample:zzExample
+    php path/to/framework/app/Console/Console.php zzExample:zzExample
 
-4.  An example command line process class can be found in app\Console\zzExample\zzExample.php
+    This means that the class zzExample is saved in the folder app/Console/zzExample
+
+5.  To pass arguments to your class add them to the command line command.
+
+     For example:
+     php path/to/framework/app/Console/Console.php ClassToRun Argrument1 Argument2
+
+     Please note: The arguments you need are positional.  Your class should expect Argument1 to be a certain data element, Argument2 is expected to be a certain secend data element, and so on.
+
+     In the __construct function of ClassToRun ensure you accept an array.  Such as:
+
+         public function __construct($data=[])
+
+     Arguments with spaces will look like two arguments on the command line.  If you have arguments that require spaces, yet you want it to be in one argument only, use ~ (tilde) for the spaces. Then remove those spaces in  your class function.  Such as:
+
+        if (isset($data[0]) && $data[0] !== '') {
+            $this->lookup = str_replace('~', ' ', $data[0]);
+        }
+
+        zzExample console class has been updated to use an argument.
+        php path/to/framework/app/Console/Console.php zzExample:zzExample Abby~Ward
+
+        and
+
+        php path/to/framework/app/Console/Console.php zzExample:zzExample Aston~Simmonds
+
+6.  An example command line process class can be found in app\Console\zzExample\zzExample.php
 

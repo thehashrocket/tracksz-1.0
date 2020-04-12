@@ -17,6 +17,14 @@ $dotenv->load();
 $cli = '';
 if (isset($argv[1])) $cli = $argv[1];
 
+$class_arguments = [];
+if (count($argv)>2) {
+    for ($i=2;$i<count($argv);$i++) {
+        $class_arguments[] = $argv[$i];
+    }
+}
+var_dump($class_arguments);
+
 if (!$cli) {
     echo 'Error; Usage from framework root is "php app/console/Console.php ClassToRun"' . "\n";
     echo '  With ClassToRun being the class with the "run" function you wish to execute.';
@@ -26,5 +34,5 @@ if (!$cli) {
     $cli_class = 'App\Console\\'.$cli;
 }
 
-$command = new $cli_class();
+$command = new $cli_class($class_arguments);
 $command->run();
