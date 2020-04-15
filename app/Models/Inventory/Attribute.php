@@ -39,7 +39,7 @@ class Attribute
     */
     public function all()
     {
-        $stmt = $this->db->prepare('SELECT Id, `Name`,`Value`,`SortOrder` FROM productattribute ORDER BY `Name`');
+        $stmt = $this->db->prepare('SELECT Id, `Name`,`Value`,`SortOrder` FROM ProductAttribute ORDER BY `Name`');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -49,7 +49,7 @@ class Attribute
     *
     * @return array of arrays
     */
-    public function productattributeJoinAll()
+    public function ProductAttributeJoinAll()
     {
         $stmt = $this->db->prepare('SELECT `cat`.`Id` as `CatId`,`Category`.`Name` as `ParentName`,`Category`.`Id`, `Category`.`Name` as `Name`,`Category`.`Description`, `cat`.`ParentId` as `ParentCategory`,`Category`.`Image` FROM `Category` LEFT JOIN `Category` as `cat` ON 
         `Category`.`Id` =  `cat`.`ParentId`');
@@ -65,7 +65,7 @@ class Attribute
     public function getActiveUserAll($UserId = 0, $Status = array())
     {
         $Status = implode(',', $Status); // WITHOUT WHITESPACES BEFORE AND AFTER THE COMMA
-        $stmt = $this->db->prepare("SELECT * FROM productattribute WHERE UserId = :UserId AND Status IN ($Status) ORDER BY `Id` DESC");
+        $stmt = $this->db->prepare("SELECT * FROM ProductAttribute WHERE UserId = :UserId AND Status IN ($Status) ORDER BY `Id` DESC");
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -94,7 +94,7 @@ class Attribute
     */
     public function addAttribute($form = array())
     {
-        $query  = 'INSERT INTO productattribute (Name, Value, SortOrder, StoreId';
+        $query  = 'INSERT INTO ProductAttribute (Name, Value, SortOrder, StoreId';
         $query .= ') VALUES (';
         $query .= ':Name, :Value, :SortOrder, :StoreId';
         $query .= ')';
@@ -108,35 +108,35 @@ class Attribute
 
 
     /*
-    * delete - delete a productattribute records
+    * delete - delete a ProductAttribute records
     *
     * @param  $id = table record ID   
     * @return boolean
     */
     public function delete($Id = null)
     {
-        $query = 'DELETE FROM productattribute WHERE Id = :Id';
+        $query = 'DELETE FROM ProductAttribute WHERE Id = :Id';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
     /*
-    * find - Find productattribute by productattribute record Id
+    * find - Find ProductAttribute by ProductAttribute record Id
     *
-    * @param  Id  - Table record Id of productattribute to find
+    * @param  Id  - Table record Id of ProductAttribute to find
     * @return associative array.
     */
     public function findById($Id)
     {
-        $stmt = $this->db->prepare('SELECT * FROM productattribute WHERE Id = :Id');
+        $stmt = $this->db->prepare('SELECT * FROM ProductAttribute WHERE Id = :Id');
         $stmt->execute(['Id' => $Id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
     /*
-    * editAttribute - Find productattribute by productattribute record Id and update
+    * editAttribute - Find ProductAttribute by ProductAttribute record Id and update
     *
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
@@ -144,7 +144,7 @@ class Attribute
     */
     public function editAttribute($form)
     {
-        $query  = 'UPDATE productattribute SET ';
+        $query  = 'UPDATE ProductAttribute SET ';
         $query .= 'Name = :Name, ';
         $query .= 'Value = :Value, ';
         $query .= 'SortOrder = :SortOrder, ';

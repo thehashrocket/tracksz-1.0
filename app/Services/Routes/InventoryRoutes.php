@@ -41,7 +41,6 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
-                
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Inventory routes.  Must have a selected store
