@@ -104,7 +104,7 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-                     <!-- .menu-item -->
+                    <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $product_menu = ['product-view', 'product-defaults', 'product-categories', 'product-add', 'product-place_market', 'product-upload'];
@@ -121,7 +121,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                 ?>">
                                 <a href="/product/add" title="<?= _('View, Add, Edit, Delete Product') ?>" class="menu-link"><?= _('Add') ?></a>
                             </li>
-                            <li class="menu-item<?php if ($page == 'product-view') {
+                            <li class="menu-item<?php if ($page == 'product-upload') {
                                                     echo ' has-active';
                                                 }
                                                 ?>">
@@ -137,7 +137,7 @@ if (substr($page, 0, 12) == 'example-page') {
                     </li><!-- /.menu-item -->
 
 
-			<!-- .menu-item -->
+                    <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
                     $category_menu = ['category-view', 'category-add'];
@@ -218,6 +218,33 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                             <li class="menu-item<?php if ($page == 'account-activities') echo ' has-active'; ?>">
                                 <a href="user-activities.html" title="<?= _('Tracksz Member Activities') ?>" class="menu-link"><?= _('Activities') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+                    <!-- .menu-header -->
+                    <li class="menu-header">Catalog </li><!-- /.menu-header -->
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $attribute_menu = ['attribute-add', 'attribute-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $attribute_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Attributes List') ?>"><span class="menu-icon fas fa-list" title="<?= _('Example Data') ?>"></span> <span class="menu-text"><?= _('Attributes') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'attribute-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/attribute/page" title="<?= _('View Attribute Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'attribute-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/attribute/add" title="<?= _('Add Attribute Data') ?>" class="menu-link"><?= _('Add') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->

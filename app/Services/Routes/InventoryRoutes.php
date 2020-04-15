@@ -77,6 +77,19 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'));
             // Main Category routes.  Must have a selected store
 
+            // Main Attribute routes.  Must have a selected store
+            $routes->group('/attribute', function (\League\Route\RouteGroup $route) {
+                $route->get('/page', Inventory\AttributesController::class . '::view');
+                $route->get('/add', Inventory\AttributesController::class . '::add');
+
+                $route->post('/insert_attribute', Inventory\AttributesController::class . '::addAttribute');
+                $route->post('/delete', Inventory\AttributesController::class . '::deleteAttributeData');
+                $route->get('/edit/{Id:number}', Inventory\AttributesController::class . '::editAttribute');
+                $route->post('/update', Inventory\AttributesController::class . '::updateAttribute');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main Category routes.  Must have a selected store
+
             return $routes;
         })->setShared(true);
     }
