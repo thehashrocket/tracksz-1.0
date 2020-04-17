@@ -274,6 +274,32 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
+
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $recurring_menu = ['recurring-add', 'recurring-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $recurring_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Recurring List') ?>"><span class="menu-icon fa fa-download" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Recurring') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'recurring-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/recurring/page" title="<?= _('View Recurring Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'recurring-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/recurring/add" title="<?= _('Add Recurring Data') ?>" class="menu-link"><?= _('Add') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
                     <!-- .menu-header -->
                     <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
                     <?php

@@ -52,6 +52,7 @@ class Application
         'Product' =>  Services\Routes\InventoryRoutes::class,
         'Attribute' =>  Services\Routes\InventoryRoutes::class,
         'Download' =>  Services\Routes\InventoryRoutes::class,
+        'Recurring' =>  Services\Routes\InventoryRoutes::class,
         // example Rooutes file
         'Example'   =>  Services\Routes\zzExampleRoutes::class,
     ];

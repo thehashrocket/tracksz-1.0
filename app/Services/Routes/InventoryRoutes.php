@@ -103,6 +103,17 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'));
             // Main Attribute routes.  Must have a selected store
 
+
+
+            // Main Recurring routes.  Must have a selected store
+            $routes->group('/recurring', function (\League\Route\RouteGroup $route) {
+                $route->get('/view', Inventory\RecurringController::class . '::view');
+                $route->get('/add', Inventory\RecurringController::class . '::add');
+                $route->post('/insert_recurring', Inventory\RecurringController::class . '::addRecurringData');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main Recurring routes.  Must have a selected store
+
             return $routes;
         })->setShared(true);
     }
