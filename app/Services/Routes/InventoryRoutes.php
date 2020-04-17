@@ -41,6 +41,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
+                
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Inventory routes.  Must have a selected store
@@ -87,7 +88,20 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/update', Inventory\AttributesController::class . '::updateAttribute');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
-            // Main Category routes.  Must have a selected store
+            // Main Attribute routes.  Must have a selected store
+
+            // Main Attribute routes.  Must have a selected store
+            $routes->group('/download', function (\League\Route\RouteGroup $route) {
+                $route->get('/page', Inventory\DownloadController::class . '::view');
+                $route->get('/add', Inventory\DownloadController::class . '::add');
+
+                $route->post('/insert_download', Inventory\DownloadController::class . '::addDownload');
+                $route->post('/delete', Inventory\DownloadController::class . '::deleteDownloadData');
+                $route->get('/edit/{Id:number}', Inventory\DownloadController::class . '::editDownload');
+                $route->post('/update', Inventory\DownloadController::class . '::updateDownload');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main Attribute routes.  Must have a selected store
 
             return $routes;
         })->setShared(true);

@@ -1,0 +1,80 @@
+
+Note :- All command run in adminstrated open command tab.
+
+
+
+Android Apk Release,Unsign,sign process
+ password- etcspl@123
+1)first release build apk from cordova using -
+    - cordova build android --release
+2) sign release unsign apk from jdk > bin 
+ 
+- C:\Program Files\Java\jdk1.8.0_73\bin>jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release_key_name.keystore android-release-unsigned.apk Kalasagar
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release_key_name.keystore android-release-unsigned.apk Kalasagar
+
+create Key => keytool -genkey -v -keystore release_key_name.keystore -alias Kalasagar -keyalg RSA -keysize 2048 -validity 10000
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release_key_name.keystore Kalasagar.apk Kalasagar
+
+
+
+3) zipalign released unsigned apk from android-sdk > tools 
+
+  -D:\Software\android-sdks\build-tools\25.0.0>zipalign  4 android-release-unsigned.apk ganesh.apk
+or 
+zipalign -v 4 Example-release-unsigned.apk Example.apk
+
+
+ https://developer.apple.com/contact/app-store/?topic=expedite 
+========================================
+D:\Software\android-sdks\tools;D:\Software\android-sdks\platform-tools
+
+
+\Users\Pradeep\Documents\NetBeansProjects\Kalasagar>jarsigner -verbose -sigalg
+HA1withRSA -digestalg SHA1 -keystore release_key_name.keystore app_name.apk al
+s_name
+
+etcspl@123 keystore
+C:\Program Files\Java\jdk1.8.0_73\bin>jarsigner -verbose -sigalg SHA1withRSA -di
+gestalg SHA1 -keystore release_key_name.keystore app_name.apk alias_name
+Enter Passphrase for keystore:
+jarsigner error: java.lang.RuntimeException: keystore load: C:\Program Files\Jav
+a\jdk1.8.0_73\bin\release_key_name.keystore (The system cannot find the file spe
+cified)
+
+C:\Program Files\Java\jdk1.8.0_73\bin>jarsigner -verbose -sigalg SHA1withRSA -di
+gestalg SHA1 -keystore release_key_name.keystore Kalasagar.apk Kalasagar
+Enter Passphrase for keystore:
+jarsigner error: java.lang.RuntimeException: keystore load: C:\Program Files\Jav
+a\jdk1.8.0_73\bin\release_key_name.keystore (The system cannot find the file spe
+cified)
+
+C:\Program Files\Java\jdk1.8.0_73\bin>
+keytool -genkey -v -keystore release_key_name.keystore -alias Kalasagar -keyalg RSA -keysize 2048 -validity 10000
+Enter keystore password:etcspl@123
+Re-enter new password:etcspl@123
+
+What is your first and last name?
+  [Unknown]:  kalasagar
+What is the name of your organizational unit?
+  [Unknown]:  etcspl
+What is the name of your organization?
+  [Unknown]:  etcspl
+What is the name of your City or Locality?
+  [Unknown]:  aurangabad
+What is the name of your State or Province?
+  [Unknown]:  maharashtra
+What is the two-letter country code for this unit?
+  [Unknown]:  91
+Is CN=kalasagar, OU=etcspl, O=etcspl, L=aurangabad, ST=maharashtra, C=91 correct
+?
+  [no]:yes
+
+Warning:
+No -tsa or -tsacert is provided and this jar is not timestamped. Without a time
+tamp, users may not be able to validate this jar after the signer certificate's
+expiration date (2044-06-08) or after any future revocation date.
+
+
+licence ker kalasagar - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1A/tSGBgi3wgagiasamOMXYJ0CXyMxWO2SUjnve1rZUrB8t1yF0UTa/ubHFj++2aemkEvQO3Y8FWhJHnkolcqhGapTAcSjU5QqLHgD5lzPBZsJrduY9Jc5+aEi8Vw5ORtkjMTXXOqWJ4RMLBJjKNdimgMMLRe1JU95f1bQLR7BXGZWKAg9gcQmvUjYPAM3vZIUMbdJKjlcWEAi8sYHC/XiciNUMMAy2/MQa6B2AmplEKQ3mtfSBoRfB5Bs4GRKXOxGTl1/uNh8f94pn53cWXJe7EDnC0+yo+nDfnzRjvUQZO59i+5c3k1H5bRLm5Aip+wzIP4m/FezN6HFXdtbTB0QIDAQAB

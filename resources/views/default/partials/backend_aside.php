@@ -248,6 +248,32 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
+
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $download_menu = ['download-add', 'download-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $download_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Downloads List') ?>"><span class="menu-icon fa fa-download" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Downloads') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'download-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/download/page" title="<?= _('View Download Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'download-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/download/add" title="<?= _('Add Download Data') ?>" class="menu-link"><?= _('Add') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
                     <!-- .menu-header -->
                     <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
                     <?php

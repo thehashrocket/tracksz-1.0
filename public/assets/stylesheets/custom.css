@@ -67,6 +67,7 @@ select.parsley-error:focus {
 }
 
 .inventory_csv .fa-file-csv:before,
-.product_csv .fa-file-csv:before {
+.product_csv .fa-file-csv:before,
+.download_file .fa-file:before {
     font-size: 32px;
 }

@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Attribute Edit for Your Tracksz Store, a Multiple Market Product Management Service';
-$description_meta = 'Attribute Edit for your Tracksz Store, a Multiple Market Product Management Service';
+$title_meta = 'Download Add for Your Tracksz Store, a Multiple Market Product Management Service';
+$description_meta = 'Download Add for your Tracksz Store, a Multiple Market Product Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -23,18 +23,18 @@ $description_meta = 'Attribute Edit for your Tracksz Store, a Multiple Market Pr
                                 <a href="/inventory/browse" title="Inventory Listings"><?= ('Inventory') ?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/attribute/page" title="Inventory Categories"><?= ('Attributes') ?></a>
+                                <a href="/download/page" title="Inventory Download"><?= ('Downloads') ?></a>
                             </li>
-                            <li class="breadcrumb-item active"><?= ('Edit') ?></li>
+                            <li class="breadcrumb-item active"><?= ('Add') ?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <!-- title -->
-                <h1 class="page-title"> <?= _('Attribute Edit') ?> </h1>
+                <h1 class="page-title"> <?= _('Download Add') ?> </h1>
                 <p class="text-muted">
-                    <?= _('This is where you can add, modify, and delete Attribute for the current Active Store: ') ?><strong><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+                    <?= _('This is where you can add, modify, and delete Download for the current Active Store: ') ?><strong><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
                 <?php endif ?>
@@ -49,23 +49,23 @@ $description_meta = 'Attribute Edit for your Tracksz Store, a Multiple Market Pr
                         <div class="card-body">
                             <!-- .card-body starts -->
 
-                            <form name="attribute_market_request" id="attribute_market_request" action="/attribute/update" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                            <form name="download_market_request" id="download_market_request" action="/download/insert_download" method="POST" enctype="multipart/form-data" data-parsley-validate>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-sm">
                                             <div class="form-group">
-                                                <label for="AttributeName">Attribute Name</label>
-                                                <input type="text" class="form-control" id="AttributeName" name="AttributeName" placeholder="Enter Attribute Name" data-parsley-required-message="<?= _('Enter Attribute Name') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['Name']) && !empty($form['Name'])) ? $form['Name'] : ''; ?>">
-                                                <input type="hidden" class="form-control" id="Id" name="Id" value="<?php echo (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : $form['AttributeName']; ?>">
+                                                <label for="DownloadName">Name</label>
+                                                <input type="text" class="form-control" id="DownloadName" name="DownloadName" placeholder="Enter Download Name" data-parsley-required-message="<?= _('Enter Download Name') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['DownloadName']) && !empty($form['DownloadName'])) ? $form['DownloadName'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
-                                                <label for="AttributeValue">Attribute Value</label>
-                                                <input type="text" class="form-control" id="AttributeValue" name="AttributeValue" placeholder="Enter Attribute Value" data-parsley-required-message="<?= _('Enter Attribute Value') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['Value']) && !empty($form['Value'])) ? $form['Value'] : $form['AttributeValue']; ?>">
+                                                <label for="DownloadFilename"><?= _('Filename') ?></label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="DownloadFilename" name="DownloadFilename" multiple="" data-parsley-required-message="<?= _('Select File') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" required> <label class="custom-file-label" for="DownloadFilename"><?= _('Choose file') ?></label>
+                                                </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="SortOrder">Sort Order</label>
-                                                <input type="number" class="form-control" id="SortOrder" data-parsley-minvalue="0" min="0" name="SortOrder" placeholder="Enter Sort Order" data-parsley-required-message="<?= _('Enter Attribute Value') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['SortOrder']) && !empty($form['SortOrder'])) ? $form['SortOrder'] : 0; ?>">
+                                                <label for="DownloadMask">Mask</label>
+                                                <input type="text" class="form-control" id="DownloadMask" name="DownloadMask" placeholder="Enter Mask" data-parsley-required-message="<?= _('Enter Download Value') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['DownloadMask']) && !empty($form['DownloadMask'])) ? $form['DownloadMask'] : ''; ?>">
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm mt-3 pt-3">
