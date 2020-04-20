@@ -1,13 +1,12 @@
 $(document).ready(function() {
     console.log('document ready test..!');
 
-    $('#downloads_table').DataTable({
+    $('#recurring_table').DataTable({
         responsive: true,
         "order": [
             [0, "desc"]
         ]
     });
-
 
 
     $(document).on("click", ".btn_delete", function() {
@@ -16,7 +15,7 @@ $(document).ready(function() {
         } else {
             $.ajax({
                 type: 'POST',
-                url: BASE_URL + '/download/delete',
+                url: BASE_URL + '/recurring/delete',
                 data: { 'Id': $(this).attr('delete_id') },
                 dataType: "json",
                 success: function(resultData) {
@@ -29,6 +28,5 @@ $(document).ready(function() {
             });
         }
     });
-
 
 });

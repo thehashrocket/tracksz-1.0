@@ -40,7 +40,7 @@ class Recurring
     */
     public function all()
     {
-        $stmt = $this->db->prepare('SELECT Id, `Name`,`Price`,`Frequency`,`Duration`,`Cycle`,`TrialStatus` FROM Recurring ORDER BY `Name`');
+        $stmt = $this->db->prepare('SELECT Id, `Name`,`Price`,`Frequency`,`Duration`,`Cycle`,`TrialStatus`,`TrialPrice`,`TrialFrequency`,`TrialDuration`,`TrialCycle`,`Status`,`SortOrder` FROM Recurring ORDER BY `Name`');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -150,12 +150,19 @@ class Recurring
     {
         $query  = 'UPDATE Recurring SET ';
         $query .= 'Name = :Name, ';
-        $query .= 'Description = :Description, ';
-        $query .= 'ParentId = :ParentId, ';
-        $query .= 'Image = :Image, ';
+        $query .= 'Price = :Price, ';
+        $query .= 'Frequency = :Frequency, ';
+        $query .= 'Duration = :Duration, ';
+        $query .= 'Cycle = :Cycle, ';
+        $query .= 'TrialStatus = :TrialStatus, ';
+        $query .= 'TrialPrice = :TrialPrice, ';
+        $query .= 'TrialFrequency = :TrialFrequency, ';
+        $query .= 'TrialDuration = :TrialDuration, ';
+        $query .= 'TrialCycle = :TrialCycle, ';
         $query .= 'Status = :Status, ';
-        $query .= 'UserId = :UserId, ';
-        $query .= 'Updated = :Updated ';
+        $query .= 'SortOrder = :SortOrder, ';
+        $query .= 'SortOrder = :SortOrder, ';
+        $query .= 'StoreId = :StoreId ';
         $query .= 'WHERE Id = :Id ';
 
         $stmt = $this->db->prepare($query);
