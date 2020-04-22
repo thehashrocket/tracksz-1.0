@@ -4,19 +4,32 @@ declare(strict_types=1);
 
 namespace App;
 
+use PDO;
+use App\Middleware;
 use App\Library\Utils;
 use App\Library\Views;
-use App\Middleware;
 use Delight\Auth\Auth;
-use Delight\Cookie\Session;
-use League\Container\Container;
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Route\Dispatcher;
 use League\Route\Router;
+use Delight\Cookie\Session;
+use League\Route\Dispatcher;
+use League\Container\Container;
+use App\Services\Routes\ApiRoutes;
+use App\Services\Routes\AjaxRoutes;
+use App\Services\PDOServiceProvider;
+use App\Services\Routes\OrderRoutes;
 use Laminas\Diactoros\StreamFactory;
+use App\Services\AuthServiceProvider;
+use App\Services\Routes\ReportRoutes;
+use App\Services\ViewServiceProvider;
+use App\Services\ErrorServiceProvider;
+use App\Services\Routes\AccountRoutes;
+use App\Services\Routes\DefaultRoutes;
+use App\Services\SphinxServiceProvider;
+use App\Services\Routes\InventoryRoutes;
+use App\Services\Routes\MarketplaceRoutes;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use PDO;
+use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class Application
 {
@@ -53,6 +66,7 @@ class Application
         'Attribute' =>  Services\Routes\InventoryRoutes::class,
         'Download' =>  Services\Routes\InventoryRoutes::class,
         'Recurring' =>  Services\Routes\InventoryRoutes::class,
+        'Customergroup' =>  Services\Routes\InventoryRoutes::class,
         // example Rooutes file
         'Example'   =>  Services\Routes\zzExampleRoutes::class,
     ];

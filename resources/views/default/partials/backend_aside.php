@@ -231,7 +231,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                         echo ' has-active';
                                                     }
                                                     ?>">
-                        <a href="#" class="menu-link" title="<?= _('Attributes List') ?>"><span class="menu-icon fas fa-list" title="<?= _('Example Data') ?>"></span> <span class="menu-text"><?= _('Attributes') ?></span></a> <!-- child menu -->
+                        <a href="#" class="menu-link" title="<?= _('Attributes List') ?>"><span class="menu-icon fas fa-paperclip" title="<?= _('Example Data') ?>"></span> <span class="menu-text"><?= _('Attributes') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <!-- Notice the use of substr because of pagination urls -->
                             <li class="menu-item<?php if ($page == 'attribute-page') {
@@ -283,7 +283,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                         echo ' has-active';
                                                     }
                                                     ?>">
-                        <a href="#" class="menu-link" title="<?= _('Recurring List') ?>"><span class="menu-icon fa fa-download" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Recurring') ?></span></a> <!-- child menu -->
+                        <a href="#" class="menu-link" title="<?= _('Recurring List') ?>"><span class="menu-icon fa fa-recycle" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Recurring') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <!-- Notice the use of substr because of pagination urls -->
                             <li class="menu-item<?php if ($page == 'recurring-page') {
@@ -297,6 +297,32 @@ if (substr($page, 0, 12) == 'example-page') {
                                                 }
                                                 ?>">
                                 <a href="/recurring/add" title="<?= _('Add Recurring Data') ?>" class="menu-link"><?= _('Add') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $customergroup_menu = ['customergroup-add', 'customergroup-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $customergroup_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Customer Group List') ?>"><span class="menu-icon fa fa-download" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Customer Group') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'customergroup-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/customergroup/page" title="<?= _('View Customer Group Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'customergroup-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/customergroup/add" title="<?= _('Add Customer Group Data') ?>" class="menu-link"><?= _('Add') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->

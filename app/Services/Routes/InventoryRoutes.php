@@ -116,6 +116,18 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'));
             // Main Recurring routes.  Must have a selected store
 
+            // Main CustomerGroup routes.  Must have a selected store
+            $routes->group('/customergroup', function (\League\Route\RouteGroup $route) {
+                $route->get('/page', Inventory\CustomerGroupController::class . '::view');
+                $route->get('/add', Inventory\CustomerGroupController::class . '::add');
+                $route->post('/insert_customergroup', Inventory\CustomerGroupController::class . '::addCustomerGroupData');
+                $route->post('/delete', Inventory\CustomerGroupController::class . '::deleteCustomerGroupData');
+                $route->get('/edit/{Id:number}', Inventory\CustomerGroupController::class . '::editCustomerGroup');
+                $route->post('/update', Inventory\CustomerGroupController::class . '::updateCustomerGroup');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main CustomerGroup routes.  Must have a selected store
+
             return $routes;
         })->setShared(true);
     }
