@@ -67,6 +67,8 @@ class Application
         'Download' =>  Services\Routes\InventoryRoutes::class,
         'Recurring' =>  Services\Routes\InventoryRoutes::class,
         'Customergroup' =>  Services\Routes\InventoryRoutes::class,
+        'Productdiscount' =>  Services\Routes\InventoryRoutes::class,
+        'Productspecial' =>  Services\Routes\InventoryRoutes::class,
         // example Rooutes file
         'Example'   =>  Services\Routes\zzExampleRoutes::class,
     ];

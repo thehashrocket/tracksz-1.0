@@ -5,12 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- End Required meta tags -->
-    
     <!-- Begin SEO tag -->
-    <title><?=$this->e($title)?></title>
-    <meta name="description" content="<?=$this->e($description)?>">
+    <title><?= $this->e($title) ?></title>
+    <meta name="description" content="<?= $this->e($description) ?>">
     <!-- End SEO tag -->
-    
     <!-- FAVICONS -->
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/images/favicons/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/images/favicons/apple-icon-60x60.png">
@@ -21,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="/assets/images/favicons/apple-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/favicons/apple-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/images/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicons/android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/images/favicons/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">
@@ -30,18 +28,15 @@
     <meta name="msapplication-TileImage" content="/assets/images/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!-- End FAVICONS -->
-    
     <!-- GOOGLE FONT -->
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet">
     <!-- End GOOGLE FONT -->
-    
     <!-- BEGIN PLUGINS STYLES -->
     <link rel="stylesheet" href="/assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.css">
     <link rel="stylesheet" href="/assets/vendor/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="/assets/vendor/datatables/css/dataTables.bootstrap4.min.css">
     <!-- END PLUGINS STYLES -->
-    
     <!-- BEGIN THEME STYLES -->
     <link rel="stylesheet" href="/assets/stylesheets/theme.min.css" data-skin="default">
     <link rel="stylesheet" href="/assets/stylesheets/custom.css">
@@ -59,48 +54,49 @@
 </head>
 
 <body>
-<!-- .app -->
-<div class="app">
-    <!--[if lt IE 10]>
+    <!-- .app -->
+    <div class="app">
+        <!--[if lt IE 10]>
     <div class="page-message" role="alert">You are using an <strong>outdated</strong> browser. Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</div>
     <![endif]-->
-    <!-- .app-header -->
-<?php $this->insert('partials/header_backend') ?>
-<?php $this->insert('partials/backend_aside') ?>
-    
-    <!-- .app-main -->
-    <main class="app-main">
-    
-<?=$this->section('page_content')?>
+        <!-- .app-header -->
+        <?php $this->insert('partials/header_backend') ?>
+        <?php $this->insert('partials/backend_aside') ?>
 
-<?php $this->insert('partials/footer_backend') ?>
-    
-    </main>
-</div><!-- /.app -->
+        <!-- .app-main -->
+        <main class="app-main">
 
-<!-- BEGIN BASE JS -->
-<script src="/assets/vendor/jquery/jquery.min.js"></script>
-<script src="/assets/vendor/bootstrap/js/popper.min.js"></script>
-<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-<!-- END BASE JS -->
-<script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<!-- BEGIN PLUGINS JS -->
-<?=$this->section('plugin_js')?>
-<!-- END PLUGINS JS -->
+            <?= $this->section('page_content') ?>
 
-<!-- BEGIN PAGE LEVEL JS -->
-<?=$this->section('page_js')?>
-<!-- END PAGE LEVEL JS -->
+            <?php $this->insert('partials/footer_backend') ?>
 
-<!-- BEGIN THEME JS -->
-<script src="/assets/javascript/theme.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
-<!-- END THEME JS -->
+        </main>
+    </div><!-- /.app -->
 
-<!-- BEGIN PAGE LEVEL JS -->
-<?=$this->section('footer_extras')?>
-<!-- END PAGE LEVEL JS -->
+    <!-- BEGIN BASE JS -->
+    <script src="/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/popper.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- END BASE JS -->
+    <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/vendor/flatpickr/flatpickr.min.js"></script>
+    <script src="/assets/vendor/flatpickr/plugins/monthSelect/index.js"></script>
+    <!-- BEGIN PLUGINS JS -->
+    <?= $this->section('plugin_js') ?>
+    <!-- END PLUGINS JS -->
+
+    <!-- BEGIN PAGE LEVEL JS -->
+    <?= $this->section('page_js') ?>
+    <!-- END PAGE LEVEL JS -->
+
+    <!-- BEGIN THEME JS -->
+    <script src="/assets/javascript/theme.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- END THEME JS -->
+
+    <!-- BEGIN PAGE LEVEL JS -->
+    <?= $this->section('footer_extras') ?>
+    <!-- END PAGE LEVEL JS -->
 
 
 </body>

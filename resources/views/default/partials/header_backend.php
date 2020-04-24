@@ -100,7 +100,7 @@
                 </ul><!-- /.nav -->
                 <!-- .btn-account -->
                 <div class="dropdown d-none d-sm-flex">
-                    <button class="btn-account" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="user-avatar user-avatar-md"><img src="/assets/images/member/<?=\Delight\Cookie\Session::get('member_avatar')?>" alt=""></span> <span class="account-summary pr-md-4 d-none d-md-block"><span class="account-name"><?php if(\Delight\Cookie\Session::has('member_name')) echo  \Delight\Cookie\Session::get('member_name');?></span> <span class="account-description"><?=_('Admin Panel')?></span></span></button> <!-- .dropdown-menu -->
+                    <button class="btn-account" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="user-avatar user-avatar-md"><img src="/assets/images/member/<?= \Delight\Cookie\Session::get('member_avatar') ?>" alt=""></span> <span class="account-summary pr-md-4 d-none d-md-block"><span class="account-name"><?php if (\Delight\Cookie\Session::has('member_name')) echo  \Delight\Cookie\Session::get('member_name'); ?></span> <span class="account-description"><?= _('Admin Panel') ?></span></span></button> <!-- .dropdown-menu -->
                     <div class="dropdown-menu">
                         <div class="dropdown-arrow ml-3"></div>
                         <h6 class="dropdown-header d-none d-sm-block d-md-none"> Beni Arisandi </h6><a class="dropdown-item" href="/account/profile"><span class="dropdown-icon oi oi-person"></span> Profile</a> <a class="dropdown-item" href="/logout"><span class="dropdown-icon oi oi-account-logout"></span> Logout</a>

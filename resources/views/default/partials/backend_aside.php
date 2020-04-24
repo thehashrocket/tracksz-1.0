@@ -309,7 +309,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                         echo ' has-active';
                                                     }
                                                     ?>">
-                        <a href="#" class="menu-link" title="<?= _('Customer Group List') ?>"><span class="menu-icon fa fa-download" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Customer Group') ?></span></a> <!-- child menu -->
+                        <a href="#" class="menu-link" title="<?= _('Customer Group List') ?>"><span class="menu-icon fa fa-user-friends" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Customer Group') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <!-- Notice the use of substr because of pagination urls -->
                             <li class="menu-item<?php if ($page == 'customergroup-page') {
@@ -323,6 +323,58 @@ if (substr($page, 0, 12) == 'example-page') {
                                                 }
                                                 ?>">
                                 <a href="/customergroup/add" title="<?= _('Add Customer Group Data') ?>" class="menu-link"><?= _('Add') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $productdiscount_menu = ['productdiscount-add', 'productdiscount-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $productdiscount_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Product Discount List') ?>"><span class="menu-icon fa fa-tags" title="<?= _('Download Data') ?>"></span> <span class="menu-text"><?= _('Product Discount') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'productdiscount-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/productdiscount/page" title="<?= _('View Product Discount Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'productdiscount-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/productdiscount/add" title="<?= _('Add Product Discount Data') ?>" class="menu-link"><?= _('Add') ?></a>
+                            </li>
+                        </ul><!-- /child menu -->
+                    </li><!-- /.menu-item -->
+
+                    <?php
+                    // determine if sub-menu has active page - set up array for in_array
+                    $productspecial_menu = ['productspecial-add', 'productspecial-page'];
+                    ?>
+                    <li class="menu-item has-child<?php if (in_array($page, $productspecial_menu)) {
+                                                        echo ' has-active';
+                                                    }
+                                                    ?>">
+                        <a href="#" class="menu-link" title="<?= _('Product Special List') ?>"><span class="menu-icon fa fa-tags" title="<?= _('Special Product') ?>"></span> <span class="menu-text"><?= _('Product Special') ?></span></a> <!-- child menu -->
+                        <ul class="menu">
+                            <!-- Notice the use of substr because of pagination urls -->
+                            <li class="menu-item<?php if ($page == 'productspecial-page') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/productspecial/page" title="<?= _('View Product Special Data') ?>" class="menu-link"><?= _('List') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'productspecial-add') {
+                                                    echo ' has-active';
+                                                }
+                                                ?>">
+                                <a href="/productspecial/add" title="<?= _('Add Product Special Data') ?>" class="menu-link"><?= _('Add') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->

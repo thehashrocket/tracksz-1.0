@@ -128,6 +128,30 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'));
             // Main CustomerGroup routes.  Must have a selected store
 
+            // Main ProductDiscount routes.  Must have a selected store
+            $routes->group('/productdiscount', function (\League\Route\RouteGroup $route) {
+                $route->get('/page', Inventory\ProductDiscountController::class . '::view');
+                $route->get('/add', Inventory\ProductDiscountController::class . '::add');
+                $route->post('/insert_discount', Inventory\ProductDiscountController::class . '::addProductDiscountData');
+                $route->post('/delete', Inventory\ProductDiscountController::class . '::deleteProductDiscountData');
+                $route->get('/edit/{Id:number}', Inventory\ProductDiscountController::class . '::editProductDiscount');
+                $route->post('/update', Inventory\ProductDiscountController::class . '::updateProductDiscount');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main ProductDiscount routes.  Must have a selected store
+
+            // Main ProductSpecial routes.  Must have a selected store
+            $routes->group('/productspecial', function (\League\Route\RouteGroup $route) {
+                $route->get('/page', Inventory\ProductSpecialController::class . '::view');
+                $route->get('/add', Inventory\ProductSpecialController::class . '::add');
+                $route->post('/insert_discount', Inventory\ProductSpecialController::class . '::addProductSpecialData');
+                $route->post('/delete', Inventory\ProductSpecialController::class . '::deleteProductSpecialData');
+                $route->get('/edit/{Id:number}', Inventory\ProductSpecialController::class . '::editProductSpecial');
+                $route->post('/update', Inventory\ProductSpecialController::class . '::updateProductSpecial');
+            })->middleware($this->container->get('Csrf'))
+                ->middleware($this->container->get('Auth'));
+            // Main ProductSpecial routes.  Must have a selected store
+
             return $routes;
         })->setShared(true);
     }
