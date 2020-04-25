@@ -22,8 +22,8 @@ class ProductController
     private $view;
     private $db;
     /*
-    * __construct - 
-    * @param  $form  - Default View, PDO db   
+    * __construct -
+    * @param  $form  - Default View, PDO db
     * @return set data
     */
     public function __construct(Views $view, PDO $db)
@@ -33,7 +33,7 @@ class ProductController
     }
     /*
     * add - Load Add Product View
-    * @param  $form  - Id    
+    * @param  $form  - Id
     * @return boolean load view with pass data
     */
     public function add()
@@ -65,7 +65,7 @@ class ProductController
             ));
 
             $validated = $validate->run($form);
-            // use validated as it is filtered and validated        
+            // use validated as it is filtered and validated
             if ($validated === false) {
                 throw new Exception("Please enter required fields...!", 301);
             }
@@ -78,7 +78,7 @@ class ProductController
                 'min' => '0kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
             ]);
-            // if false than throw Size error 
+            // if false than throw Size error
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
@@ -124,8 +124,8 @@ class ProductController
                     // echo '<pre> martplaces';
                     // print_r($market_wise_data);
                     // echo '</pre>';
-                    // exit;                        
-                } // Loops Ends                
+                    // exit;
+                } // Loops Ends
             }
             /* Mapping marketplace attributes Ends */
         } catch (Exception $e) {
@@ -149,7 +149,7 @@ class ProductController
     }
 
     /*
-    * PrepareInsertData - Assign Value to new array and prepare insert data    
+    * PrepareInsertData - Assign Value to new array and prepare insert data
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return array
@@ -195,7 +195,7 @@ class ProductController
                 if (isset($predefined_attr[$prod_key][$store_name])) {
                     $set_attr[$predefined_attr[$prod_key][$store_name]] = $prod_val;
                 }
-            } // Loops Ends                    
+            } // Loops Ends
             $res['status'] = true;
             $res['data'] = $set_attr;
             $res['message'] = 'Market attributes is set successfully..!';
@@ -205,19 +205,19 @@ class ProductController
 
     /*
     * view - Load List Category View
-    * @param  none 
+    * @param  none
     * @return boolean load view with pass data
     */
-    public function view()
+    public function browse()
     {
         $prod_obj = new Product($this->db);
         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product]);
     }
 
     /*
-    * DeleteProductData - Delete Product Data By Id    
-    * @param  $form  - Id    
+    * DeleteProductData - Delete Product Data By Id
+    * @param  $form  - Id
     * @return boolean
     */
     public function DeleteProductData(ServerRequest $request)
@@ -251,7 +251,7 @@ class ProductController
 
     /*
     * editProduct - Load Edit Product View
-    * @param  $form  - Id    
+    * @param  $form  - Id
     * @return boolean load view with pass data
     */
     public function editProduct(ServerRequest $request, $Id = [])
@@ -275,14 +275,14 @@ class ProductController
     /*
     * updateProduct - Update Product data
     * @param  $form  - Array of form fields, name match Database Fields
-    *                  Form Field Names MUST MATCH Database Column Names   
-    * @return boolean 
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
     */
     public function updateProduct(ServerRequest $request, $Id = [])
     {
         try {
             $methodData = $request->getParsedBody();
-            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
             $prod_img = $methodData['ProductImageHidden'];
 
             // Sanitize and Validate
@@ -299,7 +299,7 @@ class ProductController
 
             $validated = $validate->run($methodData);
 
-            // use validated as it is filtered and validated        
+            // use validated as it is filtered and validated
             if ($validated === false) {
                 throw new Exception("Please enter required fields...!", 301);
             }
@@ -312,7 +312,7 @@ class ProductController
                     'max' => '10MB', // maximum of 10MB
                 ]);
 
-                // if false than throw Size error 
+                // if false than throw Size error
                 if (!$validator->isValid($_FILES)) {
                     throw new Exception("File upload size is too large...!", 301);
                 }
@@ -371,7 +371,7 @@ class ProductController
     }
 
     /*
-    * PrepareUpdateData - Assign Value to new array and prepare update data    
+    * PrepareUpdateData - Assign Value to new array and prepare update data
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return array
@@ -400,7 +400,7 @@ class ProductController
 
     /*
     * UploadProduct -  Load Edit Product View
-    * @param  $form  - Id    
+    * @param  $form  - Id
     * @return boolean load view with pass data
     */
     public function UploadProduct()
@@ -412,8 +412,8 @@ class ProductController
 
     /*
     * UploadInventoryFTP - Upload Product csv file to ftp server
-    * @param  $form  - marketplace of ftp server details, product cs file      
-    * @return boolean 
+    * @param  $form  - marketplace of ftp server details, product cs file
+    * @return boolean
     */
     public function UploadInventoryFTP(ServerRequest $request)
     {
@@ -433,7 +433,7 @@ class ProductController
 
             $validated = $validate2->run($form_2, true);
 
-            // use validated as it is filtered and validated        
+            // use validated as it is filtered and validated
             if ($validated === false) {
                 throw new Exception("Please Select Marketplace...!", 301);
             }
@@ -447,7 +447,7 @@ class ProductController
                 'max' => '10MB', // maximum of 10MB
             ]);
 
-            // if false than throw Size error 
+            // if false than throw Size error
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }

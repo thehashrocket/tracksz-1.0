@@ -31,25 +31,24 @@ class InventoryRoutes extends AbstractServiceProvider
             $routes   = (new Router)->setStrategy($strategy);
             // Main Inventory routes.  Must have a selected store
             $routes->group('/inventory', function (\League\Route\RouteGroup $route) {
-                $route->get('/browse', Inventory\InventoryController::class . '::browse');
+                $route->get('/browse', Inventory\ProductController::class . '::browse');
                 $route->get('/upload', Inventory\InventoryController::class . '::uploadInventory');
                 $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');
 
-                $route->get('/view', Inventory\InventoryController::class . '::view');
-                $route->get('/add', Inventory\InventoryController::class . '::add');
+                $route->get('/add', Inventory\ProductController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+              ->middleware($this->container->get('Auth'))
+              ->middleware($this->container->get('Store'));
+              
             // Main Inventory routes.  Must have a selected store
 
 
             // Main Product routes.  Must have a selected store
             $routes->group('/product', function (\League\Route\RouteGroup $route) {
-                $route->get('/view', Inventory\ProductController::class . '::view');
-                $route->get('/add', Inventory\ProductController::class . '::add');
                 $route->post('/place_market', Inventory\ProductController::class . '::MapMarketProducts');
                 $route->post('/delete', Inventory\ProductController::class . '::DeleteProductData');
                 $route->get('/edit/{Id:number}', Inventory\ProductController::class . '::EditProduct');
@@ -58,11 +57,11 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
-            // Main Product routes.  Must have a selected store    
+            // Main Product routes.  Must have a selected store
 
             // Main Category routes.  Must have a selected store
             $routes->group('/category', function (\League\Route\RouteGroup $route) {
-                $route->get('/view', Inventory\CategoryController::class . '::view');
+                $route->get('/browse', Inventory\CategoryController::class . '::browse');
                 $route->get('/add', Inventory\CategoryController::class . '::add');
                 $route->get('/defaults', Inventory\CategoryController::class . '::defaults');
                 $route->get('/lists', Inventory\CategoryController::class . '::get_list_records');
@@ -101,8 +100,7 @@ class InventoryRoutes extends AbstractServiceProvider
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Attribute routes.  Must have a selected store
-
-
+            
 
             // Main Recurring routes.  Must have a selected store
             $routes->group('/recurring', function (\League\Route\RouteGroup $route) {
