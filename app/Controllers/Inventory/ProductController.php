@@ -223,7 +223,7 @@ class ProductController
     * @param  none 
     * @return boolean load view with pass data
     */
-    public function view()
+    public function browse()
     {
         $prod_obj = new Product($this->db);
         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);

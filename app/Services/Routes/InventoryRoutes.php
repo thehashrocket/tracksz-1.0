@@ -41,9 +41,9 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
             })->middleware($this->container->get('Csrf'))
-              ->middleware($this->container->get('Auth'))
-              ->middleware($this->container->get('Store'));
-              
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
+
             // Main Inventory routes.  Must have a selected store
 
 
@@ -66,10 +66,6 @@ class InventoryRoutes extends AbstractServiceProvider
             $routes->group('/category', function (\League\Route\RouteGroup $route) {
                 $route->get('/browse', Inventory\CategoryController::class . '::browse');
                 $route->get('/add', Inventory\CategoryController::class . '::add');
-                $route->get('/defaults', Inventory\CategoryController::class . '::defaults');
-                $route->get('/lists', Inventory\CategoryController::class . '::get_list_records');
-
-                $route->post('/defaults', Inventory\CategoryController::class . '::updateDefaults');
                 $route->post('/insert_category', Inventory\CategoryController::class . '::addCategory');
                 $route->post('/delete', Inventory\CategoryController::class . '::deleteCategoryData');
                 $route->get('/edit/{Id:number}', Inventory\CategoryController::class . '::editCategory');
@@ -103,7 +99,7 @@ class InventoryRoutes extends AbstractServiceProvider
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'));
             // Main Attribute routes.  Must have a selected store
-            
+
 
             // Main Recurring routes.  Must have a selected store
             $routes->group('/recurring', function (\League\Route\RouteGroup $route) {

@@ -28,7 +28,7 @@ $description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketp
                 <!-- title -->
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?= _('Category Listing') ?> </h1>
+                    <h1 class="page-title"> <?= _('Category Listing123') ?> </h1>
                 </div>
                 <p class="text-muted"> <?= _('This is where you can modify, and delete Category for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
                 <a href="/category/add" class="btn btn-sm btn-primary" title="<?= _('Add Category') ?>"><?= _('Add Category') ?></a>

@@ -16,7 +16,7 @@ use Exception;
 
 class CategoryController
 {
-    private $view;
+    private $browse;
     private $db;
 
     /*
@@ -24,22 +24,22 @@ class CategoryController
     * @param  $form  - Default View, PDO db   
     * @return set data
     */
-    public function __construct(Views $view, PDO $db)
+    public function __construct(Views $browse, PDO $db)
     {
-        $this->view = $view;
+        $this->browse = $browse;
         $this->db = $db;
     }
 
     /*
     * add - Load Add Category View
     * @param  $form  - Id    
-    * @return boolean load view with pass data
+    * @return boolean load browse with pass data
     */
     public function add()
     {
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('inventory/category/add', ['all_category' => $all_category]);
+        return $this->browse->buildResponse('inventory/category/add', ['all_category' => $all_category]);
     }
 
     /*
@@ -74,12 +74,12 @@ class CategoryController
                 'min' => '0kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
             ]);
-        
+
             // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
-       
+
             // Using an options array:
             $validator_ext = new Extension(['png,jpg,PNG,JPG,jpeg,JPEG']);
             // if false than throw type error
@@ -101,11 +101,11 @@ class CategoryController
             $all_category = $cat_obj->addCateogry($insert_data);
 
             if (isset($all_category) && !empty($all_category)) {
-                $this->view->flash([
+                $this->browse->flash([
                     'alert' => _('Category added successfully..!'),
                     'alert_type' => 'success'
                 ]);
-                return $this->view->redirect('/category/add');
+                return $this->browse->redirect('/category/add');
             } else {
                 throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
             }
@@ -121,11 +121,11 @@ class CategoryController
 
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
-            $this->view->flash($validated);
+            $this->browse->flash($validated);
 
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-            return $this->view->buildResponse('/inventory/category/add', ['all_category' => $all_category, 'form' => $form]);
+            return $this->browse->buildResponse('/inventory/category/add', ['all_category' => $all_category, 'form' => $form]);
         }
     }
 
@@ -147,15 +147,15 @@ class CategoryController
     }
 
     /*
-    * view - Load List Category View
+    * browse - Load List Category View
     * @param  none 
-    * @return boolean load view with pass data
+    * @return boolean load browse with pass data
     */
-    public function view()
+    public function browse()
     {
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+        return $this->browse->buildResponse('inventory/category/browse', ['all_category' => $all_category]);
     }
 
     /*
@@ -170,7 +170,7 @@ class CategoryController
         if (isset($result_data) && !empty($result_data)) {
             $validated['alert'] = 'Category record deleted successfully..!';
             $validated['alert_type'] = 'success';
-            $this->view->flash($validated);
+            $this->browse->flash($validated);
 
             $res['status'] = true;
             $res['data'] = array();
@@ -180,7 +180,7 @@ class CategoryController
         } else {
             $validated['alert'] = 'Sorry, Category records not deleted..! Please try again.';
             $validated['alert_type'] = 'danger';
-            $this->view->flash($validated);
+            $this->browse->flash($validated);
 
             $res['status'] = false;
             $res['data'] = array();
@@ -193,7 +193,7 @@ class CategoryController
     /*
     * editCategory - Load Edit Category View
     * @param  $form  - Id    
-    * @return boolean load view with pass data
+    * @return boolean load browse with pass data
     */
     public function editCategory(ServerRequest $request, $Id = [])
     {
@@ -201,15 +201,15 @@ class CategoryController
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         if (is_array($form) && !empty($form)) {
-            return $this->view->buildResponse('inventory/category/edit', [
+            return $this->browse->buildResponse('inventory/category/edit', [
                 'form' => $form, 'all_category' => $all_category
             ]);
         } else {
-            $this->view->flash([
+            $this->browse->flash([
                 'alert' => 'Failed to fetch Category details. Please try again.',
                 'alert_type' => 'danger'
             ]);
-            return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+            return $this->browse->buildResponse('inventory/category/browse', ['all_category' => $all_category]);
         }
     }
 
@@ -259,13 +259,13 @@ class CategoryController
 
             $is_updated = (new Category($this->db))->editCategory($update_data);
             if (isset($is_updated) && !empty($is_updated)) {
-                $this->view->flash([
+                $this->browse->flash([
                     'alert' => 'Category record updated successfully..!',
                     'alert_type' => 'success'
                 ]);
                 $cat_obj = new Category($this->db);
                 $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('inventory/category/view', ['all_category' => $all_category]);
+                return $this->browse->buildResponse('inventory/category/browse', ['all_category' => $all_category]);
                 unlink(getcwd() . "/assets/images/category/" . $methodData['CategoryImageHidden']);
             } else {
                 throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
@@ -282,10 +282,10 @@ class CategoryController
 
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
-            $this->view->flash($validated);
+            $this->browse->flash($validated);
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-            return $this->view->buildResponse('inventory/category/edit', [
+            return $this->browse->buildResponse('inventory/category/edit', [
                 'form' => $methodData, 'all_category' => $all_category
             ]);
         }
@@ -308,5 +308,4 @@ class CategoryController
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
     }
-     
 }
