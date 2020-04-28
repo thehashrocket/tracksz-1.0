@@ -41,7 +41,7 @@ class InventoryController
     }
 
     public function uploadInventoryFTP(ServerRequest $request)
-    {
+    { 
         $form = $request->getUploadedFiles();
         $form_2 = $request->getParsedBody();
         // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
@@ -55,7 +55,7 @@ class InventoryController
                 'MarketName'    => 'required'
             ));
             $validated = $validate2->run($form_2, true);
-            // use validated as it is filtered and validated
+            // use validated as it is filtered and validated        
             if ($validated === false) {
                 throw new Exception("Please Select Marketplace...!", 301);
             }
@@ -69,7 +69,7 @@ class InventoryController
                 'max' => '10MB', // maximum of 10MB
             ]);
 
-            // if false than throw Size error
+            // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
@@ -150,7 +150,7 @@ class InventoryController
             ));
                 $validated = $validate2->run($form_2,true);
 
-            // use validated as it is filtered and validated
+            // use validated as it is filtered and validated        
             if ($validated === false) {
                 throw new Exception("Please Select Marketplace...!", 301);
             }
@@ -164,7 +164,7 @@ class InventoryController
                 'max' => '10MB', // maximum of 10MB
             ]);
 
-            // if false than throw Size error
+            // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
@@ -233,6 +233,18 @@ class InventoryController
     {
         return $this->view->buildResponse('inventory/view', []);
     }
+
+    /*
+    * view - Load inventory view file
+    * @param  - none
+    * @return view
+    */
+    public function view()
+    {
+        return $this->view->buildResponse('inventory/view', []);
+    }
+
+
 
     /*
     * updateInventoryView - Load inventory update view file

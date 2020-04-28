@@ -337,6 +337,7 @@ if (substr($page, 0, 12) == 'example-page') {
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <!-- .menu-header -->
+
                     <li class="menu-header">EXAMPLES </li><!-- /.menu-header -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array

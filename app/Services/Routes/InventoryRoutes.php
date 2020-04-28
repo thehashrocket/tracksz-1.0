@@ -49,6 +49,9 @@ class InventoryRoutes extends AbstractServiceProvider
 
             // Main Product routes.  Must have a selected store
             $routes->group('/product', function (\League\Route\RouteGroup $route) {
+                $route->get('/view', Inventory\ProductController::class . '::view');
+                $route->get('/add', Inventory\ProductController::class . '::add');
+                $route->get('/add_2', Inventory\ProductController::class . '::add_2');
                 $route->post('/place_market', Inventory\ProductController::class . '::MapMarketProducts');
                 $route->post('/delete', Inventory\ProductController::class . '::DeleteProductData');
                 $route->get('/edit/{Id:number}', Inventory\ProductController::class . '::EditProduct');

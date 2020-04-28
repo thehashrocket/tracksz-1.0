@@ -20,8 +20,8 @@ class CategoryController
     private $db;
 
     /*
-    * __construct -
-    * @param  $form  - Default View, PDO db
+    * __construct - 
+    * @param  $form  - Default View, PDO db   
     * @return set data
     */
     public function __construct(Views $view, PDO $db)
@@ -32,7 +32,7 @@ class CategoryController
 
     /*
     * add - Load Add Category View
-    * @param  $form  - Id
+    * @param  $form  - Id    
     * @return boolean load view with pass data
     */
     public function add()
@@ -43,7 +43,7 @@ class CategoryController
     }
 
     /*
-    * addCategory -
+    * addCategory - 
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return boolean
@@ -51,7 +51,7 @@ class CategoryController
     public function addCategory(ServerRequest $request)
     {
         $form = $request->getParsedBody();
-        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
             // Sanitize and Validate
             $validate = new ValidateSanitize();
@@ -62,7 +62,7 @@ class CategoryController
             ));
 
             $validated = $validate->run($form);
-            // use validated as it is filtered and validated
+            // use validated as it is filtered and validated        
             if ($validated === false) {
                 throw new Exception("Please enter required fields...!", 301);
             }
@@ -75,7 +75,7 @@ class CategoryController
                 'max' => '10MB', // maximum of 10MB
             ]);
         
-            // if false than throw Size error
+            // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
@@ -130,7 +130,7 @@ class CategoryController
     }
 
     /*
-    * PrepareInsertData - Assign Value to new array and prepare insert data
+    * PrepareInsertData - Assign Value to new array and prepare insert data    
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return array
@@ -148,10 +148,10 @@ class CategoryController
 
     /*
     * view - Load List Category View
-    * @param  none
+    * @param  none 
     * @return boolean load view with pass data
     */
-    public function browse()
+    public function view()
     {
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
@@ -159,8 +159,8 @@ class CategoryController
     }
 
     /*
-    * deleteCategoryData - Delete Category Data By Id
-    * @param  $form  - Id
+    * deleteCategoryData - Delete Category Data By Id    
+    * @param  $form  - Id    
     * @return boolean
     */
     public function deleteCategoryData(ServerRequest $request)
@@ -192,7 +192,7 @@ class CategoryController
 
     /*
     * editCategory - Load Edit Category View
-    * @param  $form  - Id
+    * @param  $form  - Id    
     * @return boolean load view with pass data
     */
     public function editCategory(ServerRequest $request, $Id = [])
@@ -216,14 +216,14 @@ class CategoryController
     /*
     * updateCategory - Update Category data
     * @param  $form  - Array of form fields, name match Database Fields
-    *                  Form Field Names MUST MATCH Database Column Names
-    * @return boolean
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
     */
     public function updateCategory(ServerRequest $request, $Id = [])
     {
         try {
             $methodData = $request->getParsedBody();
-            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
             $cat_img = $methodData['CategoryImageHidden'];
             /* File upload validation starts */
             if (isset($_FILES['CategoryImage']['error']) && $_FILES['CategoryImage']['error'] == 0) {
@@ -233,7 +233,7 @@ class CategoryController
                     'max' => '10MB', // maximum of 10MB
                 ]);
 
-                // if false than throw Size error
+                // if false than throw Size error 
                 if (!$validator->isValid($_FILES)) {
                     throw new Exception("File upload size is too large...!", 301);
                 }
@@ -292,7 +292,7 @@ class CategoryController
     }
 
     /*
-    * PrepareUpdateData - Assign Value to new array and prepare update data
+    * PrepareUpdateData - Assign Value to new array and prepare update data    
     * @param  $form  - Array of form fields, name match Database Fields
     *                  Form Field Names MUST MATCH Database Column Names
     * @return array
@@ -308,5 +308,5 @@ class CategoryController
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
     }
-    
+     
 }

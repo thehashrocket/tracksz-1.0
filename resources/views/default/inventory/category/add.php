@@ -20,10 +20,10 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                 <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/inventory/browse" title="Inventory Listings"><?= ('Inventory') ?></a>
+                                <a href="/inventory/view" title="Inventory Listings"><?= ('Inventory') ?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/inventory/category" title="Inventory Categories"><?= ('Categories') ?></a>
+                                <a href="/category/view" title="Categories"><?= ('Categories') ?></a>
                             </li>
                             <li class="breadcrumb-item active"><?= ('Add') ?></li>
                         </ol>
