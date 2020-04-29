@@ -19,7 +19,6 @@ class InventoryController
 {
     private $view;
     private $db;
-    
     public function __construct(Views $view, PDO $db)
     {
 
@@ -41,7 +40,7 @@ class InventoryController
     }
 
     public function uploadInventoryFTP(ServerRequest $request)
-    { 
+    {
         $form = $request->getUploadedFiles();
         $form_2 = $request->getParsedBody();
         // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
@@ -148,7 +147,7 @@ class InventoryController
             $validate2->validation_rules(array(
                 'MarketName'    => 'required'
             ));
-                $validated = $validate2->run($form_2,true);
+            $validated = $validate2->run($form_2, true);
 
             // use validated as it is filtered and validated        
             if ($validated === false) {
@@ -299,6 +298,71 @@ class InventoryController
         );
         var_dump($updated);
         exit();
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function inventorySettingsBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function repriceInventoryBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function advancedSettingsBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function exportInventoryBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function conditionPriceBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
     }
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
