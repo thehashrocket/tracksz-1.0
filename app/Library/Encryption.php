@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Library;
 
@@ -7,12 +9,12 @@ use Sodium;
 
 class Encryption
 {
-    
+
     public function __construct()
     {
         //
     }
-    
+
     /**
      * Encrypt a message
      *
@@ -25,20 +27,20 @@ class Encryption
         $nonce = random_bytes(
             SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
         );
-        
+
         $cipher = base64_encode(
-            $nonce.
-            sodium_crypto_secretbox(
-                $message,
-                $nonce,
-                $key
-            )
+            $nonce .
+                sodium_crypto_secretbox(
+                    $message,
+                    $nonce,
+                    $key
+                )
         );
         sodium_memzero($message);
         sodium_memzero($key);
         return $cipher;
     }
-    
+
     /**
      * Decrypt a message
      *
@@ -57,7 +59,7 @@ class Encryption
         }
         $nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
         $ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
-        
+
         $plain = sodium_crypto_secretbox_open(
             $ciphertext,
             $nonce,
@@ -70,5 +72,4 @@ class Encryption
         sodium_memzero($key);
         return $plain;
     }
-    
 }

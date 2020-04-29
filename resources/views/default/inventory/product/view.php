@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Category Listing for Your Tracksz Store, a Multiple Marketplace Management Service';
-$description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketpalce Management Service';
+$title_meta = 'Product Listing for Your Tracksz Store, a Multiple Marketplace Management Service';
+$description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpalce Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -19,19 +19,18 @@ $description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketp
                             <li class="breadcrumb-item">
                                 <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
                             </li>
-                            <li class="breadcrumb-item active"><?= ('Stores') ?></li>
+                            <li class="breadcrumb-item active"><?= ('Products') ?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <!-- title -->
-                <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?= _('Category Listing123') ?> </h1>
+                    <h1 class="page-title"> <?= _('Product Listing') ?> </h1>
                 </div>
-                <p class="text-muted"> <?= _('This is where you can modify, and delete Category for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
-                <a href="/category/add" class="btn btn-sm btn-primary" title="<?= _('Add Category') ?>"><?= _('Add Category') ?></a>
+                <p class="text-muted"> <?= _('This is where you can modify, and delete Product for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
+                <a href="/product/add" class="btn btn-sm btn-primary" title="<?= _('Add Product') ?>"><?= _('Add Product') ?></a>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
                 <?php endif ?>
@@ -44,34 +43,40 @@ $description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketp
                         <!-- .card-body starts -->
                         <?php
 
-                        if (is_array($all_category) &&  count($all_category) > 0) : ?>
-                            <table id="category_table" name="category_table" class="table table-striped table-bordered nowrap" style="width:100%">
+                        if (is_array($all_product) &&  count($all_product) > 0) : ?>
+                            <table id="product_table" name="product_table" class="table table-striped table-bordered nowrap" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th><?= _('Name') ?></th>
-                                        <th><?= _('Description') ?></th>
+                                        <th><?= _('Notes') ?></th>
+                                        <th><?= _('SKU') ?></th>
+                                        <th><?= _('BasePrice') ?></th>
+                                        <th><?= _('Condition') ?></th>
                                         <th><?= _('Image') ?></th>
                                         <th><?= _('Action') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($all_category as $category) : ?>
+                                    <?php
+                                    foreach ($all_product as $product) : ?>
                                         <tr>
                                             <?php
                                             $img_path = '';
-                                            $img_path = \App\Library\Config::get('company_url') . '/assets/images/category/' . $category['Image'];
+                                            $img_path = \App\Library\Config::get('company_url') . '/assets/images/product/' . $product['Image'];
                                             ?>
-                                            <td><?= $category['Name'] ?></td>
-                                            <td><?= $category['Description'] ?></td>
-                                            <td><?= (isset($category['Image']) && !empty($category['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
+                                            <td><?= $product['Name'] ?></td>
+                                            <td><?= $product['Notes'] ?></td>
+                                            <td><?= $product['SKU'] ?></td>
+                                            <td><?= $product['BasePrice'] ?></td>
+                                            <td><?= $product['ProdCondition'] ?></td>
+                                            <td><?= (isset($product['Image']) && !empty($product['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
                                             <td> <?php
                                                     $button = '';
-                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/category/edit/' . $category['Id'] . '" class="btn btn-sm btn-icon btn-secondary btn_edit" title="edit"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="Edit this Category"></i></a> &nbsp;';
-                                                    $delete_button = '<a href="#delete-' . $category['Id'] . '" delete_id="' . $category['Id'] . '" class="btn btn-sm btn-icon btn-danger btn_delete" title="delete"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="left" title="Delete this Category"></i> </a>';
+                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/product/edit/' . $product['Id'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
+                                                    $delete_button = '<a href="#delete-' . $product['Id'] . '" delete_id="' . $product['Id'] . '" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
                                                     $button .= $edit_button;
                                                     $button .= $delete_button;
                                                     echo $button;
-
                                                     ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -92,7 +97,7 @@ $description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketp
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/javascript/pages/category.js"></script>
+<script src="/assets/javascript/pages/product.js"></script>
 <?= $this->stop() ?>
 
 <?php $this->start('page_js') ?>

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -44,8 +45,8 @@
     <!-- BEGIN PAGE LEVEL STYLES -->
     <!-- styles for specific page goes here -->
     <!-- END PAGE LEVEL STYLES -->
-    
-    <?=$this->section('header_extras')?>
+
+    <?= $this->section('header_extras') ?>
     <script>
         var isCompact = JSON.parse(localStorage.getItem('hasCompactMenu'));
         // add flag class to html immediately
@@ -79,6 +80,7 @@
     <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <!-- END BASE JS -->
     <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/assets/vendor/flatpickr/flatpickr.min.js"></script>
     <script src="/assets/vendor/flatpickr/plugins/monthSelect/index.js"></script>
     <!-- BEGIN PLUGINS JS -->
