@@ -64,19 +64,19 @@ class AccountRoutes extends AbstractServiceProvider
               ->middleware($this->container->get('Auth'));
     
     
-            // Shipping Methods for a Spefic Store
+            // Shipping Methods for a Specific Store
             $routes->group('/account/shipping-methods', function (\League\Route\RouteGroup $route) {
                 $route->get('/', Account\ShippingController::class.'::viewMethods');
                 $route->get('/add', Account\ShippingController::class.'::viewAddMethod');
-                $route->get('/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
+                $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
         
                 $route->post('/create', Account\ShippingController::class.'::createMethod');
-                $route->post('/{Id:number}', Account\ShippingController::class.'::deleteMethod');
+                $route->post('/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
                 $route->post('/edit', Account\ShippingController::class.'::updateMethod');
         
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Store'))
-                ->middleware($this->container->get('Auth'));
+              ->middleware($this->container->get('Store'))
+              ->middleware($this->container->get('Auth'));
     
             // Shipping zones
             $routes->group('/account/shipping-zones', function (\League\Route\RouteGroup $route) {
@@ -85,7 +85,8 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
     
                 $route->post('/create', Account\ShippingController::class.'::createZone');
-                $route->post('/edit', Account\ShippingController::class.'::updateZone');
+                $route->post('/edit/{Id:number}', Account\ShippingController::class.'::updateZone');
+                $route->post('/delete/{Id:number}', Account\ShippingController::class.'::deleteZone');
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));

@@ -39,8 +39,7 @@ $description_meta = 'Add a Shipping Zone at Tracksz, a Multiple Market Inventory
                     <div class="card">
                         <div class="card-body">
                             <?php if(isset($update_id)): ?>
-                            <form action="/account/shipping-zones/edit" method="POST" data-parsley-validate>
-                            <input type="hidden" name="update_id" value="<?=$update_id?>">
+                            <form action="/account/shipping-zones/edit/<?=$update_id?>" method="POST" data-parsley-validate>
                             <?php else: ?>
                             <form action="/account/shipping-zones/create" method="POST" data-parsley-validate>
                             <?php endif; ?>

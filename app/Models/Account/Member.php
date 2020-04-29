@@ -177,7 +177,7 @@ class Member
      * @param  $id  - Provided by AUTH after registration
      * @return Sends back to login or profile page
     */
-    public function addGatewayId($Id, $GatewayUserId)
+    public function addGatewayId($id, $gatewayUserId)
     {
         $query  = 'UPDATE Member SET ';
         $query .= 'GatewayUserId = :GatewayUserId, ';
@@ -186,10 +186,19 @@ class Member
         $today  = date('Y-m-d H:i:s');
         $stmt = $this->db->prepare($query);
         
-        if (!$stmt->execute(['Id' => $Id, 'GatewayUserId' => $GatewayUserId, 'today' => $today])) {
+        if (!$stmt->execute(['Id' => $id, 'GatewayUserId' => $gatewayUserId, 'today' => $today])) {
             return false;
         }
         $stmt = null;
         return true;
+    }
+
+    public function getActiveStoreId($id)
+    {
+        $query = 'SELECT ActiveStore FROM Member WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return intval($stmt->fetch(PDO::FETCH_ASSOC)['ActiveStore']);
     }
 }

@@ -29,16 +29,16 @@ class ShippingMethod
     }
 
     /**
-     * findByMember - Find all shipping methods tied to member
+     * findByMember - Find all shipping methods tied to store
      *
-     * @param  $memberId  - ID of member
+     * @param  $memberId  - ID of store
      * @return array      - Shipping methods
     */
-    public function findByMember($memberId)
+    public function findByStore($storeId)
     {
-        $query = 'SELECT * FROM ShippingMethod WHERE MemberId = :memberId';
+        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -51,10 +51,10 @@ class ShippingMethod
      */
     public function create(array $data)
     {
-        $query =  'INSERT INTO ShippingMethod (MemberId, `Name`, DeliveryTime, InitialFee, DiscountFee, Minimum) ';
-        $query .= 'VALUES (:memberId, :name, :deliveryTime, :initialFee, :discountFee, :minimum)';
+        $query =  'INSERT INTO ShippingMethod (StoreId, `Name`, DeliveryTime, InitialFee, DiscountFee, Minimum) ';
+        $query .= 'VALUES (:storeId, :name, :deliveryTime, :initialFee, :discountFee, :minimum)';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $data['MemberId'], PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $data['StoreId'], PDO::PARAM_INT);
         $stmt->bindParam(':name', $data['Name']);
         $stmt->bindParam(':deliveryTime', $data['DeliveryTime']);
         $stmt->bindParam(':initialFee', $data['InitialFee']);

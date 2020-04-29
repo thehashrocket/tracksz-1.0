@@ -30,16 +30,16 @@ class ShippingZone
     }
 
     /**
-     * findByMember - Find all shipping zones tied to member
+     * findByStore - Find all shipping zones tied to store
      *
-     * @param  $memberId  - ID of zone
+     * @param  $memberId  - ID of store
      * @return array      - Shipping zones
     */
-    public function findByMember($memberId)
+    public function findByStore($storeId)
     {
-        $query = 'SELECT * FROM ShippingZone WHERE MemberId = :memberId';
+        $query = 'SELECT * FROM ShippingZone WHERE StoreId = :storeId';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $memberId, PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -52,10 +52,10 @@ class ShippingZone
      */
     public function create(array $data)
     {
-        $query =  'INSERT INTO ShippingZone (MemberId, `Name`) ';
-        $query .= 'VALUES (:memberId, :name)';
+        $query =  'INSERT INTO ShippingZone (StoreId, `Name`) ';
+        $query .= 'VALUES (:storeId, :name)';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':memberId', $data['MemberId'], PDO::PARAM_INT);
+        $stmt->bindParam(':storeId', $data['StoreId'], PDO::PARAM_INT);
         $stmt->bindParam(':name', $data['Name']);
         return $stmt->execute();
     }
@@ -82,10 +82,10 @@ class ShippingZone
      */
     public function update($data)
     {
-        $query = 'UPDATE ShippingZone SET `Name` = :_name';
-        $query .= 'WHERE Id = ' . $data['update_id'];
+        $query = 'UPDATE ShippingZone SET `Name` = :_name WHERE Id = :id';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':_name', $data['Name']);
+        $stmt->bindParam(':id', $data['Id'], PDO::PARAM_INT);
+        $stmt->bindParam(':_name', $data['Name'], PDO::PARAM_STR);
         return $stmt->execute();
     }
 }
