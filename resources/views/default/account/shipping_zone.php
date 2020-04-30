@@ -41,6 +41,7 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
             <a href="/account/shipping-zones/add" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Zone')?>"><?=_('Add Shipping Zone')?></a>
+            <br><br>
         <?php if (is_array($shippingZones) &&  count($shippingZones)> 0): ?>
             <!-- .card -->
             <div class="card card-fluid">
@@ -58,6 +59,7 @@ $description_meta = 'Shipping Zones at Tracksz, a Multiple Market Inventory Mana
                             <tr>
                                 <td width="60%"><?=$shippingZone['Name']?></td>
                                 <td class="align-middle text-left">
+                                    <a href="/account/shipping-assign/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Assign Shipping Methods."><i class="fa fa-cog" data-toggle="tooltip" data-placement="left" title="" data-original-title="Assign Shipping Methods."></i> <span class="sr-only">Assign</span></a>
                                     <a href="/account/shipping-zones/edit/<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Edit this Shipping Zone."><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit this Shipping Zone."></i> <span class="sr-only">Edit</span></a>
                                     <a href="#" data-toggle="modal" data-target="#deleteZone-<?=$shippingZone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Delete this Shipping Zone."><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete this Shipping Zone."></i> <span class="sr-only">Delete</span></a>
                                 </td>

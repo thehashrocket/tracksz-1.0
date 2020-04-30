@@ -78,15 +78,24 @@ class AccountRoutes extends AbstractServiceProvider
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
     
-            // Shipping zones
+            // Create/manage shipping zones
             $routes->group('/account/shipping-zones', function (\League\Route\RouteGroup $route) {
                 $route->get('/', Account\ShippingController::class.'::viewZones');
                 $route->get('/add', Account\ShippingController::class.'::viewAddZone');
                 $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
+                $route->get('/manage/{Id:number}', Account\ShippingController::class.'::viewManageZone');
     
                 $route->post('/create', Account\ShippingController::class.'::createZone');
                 $route->post('/edit/{Id:number}', Account\ShippingController::class.'::updateZone');
                 $route->post('/delete/{Id:number}', Account\ShippingController::class.'::deleteZone');
+            })->middleware($this->container->get('Csrf'))
+              ->middleware($this->container->get('Store'))
+              ->middleware($this->container->get('Auth'));
+
+            // Assign shipping zones to regions
+            $routes->group('/account/shipping-assign', function (\League\Route\RouteGroup $route) {
+                $route->get('/{Id:number}', Account\ShippingController::class.'::viewAssignZones');
+
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));

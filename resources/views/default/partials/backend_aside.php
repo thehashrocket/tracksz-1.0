@@ -283,11 +283,12 @@ if (substr($page, 0, 12) == 'example-page') {
                     // determine if sub-menu has active page - set up array for in_array
                     $store_menu = [
                         'account-stores', 'account-store', 'account-shipping-methods', 'account-shipping-methods-add',
-                        'account-shipping-zones', 'account-shipping-zones-add'
+                        'account-shipping-zones', 'account-shipping-zones-add', 'account-shipping-assign'
                     ];
                     $shipping_menu = [
                         'account-shipping-methods', 'account-shipping-methods-add',
-                        'account-shipping-zones', 'account-shipping-zones-add'
+                        'account-shipping-zones', 'account-shipping-zones-add',
+                        'account-shipping-assign'
                     ]
                     ?>
                     <!-- .menu-item -->
@@ -305,6 +306,9 @@ if (substr($page, 0, 12) == 'example-page') {
                                     </li>
                                     <li class="menu-item<?php if (substr($page, 0, 20) == 'account-shipping-zon') echo ' has-active'; ?>">
                                         <a href="/account/shipping-zones" title="<?= _('Browse Shipping Zones') ?>" class="menu-link"><?= _('Shipping Zones') ?></a>
+                                    </li>
+                                    <li class="menu-item<?php if (substr($page, 0, 20) == 'account-shipping-ass') echo ' has-active'; ?>">
+                                        <a href="/account/shipping-assign" title="<?= _('Assign Shipping Zones') ?>" class="menu-link"><?= _('Assign Shipping Zones') ?></a>
                                     </li>
                                 </ul><!-- /child menu -->
                             </li>

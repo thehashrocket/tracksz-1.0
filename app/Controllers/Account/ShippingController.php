@@ -118,6 +118,35 @@ class ShippingController
     }
 
     /**
+     *  viewManageZones - View page to assign shipping method to zone
+     * 
+     *  @return view - /account/shipping-zones/manage
+     */
+    public function viewManageZone(ServerRequest $request, array $data)
+    {
+        // TODO: Get assigned and unassigned zones
+        
+        return $this->view->buildResponse('/account/shipping_zone', [
+            'assignedMethods' => '',
+            'unassignedMethods' => ''
+        ]);
+    }
+
+    /**
+     *  viewAssignZones - View page to assign shipping zones
+     * 
+     *  @return view - /account/shipping-assign
+     */
+    public function viewAssignZones()
+    {
+        $activeStoreId = Cookie::get('tracksz_active_store');
+        $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
+        return $this->view->buildResponse('/account/shipping_assign', [
+            'shippingZones' => $zones
+        ]);
+    }
+
+    /**
      *  createMethod - Add shipping method and redirect to list of methods
      *
      *  @param  ServerRequest - To grab form data

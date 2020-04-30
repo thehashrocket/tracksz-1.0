@@ -63,7 +63,7 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                                     </div>
                                     <div class="col-8">
                                         <select class="form-control" id="zone" name="ZoneId" style="width: 70%">
-                                            <?php foreach ($zones as $zone): ?>
+                                            <?php foreach ($shippingZones as $zone): ?>
                                                 <option value="<?=$zone['Id']?>"><?=$zone['Name']?></option>
                                             <?php endforeach; ?>
                                         </select>

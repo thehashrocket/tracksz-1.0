@@ -29,10 +29,10 @@ class ShippingMethod
     }
 
     /**
-     * findByMember - Find all shipping methods tied to store
+     * findByStore - Find all shipping methods tied to store
      *
-     * @param  $memberId  - ID of store
-     * @return array      - Shipping methods
+     * @param  $storeId - ID of store
+     * @return array    - Shipping methods
     */
     public function findByStore($storeId)
     {
@@ -94,5 +94,31 @@ class ShippingMethod
         $stmt->bindParam(':discount', $data['DiscountFee']);
         $stmt->bindParam(':minimum', $data['Minimum']);
         return $stmt->execute();
+    }
+
+    /**
+     *  getAssigned - Get a store's assigned methods
+     * 
+     *  @param  $storeId - Store ID
+     *  @return list - Assigned shipping methods
+     */
+    public function getAssigned($storeId)
+    {
+        $query = 'SELECT * FROM ShippingMethod INNER JOIN ShippingMethodToZone ON ShippingMethod.Id = ShippingMethodToZone.MethodId WHERE ShippingMethod.StoreId = :storeId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getUnassigned - Get a store's unassigned methods
+     * 
+     *  @param  $storeId - Store ID
+     *  @return list - Unassigned shipping methods
+     */
+    public function getUnassigned($storeId)
+    {
+        
     }
 }
