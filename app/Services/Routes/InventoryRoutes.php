@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Routes;
 
 // Use to shorten controller paths in route definitions
-use App\Controllers\Inventory;
+use League\Route\Router;
 
 // For functionality
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Route\Router;
+use App\Controllers\Inventory;
+use App\Controllers\Job\UploadQueue;
 use League\Route\Strategy\ApplicationStrategy;
+use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class InventoryRoutes extends AbstractServiceProvider
 {
@@ -37,14 +38,16 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/export', Inventory\InventoryController::class . '::exportInventoryBrowse');
                 $route->get('/re-price', Inventory\InventoryController::class . '::repriceInventoryBrowse');
                 $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');
+                $route->get('/queue', Inventory\UploadQueue::class . '::fooAction');
 
                 $route->get('/add', Inventory\ProductController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
-                $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
+                $route->post('/ftpupload', Inventory\InventoryController::class . '::importInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
                 $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
+                $route->post('/update_settings', Inventory\InventoryController::class . '::updateSettings');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));

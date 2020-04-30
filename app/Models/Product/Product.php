@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models\Product;
 
@@ -8,13 +10,11 @@ class product
 {
     // Contains Resources
     private $db;
-    
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
-    
-     /*
+  /*
     * all records - get all product records
     *
     * @param  
@@ -28,7 +28,7 @@ class product
     }
 
 
-     /*
+    /*
     * all records - get all product records
     *
     * @param  
@@ -41,8 +41,6 @@ class product
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
- 
-    
     /*
     * find - Find product by product record Id
     *
@@ -63,10 +61,10 @@ class product
     * @param  Status  - Table record Status of product to find
     * @return associative array.
     */
-    public function findByUserId($UserId , $Status = 0)
+    public function findByUserId($UserId, $Status = 0)
     {
         $stmt = $this->db->prepare('SELECT * FROM product WHERE UserId = :UserId AND Status = :Status');
-        $stmt->execute(['UserId' => $UserId,'Status' => $Status]);
+        $stmt->execute(['UserId' => $UserId, 'Status' => $Status]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -78,24 +76,22 @@ class product
     * @return boolean
     */
     public function addProduct($form = array())
-    {          
+    {
         $query  = 'INSERT INTO product (Name, Notes, SKU, ProdId,BasePrice,ProdCondition,';
         $query .= 'ProdActive, InternationalShip,ExpectedShip,EbayTitle,Qty,';
-        $query .= 'CategoryId, Status,UserId,Image';        
+        $query .= 'CategoryId,Status,UserId,Image';
         $query .= ') VALUES (';
         $query .= ':Name, :Notes, :SKU, :ProdId,:BasePrice, :ProdCondition,';
         $query .= ':ProdActive, :InternationalShip, :ExpectedShip, :EbayTitle, :Qty,';
-        $query .= ':CategoryId, :Status, :UserId, :Image';        
+        $query .= ':CategoryId,:Status,:UserId,:Image';
         $query .= ')';
 
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
             return false;
-        }        
+        }
         return true;
     }
-    
-      
     /*
     * editAddress - Find address by address record Id
     *
@@ -104,14 +100,14 @@ class product
     * @return boolean
     */
     public function editProduct($form)
-    {   
+    {
         $query  = 'UPDATE product SET ';
         $query .= 'Name = :Name, ';
         $query .= 'Notes = :Notes, ';
         $query .= 'SKU = :SKU, ';
         $query .= 'ProdId = :ProdId, ';
         $query .= 'BasePrice = :BasePrice, ';
-        $query .= 'ProdCondition = :ProdCondition, ';        
+        $query .= 'ProdCondition = :ProdCondition, ';
         $query .= 'ProdActive = :ProdActive, ';
         $query .= 'InternationalShip = :InternationalShip, ';
         $query .= 'ExpectedShip = :ExpectedShip, ';
@@ -121,19 +117,18 @@ class product
         $query .= 'CategoryId = :CategoryId, ';
         $query .= 'Status = :Status, ';
         $query .= 'Updated = :Updated ';
-        $query .= 'WHERE Id = :Id ';   
-      
-        $stmt = $this->db->prepare($query); 
+        $query .= 'WHERE Id = :Id ';
+
+        $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
             return 0;
         }
-        
         $stmt = null;
         return $form['Id'];
-    }  
-    
- 
-    
+    }
+
+
+
     /*
     * delete - delete a product records
     *

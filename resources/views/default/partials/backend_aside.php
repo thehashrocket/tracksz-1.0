@@ -75,7 +75,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                     echo ' has-active';
                                                 } ?>"><a href="/inventory/export" title="<?= _('Inventory File Export') ?>" class="menu-link"><?= _('Export Items') ?></a>
                             </li>
-                            <li class="menu-item<?php if ($page == 're-price') {
+                            <li class="menu-item<?php if ($page == 'inventory-re-price') {
                                                     echo ' has-active';
                                                 } ?>"><a href="/inventory/re-price" title="<?= _('Inventory Re-Price') ?>" class="menu-link"><?= _('Re-Price') ?></a>
                             </li>
