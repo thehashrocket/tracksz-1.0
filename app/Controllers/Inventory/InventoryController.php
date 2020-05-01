@@ -40,6 +40,16 @@ class InventoryController
         return $this->view->buildResponse('inventory/upload', ['market_places' => $market_places]);
     }
 
+    public function browseInventoryUpload()
+    {
+        $file_stream = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+        $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
+        $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
+        $cat_img = $file_encrypt_name . strstr($file_name, '.');
+        $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+    }
+
     public function importInventoryFTP(ServerRequest $request)
     {
         $form = $request->getUploadedFiles();

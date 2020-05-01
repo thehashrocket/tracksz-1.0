@@ -23,24 +23,34 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
             <div class="page-section">
-                <!-- .page-section starts -->
-                <div class="card-deck-xl">
-                    <!-- .card-deck-xl starts -->
-                    <div class="card card-fluid">
-                        <!-- .card card-fluid starts -->
+                <div class="col-lg-12">
+                    <!-- .card -->
+                    <div class="card">
+                        <!-- .card-header -->
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#card-ftpupload"><?= _('FTP Upload') ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link show" data-toggle="tab" href="#card-filebrowse"><?= _('File Browse') ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="#">Disabled</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.card-header -->
+                        <!-- .card-body -->
                         <div class="card-body">
-                            <!-- .card-body starts -->
-                            <form name="inventory_ftp_request" id="inventory_ftp_request" action="/inventory/ftpupload" method="POST" enctype="multipart/form-data" data-parsley-validate>
-                                <!-- form starts -->
+                            <!-- .tab-content -->
 
-                                <div class="container">
-                                    <!-- Container Starts -->
-                                    <div class="row">
-                                        <!-- Row Starts -->
+                            <div id="myTabCard" class="tab-content">
+                                <div class="tab-pane fade active show" id="card-ftpupload">
+                                    <h5 class="card-title"> FTP File Upload </h5>
+                                    <div class="col-lg-6">
 
-                                        <div class="col-sm">
-                                            <!-- col-sm Group Left Starts -->
-
+                                        <form name="inventory_ftp_request" id="inventory_ftp_request" action="/inventory/ftpupload" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                                            <!-- form starts -->
                                             <div class="form-group">
                                                 <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
                                                     <option value="" selected><?= _('Select Marketplace...') ?></option>
@@ -61,31 +71,49 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                     <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
                                                 </div>
                                             </div>
-                                        </div> <!-- col-sm Group Left Ends -->
+                                            <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
+                                            <a href="<?php echo \App\Library\Config::get('company_url') . '/inventory/queue'; ?>" class="btn btn-warning"><?= _('Queue Sample') ?> </a>
 
-                                        <div class="col-sm mt-3 pt-3">
-                                            <!-- col-sm Group Right Starts -->
-                                        </div> <!-- col-sm Group Right Ends -->
+                                        </form> <!-- form ends -->
+                                    </div>
+                                </div> <!-- col-sm Group Left Ends -->
+                                <div class="tab-pane fade" id="card-filebrowse">
+                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
 
-                                    </div> <!-- Row Ends -->
-                                </div> <!-- Container Ends -->
-
-                                <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
-                                <a href="<?php echo \App\Library\Config::get('company_url') . '/inventory/queue'; ?>" class="btn btn-warning"><?= _('Queue Sample') ?> </a>
-
-                            </form> <!-- form ends -->
-                        </div> <!-- Card Body ends -->
-                    </div> <!-- .card card-fluid ends -->
-                </div> <!-- .card-deck-xl ends -->
-            </div> <!-- .page-section ends -->
+                                    </form>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <button type="submit" class="btn btn-primary" id="submit-all">Upload</button>
+                                </div>
 
 
-        </div><!-- /.page-inner -->
-    </div><!-- /.page -->
+                                <div class="col-sm mt-3 pt-3">
+                                    <!-- col-sm Group Right Starts -->
+                                </div> <!-- col-sm Group Right Ends -->
+
+                            </div> <!-- Row Ends -->
+
+
+
+
+
+                        </div>
+
+                    </div><!-- /.tab-content -->
+                </div><!-- /.card-body -->
+            </div><!-- /.card -->
+        </div>
+    </div> <!-- .page-section ends -->
+
+
+</div><!-- /.page-inner -->
+</div><!-- /.page -->
 </div><!-- /.wrapper -->
 <?= $this->stop() ?>
 
 <?php $this->start('plugin_js') ?>
+<script src="/assets/javascript/pages/inventory-upload.js"></script>
 <?= $this->stop() ?>
 
 <?php $this->start('page_js') ?>
