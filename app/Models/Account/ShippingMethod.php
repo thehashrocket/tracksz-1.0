@@ -44,6 +44,38 @@ class ShippingMethod
     }
 
     /**
+     * belongsToMember - Check if shipping method belongs to member
+     *
+     * @param $methodId - Shipping method ID
+     * @param $memberId - Member ID
+     * @return bool
+    */
+    public function belongsToMember($methodId, $memberId)
+    {
+        // TODO: Pre-prepare these queries to reduce overhead
+        
+        $query = 'SELECT StoreId FROM ShippingMethod WHERE Id = :methodId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
+        $stmt->execute();
+        $storeId = $stmt->fetch(PDO::FETCH_ASSOC)['StoreId'];
+
+        if ($storeId == NULL)
+        {
+            return false;
+        }
+        else
+        {
+            $query = 'SELECT MemberId FROM Store WHERE Id = :storeId';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC)['MemberId'];
+            return $result == $memberId;
+        }
+    }
+
+    /**
      *  create - Create a shipping method
      * 
      *  @param  $data - Array containing method information
@@ -119,6 +151,76 @@ class ShippingMethod
      */
     public function getUnassigned($storeId)
     {
-        
+        $query = 'SELECT * FROM ShippingMethod WHERE ShippingMethod.StoreId = :storeId AND NOT EXISTS (SELECT NULL FROM ShippingMethodToZone WHERE ShippingMethod.Id = ShippingMethodToZone.MethodId)';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /** 
+     *  isAssigned - Check if shipping method is assigned to a zone
+     * 
+     *  @param $methodId - Shipping method ID
+     *  @param $zoneId - Shipping zone ID
+     *  @return bool
+     */
+    private function isAssigned($methodId, $zoneId)
+    {
+        $query = 'SELECT Id FROM ShippingMethodToZone WHERE MethodId = :methodId AND ZoneId = :zoneId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return boolval($result);
+    }
+
+    /**
+     *  assign - Assign shipping method to a zone
+     * 
+     *  @param $methodId - Shipping method ID
+     *  @param $zoneId - Shipping zone ID
+     *  @return bool - Success
+     */
+    public function assign($methodId, $zoneId)
+    {
+        $assigned = $this->isAssigned($methodId, $zoneId);
+        if ($assigned)
+        {
+            return true;
+        }
+        else
+        {
+            $query = 'INSERT INTO ShippingMethodToZone (MethodId, ZoneId) VALUES (:methodId, :zoneId)';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
+            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+    }
+
+    /**
+     *  Unassign - Unassign shipping method from a zone
+     * 
+     *  @param $methodId - Shipping method ID
+     *  @param $zoneId - Shipping zone ID
+     *  @return bool - Success
+     */
+     public function unassign($methodId, $zoneId)
+     {
+        $assigned = $this->isAssigned($methodId, $zoneId);
+        if ($assigned)
+        {
+            $query = 'DELETE FROM ShippingMethodToZone WHERE MethodId = :methodId AND ZoneId = :zoneId';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
+            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        else
+        {
+            return true;
+        }
+     }
 }

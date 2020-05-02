@@ -73,7 +73,8 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->post('/create', Account\ShippingController::class.'::createMethod');
                 $route->post('/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
                 $route->post('/edit', Account\ShippingController::class.'::updateMethod');
-        
+                $route->get('/assign/{MethodId:number}/{ZoneId:number}', Account\ShippingController::class.'::assignMethod');
+                $route->get('/unassign/{MethodId:number}/{ZoneId:number}', Account\ShippingController::class.'::unassignMethod');
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
@@ -94,7 +95,6 @@ class AccountRoutes extends AbstractServiceProvider
 
             // Assign shipping zones to regions
             $routes->group('/account/shipping-assign', function (\League\Route\RouteGroup $route) {
-                $route->get('/{Id:number}', Account\ShippingController::class.'::viewAssignZones');
 
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))

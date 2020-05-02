@@ -278,27 +278,14 @@ if (substr($page, 0, 12) == 'example-page') {
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
-
-                    <?php
-                    // determine if sub-menu has active page - set up array for in_array
-                    $store_menu = [
-                        'account-stores', 'account-store', 'account-shipping-methods', 'account-shipping-methods-add',
-                        'account-shipping-zones', 'account-shipping-zones-add', 'account-shipping-assign'
-                    ];
-                    $shipping_menu = [
-                        'account-shipping-methods', 'account-shipping-methods-add',
-                        'account-shipping-zones', 'account-shipping-zones-add',
-                        'account-shipping-assign'
-                    ]
-                    ?>
                     <!-- .menu-item -->
-                    <li class="menu-item has-child<?php if (in_array($page, $store_menu) || substr($page, 0, 14) == 'account-stripe') echo ' has-active'; ?>">
+                    <li class="menu-item has-child<?php if (substr($page, 0, 9) == 'account-s' || substr($page, 0, 14) == 'account-stripe') echo ' has-active'; ?>">
                         <a href="/account/stores" title="<?= _('Select Store to Work On') ?>" class="menu-link<?php if ($page == 'category-view') echo ' has-active'; ?>"><span class="menu-icon fa fa-shopping-cart"></span><span class="menu-text"><?= _('Member Stores') ?></span></a>
                         <ul class="menu">
                             <li class="menu-item<?php if (substr($page, 0, 13) == 'account-store') echo ' has-active'; ?>">
                                 <a href="/account/stores" title="<?= _('View, Add, Edit, Delete Inventory') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
-                            <li class="menu-item has-child<?php if (in_array($page, $shipping_menu)) echo ' has-active'; ?>">
+                            <li class="menu-item has-child<?php if (substr($page, 0, 12) == 'account-ship') echo ' has-active'; ?>">
                                 <a href="/account/shipping-methods" class="menu-link" title="<?= _('Active Store Shipping') ?>"><small><span class="menu-icon fas fa-ship"></span></small> <span class="menu-text"><?= _('Shipping') ?></span></a> <!-- child menu -->
                                 <ul class="menu">
                                     <li class="menu-item<?php if (substr($page, 0, 20) == 'account-shipping-met') echo ' has-active'; ?>">

@@ -25,6 +25,10 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
             <?php endif ?>
             <div class="page-section">
                 <div class="section-block">
+                    <?php if(!$assignedMethods && !$unassignedMethods): ?>
+                    <p>No shipping methods exist for this store.</p>
+                    <a href="/account/shipping-methods" class="btn btn-primary">Create Shipping Methods</a>
+                    <?php endif; ?>
                     <?php if($assignedMethods): ?>
                     <div class="card">
                         <h6 class="card-header"><?=_('Assigned')?></h6>
@@ -49,7 +53,7 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
                                         <td><?=$shippingMethod['DiscountFee']?></td>
                                         <td><?=$shippingMethod['Minimum']?></td>
                                         <td class="align-middle text-left">
-                                            <a href="/account/shipping-zones/unassign/<?=$shippingMethod['MethodId']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Unassign this Shipping Method."><i class="fa fa-minus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Unassign this Shipping Method."></i> <span class="sr-only">Unassign</span></a>
+                                            <a href="/account/shipping-methods/unassign/<?=$shippingMethod['MethodId']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Unassign this Shipping Method."><i class="fa fa-minus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Unassign this Shipping Method."></i> <span class="sr-only">Unassign</span></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -82,7 +86,7 @@ $description_meta = 'Manage a Shipping Zone at Tracksz, a Multiple Market Invent
                                         <td><?=$shippingMethod['DiscountFee']?></td>
                                         <td><?=$shippingMethod['Minimum']?></td>
                                         <td class="align-middle text-left">
-                                            <a href="/account/shipping-zones/assign/<?=$shippingMethod['Id']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Assign this Shipping Method."><i class="fa fa-plus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Assign this Shipping Method."></i> <span class="sr-only">Assign</span></a>
+                                            <a href="/account/shipping-methods/assign/<?=$shippingMethod['Id']?>/<?=$zone['Id']?>" class="btn btn-sm btn-icon btn-secondary" title="Assign this Shipping Method."><i class="fa fa-plus-square" data-toggle="tooltip" data-placement="left" title="" data-original-title="Assign this Shipping Method."></i> <span class="sr-only">Assign</span></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

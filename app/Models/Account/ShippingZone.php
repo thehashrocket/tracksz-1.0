@@ -33,7 +33,7 @@ class ShippingZone
      * findByStore - Find all shipping zones tied to store
      *
      * @param  $memberId  - ID of store
-     * @return array      - Shipping zones
+     * @return array - Shipping zones
     */
     public function findByStore($storeId)
     {
@@ -42,6 +42,38 @@ class ShippingZone
         $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * belongsToMember - Check if shipping zone belongs to member
+     *
+     * @param $zoneId - Shipping zone ID
+     * @param $memberId - Member ID
+     * @return bool
+    */
+    public function belongsToMember($zoneId, $memberId)
+    {
+        // TODO: Pre-prepare these queries to reduce overhead
+        
+        $query = 'SELECT StoreId FROM ShippingZone WHERE Id = :zoneId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->execute();
+        $storeId = $stmt->fetch(PDO::FETCH_ASSOC)['StoreId'];
+
+        if ($storeId == NULL)
+        {
+            return false;
+        }
+        else
+        {
+            $query = 'SELECT MemberId FROM Store WHERE Id = :storeId';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC)['MemberId'];
+            return $result == $memberId;
+        }
     }
 
     /**
