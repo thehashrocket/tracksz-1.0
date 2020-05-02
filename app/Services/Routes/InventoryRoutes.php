@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Routes;
 
 // Use to shorten controller paths in route definitions
-use App\Controllers\Inventory;
+use League\Route\Router;
 
 // For functionality
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Route\Router;
+use App\Controllers\Inventory;
+use App\Controllers\Job\UploadQueue;
 use League\Route\Strategy\ApplicationStrategy;
+use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class InventoryRoutes extends AbstractServiceProvider
 {
@@ -32,14 +33,22 @@ class InventoryRoutes extends AbstractServiceProvider
             // Main Inventory routes.  Must have a selected store
             $routes->group('/inventory', function (\League\Route\RouteGroup $route) {
                 $route->get('/browse', Inventory\ProductController::class . '::browse');
-                $route->get('/upload', Inventory\InventoryController::class . '::uploadInventory');
+                $route->get('/condition-price', Inventory\InventoryController::class . '::conditionPriceBrowse');
+                $route->get('/import', Inventory\InventoryController::class . '::uploadInventory');
+                $route->get('/export', Inventory\InventoryController::class . '::exportInventoryBrowse');
+                $route->get('/re-price', Inventory\InventoryController::class . '::repriceInventoryBrowse');
                 $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');
+                $route->get('/queue', Inventory\UploadQueue::class . '::fooAction');
 
                 $route->get('/add', Inventory\ProductController::class . '::add');
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
-                $route->post('/ftpupload', Inventory\InventoryController::class . '::UploadInventoryFTP');
+                $route->post('/ftpupload', Inventory\InventoryController::class . '::importInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
+                $route->post('/importupload', Inventory\InventoryController::class . '::browseInventoryUpload');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
+                $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
+                $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
+                $route->post('/update_settings', Inventory\InventoryController::class . '::updateSettings');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
@@ -59,7 +68,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/upload', Inventory\ProductController::class . '::UploadProduct');
                 $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main Product routes.  Must have a selected store
 
             // Main Category routes.  Must have a selected store
@@ -71,7 +81,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\CategoryController::class . '::editCategory');
                 $route->post('/update', Inventory\CategoryController::class . '::updateCategory');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main Category routes.  Must have a selected store
 
             // Main Attribute routes.  Must have a selected store
@@ -84,7 +95,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\AttributesController::class . '::editAttribute');
                 $route->post('/update', Inventory\AttributesController::class . '::updateAttribute');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main Attribute routes.  Must have a selected store
 
             // Main Attribute routes.  Must have a selected store
@@ -97,7 +109,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\DownloadController::class . '::editDownload');
                 $route->post('/update', Inventory\DownloadController::class . '::updateDownload');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main Attribute routes.  Must have a selected store
 
 
@@ -110,7 +123,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\RecurringController::class . '::editRecurring');
                 $route->post('/update', Inventory\RecurringController::class . '::updateRecurring');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main Recurring routes.  Must have a selected store
 
             // Main CustomerGroup routes.  Must have a selected store
@@ -122,7 +136,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\CustomerGroupController::class . '::editCustomerGroup');
                 $route->post('/update', Inventory\CustomerGroupController::class . '::updateCustomerGroup');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main CustomerGroup routes.  Must have a selected store
 
             // Main ProductDiscount routes.  Must have a selected store
@@ -134,7 +149,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\ProductDiscountController::class . '::editProductDiscount');
                 $route->post('/update', Inventory\ProductDiscountController::class . '::updateProductDiscount');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main ProductDiscount routes.  Must have a selected store
 
             // Main ProductSpecial routes.  Must have a selected store
@@ -146,7 +162,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/edit/{Id:number}', Inventory\ProductSpecialController::class . '::editProductSpecial');
                 $route->post('/update', Inventory\ProductSpecialController::class . '::updateProductSpecial');
             })->middleware($this->container->get('Csrf'))
-                ->middleware($this->container->get('Auth'));
+                ->middleware($this->container->get('Auth'))
+                ->middleware($this->container->get('Store'));
             // Main ProductSpecial routes.  Must have a selected store
 
             return $routes;

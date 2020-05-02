@@ -51,20 +51,34 @@ if (substr($page, 0, 12) == 'example-page') {
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-upload', 'inventory-update', 'category-browse', 'category-add'];
+                    $inventory_menu = ['product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price'];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $inventory_menu)) {
                                                         echo ' has-active';
-                                                    } ?>"><a href="/inventory/browse" class="menu-link" title="<?= _('Active Store Inventory') ?>"><span class="menu-icon fas fa-list" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Inventory') ?></span></a> <!-- child menu -->
+                                                    } ?>"><a href="/inventory/browse" class="menu-link" title="<?= _('Active Store Inventory') ?>"><span class="menu-icon fas fa-dolly-flatbed" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Inventory') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <li class="menu-item<?php if ($page == 'inventory-browse') {
                                                     echo ' has-active';
                                                 } ?>">
                                 <a href="/inventory/browse" title="<?= _('View, Add, Edit, Delete Inventory') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
-                            <li class="menu-item<?php if ($page == 'inventory-upload') {
+                            <li class="menu-item<?php if ($page == 'inventory-condition-price') {
                                                     echo ' has-active';
-                                                } ?>"><a href="/inventory/upload" title="<?= _('Inventory File Upload') ?>" class="menu-link"><?= _('Upload') ?></a></li>
+                                                } ?>">
+                                <a href="/inventory/condition-price" title="<?= _('View, Add, Edit, Delete Condition & Price') ?>" class="menu-link"><?= _('Condition & Price') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'inventory-import') {
+                                                    echo ' has-active';
+                                                } ?>"><a href="/inventory/import" title="<?= _('Inventory File Import') ?>" class="menu-link"><?= _('Import Items') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'inventory-export') {
+                                                    echo ' has-active';
+                                                } ?>"><a href="/inventory/export" title="<?= _('Inventory File Export') ?>" class="menu-link"><?= _('Export Items') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'inventory-re-price') {
+                                                    echo ' has-active';
+                                                } ?>"><a href="/inventory/re-price" title="<?= _('Inventory Re-Price') ?>" class="menu-link"><?= _('Re-Price') ?></a>
+                            </li>
                             <!-- .menu-item -->
                             <?php
                             // determine if sub-menu has active page - set up array for in_array
@@ -76,11 +90,37 @@ if (substr($page, 0, 12) == 'example-page') {
                                                             ?>">
                                 <a href="/category/browse" class="menu-link" title="<?= _('Active Store Cateogry') ?>"><span class="menu-icon fa fa-database" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Category') ?></span></a> <!-- child menu -->
                                 <ul class="menu">
-                                    <li class="menu-item<?php if ($page == 'category-view') {
+                                    <li class="menu-item<?php if ($page == 'category-browse') {
                                                             echo ' has-active';
                                                         }
                                                         ?>">
                                         <a href="/category/browse" title="<?= _('View, Add, Edit, Delete Cateogry') ?>" class="menu-link"><?= _('Browse') ?></a>
+                                    </li>
+
+                                </ul><!-- /child menu -->
+                            </li><!-- /.menu-item -->
+                            <!-- .menu-item -->
+                            <?php
+                            // determine if sub-menu has active page - set up array for in_array
+                            $setting_menu = ['inventory-inventory-settings', 'inventory-advanced-settings'];
+                            ?>
+                            <li class="menu-item has-child<?php if (in_array($page, $setting_menu)) {
+                                                                echo ' has-active';
+                                                            }
+                                                            ?>">
+                                <a href="/inventory/inventory-settings" class="menu-link" title="<?= _('Active Store Cateogry') ?>"><span class="menu-icon fa fa-cog" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Settings') ?></span></a> <!-- child menu -->
+                                <ul class="menu">
+                                    <li class="menu-item<?php if ($page == 'inventory-inventory-settings') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/inventory/inventory-settings" title="<?= _('Inventory Settings') ?>" class="menu-link"><?= _('Inventory Settings') ?></a>
+                                    </li>
+                                    <li class="menu-item<?php if ($page == 'inventory-advanced-settings') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/inventory/advanced-settings" title="<?= _('Advanced Settings') ?>" class="menu-link"><?= _('Advanced Settings') ?></a>
                                     </li>
 
                                 </ul><!-- /child menu -->

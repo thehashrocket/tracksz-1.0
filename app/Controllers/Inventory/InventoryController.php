@@ -6,6 +6,7 @@ namespace App\Controllers\Inventory;
 
 use App\Library\Views;
 use App\Models\Inventory\Category;
+use App\Models\Inventory\InventorySetting;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
@@ -19,7 +20,6 @@ class InventoryController
 {
     private $view;
     private $db;
-    
     public function __construct(Views $view, PDO $db)
     {
 
@@ -40,8 +40,18 @@ class InventoryController
         return $this->view->buildResponse('inventory/upload', ['market_places' => $market_places]);
     }
 
-    public function uploadInventoryFTP(ServerRequest $request)
-    { 
+    public function browseInventoryUpload()
+    {
+        $file_stream = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+        $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
+        $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
+        $cat_img = $file_encrypt_name . strstr($file_name, '.');
+        $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+    }
+
+    public function importInventoryFTP(ServerRequest $request)
+    {
         $form = $request->getUploadedFiles();
         $form_2 = $request->getParsedBody();
         // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
@@ -80,6 +90,10 @@ class InventoryController
                 throw new Exception("Please upload valid file type docs, jpg and xlsx...!", 301);
             }
 
+            $is_valid = $this->fileExtenstion($form);
+            if (!$is_valid) {
+                throw new Exception("Please upload file type as per Inventory Settings...!", 301);
+            }
             $ftp_details = (new Marketplace($this->db))->findFtpDetails($form_2['MarketName'], Session::get('auth_user_id'), 1);
 
             if (is_array($ftp_details) && empty($ftp_details)) {
@@ -109,7 +123,7 @@ class InventoryController
             $validated['alert'] = 'Inventory File is uploaded into FTP Server successully..!';
             $validated['alert_type'] = 'success';
             $this->view->flash($validated);
-            return $this->view->redirect('/inventory/upload');
+            return $this->view->redirect('/inventory/import');
         } catch (Exception $e) {
             $res['status'] = false;
             $res['data'] = [];
@@ -122,7 +136,7 @@ class InventoryController
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->redirect('/inventory/upload');
+            return $this->view->redirect('/inventory/import');
         }
         ftp_close($ftp_connect);
         exit;
@@ -148,7 +162,7 @@ class InventoryController
             $validate2->validation_rules(array(
                 'MarketName'    => 'required'
             ));
-                $validated = $validate2->run($form_2,true);
+            $validated = $validate2->run($form_2, true);
 
             // use validated as it is filtered and validated        
             if ($validated === false) {
@@ -222,6 +236,20 @@ class InventoryController
         }
         ftp_close($ftp_connect);
         exit;
+    }
+
+    /*
+    * fileExtenstion - file extenstion logic
+    * @param  - none
+    * @return boolean
+    */
+    private function fileExtenstion($files)
+    {
+        $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+        if ($user_details['FileType'] == str_replace("/", "", strstr($files['InventoryUpload']->getClientMediaType(), "/")))
+            return true;
+
+        return false;
     }
 
     /*
@@ -300,6 +328,140 @@ class InventoryController
         var_dump($updated);
         exit();
     }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function inventorySettingsBrowse()
+    {
+        $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+        return $this->view->buildResponse('inventory/settings/inventory', ['all_settings' => $user_details]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function repriceInventoryBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function advancedSettingsBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function exportInventoryBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * uploadInventory - Upload inventory file via ftp
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function conditionPriceBrowse()
+    {
+        $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+    }
+
+    /*
+    * updateSettings - Update Inventory Settings
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateSettings(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $update_data['UserId'] = Session::get('auth_user_id');
+            $update_data['FileType'] = $methodData['FileName'];
+
+            $is_data = $this->insertOrUpdate($update_data);
+
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Settings updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+                return $this->view->buildResponse('inventory/settings/inventory', ['all_settings' => $user_details]);
+            } else {
+                throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('inventory/settings/inventory', ['all_settings' => $user_details]);
+        }
+    }
+
+    /*
+    * insertOrUpdate - find user id if exist
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function insertOrUpdate($data)
+    {
+        $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+        if (isset($user_details) && !empty($user_details)) { // update
+            $data['Updated'] = date('Y-m-d H:i:s');
+            $result = (new InventorySetting($this->db))->editInventorySettings($data);
+        } else { // insert
+            $result = (new InventorySetting($this->db))->addInventorySettings($data);
+        }
+
+        return $result;
+    }
+
+
+
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.css">
     <link rel="stylesheet" href="/assets/vendor/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="/assets/vendor/datatables/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/assets/stylesheets/dropzone.css">
     <!-- END PLUGINS STYLES -->
     <!-- BEGIN THEME STYLES -->
     <link rel="stylesheet" href="/assets/stylesheets/theme.min.css" data-skin="default">
@@ -83,6 +84,7 @@
     <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/assets/vendor/flatpickr/flatpickr.min.js"></script>
     <script src="/assets/vendor/flatpickr/plugins/monthSelect/index.js"></script>
+    <script src="/assets/javascript/dropzone.js"></script>
     <!-- BEGIN PLUGINS JS -->
     <?= $this->section('plugin_js') ?>
     <!-- END PLUGINS JS -->

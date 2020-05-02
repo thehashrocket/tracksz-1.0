@@ -1,8 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 return [
-    
     // Market Places
-    'market_places' => ['AbeBooks','Alibris','Amazon','Amazon', 'Amazon Europe','Barnes and Noble', 'Biblio','Chrislands.com',  'eBay', 'eCampus', 'TextbookRush.com', 'TextbookX',  'Valore'
+    'market_places' => [
+        'AbeBooks', 'Alibris', 'Amazon.com', 'Amazon.ca', 'Amazon.co.uk', 'Barnes and Noble', 'Biblio.com', 'Chrislands.com',  'eBay.com', 'eCampus.com', 'TextbookRush.com', 'ValoreBooks'
     ]
 ];

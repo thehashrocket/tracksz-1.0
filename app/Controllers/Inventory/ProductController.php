@@ -115,7 +115,6 @@ class ProductController
             $insert_data = $this->PrepareInsertData($form);
             $insert_data['Image'] = $prod_img;
             $prod_obj = new Product($this->db);
-
             $all_product = $prod_obj->addProduct($insert_data);
 
             if (isset($all_product) && !empty($all_product)) {
