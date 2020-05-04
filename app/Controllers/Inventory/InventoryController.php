@@ -7,15 +7,22 @@ namespace App\Controllers\Inventory;
 use App\Library\Views;
 use App\Models\Inventory\Category;
 use App\Models\Inventory\InventorySetting;
+use App\Models\Product\Product;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use App\Library\ValidateSanitize\ValidateSanitize;
-use Delight\Cookie\Session;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use Exception;
 use PDO;
+use App\Library\Config;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Delight\Cookie\Session;
+
+
 class InventoryController
 {
     private $view;
@@ -40,14 +47,89 @@ class InventoryController
         return $this->view->buildResponse('inventory/upload', ['market_places' => $market_places]);
     }
 
+    /*
+    * browseInventoryUpload - import inventory file and update inventory table
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
     public function browseInventoryUpload()
     {
-        $file_stream = $_FILES['file']['tmp_name'];
-        $file_name = $_FILES['file']['name'];
-        $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
-        $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
-        $cat_img = $file_encrypt_name . strstr($file_name, '.');
-        $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+
+
+        $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+
+            $arr_file = explode('.', $_FILES['file']['name']);
+            $extension = end($arr_file);
+            if ('csv' == $extension) {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            } else {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            }
+
+            $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+            $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
+            unset($sheetData[0]);
+            $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
+
+            $is_result = $this->insertOrUpdateInventory($map_data);
+        } else { // UIEE Format
+
+        }
+
+
+        // ! yersterday code working
+        // $file_stream = $_FILES['file']['tmp_name'];
+        // $file_name = $_FILES['file']['name'];
+        // $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
+        // $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
+        // $cat_img = $file_encrypt_name . strstr($file_name, '.');
+        // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+    }
+
+    /*
+    * insertOrUpdate - find user id if exist
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function insertOrUpdateInventory($data)
+    {
+        foreach ($data as $data_val) {
+            if (isset($data_val['ProdId']) && !empty($data_val['ProdId'])) {
+                $data_val['AddtionalData'] = json_encode($data_val['AddtionalData']);
+                $data_val['UserId'] = Session::get('auth_user_id');
+                $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
+                $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventory($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventory($data_val);
+            }
+        }
+        return true;
+    }
+
+    private function mapFieldsAttributes($marketPlaceName = "", $fileHeader = array(), $fileData = array())
+    {
+        if (empty($marketPlaceName))
+            return false;
+
+        $market_place_map = Config::get('market_place_map');
+        $new_arr = [];
+        $map_arr = [];
+        foreach ($fileData as $file_key => $file_val) {
+            for ($i = 0; $i < 35; $i++) {
+                if (in_array($fileHeader[$i], array_keys($market_place_map[$marketPlaceName]))) { // *found                    
+                    $map_arr[$file_key][$market_place_map[$marketPlaceName][$fileHeader[$i]]] = $fileData[$file_key][$i];
+                } else { // ! not found
+                    if (isset($market_place_map[$marketPlaceName]['AddtionalData'][$fileHeader[$i]]))
+                        $map_arr[$file_key]['AddtionalData'][$market_place_map[$marketPlaceName]['AddtionalData'][$fileHeader[$i]]] = $fileData[$file_key][$i];
+                }
+            }
+        }
+        return $map_arr;
     }
 
     public function importInventoryFTP(ServerRequest $request)
