@@ -3,14 +3,17 @@
 .fixed-top {
     background-color: white;
 }
+
 .required-field::after {
     content: " *";
     color: #B76BA3;
     font-size: 110%;
 }
+
 .input-group:not(.input-group-alt) .input-group-prepend .input-group-text {
     padding-right: 10px;
 }
+
 #card-errors {
     color: #B76BA3;
 }
@@ -21,17 +24,23 @@ label.error {
     color: #B76BA3;
     font-size: 80%;
 }
+
+
 /*parsley js form validation style*/
+
 input.parsley-error {
     border: 1px solid #B76BA3 !important;
 }
+
 input.parsley-error:focus {
     border: 2px solid #B76BA3 !important;
     box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);
 }
+
 select.parsley-error {
     border: 1px solid #B76BA3 !important;
 }
+
 select.parsley-error:focus {
     border: 2px solid #B76BA3 !important;
     box-shadow: 0 0 0 1px rgba(183, 107, 163, 0.25);

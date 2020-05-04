@@ -30,6 +30,7 @@ use App\Services\Routes\MarketplaceRoutes;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\Container\ServiceProvider\AbstractServiceProvider;
+use Slm\Src\Module;
 
 class Application
 {
