@@ -3,6 +3,8 @@
 namespace App\Controllers\Account;
 
 use App\Library\Views;
+use App\Library\Paginate;
+use App\Models\Country;
 use App\Models\Account\ShippingMethod;
 use App\Models\Account\ShippingZone;
 use App\Models\Account\Store;
@@ -153,15 +155,32 @@ class ShippingController
     }
 
     /**
-     *  viewAssignZones - View page to assign shipping zones
+     *  viewAssignZones - View page to bulk assign shipping zones
      * 
      *  @return view - /account/shipping-assign
      */
-    public function viewAssignZones()
+    public function viewAssignZonesBulk()
     {
         $activeStoreId = Cookie::get('tracksz_active_store');
         $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
-        return $this->view->buildResponse('/account/shipping_assign', [
+        return $this->view->buildResponse('/account/shipping_assign_bulk', [
+            'shippingZones' => $zones
+        ]);
+    }
+
+    /**
+     *  viewAssignZones - View page to assign shipping zones to individual countries
+     * 
+     *  @return view - /account/shipping-assign/individual
+     */
+    public function viewAssignZonesIndividual()
+    {
+        $countryZones = (new ShippingZone($this->db))->getCountryAssignments();
+        $countries = (new Country($this->db))->all();
+        $activeStoreId = Cookie::get('tracksz_active_store');
+        $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
+        return $this->view->buildResponse('/account/shipping_assign_individual', [
+            'countries' => $countries,
             'shippingZones' => $zones
         ]);
     }

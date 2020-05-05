@@ -23,7 +23,16 @@ class Country
     public function all()
     {
         // Only supporting US, UK, Australia, and Canada for now, 2019-07-31
-        $stmt = $this->db->prepare('SELECT Id, Name FROM Country WHERE Id IN (223,222,13,38)');
+        $stmt = $this->db->prepare('SELECT Id, `Name`, IsoCode2 FROM Country WHERE Id IN (223,222,13,38)');
+        if (!$stmt->execute()) {
+            return false;
+        }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllIds()
+    {
+        $stmt = $this->db->prepare('SELECT Id FROM Country');
         if (!$stmt->execute()) {
             return false;
         }

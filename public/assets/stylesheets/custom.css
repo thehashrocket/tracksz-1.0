@@ -80,3 +80,12 @@ select.parsley-error:focus {
 .download_file .fa-file:before {
     font-size: 32px;
 }
+
+#shipping-countries td:first-child {
+    width: 50%;
+}
+
+#shipping-countries select {
+    width: 60%;
+    display: inline-block;
+}

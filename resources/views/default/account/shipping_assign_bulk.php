@@ -18,9 +18,9 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
             <header class="page-title-bar">
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Assign Shipping Zones')?> </h1>
+                    <h1 class="page-title"> <?=_('Bulk Assign Shipping Zones')?> </h1>
                 </div>
-                <p class="text-muted"> <?=_('Here you can assign shipping zones to entire countries or only specific regions.')?></p>
+                <p class="text-muted"> <?=_('Here you can assign shipping zones to entire countries.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
@@ -73,6 +73,9 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                             <button type="submit" class="btn btn-primary">Apply</button>
                         </form>
                     </blockquote>
+
+                    <br>
+                    <a href="/account/shipping-assign/individual">Assign shipping zones to individual countries</a>
                 </div>
             </div>
         </div><!-- /.page-inner -->

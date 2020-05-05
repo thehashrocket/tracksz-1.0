@@ -32,22 +32,24 @@ class Paginate
     /**
      * Initialize - create object only once
      *
-     * @param  total   - total items in query result - get from query in Model
-     * @param  pgnow   - current page - place hidden in form or use 1 for first page
-     * @param  perpage - listings per page - place hidden field in form or use
-     *                   Config::$get['listing_limit'] for first page
+     * @param  $db - Database object
+     * @param  $countQuery - SQL query to count number of rows
+     * @param  $data - Input parameters for query
+     * @param  $pgnow - Current page (default: null)
+     * @param  $perPage - How many listings per page
+     *                   
      * @return boolean - Initialized object
      */
-    public static function initialize($db, $query, $data=[], $pgnow=null, $perpage=null)
+    public static function initialize($db, $countQuery, $data=[], $pgnow=null, $perPage=null)
     {
         if (self::$initialized)
             return;
         // Do We Need to Paginate?
-        $stmt = $db->prepare($query);
+        $stmt = $db->prepare($countQuery);
         $stmt->execute($data);
         $row = $stmt->fetch(PDO::FETCH_NAMED);
-        if ($row['count'] > $perpage) {
-            self::setup($row['count'], $pgnow,$perpage);
+        if ($row['count'] > $perPage) {
+            self::setup($row['count'], $pgnow, $perPage);
             self::$paginate = true;
         }
         self::$initialized = true;
@@ -61,9 +63,9 @@ class Paginate
         if (!is_numeric($total)) { $total = 0; }
         if (!is_numeric($pgnow)) { $pgnow = 1; }
         if (!is_numeric($perpage)) { $perpage = 20; }
-        self::$pgtotal = $total<0 ? 0 : $total ;
-        self::$pgnow   = $pgnow<1 ? 1 : $pgnow ;
-        self::$perpage = $perpage<=0 ? 20 : $perpage ;
+        self::$pgtotal = $total < 0 ? 0 : $total ;
+        self::$pgnow   = $pgnow < 1 ? 1 : $pgnow ;
+        self::$perpage = $perpage <= 0 ? 20 : $perpage ;
         self::$pgall   = CEIL(self::$pgtotal / self::$perpage);
         self::$pgX     = self::$perpage * (self::$pgnow-1);
         self::$pgY     = self::$pgX + (self::$perpage - 1);
