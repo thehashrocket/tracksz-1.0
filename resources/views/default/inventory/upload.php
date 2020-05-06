@@ -36,6 +36,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     <a class="nav-link show" data-toggle="tab" href="#card-filebrowse"><?= _('File Browse') ?></a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link show" data-toggle="tab" href="#card-filedelete"><?= _('Delete Inventory') ?></a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link disabled" href="#">Disabled</a>
                                 </li>
                             </ul>
@@ -79,6 +82,16 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 </div> <!-- col-sm Group Left Ends -->
                                 <div class="tab-pane fade" id="card-filebrowse">
                                     <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
+
+                                    </form>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <button type="submit" class="btn btn-primary" id="submit-all">Upload</button>
+                                </div>
+                                <div class="tab-pane fade" id="card-filedelete">
+                                    <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
+                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />

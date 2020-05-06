@@ -69,6 +69,22 @@ class product
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+
+    /*
+    * findBySKUProd - Find product by product record UserId and Status
+    *
+    * @param  UserId  - Table record Id of product to find
+    * @param  Status  - Table record Status of product to find
+    * @return associative array.
+    */
+    public function findBySKUProd($ProdSku, $Status = array())
+    {
+        $Status = implode(',', $Status); // WITHOUT WHITESPACES BEFORE AND AFTER THE COMMA
+        $stmt = $this->db->prepare("SELECT * FROM product WHERE SKU = :SKU AND Status IN ($Status)");
+        $stmt->execute(['SKU' => $ProdSku]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     /*
     * find - Find product by product record UserId and Status
     *
