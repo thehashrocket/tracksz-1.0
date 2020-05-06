@@ -49,7 +49,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     <h5 class="card-title"> FTP File Upload </h5>
                                     <div class="col-lg-6">
 
-                                        <form name="inventory_ftp_request" id="inventory_ftp_request" action="/inventory/ftpupload" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                                        <form name="dropzoneFrom" id="dropzoneFrom" action="/inventory/ftpupload" method="POST" enctype="multipart/form-data" data-parsley-validate>
                                             <!-- form starts -->
                                             <div class="form-group">
                                                 <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">

@@ -112,8 +112,6 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
             // Main Attribute routes.  Must have a selected store
-
-
             // Main Recurring routes.  Must have a selected store
             $routes->group('/recurring', function (\League\Route\RouteGroup $route) {
                 $route->get('/page', Inventory\RecurringController::class . '::view');
