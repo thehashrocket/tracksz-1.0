@@ -45,6 +45,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::importInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
                 $route->post('/importupload', Inventory\InventoryController::class . '::browseInventoryUpload');
+                $route->post('/importdelete', Inventory\InventoryController::class . '::browseInventoryDelete');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
                 $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
@@ -112,8 +113,6 @@ class InventoryRoutes extends AbstractServiceProvider
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
             // Main Attribute routes.  Must have a selected store
-
-
             // Main Recurring routes.  Must have a selected store
             $routes->group('/recurring', function (\League\Route\RouteGroup $route) {
                 $route->get('/page', Inventory\RecurringController::class . '::view');

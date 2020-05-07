@@ -56,33 +56,151 @@ class InventoryController
     */
     public function browseInventoryUpload()
     {
+        try {
+            $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+            $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
+            if (isset($mime_settings[$user_details['FileType']])) {
 
 
-        $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                if ($mime_settings[$user_details['FileType']] != $user_details['FileType'] && $user_details['FileType'] != 'uiee')
+                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
 
-        if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+                if ($user_details['FileType'] == 'uiee' && strstr($_FILES['file']['name'], ".", false) != ".txt")
+                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
 
-            $arr_file = explode('.', $_FILES['file']['name']);
-            $extension = end($arr_file);
-            if ('csv' == $extension) {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+
+                    $arr_file = explode('.', $_FILES['file']['name']);
+                    $extension = end($arr_file);
+                    if ('csv' == $extension) {
+                        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                    } else {
+                        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                    }
+
+                    $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+                    $sheetData = $spreadsheet->getActiveSheet()->toArray();
+                    $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
+                    unset($sheetData[0]);
+                    $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
+
+                    $is_result = $this->insertOrUpdateInventory($map_data);
+                    $temo = 'Files for Inventory Import successfully upload..!';
+
+                    die(json_encode(['message'=>$temo,'status'=>true]));
+                    //die(json_encode(true));
+                } else { // UIEE Format
+                   
+                    $file = fopen($_FILES['file']['tmp_name'], "r");
+                    $uiee_arr = array();
+                    while (!feof($file)) {
+                        $uiee_arr[] = fgets($file);
+                    }
+                    fclose($file);
+
+                    // UIEEFile , HomeBase2File
+                    $marketplace_name = "HomeBase2File";
+                    if ($marketplace_name == "UIEEFile") {
+                        $map_data = $this->mapUIEEFieldsAttributes("UIEEFile", $uiee_arr);
+                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    } else if ($marketplace_name == "HomeBase2File") {
+                        $map_data = $this->mapUIEEFieldsAttributes("HomeBase2File", $uiee_arr);
+                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    }
+                    $temo = 'Files for Inventory Import successfully upload..!';
+
+                    die(json_encode(['message'=>$temo,'status'=>true]));
+
+
+
+                }
             } else {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
             }
+        } catch (Exception $e) {
 
-            $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
-            $sheetData = $spreadsheet->getActiveSheet()->toArray();
-            $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
-            unset($sheetData[0]);
-            $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
-
-            $is_result = $this->insertOrUpdateInventory($map_data);
-        } else { // UIEE Format
-
-        }
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = 'Inventory File not uploaded into server...!';
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
 
 
-        // ! yersterday code working
+
+
+
+
+            die(json_encode($res));
+        }        // ! yersterday code working
+        // $file_stream = $_FILES['file']['tmp_name'];
+        // $file_name = $_FILES['file']['name'];
+        // $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
+        // $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
+        // $cat_img = $file_encrypt_name . strstr($file_name, '.');
+        // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+    }
+
+
+
+
+
+
+
+
+
+
+
+   
+ /*
+    * browseInventoryDelete - import inventory file and update inventory table
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function browseInventoryDelete()
+    {
+        try {
+            $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+
+                $arr_file = explode('.', $_FILES['file']['name']);
+                $extension = end($arr_file);
+                if ('csv' == $extension) {
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                } else {
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                }
+
+                $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+                $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
+                unset($sheetData[0]);
+
+                if (empty($sheetData))
+                    throw new Exception("Please upload File with SKU Details...!", 301);
+
+                $map_data = $this->mapRemoveFieldsAttributes($sheetData);
+                $is_result = $this->deleteImportInventory($map_data);
+                die(json_encode(true));
+            } else {
+                throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = 'Inventory File not uploaded into server...!';
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            die(json_encode($res));
+        }        // ! yersterday code working
         // $file_stream = $_FILES['file']['tmp_name'];
         // $file_name = $_FILES['file']['name'];
         // $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
@@ -111,6 +229,35 @@ class InventoryController
         return true;
     }
 
+    /*
+    * deleteImportInventory - find sku if exist
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function deleteImportInventory($data)
+    {
+        foreach ($data as $data_val) {
+            if (isset($data_val['SKU']) && !empty($data_val['SKU'])) {
+                $is_exist = (new Product($this->db))->findBySKUProd($data_val['SKU'], [0, 1]);
+                if (isset($is_exist) && !empty($is_exist)) {
+                    (new Product($this->db))->delete($is_exist['Id']);
+                }
+            }
+        }
+        return true;
+    }
+
+    private function mapRemoveFieldsAttributes($fileData = array())
+    {
+        array_walk($fileData, function (&$item) {
+            $item['SKU'] = $item[0];
+            unset($item[0]);
+        });
+        return $fileData;
+    }
+
     private function mapFieldsAttributes($marketPlaceName = "", $fileHeader = array(), $fileData = array())
     {
         if (empty($marketPlaceName))
@@ -130,6 +277,35 @@ class InventoryController
             }
         }
         return $map_arr;
+    }
+
+    private function mapUIEEFieldsAttributes($marketPlaceName = "", $fileData = array())
+    {
+        if (empty($marketPlaceName))
+            return false;
+
+        $map_uiee = [];
+        $map_uiee_set = [];
+        $key_counter = 0;
+        $market_place_map = Config::get('market_place_map');
+        foreach ($fileData as $file_key => $file_val) {
+            if (is_string($file_val) && empty(trim($file_val))) {
+                $key_counter = $key_counter + 1;
+                continue;
+            }
+
+            $uiee_key = strstr($file_val, "|", true);
+            if (!empty($uiee_key)) {
+                $arr_file = explode('|', $file_val);
+                if (in_array($uiee_key, array_keys($market_place_map[$marketPlaceName]))) { // *found           
+                    $map_uiee[$key_counter][$market_place_map[$marketPlaceName][$uiee_key]] = end($arr_file);
+                } else { // ! not found
+                    if (isset($market_place_map[$marketPlaceName]['AddtionalData'][$uiee_key]))
+                        $map_uiee[$key_counter]['AddtionalData'][$market_place_map[$marketPlaceName]['AddtionalData'][$uiee_key]] = end($arr_file);
+                }
+            }
+        }
+        return $map_uiee;
     }
 
     public function importInventoryFTP(ServerRequest $request)

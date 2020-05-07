@@ -105,6 +105,35 @@ return [
                 'BD' => 'Binding'
             ]
         ],
+        'HomeBase2File' => [
+            'ISBN' => 'ProdId',
+            'BSKU' => 'SKU',
+            'TNAM' => 'Name',
+            'BOOC' => 'ProdCondition',
+            'DESC' => 'Notes',
+            'PRIC' => 'BasePrice',
+            'QUAN' => 'Qty',
+            'AddtionalData' => [
+                'ANAM' => 'Author',
+                'PBLS' => 'Publisher',
+                'SIZE' => 'Size',
+                'JCKC' => 'JackCondition',
+                'BTYP' => 'Type',
+                'BNDC' => 'Binding',
+                'PBPL' => 'PublishPlace',
+                'PBYR' => 'PublishYear',
+                'EDNT' => 'Edition',
+                'SGNT' => 'Inscription',
+                'SUB1' => 'Keywords',
+                'BCAT' => 'Category',
+                'INAM' => 'Illustrator',
+                'PDSC' => 'CheckImage',
+                'STAT' => 'Status',
+                'TRAN' => 'Transaction',
+                'LOCA' => '1.2gm'
+            ]
+        ],
+
 
     ],
     'market_attributes' => [

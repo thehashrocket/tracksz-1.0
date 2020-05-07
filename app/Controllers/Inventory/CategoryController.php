@@ -74,12 +74,10 @@ class CategoryController
                 'min' => '0kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
             ]);
-
             // if false than throw Size error 
             if (!$validator->isValid($_FILES)) {
                 throw new Exception("File upload size is too large...!", 301);
             }
-
             // Using an options array:
             $validator_ext = new Extension(['png,jpg,PNG,JPG,jpeg,JPEG']);
             // if false than throw type error
