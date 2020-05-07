@@ -86,8 +86,12 @@ class InventoryController
                     $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
 
                     $is_result = $this->insertOrUpdateInventory($map_data);
-                    die(json_encode(true));
+                    $temo = 'Files for Inventory Import successfully upload..!';
+
+                    die(json_encode(['message'=>$temo,'status'=>true]));
+                    //die(json_encode(true));
                 } else { // UIEE Format
+                   
                     $file = fopen($_FILES['file']['tmp_name'], "r");
                     $uiee_arr = array();
                     while (!feof($file)) {
@@ -104,8 +108,12 @@ class InventoryController
                         $map_data = $this->mapUIEEFieldsAttributes("HomeBase2File", $uiee_arr);
                         $is_result = $this->insertOrUpdateInventory($map_data);
                     }
+                    $temo = 'Files for Inventory Import successfully upload..!';
 
-                    die(json_encode(true));
+                    die(json_encode(['message'=>$temo,'status'=>true]));
+
+
+
                 }
             } else {
                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
@@ -120,6 +128,11 @@ class InventoryController
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
 
+
+
+
+
+
             die(json_encode($res));
         }        // ! yersterday code working
         // $file_stream = $_FILES['file']['tmp_name'];
@@ -130,7 +143,18 @@ class InventoryController
         // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
     }
 
-    /*
+
+
+
+
+
+
+
+
+
+
+   
+ /*
     * browseInventoryDelete - import inventory file and update inventory table
     *
     * @param  $form  - Array of form fields, name match Database Fields
@@ -163,6 +187,7 @@ class InventoryController
                 $is_result = $this->deleteImportInventory($map_data);
                 die(json_encode(true));
             } else {
+                throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
             }
         } catch (Exception $e) {
 

@@ -70,6 +70,7 @@ class product
     }
 
 
+
     /*
     * findBySKUProd - Find product by product record UserId and Status
     *

@@ -1,5 +1,27 @@
+
+
+Dropzone.autoDiscover = false;
 $(document).ready(function() {
-    console.log('document ready test..! drop');
+     var myDropzone = new Dropzone("#dropzone_request1", { 
+         url: "/inventory/importupload",
+         success : function(file, response){
+            res= JSON.parse(response);console.log(res);
+             $("#ajaxMsg").empty();
+             $("#ajaxMsg").append('<div class="alert alert-success text-center">'+res.message+'</div>');
+         }
+    
+     });
+
+                               /* $.ajax({
+                                    type: "POST",
+                                    url: "upload.php",
+                                    data: 'alertdata=' + alertd,
+                                    success: function (data) {
+                                        $("#alertdata").html(data);
+                                    }
+                                });*/
+    //console.log('document ready test..! drop');
+
     // Dropzone.autoDiscover = false;
     // Dropzone.options.dropzoneFrom = {
     //     autoProcessQueue: false,
@@ -25,15 +47,8 @@ $(document).ready(function() {
     //     }
     // }
 
-    Dropzone.autoDiscover = false;
+   //Dropzone.autoDiscover = false;
 
-    // var myDropzone = new Dropzone("#dropzoneFrom", { 
-    //     url: "/inventory/importupload",
-    //     success : function(file, response){
-    //         console.log(file);
-    //         console.log(response);
-    //     }
     
-    // });
 
 });
