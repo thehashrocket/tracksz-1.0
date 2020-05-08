@@ -1,0 +1,82 @@
+date/time         : 2020-05-07, 17:07:20, 715ms
+computer name     : VANSHU
+user name         : sonit <admin>
+registered owner  : soni.tejas@live.com
+operating system  : Windows NT New x64 build 9200
+system language   : English
+system up time    : 21 hours 35 minutes
+program up time   : 4 seconds
+processors        : 6x Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz
+physical memory   : 1460/8056 MB (free/total)
+free disk space   : (C:) 424.09 GB (E:) 410.30 GB
+display mode      : 1280x768, 32 bit
+process id        : $384c
+allocated memory  : 17.09 MB
+command line      : "E:\xampp\sendmail\sendmail.exe" -t
+executable        : sendmail.exe
+exec. date/time   : 2012-04-16 23:00
+compiled with     : Delphi 2006/07
+madExcept version : 3.0l
+callstack crc     : $205f8196, $ab81ce71, $ab81ce71
+exception number  : 1
+exception class   : EInOutError
+exception message : I/O error 6.
+
+main thread ($2930):
+004b675c +18a8 sendmail.exe sendmail        922 +440 initialization
+77dc42c1 +0021 ntdll.dll                             KiUserExceptionDispatcher
+0040474d +001d sendmail.exe System          262   +0 @AfterConstruction
+0043ff28 +0008 sendmail.exe IdTCPConnection 576   +0 TIdTCPConnection.RaiseExceptionForLastCmdResult
+004402f4 +003c sendmail.exe IdTCPConnection 751  +10 TIdTCPConnection.CheckResponse
+0043feba +002a sendmail.exe IdTCPConnection 565   +2 TIdTCPConnection.GetResponse
+0043ff87 +005b sendmail.exe IdTCPConnection 585   +4 TIdTCPConnection.SendCmd
+0044020e +0056 sendmail.exe IdTCPConnection 723   +4 TIdTCPConnection.SendCmd
+0045aa16 +0192 sendmail.exe IdSMTP          341  +40 TIdSMTP.Authenticate
+004b5f81 +10cd sendmail.exe sendmail        822 +340 initialization
+75596357 +0017 KERNEL32.DLL                          BaseThreadInitThunk
+
+thread $4410:
+75596357 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $2d4:
+75596357 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $3cd4:
+75596357 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+stack dump:
+0019f5c0  5c 67 4b 00 de fa ed 0e - 01 00 00 00 07 00 00 00  \gK.............
+0019f5d0  d4 f5 19 00 5c 67 4b 00 - 10 ca 3d 02 5c 67 4b 00  ....\gK...=.\gK.
+0019f5e0  5c 67 4b 00 f0 fd 19 00 - 70 ff 19 00 f0 f5 19 00  \gK.....p.......
+0019f5f0  00 00 00 00 64 30 40 00 - 00 00 00 00 88 ca 3d 02  ....d0@.......=.
+0019f600  5c 67 4b 00 00 00 00 00 - 8f 91 45 00 88 ca 3d 02  \gK.......E...=.
+0019f610  28 f7 19 00 3c f6 19 00 - 48 f6 19 00 00 00 00 00  (...<...H.......
+0019f620  00 00 00 00 00 00 00 00 - 72 8e dd 77 28 f7 19 00  ........r..w(...
+0019f630  f0 fd 19 00 78 f7 19 00 - b4 f6 19 00 e4 fc 19 00  ....x...........
+0019f640  90 8e dd 77 f0 fd 19 00 - 10 f7 19 00 44 8e dd 77  ...w........D..w
+0019f650  28 f7 19 00 f0 fd 19 00 - 78 f7 19 00 b4 f6 19 00  (.......x.......
+0019f660  1c 67 4b 00 f0 fd 19 00 - 28 f7 19 00 00 00 00 00  .gK.....(.......
+0019f670  ff 81 db 77 28 f7 19 00 - f0 fd 19 00 78 f7 19 00  ...w(.......x...
+0019f680  b4 f6 19 00 1c 67 4b 00 - 17 02 00 00 00 00 00 00  .....gK.........
+0019f690  28 f7 19 00 28 f7 19 00 - 78 f7 19 00 f0 fd 19 00  (...(...x.......
+0019f6a0  32 00 00 00 00 c0 19 00 - 00 00 1a 00 00 00 00 00  2...............
+0019f6b0  00 00 00 00 72 2f cc 03 - 0a 00 00 00 2b fe ff ff  ....r/......+...
+0019f6c0  05 00 00 05 72 2f cc 03 - 00 00 cc 03 23 b8 da 77  ....r/......#..w
+0019f6d0  0e 00 00 00 00 00 cd 03 - d0 c6 d8 77 08 08 00 00  ...........w....
+0019f6e0  1b 00 00 00 c0 00 cc 03 - 00 00 00 00 00 00 00 00  ................
+0019f6f0  00 00 00 00 00 f0 22 00 - 13 00 00 00 4a 00 00 00  ......".....J...
+
+disassembling:
+[...]
+004b6742       mov     edx, [ebp-$15c]
+004b6748       mov     eax, [$4bd968]
+004b674d       call    -$b0c2a ($405b28)      ; System.@Write0LString
+004b6752       call    -$b297b ($403ddc)      ; System.@WriteLn
+004b6757       call    -$b36bc ($4030a0)      ; System.@_IOTest
+004b675c 922 > mov     eax, [ebx+4]
+004b675f       call    -$3b3c ($4b2c28)       ; sendmail.errorLog
+004b6764 924   call    -$b1a55 ($404d14)      ; System.@RaiseAgain
+004b6769       call    -$b1a06 ($404d68)      ; System.@DoneExcept
+004b676e 931   xor     eax, eax
+004b6770       pop     edx
+[...]
