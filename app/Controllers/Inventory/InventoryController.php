@@ -21,7 +21,10 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Delight\Cookie\Session;
-
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Formatter\Json;
+use App\Library\Email;
 
 class InventoryController
 {
@@ -29,7 +32,6 @@ class InventoryController
     private $db;
     public function __construct(Views $view, PDO $db)
     {
-
         $this->view = $view;
         $this->db   = $db;
     }
@@ -87,11 +89,19 @@ class InventoryController
 
                     $is_result = $this->insertOrUpdateInventory($map_data);
                     $temo = 'Files for Inventory Import successfully upload..!';
-
-                    die(json_encode(['message'=>$temo,'status'=>true]));
+                    $email_file = $this->_LogGenerator($map_data);
+                    $mailer = new Email();
+                    $mailer->sendEmailAttachment(
+                        'tejas.soni@sinelogix.com',
+                        Config::get('company_name'),
+                        _('Inventory Update Details'),
+                        'Please find attachment of Inventory Update',
+                        ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+                    );
+                    die(json_encode(['message' => $temo, 'status' => true]));
                     //die(json_encode(true));
                 } else { // UIEE Format
-                   
+
                     $file = fopen($_FILES['file']['tmp_name'], "r");
                     $uiee_arr = array();
                     while (!feof($file)) {
@@ -109,11 +119,8 @@ class InventoryController
                         $is_result = $this->insertOrUpdateInventory($map_data);
                     }
                     $temo = 'Files for Inventory Import successfully upload..!';
-
-                    die(json_encode(['message'=>$temo,'status'=>true]));
-
-
-
+                    $email_file = $this->_LogGenerator($map_data);
+                    die(json_encode(['message' => $temo, 'status' => true]));
                 }
             } else {
                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
@@ -127,12 +134,6 @@ class InventoryController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
-
-
-
-
-
             die(json_encode($res));
         }        // ! yersterday code working
         // $file_stream = $_FILES['file']['tmp_name'];
@@ -143,18 +144,30 @@ class InventoryController
         // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
     }
 
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+    */
+    public function _LogGenerator($log_data = [])
+    {
+        $log_json = "log_" . date('Y_m_d_his') . ".json";
+        $stream = @fopen("logs/$log_json", 'a', false);
+        if (!$stream) {
+            throw new Exception('Failed to open stream');
+        }
 
+        $writer = new Stream($stream);
+        $formatter = new Json();
+        $writer->setFormatter($formatter);
+        $logger = new Logger();
+        $logger->addWriter($writer);
+        $logger->info(json_encode($log_data));
+        return $log_json;
+    }
 
-
-
-
-
-
-
-
-
-   
- /*
+    /*
     * browseInventoryDelete - import inventory file and update inventory table
     *
     * @param  $form  - Array of form fields, name match Database Fields
