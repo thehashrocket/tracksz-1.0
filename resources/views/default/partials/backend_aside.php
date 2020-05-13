@@ -26,7 +26,10 @@ if (substr($page, 0, 12) == 'example-page') {
                     </li><!-- /.menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $orders_menu = ['order-browse'];
+                    $orders_menu = [
+                        'order-browse', 'order-batch-move', 'order-confirmation-file', 'order-export-order',
+                        'order-shipping', 'order-order-settings', 'order-postage-settings', 'order-label-settings'
+                    ];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $orders_menu)) echo ' has-active'; ?>"><a href="/order/browse" class="menu-link menu-item" title="<?= _('Active Store Orders') ?>"><span class="menu-icon fa fa-dollar-sign"></span> <span class="menu-text"><?= _('Orders') ?></span></a>
                         <!-- child menu -->
@@ -34,6 +37,50 @@ if (substr($page, 0, 12) == 'example-page') {
                             <li class="menu-item<?php if ($page == 'order-browse') echo ' has-active'; ?>">
                                 <a href="/order/browse" title="<?= _('View, Add, Edit, Delete Orders') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
+                            <li class="menu-item<?php if ($page == 'order-batch-move') echo ' has-active'; ?>">
+                                <a href="/order/batch-move" title="<?= _('Orders Batch Move') ?>" class="menu-link"><?= _('Batch Move') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'order-confirmation-file') echo ' has-active'; ?>">
+                                <a href="/order/confirmation-file" title="<?= _('Orders Confirmation File') ?>" class="menu-link"><?= _('Confirmation File') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'order-export-order') echo ' has-active'; ?>">
+                                <a href="/order/export-order" title="<?= _('Orders Export') ?>" class="menu-link"><?= _('Export Order') ?></a>
+                            </li>
+                            <li class="menu-item<?php if ($page == 'order-shipping') echo ' has-active'; ?>">
+                                <a href="/order/shipping" title="<?= _('Orders Shipping') ?>" class="menu-link"><?= _('Shipping') ?></a>
+                            </li>
+                            <!-- .menu-item -->
+                            <?php
+                            // determine if sub-menu has active page - set up array for in_array
+                            $setting_menu = ['order-order-settings', 'order-postage-settings', 'order-label-settings'];
+                            ?>
+                            <li class="menu-item has-child<?php if (in_array($page, $setting_menu)) {
+                                                                echo ' has-active';
+                                                            }
+                                                            ?>">
+                                <a href="/order/order-settings" class="menu-link" title="<?= _('Active Store Order') ?>"><span class="menu-icon fa fa-cog" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Settings') ?></span></a> <!-- child menu -->
+                                <ul class="menu">
+                                    <li class="menu-item<?php if ($page == 'order-order-settings') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/order/order-settings" title="<?= _('Order Settings') ?>" class="menu-link"><?= _('Order Settings') ?></a>
+                                    </li>
+                                    <li class="menu-item<?php if ($page == 'order-postage-settings') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/order/postage-settings" title="<?= _('Postage Settings') ?>" class="menu-link"><?= _('Postage Settings') ?></a>
+                                    </li>
+                                    <li class="menu-item<?php if ($page == 'order-label-settings') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/order/label-settings" title="<?= _('Label Settings') ?>" class="menu-link"><?= _('Label Settings') ?></a>
+                                    </li>
+                                </ul><!-- /child menu -->
+                            </li><!-- /.menu-item -->
+                            <!-- .menu-item -->
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
                     <?php
@@ -122,7 +169,6 @@ if (substr($page, 0, 12) == 'example-page') {
                                                         ?>">
                                         <a href="/inventory/advanced-settings" title="<?= _('Advanced Settings') ?>" class="menu-link"><?= _('Advanced Settings') ?></a>
                                     </li>
-
                                 </ul><!-- /child menu -->
                             </li><!-- /.menu-item -->
                             <!-- .menu-item -->
