@@ -97,8 +97,6 @@ class InventoryController
             $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
             $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
             if (isset($mime_settings[$user_details['FileType']])) {
-
-
                 if ($mime_settings[$user_details['FileType']] != $user_details['FileType'] && $user_details['FileType'] != 'uiee')
                     throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
 
@@ -134,7 +132,7 @@ class InventoryController
                         ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
                     );
                     die(json_encode(['message' => $temo, 'status' => true]));
-                } else { // UIEE Format
+                } else if ($user_details['FileType'] == 'uiee') { // UIEE Format
 
                     $file = fopen($_FILES['file']['tmp_name'], "r");
                     $uiee_arr = array();
@@ -164,6 +162,8 @@ class InventoryController
                     $temo = 'Files for Inventory Import successfully upload..!';
                     $email_file = $this->_LogGenerator($map_data);
                     die(json_encode(['message' => $temo, 'status' => true]));
+                } else {
+                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
                 }
             } else {
                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
