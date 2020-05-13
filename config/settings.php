@@ -225,7 +225,10 @@ return [
         'GBP' => 'British Pounds',
         'EUR' => 'Euros',
         'MXN' => 'Mexican Pesos',
-    ]
-
-
+    ],
+    'QUEUE' => '*',
+    'APP_INCLUDE' => 'FileUploadJobController.php',
+    'COUNT' => 5,
+    'VVERBOSE' => 1,
+    'php' => 'resque.php'
 ];

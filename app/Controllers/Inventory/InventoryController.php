@@ -25,6 +25,16 @@ use Laminas\Log\Logger;
 use Laminas\Log\Writer\Stream;
 use Laminas\Log\Formatter\Json;
 use App\Library\Email;
+// use Resque;
+// use App\Controllers\Inventory\TestJob1 as TestJob1;
+// use \SidekiqJob\Client as SidekiqJobClient;
+// use \Predis\Client as PredisClient;
+// use App\Models\TestJob as TestJob;
+// use App\Models\TestJob1 as TestJob1;
+
+// require 'TestJob1.php';
+
+
 
 class InventoryController
 {
@@ -34,6 +44,31 @@ class InventoryController
     {
         $this->view = $view;
         $this->db   = $db;
+
+        // // connect to database 0 on 127.0.0.1
+        // $redis = new PredisClient('tcp://127.0.0.1:6379/0');
+
+        // // Instantiate a new client
+        // $client = new SidekiqJobClient($redis);
+
+        // // push a job with three arguments - args array needs to be sequential (not associative)
+        // $args = [
+        //     ['url' => 'http://i.imgur.com/hlAsa4k.jpg'],
+        //     true,
+        //     70
+        // ];
+
+        // $id = $client->push('ProcessImage', $args, true);
+        // $this->_print($id, true);
+
+        // $id = $client->push('ProcessImage', $args, false);
+        // $this->_print($id, false);
+        // exit;
+    }
+
+    public function _print($id, $retry)
+    {
+        var_dump(sprintf('Pushed job with id %s and retry:%d', $id, $retry));
     }
 
     /*
@@ -99,7 +134,6 @@ class InventoryController
                         ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
                     );
                     die(json_encode(['message' => $temo, 'status' => true]));
-                    //die(json_encode(true));
                 } else { // UIEE Format
 
                     $file = fopen($_FILES['file']['tmp_name'], "r");
@@ -110,8 +144,17 @@ class InventoryController
                     fclose($file);
 
                     // UIEEFile , HomeBase2File
-                    $marketplace_name = "HomeBase2File";
+                    $marketplace_name = "UIEEFile";
                     if ($marketplace_name == "UIEEFile") {
+                        // Background Start
+                        // $do_jobs['marketplace'] = "UIEEFile";
+                        // $do_jobs['data'] = $uiee_arr;
+                        // $do_jobs['market_place_map'] = Config::get('market_place_map');
+                        // $do_jobs['UserId'] = Session::get('auth_user_id');
+                        // $do_jobs['PDO'] = $this->db;
+                        // $this->_doBackgroundJobs($do_jobs);
+                        // Background Ends 
+
                         $map_data = $this->mapUIEEFieldsAttributes("UIEEFile", $uiee_arr);
                         $is_result = $this->insertOrUpdateInventory($map_data);
                     } else if ($marketplace_name == "HomeBase2File") {
@@ -142,6 +185,36 @@ class InventoryController
         // $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
         // $cat_img = $file_encrypt_name . strstr($file_name, '.');
         // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+    }
+
+    /*
+      @author    :: Tejas
+      @task_id   :: 
+      @task_desc :: 
+      @params    :: 
+    */
+    private function _doBackgroundJobs($jobs_data = array())
+    {
+        try {
+            if (!count($jobs_data))
+                throw new Exception('Data is Empty', 401);
+
+            Resque::setBackend('127.0.0.1:6379');
+            Resque::enqueue('default', 'App\Controllers\Inventory\TestJob1', $jobs_data);
+            // 'App\Models\TestJob'
+            // App\Controllers\Inventory\TestJob1
+            $res['status'] = true;
+            $res['message'] = 'Result found successfully...!';
+            $res['data'] = array('data');
+            return $res;
+        } catch (Exception $ex) {
+            $error_msg = 'ErrorFile -> ' . $ex->getFile() . '</br> :: ErrorLine -> ' . $ex->getLine() . '
+                 </br>:: ErrorCode -> ' . $ex->getCode() . '</br> :: ErrorMsg -> ' . $ex->getMessage();
+            $res['status'] = false;
+            $res['message'] = $error_msg;
+            $res['data'] = null;
+            return $res;
+        }
     }
 
     /*

@@ -208,6 +208,12 @@ class ShippingController
         }
     }
 
+     /**
+     *  createZone - Add shipping zone and redirect to list of zones
+     *
+     *  @param  ServerRequest - To grab form data
+     *  @return view - Redirect based on success
+     */
     public function createZone(ServerRequest $request)
     {
         $zoneData = $request->getParsedBody();
@@ -231,6 +237,12 @@ class ShippingController
         }
     }
 
+    /**
+     *  updateMethod  - Update shipping method
+     *
+     *  @param  $request - To extract method data
+     *  @return view  - Redirect based on success
+     */
     public function updateMethod(ServerRequest $request)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
@@ -265,6 +277,12 @@ class ShippingController
         return $this->view->redirect('/account/shipping-methods');
     }
 
+    /**
+     *  updateZone  - Update shipping zone
+     *
+     *  @param  $request - To extract zone name
+     *  @return view  - Redirect based on success
+     */
     public function updateZone(ServerRequest $request, array $data)
     {
         $shippingZoneObj = new ShippingZone($this->db);
@@ -297,6 +315,12 @@ class ShippingController
         return $this->view->redirect('/account/shipping-zones');
     }
 
+    /**
+     *  deleteMethod - Delete shipping method via ID
+     *
+     *  @param  $data - Contains ID
+     *  @return view  - Redirect based on success
+     */
     public function deleteMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
