@@ -1,6 +1,4 @@
 
-
-Dropzone.autoDiscover = false;
 $(document).ready(function() {
      var myDropzone = new Dropzone("#dropzone_request1", { 
          url: "/inventory/importupload",
@@ -47,8 +45,15 @@ $(document).ready(function() {
     //     }
     // }
 
-   //Dropzone.autoDiscover = false;
+    Dropzone.autoDiscover = false;
 
+    // var myDropzone = new Dropzone("#dropzoneFrom", { 
+    //     url: "/inventory/importupload",
+    //     success : function(file, response){
+    //         console.log(file);
+    //         console.log(response);
+    //     }
     
+    // });
 
 });

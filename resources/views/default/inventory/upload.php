@@ -82,7 +82,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     </div>
                                 </div> <!-- col-sm Group Left Ends -->
                                 <div class="tab-pane fade" id="card-filebrowse">
-                                    <form name="dropzone_request" id="dropzone_request1" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />

@@ -6,6 +6,7 @@ namespace App\Controllers\Inventory;
 
 use App\Library\Views;
 use App\Models\Inventory\Category;
+use App\Models\Inventory\Inventory;
 use App\Models\Inventory\InventorySetting;
 use App\Models\Product\Product;
 use App\Models\Marketplace\Marketplace;
@@ -16,10 +17,14 @@ use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use Exception;
 use PDO;
+use Excel;
 use App\Library\Config;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as WriteXlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as WriteCsv;
+use Illuminate\Http\Request;
 use Delight\Cookie\Session;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Stream;
@@ -722,7 +727,7 @@ class InventoryController
     public function exportInventoryBrowse()
     {
         $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
-        return $this->view->buildResponse('inventory/defaults', ['market_places' => $market_places]);
+        return $this->view->buildResponse('inventory/inventory_export', ['market_places' => $market_places]);
     }
 
     /*
@@ -784,6 +789,72 @@ class InventoryController
         }
     }
 
+    public function export1(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        $export_type = $form['export_format'];
+        
+
+        $product_data = (new Inventory($this->db))->getAll();
+        $spreadsheet = new Spreadsheet();
+        
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Name');
+            $sheet->setCellValue('B1', 'Notes');
+            $sheet->setCellValue('C1', 'SKU');
+            $sheet->setCellValue('D1', 'ProdId');
+            $sheet->setCellValue('E1', 'BasePrice');
+            $sheet->setCellValue('F1', 'ProdCondition');
+            $sheet->setCellValue('G1', 'ProdActive');
+            $sheet->setCellValue('H1', 'InternationalShip');
+            $sheet->setCellValue('I1', 'ExpectedShip');
+            $sheet->setCellValue('J1', 'EbayTitle');
+            $sheet->setCellValue('K1', 'Qty');
+            $sheet->setCellValue('L1', 'Image');
+            $sheet->setCellValue('M1', 'CategoryId');
+            $sheet->setCellValue('N1', 'Status');
+            $sheet->setCellValue('O1', 'UserId');
+            $sheet->setCellValue('P1', 'AddtionalData');
+        $rows = 2;
+        foreach($product_data as $product)
+        {
+        $sheet->setCellValue('A' . $rows, $product['Name']);
+        $sheet->setCellValue('B' . $rows, $product['Notes']);
+        $sheet->setCellValue('C' . $rows, $product['SKU']);
+        $sheet->setCellValue('D' . $rows, $product['ProdId']);
+        $sheet->setCellValue('E' . $rows, $product['BasePrice']);
+        $sheet->setCellValue('F' . $rows, $product['ProdCondition']);
+        $sheet->setCellValue('G' . $rows, $product['ProdActive']);
+        $sheet->setCellValue('H' . $rows, $product['InternationalShip']);
+        $sheet->setCellValue('I' . $rows, $product['ExpectedShip']);
+        $sheet->setCellValue('J' . $rows, $product['EbayTitle']);
+        $sheet->setCellValue('K' . $rows, $product['Qty']);
+        $sheet->setCellValue('L' . $rows, $product['Image']);
+        $sheet->setCellValue('M' . $rows, $product['CategoryId']);
+        $sheet->setCellValue('N' . $rows, $product['Status']);
+        $sheet->setCellValue('O' . $rows, $product['UserId']);
+        $sheet->setCellValue('P' . $rows, $product['AddtionalData']);
+        $rows++;
+        }
+
+     
+               if($export_type == 'xlsx')
+               {
+                     $writer = new WriteXlsx($spreadsheet);
+                     $writer->save("inventory.".$export_type);
+                     return $this->view->redirect('/inventory/export');
+               }
+               else if($export_type == 'csv')
+               {
+                    $writer = new WriteCsv($spreadsheet);
+                     $writer->save("inventory.".$export_type);
+                     return $this->view->redirect('/inventory/export');
+                }
+     
+
+ 
+    }
+
     /*
     * insertOrUpdate - find user id if exist
     *
@@ -803,6 +874,7 @@ class InventoryController
 
         return $result;
     }
+
 
 
 
