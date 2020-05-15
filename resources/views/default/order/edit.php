@@ -38,7 +38,7 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
             </header><!-- /.page-title-bar -->
 
             <div class="page-section">
-                <form name="order_market_request" id="order_market_request" action="/order/update_order" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                <form name="order_market_request" id="order_market_request" action="/order/update" method="POST" enctype="multipart/form-data" data-parsley-validate>
                     <!-- .page-section starts -->
                     <div class="card-deck-xl">
                         <!-- .card-deck-xl starts -->
@@ -51,55 +51,56 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
                                         <div class="col-sm">
                                             <h5 class="card-title"><?= _('Order Information') ?></h5>
 
-                                            <?php
-
-                                            echo '<pre> Test 1 :: Starts';
-                                            print_r($form);
-                                            echo '</pre>';
-                                            die('LOOP ENDS HERE');
-                                            ?>
                                             <!-- form starts -->
                                             <div class="form-group">
                                                 <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
                                                     <option value="" selected><?= _('Select Marketplace...') ?></option>
                                                     <?php
                                                     if (isset($market_places) && is_array($market_places) && !empty($market_places)) {
-                                                        foreach ($market_places as $mar_key => $mar_val) { ?>
-                                                            <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
+                                                        foreach ($market_places as $mar_key => $mar_val) {
+                                                            $selected = '';
+                                                            if (isset($form['MarketName']) && $form['MarketName'] == $mar_val['Id']) {
+                                                                $selected = 'selected';
+                                                            } else if (isset($form['MarketPlaceId']) && $form['MarketPlaceId'] == $mar_val['Id']) {
+                                                                $selected = 'selected';
+                                                            } else {
+                                                                $selected = '';
+                                                            } ?>
+                                                            <option value="<?php echo $mar_val['Id']; ?>" <?php echo $selected; ?>><?php echo $mar_val['MarketName']; ?></option>
                                                         <?php }
                                                     } else { ?>
                                                         <option selected><?= _('No Marketplace found...') ?></option>
                                                     <?php } ?>
                                                 </select>
-                                                <input type="hidden" class="form-control" id="Id" name="Id" value="<?php echo (isset($all_order['Id']) && !empty($all_order['Id'])) ? $all_order['Id'] : ''; ?>">
+                                                <input type="hidden" class="form-control" id="Id" name="Id" value="<?php echo (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="MarketPlaceOrder"><?= _('MarketPlace Order') ?></label>
-                                                <input type="text" class="form-control" id="MarketPlaceOrder" name="MarketPlaceOrder" placeholder="Enter MarketPlace Order" data-parsley-required-message="<?= _('Enter MarketPlace Order') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['MarketPlaceOrder']) && !empty($all_order['MarketPlaceOrder'])) ? $all_order['MarketPlaceOrder'] : ''; ?>">
+                                                <input type="text" class="form-control" id="MarketPlaceOrder" name="MarketPlaceOrder" placeholder="Enter MarketPlace Order" data-parsley-required-message="<?= _('Enter MarketPlace Order') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketPlaceOrder']) && !empty($form['MarketPlaceOrder'])) ? $form['MarketPlaceOrder'] : (isset($form['OrderId']) && !empty($form['OrderId'])) ? $form['OrderId'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select order_status_select">
-                                                    <option value="" selected><?= _('Select Status...') ?></option>
-                                                    <option value="new"><?= _('New') ?></option>
-                                                    <option value="in-process"><?= _('In Process') ?></option>
-                                                    <option value="shipped"><?= _('Shipped') ?></option>
-                                                    <option value="deferred"><?= _('Deferred') ?></option>
-                                                    <option value="cancelled"><?= _('Cancelled') ?></option>
-                                                    <option value="shipped-noemail"><?= _('Shipped - No Email') ?></option>
-                                                    <option value="cancelled-noemail"><?= _('Cancelled - No Email') ?></option>
+                                                    <option value=""><?= _('Select Status...') ?></option>
+                                                    <option value="new" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "new") ? 'selected' : (isset($form['Status']) && $form['Status'] == "new") ? 'selected' : ''; ?>><?= _('New') ?></option>
+                                                    <option value="in-process" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "in-process") ? 'selected' : (isset($form['Status']) && $form['Status'] == "in-process") ? 'selected' : ''; ?>><?= _('In Process') ?></option>
+                                                    <option value="shipped" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "shipped") ? 'selected' : (isset($form['Status']) && $form['Status'] == "shipped") ? 'selected' : ''; ?>><?= _('Shipped') ?></option>
+                                                    <option value="deferred" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "deferred") ? 'selected' : (isset($form['Status']) && $form['Status'] == "deferred") ? 'selected' : ''; ?>><?= _('Deferred') ?></option>
+                                                    <option value="cancelled" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "cancelled") ? 'selected' : (isset($form['Status']) && $form['Status'] == "cancelled") ? 'selected' : ''; ?>><?= _('Cancelled') ?></option>
+                                                    <option value="shipped-noemail" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "shipped-noemail") ? 'selected' : (isset($form['Status']) && $form['Status'] == "shipped-noemail") ? 'selected' : ''; ?>><?= _('Shipped - No Email') ?></option>
+                                                    <option value="cancelled-noemail" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "cancelled-noemail") ? 'selected' : (isset($form['Status']) && $form['Status'] == "cancelled-noemail") ? 'selected' : ''; ?>><?= _('Cancelled - No Email') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <select name="PaymentStatus" id="PaymentStatus" class="browser-default custom-select payment_status_select">
-                                                    <option value="" selected><?= _('Select Payment Status...') ?></option>
-                                                    <option value="pre-paid"><?= _('Pre-Paid') ?></option>
-                                                    <option value="pending"><?= _('Pending') ?></option>
-                                                    <option value="paid"><?= _('Paid') ?></option>
+                                                    <option value=""><?= _('Select Payment Status...') ?></option>
+                                                    <option value="pre-paid" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "cancelled-noemail") ? 'selected' : ''; ?>><?= _('Pre-Paid') ?></option>
+                                                    <option value="pending" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "pending") ? 'selected' : ''; ?>><?= _('Pending') ?></option>
+                                                    <option value="paid" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "paid") ? 'selected' : ''; ?>><?= _('Paid') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="BuyerNote"><?= _('Buyer Note') ?></label>
-                                                <textarea class="form-control" id="BuyerNote" name="BuyerNote" rows="3" data-parsley-required-message="<?= _('Enter Buyer Note') ?>" placeholder="Enter Buyer Note" data-parsley-group="fieldset01" required><?php echo (isset($all_order['BuyerNote']) && !empty($all_order['BuyerNote'])) ? $all_order['BuyerNote'] : ''; ?></textarea>
+                                                <textarea class="form-control" id="BuyerNote" name="BuyerNote" rows="3" data-parsley-required-message="<?= _('Enter Buyer Note') ?>" placeholder="Enter Buyer Note" data-parsley-group="fieldset01" required><?php echo (isset($form['BuyerNote']) && !empty($form['BuyerNote'])) ? $form['BuyerNote'] : ''; ?></textarea>
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm mt-3 pt-3">
@@ -111,21 +112,21 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
                                             </div>
                                             <div class="form-group">
                                                 <select name="Currency" id="Currency" class="browser-default custom-select order_currency_select">
-                                                    <option value="" selected><?= _('Select Currency...') ?></option>
-                                                    <option value="USD"><?= _('USD') ?></option>
-                                                    <option value="CAD"><?= _('CAD') ?></option>
-                                                    <option value="EUR"><?= _('EUR') ?></option>
-                                                    <option value="GBP"><?= _('GBP') ?></option>
-                                                    <option value="MXN"><?= _('MXN') ?></option>
+                                                    <option value=""><?= _('Select Currency...') ?></option>
+                                                    <option value="USD" <?php echo (isset($form['Currency']) && $form['Currency'] == "USD") ? 'selected' : ''; ?>><?= _('USD') ?></option>
+                                                    <option value="CAD" <?php echo (isset($form['Currency']) && $form['Currency'] == "CAD") ? 'selected' : ''; ?>><?= _('CAD') ?></option>
+                                                    <option value="EUR" <?php echo (isset($form['Currency']) && $form['Currency'] == "EUR") ? 'selected' : ''; ?>><?= _('EUR') ?></option>
+                                                    <option value="GBP" <?php echo (isset($form['Currency']) && $form['Currency'] == "GBP") ? 'selected' : ''; ?>><?= _('GBP') ?></option>
+                                                    <option value="MXN" <?php echo (isset($form['Currency']) && $form['Currency'] == "MXN") ? 'selected' : ''; ?>><?= _('MXN') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="PaymentMethod"><?= _('Payment Method') ?></label>
-                                                <input type="text" class="form-control" id="PaymentMethod" name="PaymentMethod" placeholder="Enter Payment Method" data-parsley-required-message="<?= _('Enter Payment Method') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['PaymentMethod']) && !empty($all_order['PaymentMethod'])) ? $all_order['PaymentMethod'] : ''; ?>">
+                                                <input type="text" class="form-control" id="PaymentMethod" name="PaymentMethod" placeholder="Enter Payment Method" data-parsley-required-message="<?= _('Enter Payment Method') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['PaymentMethod']) && !empty($form['PaymentMethod'])) ? $form['PaymentMethod'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="SellerNote"><?= _('Seller Note') ?></label>
-                                                <textarea class="form-control" id="SellerNote" name="SellerNote" rows="3" data-parsley-required-message="<?= _('Enter Seller Note') ?>" placeholder="Enter Seller Note" data-parsley-group="fieldset01" required><?php echo (isset($all_order['SellerNote']) && !empty($all_order['SellerNote'])) ? $all_order['SellerNote'] : ''; ?></textarea>
+                                                <textarea class="form-control" id="SellerNote" name="SellerNote" rows="3" data-parsley-required-message="<?= _('Enter Seller Note') ?>" placeholder="Enter Seller Note" data-parsley-group="fieldset01" required><?php echo (isset($form['SellerNote']) && !empty($form['SellerNote'])) ? $form['SellerNote'] : ''; ?></textarea>
                                             </div>
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
@@ -146,27 +147,27 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
                                             <h5 class="card-title"><?= _('Shipping Information') ?></h5>
                                             <div class="form-group">
                                                 <label for="ShippingMethod"><?= _('Shipping Method') ?></label>
-                                                <input type="text" class="form-control" id="ShippingMethod" name="ShippingMethod" placeholder="Enter Shipping Method" data-parsley-required-message="<?= _('Enter Shipping Method') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['ShippingMethod']) && !empty($all_order['ShippingMethod'])) ? $all_order['ShippingMethod'] : ''; ?>">
+                                                <input type="text" class="form-control" id="ShippingMethod" name="ShippingMethod" placeholder="Enter Shipping Method" data-parsley-required-message="<?= _('Enter Shipping Method') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['ShippingMethod']) && !empty($form['ShippingMethod'])) ? $form['ShippingMethod'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <select name="CarrierOrder" id="CarrierOrder" class="browser-default custom-select order_carrier_select">
-                                                    <option value="" selected><?= _('Select Status...') ?></option>
-                                                    <option value="fedex"><?= _('FEDEX') ?></option>
-                                                    <option value="dhl"><?= _('DHL') ?></option>
-                                                    <option value="dhlgm"><?= _('DHLGM') ?></option>
-                                                    <option value="usps"><?= _('USPS') ?></option>
-                                                    <option value="ups"><?= _('UPS') ?></option>
-                                                    <option value="upsmi"><?= _('UPSMI') ?></option>
-                                                    <option value="misc"><?= _('MISC') ?></option>
-                                                    <option value="auto"><?= _('AUTO') ?></option>
-                                                    <option value="other"><?= _('Other') ?></option>
+                                                    <option value=""><?= _('Select Status...') ?></option>
+                                                    <option value="fedex" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "fedex") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "fedex") ? 'selected' : ''; ?>><?= _('FEDEX') ?></option>
+                                                    <option value="dhl" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "dhl") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "dhl") ? 'selected' : ''; ?>><?= _('DHL') ?></option>
+                                                    <option value="dhlgm" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "dhlgm") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "dhlgm") ? 'selected' : ''; ?>><?= _('DHLGM') ?></option>
+                                                    <option value="usps" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "usps") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "usps") ? 'selected' : ''; ?>><?= _('USPS') ?></option>
+                                                    <option value="ups" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "ups") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "ups") ? 'selected' : ''; ?>><?= _('UPS') ?></option>
+                                                    <option value="upsmi" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "upsmi") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "upsmi") ? 'selected' : ''; ?>><?= _('UPSMI') ?></option>
+                                                    <option value="misc" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "misc") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "misc") ? 'selected' : ''; ?>><?= _('MISC') ?></option>
+                                                    <option value="auto" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "auto") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "auto") ? 'selected' : ''; ?>><?= _('AUTO') ?></option>
+                                                    <option value="other" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "other") ? 'selected' : (isset($form['Carrier']) && $form['Carrier'] == "other") ? 'selected' : ''; ?>><?= _('Other') ?></option>
                                                 </select>
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm mt-3 pt-3">
                                             <div class="form-group">
                                                 <label for="Tracking"><?= _('Tracking') ?></label>
-                                                <input type="text" class="form-control" id="Tracking" name="Tracking" placeholder="Enter Tracking" data-parsley-required-message="<?= _('Enter Tracking') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['Tracking']) && !empty($all_order['Tracking'])) ? $all_order['Tracking'] : ''; ?>">
+                                                <input type="text" class="form-control" id="Tracking" name="Tracking" placeholder="Enter Tracking" data-parsley-required-message="<?= _('Enter Tracking') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['Tracking']) && !empty($form['Tracking'])) ? $form['Tracking'] : ''; ?>">
                                             </div>
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
@@ -185,43 +186,43 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
 
                                 <div class="form-group">
                                     <label for="ShippingName"><?= _('Name') ?></label>
-                                    <input type="text" class="form-control" id="ShippingName" name="ShippingName" placeholder="Enter Name" data-parsley-required-message="Enter Name" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingName']) && !empty($all_order['ShippingName'])) ? $all_order['ShippingName'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingName" name="ShippingName" placeholder="Enter Name" data-parsley-required-message="Enter Name" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingName']) && !empty($form['ShippingName'])) ? $form['ShippingName'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingPhone"><?= _('Phone') ?></label>
-                                    <input type="text" class="form-control" id="ShippingPhone" name="ShippingPhone" placeholder="Enter Phone" data-parsley-required-message="Enter Phone" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingPhone']) && !empty($all_order['ShippingPhone'])) ? $all_order['ShippingPhone'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingPhone" name="ShippingPhone" placeholder="Enter Phone" data-parsley-required-message="Enter Phone" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingPhone']) && !empty($form['ShippingPhone'])) ? $form['ShippingPhone'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingEmail"><?= _('Email') ?></label>
-                                    <input type="email" class="form-control" id="ShippingEmail" name="ShippingEmail" placeholder="Enter Email" data-parsley-required-message="Enter Email" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingEmail']) && !empty($all_order['ShippingEmail'])) ? $all_order['ShippingEmail'] : ''; ?>">
+                                    <input type="email" class="form-control" id="ShippingEmail" name="ShippingEmail" placeholder="Enter Email" data-parsley-required-message="Enter Email" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingEmail']) && !empty($form['ShippingEmail'])) ? $form['ShippingEmail'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ShippingEditress1"><?= _('Editress 1') ?></label>
-                                    <input type="text" class="form-control" id="ShippingEditress1" name="ShippingEditress1" placeholder="Enter Editress1" data-parsley-required-message="Enter Editress1" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingEditress1']) && !empty($all_order['ShippingEditress1'])) ? $all_order['ShippingEditress1'] : ''; ?>">
+                                    <label for="ShippingAddress1"><?= _('Address 1') ?></label>
+                                    <input type="text" class="form-control" id="ShippingAddress1" name="ShippingAddress1" placeholder="Enter Address1" data-parsley-required-message="Enter Address1" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingAddress1']) && !empty($form['ShippingAddress1'])) ? $form['ShippingAddress1'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ShippingEditress2"><?= _('Editress 2') ?></label>
-                                    <input type="text" class="form-control" id="ShippingEditress2" name="ShippingEditress2" placeholder="Enter Editress2" data-parsley-required-message="Enter Editress2" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingEditress2']) && !empty($all_order['ShippingEditress2'])) ? $all_order['ShippingEditress2'] : ''; ?>">
+                                    <label for="ShippingAddress2"><?= _('Address 2') ?></label>
+                                    <input type="text" class="form-control" id="ShippingAddress2" name="ShippingAddress2" placeholder="Enter Address2" data-parsley-required-message="Enter Address2" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingAddress2']) && !empty($form['ShippingAddress2'])) ? $form['ShippingAddress2'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ShippingEditress3"><?= _('Editress 3') ?></label>
-                                    <input type="text" class="form-control" id="ShippingEditress3" name="ShippingEditress3" placeholder="Enter Editress3" data-parsley-required-message="Enter Editress3" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingEditress3']) && !empty($all_order['ShippingEditress3'])) ? $all_order['ShippingEditress3'] : ''; ?>">
+                                    <label for="ShippingAddress3"><?= _('Address 3') ?></label>
+                                    <input type="text" class="form-control" id="ShippingAddress3" name="ShippingAddress3" placeholder="Enter Address3" data-parsley-required-message="Enter Address3" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingAddress3']) && !empty($form['ShippingAddress3'])) ? $form['ShippingAddress3'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingCity"><?= _('City') ?></label>
-                                    <input type="text" class="form-control" id="ShippingCity" name="ShippingCity" placeholder="Enter City" data-parsley-required-message="Enter City" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingCity']) && !empty($all_order['ShippingCity'])) ? $all_order['ShippingCity'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingCity" name="ShippingCity" placeholder="Enter City" data-parsley-required-message="Enter City" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingCity']) && !empty($form['ShippingCity'])) ? $form['ShippingCity'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingState"><?= _('State/Province') ?></label>
-                                    <input type="text" class="form-control" id="ShippingState" name="ShippingState" placeholder="Enter State" data-parsley-required-message="Enter State" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingState']) && !empty($all_order['ShippingState'])) ? $all_order['ShippingState'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingState" name="ShippingState" placeholder="Enter State" data-parsley-required-message="Enter State" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingState']) && !empty($form['ShippingState'])) ? $form['ShippingState'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingZipCode"><?= _('Zip/Postal Code') ?></label>
-                                    <input type="text" class="form-control" id="ShippingZipCode" name="ShippingZipCode" placeholder="Enter ZipCode" data-parsley-required-message="Enter ZipCode" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingZipCode']) && !empty($all_order['ShippingZipCode'])) ? $all_order['ShippingZipCode'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingZipCode" name="ShippingZipCode" placeholder="Enter ZipCode" data-parsley-required-message="Enter ZipCode" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingZipCode']) && !empty($form['ShippingZipCode'])) ? $form['ShippingZipCode'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="ShippingCountry"><?= _('Country') ?></label>
-                                    <input type="text" class="form-control" id="ShippingCountry" name="ShippingCountry" placeholder="Enter Country" data-parsley-required-message="Enter Country" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['ShippingCountry']) && !empty($all_order['ShippingCountry'])) ? $all_order['ShippingCountry'] : ''; ?>">
+                                    <input type="text" class="form-control" id="ShippingCountry" name="ShippingCountry" placeholder="Enter Country" data-parsley-required-message="Enter Country" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['ShippingCountry']) && !empty($form['ShippingCountry'])) ? $form['ShippingCountry'] : ''; ?>">
                                 </div>
                             </div><!-- /.card-body -->
                         </div><!-- /.card -->
@@ -233,43 +234,43 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
 
                                 <div class="form-group">
                                     <label for="BillingName"><?= _('Name') ?></label>
-                                    <input type="text" class="form-control" id="BillingName" name="BillingName" placeholder="Enter Name" data-parsley-required-message="Enter Name" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingName']) && !empty($all_order['BillingName'])) ? $all_order['BillingName'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingName" name="BillingName" placeholder="Enter Name" data-parsley-required-message="Enter Name" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingName']) && !empty($form['BillingName'])) ? $form['BillingName'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingPhone"><?= _('Phone') ?></label>
-                                    <input type="text" class="form-control" id="BillingPhone" name="BillingPhone" placeholder="Enter Phone" data-parsley-required-message="Enter Phone" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingPhone']) && !empty($all_order['BillingPhone'])) ? $all_order['BillingPhone'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingPhone" name="BillingPhone" placeholder="Enter Phone" data-parsley-required-message="Enter Phone" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingPhone']) && !empty($form['BillingPhone'])) ? $form['BillingPhone'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingEmail"><?= _('Email') ?></label>
-                                    <input type="email" class="form-control" id="BillingEmail" name="BillingEmail" placeholder="Enter Email" data-parsley-required-message="Enter Email" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingEmail']) && !empty($all_order['BillingEmail'])) ? $all_order['BillingEmail'] : ''; ?>">
+                                    <input type="email" class="form-control" id="BillingEmail" name="BillingEmail" placeholder="Enter Email" data-parsley-required-message="Enter Email" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingEmail']) && !empty($form['BillingEmail'])) ? $form['BillingEmail'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="BillingEditress1"><?= _('Editress 1') ?></label>
-                                    <input type="text" class="form-control" id="BillingEditress1" name="BillingEditress1" placeholder="Enter Editress1" data-parsley-required-message="Enter Editress1" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingEditress1']) && !empty($all_order['BillingEditress1'])) ? $all_order['BillingEditress1'] : ''; ?>">
+                                    <label for="BillingAddress1"><?= _('Address 1') ?></label>
+                                    <input type="text" class="form-control" id="BillingAddress1" name="BillingAddress1" placeholder="Enter Address1" data-parsley-required-message="Enter Address1" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingAddress1']) && !empty($form['BillingAddress1'])) ? $form['BillingAddress1'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="BillingEditress2"><?= _('Editress 2') ?></label>
-                                    <input type="text" class="form-control" id="BillingEditress2" name="BillingEditress2" placeholder="Enter Editress2" data-parsley-required-message="Enter Editress2" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingEditress2']) && !empty($all_order['BillingEditress2'])) ? $all_order['BillingEditress2'] : ''; ?>">
+                                    <label for="BillingAddress2"><?= _('Editress 2') ?></label>
+                                    <input type="text" class="form-control" id="BillingAddress2" name="BillingAddress2" placeholder="Enter Address2" data-parsley-required-message="Enter Address2" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingAddress2']) && !empty($form['BillingAddress2'])) ? $form['BillingAddress2'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="BillingEditress3"><?= _('Editress 3') ?></label>
-                                    <input type="text" class="form-control" id="BillingEditress3" name="BillingEditress3" placeholder="Enter Editress3" data-parsley-required-message="Enter Editress3" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingEditress3']) && !empty($all_order['BillingEditress3'])) ? $all_order['BillingEditress3'] : ''; ?>">
+                                    <label for="BillingAddress3"><?= _('Editress 3') ?></label>
+                                    <input type="text" class="form-control" id="BillingAddress3" name="BillingAddress3" placeholder="Enter Address3" data-parsley-required-message="Enter Address3" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingAddress3']) && !empty($form['BillingAddress3'])) ? $form['BillingAddress3'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingCity"><?= _('City') ?></label>
-                                    <input type="text" class="form-control" id="BillingCity" name="BillingCity" placeholder="Enter City" data-parsley-required-message="Enter City" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingCity']) && !empty($all_order['BillingCity'])) ? $all_order['BillingCity'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingCity" name="BillingCity" placeholder="Enter City" data-parsley-required-message="Enter City" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingCity']) && !empty($form['BillingCity'])) ? $form['BillingCity'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingState"><?= _('State/Province') ?></label>
-                                    <input type="text" class="form-control" id="BillingState" name="BillingState" placeholder="Enter State" data-parsley-required-message="Enter State" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingState']) && !empty($all_order['BillingState'])) ? $all_order['BillingState'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingState" name="BillingState" placeholder="Enter State" data-parsley-required-message="Enter State" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingState']) && !empty($form['BillingState'])) ? $form['BillingState'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingZipCode"><?= _('Zip/Postal Code') ?></label>
-                                    <input type="text" class="form-control" id="BillingZipCode" name="BillingZipCode" placeholder="Enter ZipCode" data-parsley-required-message="Enter ZipCode" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingZipCode']) && !empty($all_order['BillingZipCode'])) ? $all_order['BillingZipCode'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingZipCode" name="BillingZipCode" placeholder="Enter ZipCode" data-parsley-required-message="Enter ZipCode" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingZipCode']) && !empty($form['BillingZipCode'])) ? $form['BillingZipCode'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="BillingCountry"><?= _('Country') ?></label>
-                                    <input type="text" class="form-control" id="BillingCountry" name="BillingCountry" placeholder="Enter Country" data-parsley-required-message="Enter Country" data-parsley-group="fieldset01" required="" value="<?php echo (isset($all_order['BillingCountry']) && !empty($all_order['BillingCountry'])) ? $all_order['BillingCountry'] : ''; ?>">
+                                    <input type="text" class="form-control" id="BillingCountry" name="BillingCountry" placeholder="Enter Country" data-parsley-required-message="Enter Country" data-parsley-group="fieldset01" required="" value="<?php echo (isset($form['BillingCountry']) && !empty($form['BillingCountry'])) ? $form['BillingCountry'] : ''; ?>">
                                 </div>
                             </div><!-- /.card-body -->
                         </div><!-- /.card -->

@@ -16,12 +16,12 @@ class Category
    public function __construct(PDO $db,Adapter $adapter = null)
     {
         $this->db = $db;
-        $this->adapter = new Adapter([
-            'driver'   => 'Mysqli',
-            'database' => getenv('DATABASE'),
-            'username' => getenv('DB_USERNAME'),
-            'password' => getenv('DB_PASSWORD')
-        ]);   
+        // $this->adapter = new Adapter([
+        //     'driver'   => 'Mysqli',
+        //     'database' => getenv('DATABASE'),
+        //     'username' => getenv('DB_USERNAME'),
+        //     'password' => getenv('DB_PASSWORD')
+        // ]);   
     }
 
 
@@ -36,7 +36,6 @@ class Category
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
     /*
     * all - Get all Zomnes
     *
@@ -74,7 +73,6 @@ class Category
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
     /*
      * findParents - get top level categories
      *
@@ -89,7 +87,6 @@ class Category
 
 
 
-    
     /*
     * addCateogry - add a new cateogry for a user
     *

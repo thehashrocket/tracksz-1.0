@@ -280,4 +280,30 @@ LEFT JOIN marketplace
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function editOrder($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['Id'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE orderinventory SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE Id = :Id';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
 }
