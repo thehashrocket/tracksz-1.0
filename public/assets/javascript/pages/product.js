@@ -1,11 +1,14 @@
 $(document).ready(function() {
 
     $('#product_table').DataTable({
-        responsive: true,
-        "order": [
-            [0, "desc"]
-        ]
+        order: [
+            [1, "asc"] // asc OR desc
+        ],
+        responsive:false,
+        autoWidth: false,
+        "scrollX": true
     });
+    $('#product_table').columns.adjust().draw();
 
     $(document).on("click", "#ProductActive, #ProdInterShip, #ProdExpectedShip", function() {
         var attr = $(this).attr('checked');

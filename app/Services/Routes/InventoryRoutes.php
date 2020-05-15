@@ -36,7 +36,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/condition-price', Inventory\InventoryController::class . '::conditionPriceBrowse');
                 $route->get('/import', Inventory\InventoryController::class . '::uploadInventory');
                 $route->get('/export', Inventory\InventoryController::class . '::exportInventoryBrowse');
-                  $route->post('/fileexport', Inventory\InventoryController::class . '::export1');
+                $route->post('/fileexport', Inventory\InventoryController::class . '::export1');
                 $route->get('/re-price', Inventory\InventoryController::class . '::repriceInventoryBrowse');
                 $route->get('/update', Inventory\InventoryController::class . '::updateInventoryView');
                 $route->get('/queue', Inventory\UploadQueue::class . '::fooAction');
@@ -51,7 +51,6 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
                 $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
                 $route->get('/excel', Inventory\InventoryController::class . '::excel');
-                
                 $route->post('/update_settings', Inventory\InventoryController::class . '::updateSettings');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))

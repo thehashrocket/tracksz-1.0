@@ -39,6 +39,12 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->get('/order-settings', Order\OrderController::class . '::loadOrderSetting');
                 $route->get('/postage-settings', Order\OrderController::class . '::loadPostageSetting');
                 $route->get('/label-settings', Order\OrderController::class . '::loadLabelSetting');
+
+                $route->get('/add', Order\OrderController::class . '::addLoadView');
+                $route->post('/insert_order', Order\OrderController::class . '::addOrder');
+                $route->post('/delete', Order\OrderController::class . '::deleteOrderData');
+                $route->get('/edit/{Id:number}', Order\OrderController::class . '::editOrder');
+                $route->post('/update', Order\OrderController::class . '::updateOrder');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));
