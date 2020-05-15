@@ -8,6 +8,7 @@ use App\Library\Views;
 use App\Models\Inventory\Category;
 use App\Models\Inventory\Inventory;
 use App\Models\Inventory\InventorySetting;
+use App\Models\Inventory\OrderSetting;
 use App\Models\Product\Product;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
@@ -791,6 +792,7 @@ class InventoryController
 
     public function export1(ServerRequest $request)
     {
+        try {
         $form = $request->getParsedBody();
         $export_type = $form['export_format'];
         
@@ -837,8 +839,13 @@ class InventoryController
         $rows++;
         }
 
-     
-               if($export_type == 'xlsx')
+if ($export_type == 'xlsx' || $export_type == 'csv') {
+            $this->view->flash([
+                    'alert' => 'Inventory file suucessfully export..!',
+                    'alert_type' => 'success'
+                ]);
+
+            if($export_type == 'xlsx')
                {
                      $writer = new WriteXlsx($spreadsheet);
                      $writer->save("inventory.".$export_type);
@@ -850,6 +857,46 @@ class InventoryController
                      $writer->save("inventory.".$export_type);
                      return $this->view->redirect('/inventory/export');
                 }
+                
+                
+            } else {
+                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+                /*$this->view->flash([
+                    'alert' => 'Please Select Xlsx or Csv File Format..!',
+                    'alert_type' => 'danger'
+                ]);*/
+            }
+
+             } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = 'Please Select Xlsx or Csv File Format..!';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/inventory/export');
+        }
+        
+
+     
+               /*if($export_type == 'xlsx')
+               {
+                     $writer = new WriteXlsx($spreadsheet);
+                     $writer->save("inventory.".$export_type);
+                     return $this->view->redirect('/inventory/export');
+               }
+               else if($export_type == 'csv')
+               {
+                    $writer = new WriteCsv($spreadsheet);
+                     $writer->save("inventory.".$export_type);
+                     return $this->view->redirect('/inventory/export');
+                }*/
      
 
  
@@ -876,8 +923,7 @@ class InventoryController
     }
 
 
-
-
+    
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

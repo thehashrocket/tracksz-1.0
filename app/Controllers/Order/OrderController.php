@@ -6,14 +6,23 @@ namespace App\Controllers\Order;
 
 use App\Library\Views;
 use Delight\Auth\Auth;
-use App\Library\ValidateSanitize\ValidateSanitize;
-use Delight\Cookie\Session;
-use Laminas\Diactoros\ServerRequest;
-use App\Models\Marketplace\Marketplace;
+use App\Models\Inventory\OrderSetting;
 use App\Models\Order\Order;
-use PDO;
+use Delight\Cookie\Cookie;
+use Laminas\Diactoros\ServerRequest;
+use App\Library\ValidateSanitize\ValidateSanitize;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\Extension;
 use Exception;
-
+use PDO;
+use App\Library\Config;
+use Illuminate\Http\Request;
+use Delight\Cookie\Session;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Formatter\Json;
+use App\Library\Email;
+// use Resque;
 
 class OrderController
 {
@@ -110,8 +119,87 @@ class OrderController
     {
         return $this->view->buildResponse('order/defaults', []);
     }
+public function orderinsertOrUpdate($data)
+    {
+        $order_setting = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
+        if (isset($order_setting) && !empty($order_setting)) { // update
+            $data['Updated'] = date('Y-m-d H:i:s');
+            $result = (new OrderSetting($this->db))->editOrderSettings($data);
+        } else { // insert
+            $data['Created'] = date('Y-m-d H:i:s');
+            $result = (new OrderSetting($this->db))->addInventorySettings($data);
+        }
+
+        return $result;
+    }
+
+
 
     /*
+    * Order - Order setting
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function orderSettingsBrowse()
+    {
+
+        $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
+        return $this->view->buildResponse('inventory/settings/order', ['all_settings' => $order_details]);
+    }
+
+
+    /*
+    * OrderupdateSettings - Update Order Settings
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function orderUpdateSettings(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $update_data['UserId'] = Session::get('auth_user_id');
+            $update_data['ConfirmEmail'] = $methodData['ConfirmEmail'];
+            $update_data['CancelEmail'] = $methodData['CancelEmail'];
+            $update_data['DeferEmail'] = $methodData['DeferEmail'];
+
+            $is_data = $this->orderinsertOrUpdate($update_data);
+
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Order settings updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $user_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
+                return $this->view->buildResponse('inventory/settings/order', ['all_settings' => $user_details]);
+            } else {
+                throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            $user_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('inventory/settings/order', ['all_settings' => $user_details]);
+        }
+    }
+
+
+     /*
     * view - Load addLoadView view file
     * @param  - none
     * @return view

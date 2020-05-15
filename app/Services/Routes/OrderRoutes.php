@@ -36,10 +36,12 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->get('/confirmation-file', Order\OrderController::class . '::loadConfirmationFile');
                 $route->get('/export-order', Order\OrderController::class . '::loadExportOrder');
                 $route->get('/shipping', Order\OrderController::class . '::loadShippingOrder');
-                $route->get('/order-settings', Order\OrderController::class . '::loadOrderSetting');
+                //$route->get('/order-settings', Order\OrderController::class . '::loadOrderSetting');
                 $route->get('/postage-settings', Order\OrderController::class . '::loadPostageSetting');
                 $route->get('/label-settings', Order\OrderController::class . '::loadLabelSetting');
 
+                $route->get('/order-settings', Order\OrderController::class . '::orderSettingsBrowse');
+                 $route->post('/order_update_settings', Order\OrderController::class . '::orderUpdateSettings');
                 $route->get('/add', Order\OrderController::class . '::addLoadView');
                 $route->post('/insert_order', Order\OrderController::class . '::addOrder');
                 $route->post('/delete', Order\OrderController::class . '::deleteOrderData');

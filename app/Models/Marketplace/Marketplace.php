@@ -13,8 +13,7 @@ class Marketplace
     // Contains Resources
     private $db;
 
-
-    public function __construct(PDO $db)
+  public function __construct(PDO $db)
     {
         $this->db = $db;
     }
