@@ -129,14 +129,18 @@ class InventoryController
                     $is_result = $this->insertOrUpdateInventory($map_data);
                     $temo = 'Files for Inventory Import successfully upload..!';
                     $email_file = $this->_LogGenerator($map_data);
+                    // Email Start
+                    $message['html']  = $this->view->make('emails/inventoryupdate');
+                    $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
                     $mailer = new Email();
                     $mailer->sendEmailAttachment(
-                        'tejas.soni@sinelogix.com',
+                        Session::get('auth_email'),
                         Config::get('company_name'),
                         _('Inventory Update Details'),
-                        'Please find attachment of Inventory Update',
+                        $message,
                         ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
                     );
+                    // Email End
                     die(json_encode(['message' => $temo, 'status' => true]));
                 } else if ($user_details['FileType'] == 'uiee') { // UIEE Format
 
@@ -167,6 +171,18 @@ class InventoryController
                     }
                     $temo = 'Files for Inventory Import successfully upload..!';
                     $email_file = $this->_LogGenerator($map_data);
+                    // Email Start
+                    $message['html']  = $this->view->make('emails/inventoryupdate');
+                    $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
+                    $mailer = new Email();
+                    $mailer->sendEmailAttachment(
+                        Session::get('auth_email'),
+                        Config::get('company_name'),
+                        _('Inventory Update Details'),
+                        $message,
+                        ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+                    );
+                    // Email End
                     die(json_encode(['message' => $temo, 'status' => true]));
                 } else {
                     throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
@@ -175,7 +191,6 @@ class InventoryController
                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
             }
         } catch (Exception $e) {
-
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = 'Inventory File not uploaded into server...!';
@@ -184,13 +199,7 @@ class InventoryController
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
             die(json_encode($res));
-        }        // ! yersterday code working
-        // $file_stream = $_FILES['file']['tmp_name'];
-        // $file_name = $_FILES['file']['name'];
-        // $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
-        // $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
-        // $cat_img = $file_encrypt_name . strstr($file_name, '.');
-        // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+        }
     }
 
     /*
@@ -225,9 +234,9 @@ class InventoryController
 
     /*
      @author    :: Tejas
-     @task_id   :: 
-     @task_desc :: 
-     @params    :: 
+     @task_id   :: generate log of inventory files
+     @task_desc :: generate log of inventory files data and time wise
+     @params    :: inventory file data
     */
     public function _LogGenerator($log_data = [])
     {
@@ -277,7 +286,20 @@ class InventoryController
 
                 $map_data = $this->mapRemoveFieldsAttributes($sheetData);
                 $is_result = $this->deleteImportInventory($map_data);
-                die(json_encode(true));
+                $email_file = $this->_LogGenerator($map_data);
+                // Email Start
+                $message['html']  = $this->view->make('emails/inventorydelete');
+                $message['plain'] = $this->view->make('emails/plain/inventorydelete');
+                $mailer = new Email();
+                $mailer->sendEmailAttachment(
+                    Session::get('auth_email'),
+                    Config::get('company_name'),
+                    _('Inventory Update Details'),
+                    $message,
+                    ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+                );
+                // Email End
+                die(json_encode(['message' => 'Inventory Data are Deleted Successfully..!', 'status' => true]));
             } else {
                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
             }
@@ -291,14 +313,8 @@ class InventoryController
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
 
-            die(json_encode($res));
-        }        // ! yersterday code working
-        // $file_stream = $_FILES['file']['tmp_name'];
-        // $file_name = $_FILES['file']['name'];
-        // $file_encrypt_name = strtolower(str_replace(" ", "_", strstr($file_name, '.', true) . date('Ymd_his')));
-        // $publicDir = getcwd() . "/assets/inventory/upload/" . $file_encrypt_name . strstr($file_name, '.');
-        // $cat_img = $file_encrypt_name . strstr($file_name, '.');
-        // $is_file_uploaded = move_uploaded_file($file_stream, $publicDir);
+            die(json_encode(['message' => 'Inventory Data are Not Deleted, Please try again..!', 'status' => false]));
+        }
     }
 
     /*
@@ -425,7 +441,7 @@ class InventoryController
             }
 
             $validator = new FilesSize([
-                'min' => '1kB',  // minimum of 1kB
+                'min' => '0kB',  // minimum of 1kB
                 'max' => '10MB', // maximum of 10MB
             ]);
 
@@ -434,10 +450,10 @@ class InventoryController
                 throw new Exception("File upload size is too large...!", 301);
             }
             // Using an options array:
-            $validator2 = new Extension(['docs,jpg,xlsx,csv']);
+            $validator2 = new Extension(['xlsx,csv,txt']);
             // if false than throw type error
             if (!$validator2->isValid($_FILES['InventoryUpload'])) {
-                throw new Exception("Please upload valid file type docs, jpg and xlsx...!", 301);
+                throw new Exception("Please upload valid file type csv, txt and xlsx...!", 301);
             }
 
             $is_valid = $this->fileExtenstion($form);
@@ -482,7 +498,6 @@ class InventoryController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
@@ -502,7 +517,6 @@ class InventoryController
     {
         $form = $request->getUploadedFiles();
         $form_2 = $request->getParsedBody();
-        // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         unset($form_2['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         try {
@@ -596,10 +610,26 @@ class InventoryController
     private function fileExtenstion($files)
     {
         $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
-        if ($user_details['FileType'] == str_replace("/", "", strstr($files['InventoryUpload']->getClientMediaType(), "/")))
-            return true;
 
-        return false;
+        $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
+        if (isset($mime_settings[$user_details['FileType']])) {
+
+            if ($mime_settings[$user_details['FileType']] != $user_details['FileType'] && $user_details['FileType'] != 'uiee')
+                return false;
+
+            if ($user_details['FileType'] == 'uiee' && strstr($files['InventoryUpload']->getclientFilename(), ".", false) != ".txt")
+                return false;
+
+            if ($user_details['FileType'] == 'csv' && strstr($files['InventoryUpload']->getclientFilename(), ".", false) != ".csv")
+                return false;
+
+            if ($user_details['FileType'] == 'xlsx' && strstr($files['InventoryUpload']->getclientFilename(), ".", false) != ".xlsx")
+                return false;
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -793,15 +823,15 @@ class InventoryController
     public function export1(ServerRequest $request)
     {
         try {
-        $form = $request->getParsedBody();
-        $export_type = $form['export_format'];
-        
+            $form = $request->getParsedBody();
+            $export_type = $form['export_format'];
 
-        $product_data = (new Inventory($this->db))->getAll();
-        $spreadsheet = new Spreadsheet();
-        
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Name');
+
+            $product_data = (new Inventory($this->db))->getAll();
+            $spreadsheet = new Spreadsheet();
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Name');
             $sheet->setCellValue('B1', 'Notes');
             $sheet->setCellValue('C1', 'SKU');
             $sheet->setCellValue('D1', 'ProdId');
@@ -817,57 +847,50 @@ class InventoryController
             $sheet->setCellValue('N1', 'Status');
             $sheet->setCellValue('O1', 'UserId');
             $sheet->setCellValue('P1', 'AddtionalData');
-        $rows = 2;
-        foreach($product_data as $product)
-        {
-        $sheet->setCellValue('A' . $rows, $product['Name']);
-        $sheet->setCellValue('B' . $rows, $product['Notes']);
-        $sheet->setCellValue('C' . $rows, $product['SKU']);
-        $sheet->setCellValue('D' . $rows, $product['ProdId']);
-        $sheet->setCellValue('E' . $rows, $product['BasePrice']);
-        $sheet->setCellValue('F' . $rows, $product['ProdCondition']);
-        $sheet->setCellValue('G' . $rows, $product['ProdActive']);
-        $sheet->setCellValue('H' . $rows, $product['InternationalShip']);
-        $sheet->setCellValue('I' . $rows, $product['ExpectedShip']);
-        $sheet->setCellValue('J' . $rows, $product['EbayTitle']);
-        $sheet->setCellValue('K' . $rows, $product['Qty']);
-        $sheet->setCellValue('L' . $rows, $product['Image']);
-        $sheet->setCellValue('M' . $rows, $product['CategoryId']);
-        $sheet->setCellValue('N' . $rows, $product['Status']);
-        $sheet->setCellValue('O' . $rows, $product['UserId']);
-        $sheet->setCellValue('P' . $rows, $product['AddtionalData']);
-        $rows++;
-        }
+            $rows = 2;
+            foreach ($product_data as $product) {
+                $sheet->setCellValue('A' . $rows, $product['Name']);
+                $sheet->setCellValue('B' . $rows, $product['Notes']);
+                $sheet->setCellValue('C' . $rows, $product['SKU']);
+                $sheet->setCellValue('D' . $rows, $product['ProdId']);
+                $sheet->setCellValue('E' . $rows, $product['BasePrice']);
+                $sheet->setCellValue('F' . $rows, $product['ProdCondition']);
+                $sheet->setCellValue('G' . $rows, $product['ProdActive']);
+                $sheet->setCellValue('H' . $rows, $product['InternationalShip']);
+                $sheet->setCellValue('I' . $rows, $product['ExpectedShip']);
+                $sheet->setCellValue('J' . $rows, $product['EbayTitle']);
+                $sheet->setCellValue('K' . $rows, $product['Qty']);
+                $sheet->setCellValue('L' . $rows, $product['Image']);
+                $sheet->setCellValue('M' . $rows, $product['CategoryId']);
+                $sheet->setCellValue('N' . $rows, $product['Status']);
+                $sheet->setCellValue('O' . $rows, $product['UserId']);
+                $sheet->setCellValue('P' . $rows, $product['AddtionalData']);
+                $rows++;
+            }
 
-if ($export_type == 'xlsx' || $export_type == 'csv') {
-            $this->view->flash([
+            if ($export_type == 'xlsx' || $export_type == 'csv') {
+                $this->view->flash([
                     'alert' => 'Inventory file suucessfully export..!',
                     'alert_type' => 'success'
                 ]);
 
-            if($export_type == 'xlsx')
-               {
-                     $writer = new WriteXlsx($spreadsheet);
-                     $writer->save("inventory.".$export_type);
-                     return $this->view->redirect('/inventory/export');
-               }
-               else if($export_type == 'csv')
-               {
+                if ($export_type == 'xlsx') {
+                    $writer = new WriteXlsx($spreadsheet);
+                    $writer->save("inventory." . $export_type);
+                    return $this->view->redirect('/inventory/export');
+                } else if ($export_type == 'csv') {
                     $writer = new WriteCsv($spreadsheet);
-                     $writer->save("inventory.".$export_type);
-                     return $this->view->redirect('/inventory/export');
+                    $writer->save("inventory." . $export_type);
+                    return $this->view->redirect('/inventory/export');
                 }
-                
-                
             } else {
-                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+                throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
                 /*$this->view->flash([
                     'alert' => 'Please Select Xlsx or Csv File Format..!',
                     'alert_type' => 'danger'
                 ]);*/
             }
-
-             } catch (Exception $e) {
+        } catch (Exception $e) {
 
             $res['status'] = false;
             $res['data'] = [];
@@ -882,10 +905,8 @@ if ($export_type == 'xlsx' || $export_type == 'csv') {
             $this->view->flash($validated);
             return $this->view->redirect('/inventory/export');
         }
-        
 
-     
-               /*if($export_type == 'xlsx')
+             /*if($export_type == 'xlsx')
                {
                      $writer = new WriteXlsx($spreadsheet);
                      $writer->save("inventory.".$export_type);
@@ -897,9 +918,6 @@ if ($export_type == 'xlsx' || $export_type == 'csv') {
                      $writer->save("inventory.".$export_type);
                      return $this->view->redirect('/inventory/export');
                 }*/
-     
-
- 
     }
 
     /*
@@ -923,7 +941,6 @@ if ($export_type == 'xlsx' || $export_type == 'csv') {
     }
 
 
-    
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

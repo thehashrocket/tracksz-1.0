@@ -1,59 +1,76 @@
+Dropzone.autoDiscover = false;
+$(document).ready(function () {
+  // DropZone Code Starts for Auto upload multiples files
+  if (document.getElementById("dropzone_filebrowse")) {
+    var myDropzone = new Dropzone("form#dropzone_filebrowse", {
+      url: "/inventory/importupload",
+      addedfiles: function (files) {},
+      success: function (file, response) {
+        var parse_obj = JSON.parse(response);
+        $("#ajaxMsg").html("");
+        if (parse_obj.status) {
+          $("#ajaxMsg").append(
+            '<div class="col-sm-12 alert alert-success text-center">' +
+              parse_obj.message +
+              "</div>"
+          );
+        } else {
+          $("#ajaxMsg").append(
+            '<div class="col-sm-12 alert alert-danger text-center">' +
+              parse_obj.message +
+              "</div>"
+          );
+        }
+      },
+      error: function (file, response) {
+        // On ajax error operation
+        // console.log(response, errorThrown);
+      },
+      complete: function () {
+        // On ajax complete operation
+        // console.log('Complete ajax send');
 
-$(document).ready(function() {
-     var myDropzone = new Dropzone("#dropzone_request1", { 
-         url: "/inventory/importupload",
-         success : function(file, response){
-            res= JSON.parse(response);console.log(res);
-             $("#ajaxMsg").empty();
-             $("#ajaxMsg").append('<div class="alert alert-success text-center">'+res.message+'</div>');
-         }
-    
-     });
+        setTimeout(function () {
+          $("#ajaxMsg").html("");
+        }, 5000);
+      },
+    });
+  }
 
-                               /* $.ajax({
-                                    type: "POST",
-                                    url: "upload.php",
-                                    data: 'alertdata=' + alertd,
-                                    success: function (data) {
-                                        $("#alertdata").html(data);
-                                    }
-                                });*/
-    //console.log('document ready test..! drop');
+  if (document.getElementById("dropzone_filedelete")) {
+    var myDropzone = new Dropzone("form#dropzone_filedelete", {
+      url: "/inventory/importdelete",
+      success: function (file, response) {
+        var parse_obj = JSON.parse(response);
 
-    // Dropzone.autoDiscover = false;
-    // Dropzone.options.dropzoneFrom = {
-    //     autoProcessQueue: false,
-    //     acceptedFiles: ".xlxs,.csv,.txt,.png,.jpg,.gif",
-    //     init: function(){
-    //         console.log('init')
-    //         var submit = document.querySelector('#submit-all');
-    //         myDropzone = this;
-    //         submit.addEventListener("click",function(){
-    //             myDropzone.processQueue();
-    //         });
-    //         this.on("success", function(file, responseText) {
-    //             console.log(responseText);
-    //         });
-    //         this.on("complete",function(){
+        $("#ajaxMsg").empty();
+        if (parse_obj.status) {
+          $("#ajaxMsg").append(
+            '<div class="col-sm-12 alert alert-success text-center">' +
+              parse_obj.message +
+              "</div>"
+          );
+        } else {
+          $("#ajaxMsg").append(
+            '<div class="col-sm-12 alert alert-danger text-center">' +
+              parse_obj.message +
+              "</div>"
+          );
+        }
+      },
+      error: function (file, response) {
+        // On ajax error operation
+        // console.log(response, errorThrown);
+      },
+      complete: function () {
+        // On ajax complete operation
+        // console.log('Complete ajax send');
 
-    //             console.log('complete')
-    //             if(this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0){
-    //                 var _this = this;
-    //                 _this.removeAllFiles();
-    //             }
-    //         });
-    //     }
-    // }
-
-    Dropzone.autoDiscover = false;
-
-    // var myDropzone = new Dropzone("#dropzoneFrom", { 
-    //     url: "/inventory/importupload",
-    //     success : function(file, response){
-    //         console.log(file);
-    //         console.log(response);
-    //     }
-    
-    // });
-
+        setTimeout(function () {
+          $("#ajaxMsg").empty();
+        }, 5000);
+      },
+    });
+  }
 });
+// DropZone Code Ends for Auto upload multiples files

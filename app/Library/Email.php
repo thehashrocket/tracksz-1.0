@@ -51,7 +51,8 @@ class Email
         // Content
         $this->mailer->isHTML(true);
         $this->mailer->Subject = $subject;
-        $this->mailer->Body    = $message;
+        $this->mailer->Body    = $message['html']->render(['test']);
+        $this->mailer->AltBody = $message['plain']->render(['test']);
         if (isset($is_attachment) && !empty($is_attachment))
             $this->mailer->addAttachment($is_attachment['path'], $is_attachment['name'], $is_attachment['encoding'], $is_attachment['type']);
 
