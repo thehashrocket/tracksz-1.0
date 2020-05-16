@@ -54,7 +54,96 @@ class OrderController
     */
     public function loadBatchMove()
     {
-        return $this->view->buildResponse('order/defaults', []);
+        return $this->view->buildResponse('order/batchmove', []);
+    }
+
+    /*
+    * updateBatchMove - Update Batch Move
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateBatchMove(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $map_data = $this->mapBatchMove($methodData);
+            $is_data = $this->insertOrUpdate($map_data);
+
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Order Batch moved successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->buildResponse('order/batchmove', []);
+            } else {
+                throw new Exception("Order Id not found into our database...!", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/batchmove', []);
+        }
+    }
+
+    /*
+         @author    :: Tejas
+         @task_id   :: 
+         @task_desc :: 
+         @params    :: 
+        */
+    public function mapBatchMove($batch_data = array())
+    {
+        $order_ids = [];
+        if ($batch_data['OrderId'] == trim($batch_data['OrderId']) && strpos($batch_data['OrderId'], ' ') !== false) {
+            $order_ids = explode(" ", $batch_data['OrderId']);
+        } else if ($batch_data['OrderId'] == trim($batch_data['OrderId']) && strpos($batch_data['OrderId'], ',') !== false) {
+            $order_ids = explode(",", $batch_data['OrderId']);
+        } else {
+            $order_ids[] = $batch_data['OrderId'];
+        }
+
+        $map_order = [];
+        $set_map_order = [];
+        foreach ($order_ids as $order) {
+            $map_order['OrderId'] = $order;
+            $map_order['Status'] = $batch_data['UpdateStatusOrder'];
+            $map_order['Carrier'] = $batch_data['ShippingCarrierOrder'];
+            $set_map_order[] = $map_order;
+        } // Loops Ends
+        return $set_map_order;
+    }
+
+    /*
+    * insertOrUpdate - find user id if exist
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function insertOrUpdate($data)
+    {
+        $result = false;
+        foreach ($data as $key => $value) {
+            $user_details = (new Order($this->db))->findByOrderID($value['OrderId'], Session::get('auth_user_id'));
+            if (isset($user_details) && !empty($user_details)) { // update
+                $data['Updated'] = date('Y-m-d H:i:s');
+                $result = (new Order($this->db))->editOrder($user_details['Id'], $value);
+            }
+        } // Loops Ends
+        return $result;
     }
 
     /*
@@ -116,7 +205,7 @@ class OrderController
     {
         return $this->view->buildResponse('order/defaults', []);
     }
-public function orderinsertOrUpdate($data)
+    public function orderinsertOrUpdate($data)
     {
         $order_setting = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
         if (isset($order_setting) && !empty($order_setting)) { // update
@@ -196,7 +285,7 @@ public function orderinsertOrUpdate($data)
     }
 
 
-     /*
+    /*
     * view - Load addLoadView view file
     * @param  - none
     * @return view

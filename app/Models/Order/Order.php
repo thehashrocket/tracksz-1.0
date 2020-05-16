@@ -90,6 +90,20 @@ LEFT JOIN marketplace
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /*
+    * findBySKUProd - Find orderinventory by orderinventory record UserId and Status
+    *
+    * @param  UserId  - Table record Id of orderinventory to find
+    * @param  Status  - Table record Status of orderinventory to find
+    * @return associative array.
+    */
+    public function findByOrderID($OrderId, $UserId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM orderinventory WHERE OrderId = :OrderId AND UserId = :UserId");
+        $stmt->execute(['OrderId' => $OrderId, 'UserId' => $UserId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
     /*
     * findBySKUProd - Find orderinventory by orderinventory record UserId and Status
