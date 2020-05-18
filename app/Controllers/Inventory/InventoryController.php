@@ -517,6 +517,7 @@ class InventoryController
     {
         $form = $request->getUploadedFiles();
         $form_2 = $request->getParsedBody();
+        // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         unset($form_2['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
         try {
@@ -820,16 +821,14 @@ class InventoryController
         }
     }
 
-    public function export1(ServerRequest $request)
+    public function exportInventoryData(ServerRequest $request)
     {
         try {
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
 
-
-            $product_data = (new Inventory($this->db))->getAll();
-            $spreadsheet = new Spreadsheet();
-
+           $product_data = (new Inventory($this->db))->getAll();
+           $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'Name');
             $sheet->setCellValue('B1', 'Notes');
@@ -905,8 +904,7 @@ class InventoryController
             $this->view->flash($validated);
             return $this->view->redirect('/inventory/export');
         }
-
-             /*if($export_type == 'xlsx')
+            /*if($export_type == 'xlsx')
                {
                      $writer = new WriteXlsx($spreadsheet);
                      $writer->save("inventory.".$export_type);
@@ -941,6 +939,7 @@ class InventoryController
     }
 
 
+    
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

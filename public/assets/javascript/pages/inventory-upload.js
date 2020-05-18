@@ -30,12 +30,16 @@ $(document).ready(function () {
         // On ajax complete operation
         // console.log('Complete ajax send');
 
-        setTimeout(function () {
-          $("#ajaxMsg").html("");
-        }, 5000);
-      },
-    });
-  }
+$(document).ready(function() {
+     var myDropzone = new Dropzone("#dropzone_request1", { 
+         url: "/inventory/importupload",
+         success : function(file, response){
+            res= JSON.parse(response);console.log(res);
+             $("#ajaxMsg").empty();
+             $("#ajaxMsg").append('<div class="alert alert-success text-center">'+res.message+'</div>');
+         }
+    
+     });
 
   if (document.getElementById("dropzone_filedelete")) {
     var myDropzone = new Dropzone("form#dropzone_filedelete", {

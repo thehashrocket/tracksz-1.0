@@ -19,9 +19,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                 </div>
                 <p class="text-muted"> <?= _('This is where upload inventory for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
                 <div id="ajaxMsg"></div>
-                <?php if (isset($alert) && $alert) : ?>
+              <!--  <?php if (isset($alert) && $alert) : ?>
                     <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
-                <?php endif ?>
+                <?php endif ?> -->
             </header><!-- /.page-title-bar -->
             <div class="page-section">
                 <div class="col-lg-12">
@@ -76,11 +76,13 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                 </div>
                                             </div>
                                             <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
+                                            <a href="<?php echo \App\Library\Config::get('company_url') . '/inventory/queue'; ?>" class="btn btn-warning"><?= _('Queue Sample') ?> </a>
+
                                         </form> <!-- form ends -->
                                     </div>
                                 </div> <!-- col-sm Group Left Ends -->
                                 <div class="tab-pane fade" id="card-filebrowse">
-                                    <form name="dropzone_filebrowse" id="dropzone_filebrowse" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />
@@ -90,7 +92,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 </div>
                                 <div class="tab-pane fade" id="card-filedelete">
                                     <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
-                                    <form name="dropzone_filedelete" id="dropzone_filedelete" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />

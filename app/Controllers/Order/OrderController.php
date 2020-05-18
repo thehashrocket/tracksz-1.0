@@ -7,7 +7,10 @@ namespace App\Controllers\Order;
 use App\Library\Views;
 use Delight\Auth\Auth;
 use App\Models\Inventory\OrderSetting;
+use App\Models\Order\PostageSetting;
+use App\Models\Order\LabelSetting;
 use App\Models\Order\Order;
+use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
 use App\Library\ValidateSanitize\ValidateSanitize;
@@ -18,8 +21,11 @@ use PDO;
 use App\Library\Config;
 use Illuminate\Http\Request;
 use Delight\Cookie\Session;
-use App\Models\Marketplace\Marketplace;
-
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Formatter\Json;
+use App\Library\Email;
+// use Resque;
 
 class OrderController
 {
@@ -193,8 +199,94 @@ class OrderController
     */
     public function loadPostageSetting()
     {
-        return $this->view->buildResponse('order/defaults', []);
+         $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+        return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
     }
+    public function postageinsertOrUpdate($data)
+    {
+        $postage_setting = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+        if (isset($postage_setting) && !empty($postage_setting)) { // update
+            $data['Updated'] = date('Y-m-d H:i:s');
+            $result = (new PostageSetting($this->db))->editPostageSettings($data);
+        } else { // insert
+            $data['Created'] = date('Y-m-d H:i:s');
+            $result = (new PostageSetting($this->db))->addPostageSettings($data);
+        }
+
+        return $result;
+    }
+    /*
+    * PostageAddupdateSettings - Add Update Postage Settings
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function postageAddUpdateSettings(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $update_data['UserId'] = Session::get('auth_user_id');
+            $update_data['OperatingSystem'] = $methodData['OperatingSystem'];
+            $update_data['MaxWeight'] = $methodData['MaxWeight'];
+            $update_data['DeliveryConfirmation'] = $methodData['DeliveryConfirmation'];
+            $update_data['MinOrderTotalDelivery'] = $methodData['MinOrderTotalDelivery'];
+            $update_data['SignatureConfirmation'] = $methodData['SignatureConfirmation'];
+            $update_data['ConsolidatorLabel'] = $methodData['ConsolidatorLabel'];
+
+            $update_data['IncludeInsurance'] = $methodData['IncludeInsurance'];
+            $update_data['MinOrderTotalInsurance'] = $methodData['MinOrderTotalInsurance'];
+            $update_data['RoundDownPartial'] = $methodData['RoundDownPartial'];
+
+            $update_data['EstimatePostage'] = $methodData['EstimatePostage'];
+            $update_data['MaxPostageBatch'] = $methodData['MaxPostageBatch'];
+            $update_data['CustomsSigner'] = $methodData['CustomsSigner'];
+            $update_data['DefaultWeight'] = $methodData['DefaultWeight'];
+            $update_data['FlatRatePriority'] = $methodData['FlatRatePriority'];
+            $update_data['GlobalWeight'] = $methodData['GlobalWeight'];
+
+
+
+            $is_data = $this->postageinsertOrUpdate($update_data);
+
+
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Postage settings updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+
+
+
+                return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
+            } else {
+                throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            /*$user_details = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('order/postage_setting', ['all_settings' => $user_details]);*/
+
+            $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
+        }
+    }
+
+
 
     /*
     * view - Load loadLabelSetting view file
@@ -203,9 +295,140 @@ class OrderController
     */
     public function loadLabelSetting()
     {
-        return $this->view->buildResponse('order/defaults', []);
+$all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
     }
-    public function orderinsertOrUpdate($data)
+ public function labelinsertOrUpdate($data)
+    {
+        $label_setting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+
+        if (!empty($label_setting)) { // update
+
+            $data['Updated'] = date('Y-m-d H:i:s');
+
+            $result = (new LabelSetting($this->db))->editLabelSettings($data);
+           
+        } else { // insert
+            $data['Created'] = date('Y-m-d H:i:s');
+            $result = (new LabelSetting($this->db))->addLabelSettings($data);
+        }
+
+        return $result;
+    }
+    /*
+    * LabelAddupdateSettings - Add Update Label Settings
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function LabelAddUpdateSettings(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $update_data['UserId'] = Session::get('auth_user_id');
+           // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView']))?1:null;
+           // print_r($update_data['SkipPDFView']);
+            $update_data['DefaultAction'] = $methodData['DefaultAction'];
+            $update_data['SortOrders'] = $methodData['SortOrders'];
+
+           // $update_data['SplitOrders'] = $methodData['SplitOrders'];
+            $update_data['SplitOrders'] =(isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders']))?1:null;
+            $update_data['AddBarcode'] =(isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode']))?1:null;
+            //$update_data['AddBarcode'] = $methodData['AddBarcode'];
+            $update_data['BarcodeType'] = $methodData['BarcodeType'];
+            $update_data['SortPickList'] = $methodData['SortPickList'];
+
+            $update_data['DefaultTemplate'] = $methodData['DefaultTemplate'];
+            $update_data['HeaderImageURL'] = $methodData['HeaderImageURL'];
+            $update_data['FooterImageURL'] = $methodData['FooterImageURL'];
+            $update_data['PackingSlipHeader'] = $methodData['PackingSlipHeader'];
+            $update_data['PackingSlipFooter'] = $methodData['PackingSlipFooter'];
+            $update_data['PackingSlipFrom'] = $methodData['PackingSlipFrom'];
+           // $update_data['IncludeOrderBarcodes'] = $methodData['IncludeOrderBarcodes'];
+            $update_data['IncludeOrderBarcodes'] =(isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes']))?1:null;
+             $update_data['IncludeItemBarcodes'] =(isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes']))?1:null;
+             $update_data['CentreHeaderText'] =(isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText']))?1:null;
+             $update_data['HideEmail'] =(isset($methodData['HideEmail']) && !empty($methodData['HideEmail']))?1:null;
+             $update_data['HidePhone'] =(isset($methodData['HidePhone']) && !empty($methodData['HidePhone']))?1:null;
+             $update_data['IncludeGSTExAus1'] =(isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1']))?1:null;
+             $update_data['CentreFooter'] =(isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter']))?1:null;
+             $update_data['ShowItemPrice'] =(isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice']))?1:null;
+             $update_data['IncludeMarketplaceOrder'] =(isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder']))?1:null;
+             $update_data['IncludePageNumbers'] =(isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers']))?1:null;
+            //$update_data['IncludeItemBarcodes'] = $methodData['IncludeItemBarcodes'];
+            //$update_data['CentreHeaderText'] = $methodData['CentreHeaderText'];
+           // $update_data['HideEmail'] = $methodData['HideEmail'];
+            //$update_data['HidePhone'] = $methodData['HidePhone'];
+            /*$update_data['IncludeGSTExAus1'] = $methodData['IncludeGSTExAus1'];
+            $update_data['CentreFooter'] = $methodData['CentreFooter'];
+            $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
+            $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
+            $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
+            
+
+            $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
+            $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
+            $update_data['FontSize'] = $methodData['FontSize'];
+            $update_data['HideLabelBoundaries'] =(isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries']))?1:null;
+            $update_data['IncludeGSTExAus2'] =(isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2']))?1:null;
+            //$update_data['HideLabelBoundaries'] = $methodData['HideLabelBoundaries'];
+            //$update_data['IncludeGSTExAus2'] = $methodData['IncludeGSTExAus2'];
+            $update_data['LabelWidth'] = $methodData['LabelWidth'];
+
+            $update_data['LabelWidthIn'] = $methodData['LabelWidthIn'];
+            $update_data['LabelHeight'] = $methodData['LabelHeight'];
+            $update_data['LabelHeightIn'] = $methodData['LabelHeightIn'];
+            $update_data['PageMargins'] = $methodData['PageMargins'];
+            $update_data['PageMarginsIn'] = $methodData['PageMarginsIn'];
+            $update_data['LabelMargins'] = $methodData['LabelMargins'];
+            $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
+
+
+            
+            $is_data = $this->labelinsertOrUpdate($update_data);
+            
+
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Label settings updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+
+
+
+                return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
+            } else {
+                throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            /*$user_details = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('order/postage_setting', ['all_settings' => $user_details]);*/
+
+            $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+            return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
+        }
+    }
+
+
+
+public function orderinsertOrUpdate($data)
     {
         $order_setting = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
         if (isset($order_setting) && !empty($order_setting)) { // update
@@ -232,7 +455,7 @@ class OrderController
     {
 
         $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
-        return $this->view->buildResponse('inventory/settings/order', ['all_settings' => $order_details]);
+       return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
     }
 
 
@@ -261,8 +484,8 @@ class OrderController
                     'alert' => 'Order settings updated successfully..!',
                     'alert_type' => 'success'
                 ]);
-                $user_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
-                return $this->view->buildResponse('inventory/settings/order', ['all_settings' => $user_details]);
+                $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
+        return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
             }
@@ -285,7 +508,7 @@ class OrderController
     }
 
 
-    /*
+     /*
     * view - Load addLoadView view file
     * @param  - none
     * @return view
