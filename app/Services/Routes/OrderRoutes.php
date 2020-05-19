@@ -44,7 +44,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/add_update_label_setting', Order\OrderController::class . '::labelAddUpdateSettings');
 
                 $route->get('/order-settings', Order\OrderController::class . '::orderSettingsBrowse');
-                 $route->post('/order_update_settings', Order\OrderController::class . '::orderUpdateSettings');
+                $route->post('/order_update_settings', Order\OrderController::class . '::orderUpdateSettings');
                 $route->get('/add', Order\OrderController::class . '::addLoadView');
                 $route->post('/insert_order', Order\OrderController::class . '::addOrder');
                 $route->post('/delete', Order\OrderController::class . '::deleteOrderData');

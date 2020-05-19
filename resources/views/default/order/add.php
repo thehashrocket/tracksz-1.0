@@ -57,7 +57,7 @@ $description_meta = 'Order Add for your Tracksz Store, a Multiple Market Product
                                                     <?php
                                                     if (isset($market_places) && is_array($market_places) && !empty($market_places)) {
                                                         foreach ($market_places as $mar_key => $mar_val) { ?>
-                                                            <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
+                                                            <option value="<?php echo $mar_val['Id']; ?>" <?php echo (isset($form['MarketName']) && $form['MarketName'] == $mar_val['Id']) ? 'selected' : ''; ?>><?php echo $mar_val['MarketName']; ?></option>
                                                         <?php }
                                                     } else { ?>
                                                         <option selected><?= _('No Marketplace found...') ?></option>
@@ -69,23 +69,36 @@ $description_meta = 'Order Add for your Tracksz Store, a Multiple Market Product
                                                 <input type="text" class="form-control" id="MarketPlaceOrder" name="MarketPlaceOrder" placeholder="Enter MarketPlace Order" data-parsley-required-message="<?= _('Enter MarketPlace Order') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketPlaceOrder']) && !empty($form['MarketPlaceOrder'])) ? $form['MarketPlaceOrder'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
+                                                <select name="StoreProductId" id="StoreProductId" class="browser-default custom-select store_product_select">
+                                                    <option value="" selected disabled><?= _('Select Store Product...') ?></option>
+                                                    <?php
+                                                    if (isset($products) && is_array($products) && !empty($products)) {
+                                                        foreach ($products as $prod_key => $prod_val) { ?>
+                                                            <option value="<?php echo $prod_val['Id']; ?>" <?php echo (isset($form['StoreProductId']) && $form['StoreProductId'] == $prod_val['Id']) ? 'selected' : ''; ?>><?php echo $prod_val['Name'] . " | SKU | " . $prod_val['SKU'] . " | ISBN | " . $prod_val['ProdId']; ?></option>
+                                                        <?php }
+                                                    } else { ?>
+                                                        <option selected><?= _('No Products found...') ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select order_status_select">
                                                     <option value="" selected><?= _('Select Status...') ?></option>
-                                                    <option value="new"><?= _('New') ?></option>
-                                                    <option value="in-process"><?= _('In Process') ?></option>
-                                                    <option value="shipped"><?= _('Shipped') ?></option>
-                                                    <option value="deferred"><?= _('Deferred') ?></option>
-                                                    <option value="cancelled"><?= _('Cancelled') ?></option>
-                                                    <option value="shipped-noemail"><?= _('Shipped - No Email') ?></option>
-                                                    <option value="cancelled-noemail"><?= _('Cancelled - No Email') ?></option>
+                                                    <option value="new" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "new") ? 'selected' : ''; ?>><?= _('New') ?></option>
+                                                    <option value="in-process" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "in-process") ? 'selected' : ''; ?>><?= _('In Process') ?></option>
+                                                    <option value="shipped" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "shipped") ? 'selected' : ''; ?>><?= _('Shipped') ?></option>
+                                                    <option value="deferred" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "deferred") ? 'selected' : ''; ?>><?= _('Deferred') ?></option>
+                                                    <option value="cancelled" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "cancelled") ? 'selected' : ''; ?>><?= _('Cancelled') ?></option>
+                                                    <option value="shipped-noemail" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "shipped-noemail") ? 'selected' : ''; ?>><?= _('Shipped - No Email') ?></option>
+                                                    <option value="cancelled-noemail" <?php echo (isset($form['OrderStatus']) && $form['OrderStatus'] == "cancelled-noemail") ? 'selected' : ''; ?>><?= _('Cancelled - No Email') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <select name="PaymentStatus" id="PaymentStatus" class="browser-default custom-select payment_status_select">
                                                     <option value="" selected><?= _('Select Payment Status...') ?></option>
-                                                    <option value="pre-paid"><?= _('Pre-Paid') ?></option>
-                                                    <option value="pending"><?= _('Pending') ?></option>
-                                                    <option value="paid"><?= _('Paid') ?></option>
+                                                    <option value="pre-paid" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "pre-paid") ? 'selected' : ''; ?>><?= _('Pre-Paid') ?></option>
+                                                    <option value="pending" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "pending") ? 'selected' : ''; ?>><?= _('Pending') ?></option>
+                                                    <option value="paid" <?php echo (isset($form['PaymentStatus']) && $form['PaymentStatus'] == "paid") ? 'selected' : ''; ?>><?= _('Paid') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -103,11 +116,11 @@ $description_meta = 'Order Add for your Tracksz Store, a Multiple Market Product
                                             <div class="form-group">
                                                 <select name="Currency" id="Currency" class="browser-default custom-select order_currency_select">
                                                     <option value="" selected><?= _('Select Currency...') ?></option>
-                                                    <option value="USD"><?= _('USD') ?></option>
-                                                    <option value="CAD"><?= _('CAD') ?></option>
-                                                    <option value="EUR"><?= _('EUR') ?></option>
-                                                    <option value="GBP"><?= _('GBP') ?></option>
-                                                    <option value="MXN"><?= _('MXN') ?></option>
+                                                    <option value="USD" <?php echo (isset($form['Currency']) && $form['Currency'] == "USD") ? 'selected' : ''; ?>><?= _('USD') ?></option>
+                                                    <option value="CAD" <?php echo (isset($form['Currency']) && $form['Currency'] == "CAD") ? 'selected' : ''; ?>><?= _('CAD') ?></option>
+                                                    <option value="EUR" <?php echo (isset($form['Currency']) && $form['Currency'] == "EUR") ? 'selected' : ''; ?>><?= _('EUR') ?></option>
+                                                    <option value="GBP" <?php echo (isset($form['Currency']) && $form['Currency'] == "GBP") ? 'selected' : ''; ?>><?= _('GBP') ?></option>
+                                                    <option value="MXN" <?php echo (isset($form['Currency']) && $form['Currency'] == "MXN") ? 'selected' : ''; ?>><?= _('MXN') ?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -142,15 +155,15 @@ $description_meta = 'Order Add for your Tracksz Store, a Multiple Market Product
                                             <div class="form-group">
                                                 <select name="CarrierOrder" id="CarrierOrder" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected><?= _('Select Status...') ?></option>
-                                                    <option value="fedex"><?= _('FEDEX') ?></option>
-                                                    <option value="dhl"><?= _('DHL') ?></option>
-                                                    <option value="dhlgm"><?= _('DHLGM') ?></option>
-                                                    <option value="usps"><?= _('USPS') ?></option>
-                                                    <option value="ups"><?= _('UPS') ?></option>
-                                                    <option value="upsmi"><?= _('UPSMI') ?></option>
-                                                    <option value="misc"><?= _('MISC') ?></option>
-                                                    <option value="auto"><?= _('AUTO') ?></option>
-                                                    <option value="other"><?= _('Other') ?></option>
+                                                    <option value="fedex" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "fedex") ? 'selected' : ''; ?>><?= _('FEDEX') ?></option>
+                                                    <option value="dhl" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "dhl") ? 'selected' : ''; ?>><?= _('DHL') ?></option>
+                                                    <option value="dhlgm" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "dhlgm") ? 'selected' : ''; ?>><?= _('DHLGM') ?></option>
+                                                    <option value="usps" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "usps") ? 'selected' : ''; ?>><?= _('USPS') ?></option>
+                                                    <option value="ups" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "ups") ? 'selected' : ''; ?>><?= _('UPS') ?></option>
+                                                    <option value="upsmi" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "upsmi") ? 'selected' : ''; ?>><?= _('UPSMI') ?></option>
+                                                    <option value="misc" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "misc") ? 'selected' : ''; ?>><?= _('MISC') ?></option>
+                                                    <option value="auto" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "auto") ? 'selected' : ''; ?>><?= _('AUTO') ?></option>
+                                                    <option value="other" <?php echo (isset($form['CarrierOrder']) && $form['CarrierOrder'] == "other") ? 'selected' : ''; ?>><?= _('Other') ?></option>
                                                 </select>
                                             </div>
                                         </div> <!-- col-sm -->

@@ -10,6 +10,7 @@ use App\Models\Inventory\OrderSetting;
 use App\Models\Order\PostageSetting;
 use App\Models\Order\LabelSetting;
 use App\Models\Order\Order;
+use App\Models\Product\Product;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
@@ -199,7 +200,7 @@ class OrderController
     */
     public function loadPostageSetting()
     {
-         $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
+        $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
         return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
     }
     public function postageinsertOrUpdate($data)
@@ -295,10 +296,10 @@ class OrderController
     */
     public function loadLabelSetting()
     {
-$all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
     }
- public function labelinsertOrUpdate($data)
+    public function labelinsertOrUpdate($data)
     {
         $label_setting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
 
@@ -307,7 +308,6 @@ $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::ge
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
-           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -329,15 +329,15 @@ $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::ge
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-           // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
-            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView']))?1:null;
-           // print_r($update_data['SkipPDFView']);
+            // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? 1 : null;
+            // print_r($update_data['SkipPDFView']);
             $update_data['DefaultAction'] = $methodData['DefaultAction'];
             $update_data['SortOrders'] = $methodData['SortOrders'];
 
-           // $update_data['SplitOrders'] = $methodData['SplitOrders'];
-            $update_data['SplitOrders'] =(isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders']))?1:null;
-            $update_data['AddBarcode'] =(isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode']))?1:null;
+            // $update_data['SplitOrders'] = $methodData['SplitOrders'];
+            $update_data['SplitOrders'] = (isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders'])) ? 1 : null;
+            $update_data['AddBarcode'] = (isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode'])) ? 1 : null;
             //$update_data['AddBarcode'] = $methodData['AddBarcode'];
             $update_data['BarcodeType'] = $methodData['BarcodeType'];
             $update_data['SortPickList'] = $methodData['SortPickList'];
@@ -348,33 +348,32 @@ $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::ge
             $update_data['PackingSlipHeader'] = $methodData['PackingSlipHeader'];
             $update_data['PackingSlipFooter'] = $methodData['PackingSlipFooter'];
             $update_data['PackingSlipFrom'] = $methodData['PackingSlipFrom'];
-           // $update_data['IncludeOrderBarcodes'] = $methodData['IncludeOrderBarcodes'];
-            $update_data['IncludeOrderBarcodes'] =(isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes']))?1:null;
-             $update_data['IncludeItemBarcodes'] =(isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes']))?1:null;
-             $update_data['CentreHeaderText'] =(isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText']))?1:null;
-             $update_data['HideEmail'] =(isset($methodData['HideEmail']) && !empty($methodData['HideEmail']))?1:null;
-             $update_data['HidePhone'] =(isset($methodData['HidePhone']) && !empty($methodData['HidePhone']))?1:null;
-             $update_data['IncludeGSTExAus1'] =(isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1']))?1:null;
-             $update_data['CentreFooter'] =(isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter']))?1:null;
-             $update_data['ShowItemPrice'] =(isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice']))?1:null;
-             $update_data['IncludeMarketplaceOrder'] =(isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder']))?1:null;
-             $update_data['IncludePageNumbers'] =(isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers']))?1:null;
+            // $update_data['IncludeOrderBarcodes'] = $methodData['IncludeOrderBarcodes'];
+            $update_data['IncludeOrderBarcodes'] = (isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes'])) ? 1 : null;
+            $update_data['IncludeItemBarcodes'] = (isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes'])) ? 1 : null;
+            $update_data['CentreHeaderText'] = (isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText'])) ? 1 : null;
+            $update_data['HideEmail'] = (isset($methodData['HideEmail']) && !empty($methodData['HideEmail'])) ? 1 : null;
+            $update_data['HidePhone'] = (isset($methodData['HidePhone']) && !empty($methodData['HidePhone'])) ? 1 : null;
+            $update_data['IncludeGSTExAus1'] = (isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1'])) ? 1 : null;
+            $update_data['CentreFooter'] = (isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter'])) ? 1 : null;
+            $update_data['ShowItemPrice'] = (isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice'])) ? 1 : null;
+            $update_data['IncludeMarketplaceOrder'] = (isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder'])) ? 1 : null;
+            $update_data['IncludePageNumbers'] = (isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers'])) ? 1 : null;
             //$update_data['IncludeItemBarcodes'] = $methodData['IncludeItemBarcodes'];
             //$update_data['CentreHeaderText'] = $methodData['CentreHeaderText'];
-           // $update_data['HideEmail'] = $methodData['HideEmail'];
+            // $update_data['HideEmail'] = $methodData['HideEmail'];
             //$update_data['HidePhone'] = $methodData['HidePhone'];
             /*$update_data['IncludeGSTExAus1'] = $methodData['IncludeGSTExAus1'];
             $update_data['CentreFooter'] = $methodData['CentreFooter'];
             $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
             $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
             $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
-            
 
             $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
             $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
             $update_data['FontSize'] = $methodData['FontSize'];
-            $update_data['HideLabelBoundaries'] =(isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries']))?1:null;
-            $update_data['IncludeGSTExAus2'] =(isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2']))?1:null;
+            $update_data['HideLabelBoundaries'] = (isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries'])) ? 1 : null;
+            $update_data['IncludeGSTExAus2'] = (isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2'])) ? 1 : null;
             //$update_data['HideLabelBoundaries'] = $methodData['HideLabelBoundaries'];
             //$update_data['IncludeGSTExAus2'] = $methodData['IncludeGSTExAus2'];
             $update_data['LabelWidth'] = $methodData['LabelWidth'];
@@ -388,9 +387,7 @@ $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::ge
             $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
 
 
-            
             $is_data = $this->labelinsertOrUpdate($update_data);
-            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -428,7 +425,7 @@ $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::ge
 
 
 
-public function orderinsertOrUpdate($data)
+    public function orderinsertOrUpdate($data)
     {
         $order_setting = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
         if (isset($order_setting) && !empty($order_setting)) { // update
@@ -455,7 +452,7 @@ public function orderinsertOrUpdate($data)
     {
 
         $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
-       return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
+        return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
     }
 
 
@@ -485,7 +482,7 @@ public function orderinsertOrUpdate($data)
                     'alert_type' => 'success'
                 ]);
                 $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
-        return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
+                return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
             }
@@ -508,15 +505,16 @@ public function orderinsertOrUpdate($data)
     }
 
 
-     /*
+    /*
     * view - Load addLoadView view file
     * @param  - none
     * @return view
     */
     public function addLoadView()
     {
+        $products = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [1, 0]);
         $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
-        return $this->view->buildResponse('order/add', ['market_places' => $market_places]);
+        return $this->view->buildResponse('order/add', ['market_places' => $market_places, 'products' => $products]);
     }
 
 
@@ -538,6 +536,7 @@ public function orderinsertOrUpdate($data)
                 'MarketPlaceOrder'    => 'required',
                 'PaymentMethod'       => 'required',
                 'BuyerNote'       => 'required',
+                'StoreProductId' => 'required',
                 'SellerNote'       => 'required',
                 'ShippingMethod'       => 'required',
                 'Tracking'       => 'required',
@@ -569,10 +568,32 @@ public function orderinsertOrUpdate($data)
                 throw new Exception("Please enter required fields...!", 301);
             }
 
+            // check product availablity in stock
+            $is_avail = $this->checkProductQty($form['StoreProductId']);
+
+            if (!$is_avail['status'])
+                throw new Exception("Sorry, Product is not available in stock...!", 301);
+
             $insert_data = $this->PrepareInsertData($form);
             $order_obj = new Order($this->db);
             $all_order = $order_obj->addOrder($insert_data);
+            // Update Product Qty : Decrease product qty
+            $prodUpdate['Qty'] = $is_avail['qty'] - 1;
+            $prod_obj = new Product($this->db);
+            $all_prod = $prod_obj->updateProdInventory($form['StoreProductId'], $prodUpdate);
 
+            // Email Start
+            $message['html']  = $this->view->make('emails/orderconfirm');
+            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+            $mailer = new Email();
+            $mailer->sendEmail(
+                $form['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $form['MarketPlaceOrder'], 'Carrier' => $form['CarrierOrder']]
+            );
+            // Email End
             if (isset($all_order) && !empty($all_order)) {
                 $this->view->flash([
                     'alert' => _('Order added successfully..!'),
@@ -596,8 +617,33 @@ public function orderinsertOrUpdate($data)
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
 
+            $products = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [1, 0]);
             $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
-            return $this->view->buildResponse('order/add', ['market_places' => $market_places, 'form' => $form]);
+            return $this->view->buildResponse('order/add', ['market_places' => $market_places, 'products' => $products, 'form' => $form]);
+        }
+    }
+
+
+    /*
+         @author    :: Tejas
+         @task_id   :: check product availablity
+         @task_desc :: In stock product details
+         @params    :: 
+        */
+    public function checkProductQty($product_id = "")
+    {
+        $res['status'] = false;
+        $res['qty'] = 0;
+        if (empty($product_id))
+            return $res;
+
+        $products = (new Product($this->db))->findById($product_id);
+        if (isset($products) && !empty($products) && $products['Qty'] > 0) {
+            $res['status'] = true;
+            $res['qty'] = $products['Qty'];
+            return $res;
+        } else {
+            return $res;
         }
     }
 
@@ -612,6 +658,7 @@ public function orderinsertOrUpdate($data)
         $form_data = array();
         $form_data['MarketPlaceId'] = (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : null;
         $form_data['OrderId'] = (isset($form['MarketPlaceOrder']) && !empty($form['MarketPlaceOrder'])) ? $form['MarketPlaceOrder'] : null;
+        $form_data['StoreProductId'] = (isset($form['StoreProductId']) && !empty($form['StoreProductId'])) ? $form['StoreProductId'] : null;
         $form_data['Status'] = (isset($form['OrderStatus']) && !empty($form['OrderStatus'])) ? $form['OrderStatus'] : null;
         $form_data['Currency'] = (isset($form['Currency']) && !empty($form['Currency'])) ? $form['Currency'] : 0;
         $form_data['PaymentStatus'] = (isset($form['PaymentStatus']) && !empty($form['PaymentStatus'])) ? $form['PaymentStatus'] : null;
@@ -644,8 +691,8 @@ public function orderinsertOrUpdate($data)
         $form_data['BillingZipCode'] = (isset($form['BillingZipCode']) && !empty($form['BillingZipCode'])) ? $form['BillingZipCode'] : null;
         $form_data['BillingCountry'] = (isset($form['BillingCountry']) && !empty($form['BillingCountry'])) ? $form['BillingCountry'] : null;
 
+        $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['Created'] = date('Y-m-d H:I:S');
-
         return $form_data;
     }
 
@@ -689,15 +736,16 @@ public function orderinsertOrUpdate($data)
     public function editOrder(ServerRequest $request, $Id = [])
     {
         $form = (new Order($this->db))->findById($Id['Id']);
+        $products = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [1, 0]);
         $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
         if (is_array($form) && !empty($form)) {
-            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $form]);
+            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $form, 'products' => $products, 'hidden_prod' => $form['StoreProductId']]);
         } else {
             $this->browse->flash([
                 'alert' => 'Failed to fetch Order details. Please try again.',
                 'alert_type' => 'danger'
             ]);
-            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $form]);
+            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $form, 'products' => $products, 'hidden_prod' => $form['StoreProductId']]);
         }
     }
 
@@ -719,6 +767,7 @@ public function orderinsertOrUpdate($data)
             $validate->validation_rules(array(
                 'MarketPlaceOrder'    => 'required',
                 'PaymentMethod'       => 'required',
+                'StoreProductId' => 'required',
                 'BuyerNote'       => 'required',
                 'SellerNote'       => 'required',
                 'ShippingMethod'       => 'required',
@@ -751,9 +800,27 @@ public function orderinsertOrUpdate($data)
                 throw new Exception("Please enter required fields...!", 301);
             }
 
+            $update_prod = false;
+            if (!empty($methodData['hidden_prod']) && $methodData['hidden_prod'] != $methodData['StoreProductId']) {
+                $update_prod = true;
+                // check product availablity in stock
+                $is_avail = $this->checkProductQty($form['StoreProductId']);
+                if (isset($is_avail['status']) && $is_avail['status'] == false)
+                    throw new Exception("Sorry, Product is not available in stock...!", 301);
+            }
+
+
             $update_data = $this->PrepareUpdateData($methodData);
             $Id = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : null;
             $is_updated = (new Order($this->db))->editOrder($Id, $update_data);
+
+            if ($update_prod == true) {
+                // Update Product Qty : Decrease product qty
+                $prodUpdate['Qty'] = $is_avail['qty'] - 1;
+                $prod_obj = new Product($this->db);
+                $all_prod = $prod_obj->updateProdInventory($form['StoreProductId'], $prodUpdate);
+            }
+
             if (isset($is_updated) && !empty($is_updated)) {
                 $this->view->flash([
                     'alert' => 'Order record updated successfully..!',
@@ -773,13 +840,12 @@ public function orderinsertOrUpdate($data)
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
-            $this->browse->flash($validated);
-            $form = (new Order($this->db))->findById($Id['Id']);
+            $this->view->flash($validated);
+            $products = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [1, 0]);
             $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
-            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $methodData]);
+            return $this->view->buildResponse('order/edit', ['market_places' => $market_places, 'form' => $methodData, 'products' => $products, 'hidden_prod' => $methodData['hidden_prod']]);
         }
     }
 
