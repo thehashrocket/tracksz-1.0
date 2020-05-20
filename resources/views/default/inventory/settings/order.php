@@ -56,13 +56,21 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                         <div class="col-sm">
 
                                            <div class="form-group">
-                                            <div class="form-check">
+                                             <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="DontSendCopy" id="DontSendCopy" data-parsley-required-message="<?=_('Enter DontSendCopy')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($order_details['DontSendCopy']) && $order_details['DontSendCopy'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="DontSendCopy">
+                                                        <?=_('Do not send me a copy of any confirmation,cancellation or deferal emails')?>
+                                                    </label>
+                                                
+                                            </div>
+                                           <!--  <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="ProductActive" id="ProductActive" data-parsley-required-message="<?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>" data-parsley-group="fieldset01" value="">
                                                     <label class="form-check-label" for="ProductActive">
                                                         <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
                                                     </label>
                                            
-                                               </div>
+                                               </div> -->
                                            </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>
