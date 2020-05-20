@@ -49,12 +49,49 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                 <div class="card card-fluid">
                     <h6 class="card-header">Export Order</h6><!-- .card-body -->
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label>Select export type:</label>
+                                <select class="form-control" id="exportType" name="exportType">
+                                    <option label="New" value="current">New Since Last Export</option>
+                                    <option label="By Date" value="range">By Date</option>
+                                    <option label="By Status" value="status">By Status</option>
+                                    <option label="All Orders" value="all">All Orders</option>
+                                 </select>
+                             </div>
+                             <div class="col-md-4">
+                             </div>
+                        </div>
+                        <br>
+
                        <div class="row input-daterange">
-            <div class="col-md-2">
-                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly required="" />
+            <div class="col-md-2 date_range">
+                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly required="" style="display: none;" />
             </div>
-            <div class="col-md-2">
-                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly required="" />
+            <div class="col-md-2 date_range">
+                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly required="" style="display: none;" />
+            </div>
+            <div class="col-md-4" id="current_time">
+                <input type="checkbox" name="current" value="1" checked=""> Update Last Export Time on Request
+            </div>
+            <div class="col-md-4 orderStatus" id="orderStatus" style="display: none;">
+                <select class="form-control"  name="orderStatus">
+                                                    
+                        <option value="all">All</option>
+                    
+                        <option value="new">New</option>
+                    
+                        <option value="packed">In Process</option>
+                    
+                        <option value="shipped">Shipped</option>
+                    
+                        <option value="unconfirm">Unconfirmed</option>
+                    
+                        <option value="deferred">Deferred</option>
+                    
+                        <option value="cancelled">Cancelled</option>
+                    
+                </select>
             </div>
              <div class="col-md-4">
             <div class="form-group">
