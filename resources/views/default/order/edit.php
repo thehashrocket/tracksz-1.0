@@ -51,7 +51,6 @@ $description_meta = 'Order Edit for your Tracksz Store, a Multiple Market Produc
                                         <div class="col-sm">
                                             <h5 class="card-title"><?= _('Order Information') ?></h5>
 
-                                           
                                             <!-- form starts -->
                                             <div class="form-group">
                                                 <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">

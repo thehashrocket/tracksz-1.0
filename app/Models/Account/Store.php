@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models\Account;
 
@@ -8,12 +10,10 @@ class Store
 {
     // Contains Resources
     private $db;
-    
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
-    
     /*
      * find - Find a member stores based on member id
      *
@@ -29,7 +29,6 @@ class Store
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
     /*
      * findId - Find a member stores based on member id
      *
@@ -37,7 +36,7 @@ class Store
      * @param  $MemberId  - User Id provided by AUTH after registration
      * @return send array of associative arrays back.
     */
-    public function findId($id,$MemberId)
+    public function findId($id, $MemberId)
     {
         $query  = 'SELECT * FROM Store WHERE Id = :Id AND MemberId = :MemberId ';
         $query .= 'AND IsActive = 1';
@@ -47,7 +46,6 @@ class Store
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
     /*
      * addStore - add a new store for member
      *
@@ -60,22 +58,20 @@ class Store
         $insert = '';
         $values = '';
         foreach ($form as $key => $value) {
-            $insert .= $key.', ';
-            $values .= ':'.$key.', ';
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
         }
         $insert = substr($insert, 0, -2);
         $values = substr($values, 0, -2);
-        $query  = 'INSERT INTO Store ('.$insert.') ';
-        $query .= 'VALUES('.$values.')';
+        $query  = 'INSERT INTO Store (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
         $stmt = $this->db->prepare($query);
-        
         if (!$stmt->execute($form)) {
             return false;
         }
         $stmt = null;
         return $this->db->lastInsertId();
     }
-    
     /*
     * updateColumns - update one or more columns to Member Table
     *
@@ -90,26 +86,22 @@ class Store
         $values = [];
         $values['Id'] = $Id;
         foreach ($columns as $column => $value) {
-            $update .= $column. ' = :'.$column .', ';
+            $update .= $column . ' = :' . $column . ', ';
             $values[$column] = $value;
         }
         $update = substr($update, 0, -2);
-        
         $query  = 'UPDATE Store SET ';
         $query .= $update . ' ';
         $query .= 'WHERE Id = :Id';
-        
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($values)) {
             var_dump($stmt->debugDumpParams());
             exit();
             return false;
         };
-        
         $stmt = null;
         return true;
     }
-    
     /*
      * columns - get one or more columns from Member Table
      *
@@ -121,17 +113,16 @@ class Store
     {
         $select = '';
         foreach ($columns as $column) {
-            $select .= $column.', ';
+            $select .= $column . ', ';
         }
         $select = substr($select, 0, -2);
-        $query = 'SELECT '. $select . ' FROM Store WHERE Id = :Id';
+        $query = 'SELECT ' . $select . ' FROM Store WHERE Id = :Id';
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute(['Id' => $Id])) {
             return false;
         };
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
     /*
     * isUnique - check if it is unique. Legal Name must be unique per user.
     *
@@ -151,13 +142,12 @@ class Store
             'DisplayName' => $display_name,
         ]);
         if ($unique = $stmt->fetch()) {
-            if  ($unique['stores'] > 0) {
+            if ($unique['stores'] > 0) {
                 return false;
             }
         }
         return true;
     }
-    
     /*
      * delete - delete a members address, by Address Table ID and User Id
      *
@@ -169,14 +159,12 @@ class Store
     {
         $query  = 'UPDATE Store SET IsActive = :Value WHERE Id = :Id AND MemberId = :MemberId';
         $stmt = $this->db->prepare($query);
-        
         if (!$stmt->execute(['Value' => $value, 'Id' => $Id, 'MemberId' => $memberId])) {
             return false;
         }
         $stmt = null;
         return true;
     }
-    
     /*
     * stripeSetup - check if store has stripe setup or not.
     *
@@ -199,5 +187,4 @@ class Store
         }
         return false;
     }
-
 }

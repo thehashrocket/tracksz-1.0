@@ -198,7 +198,6 @@ class CategoryController
         $form = (new Category($this->db))->findById($Id['Id']);
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-
         if (is_array($form) && !empty($form)) {
             return $this->browse->buildResponse('inventory/category/edit', [
                 'form' => $form, 'all_category' => $all_category

@@ -41,6 +41,105 @@ class product
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+
+    /*
+    * searchProductFilter - get all product records
+    *
+    * @param  
+    * @return associative array.
+    */
+    public function searchProductFilter($filterData = [])
+    {
+        if (empty($filterData))
+            return false;
+
+        $query = 'SELECT orderinventory.Id AS `OrderId`,
+                 orderinventory.Status AS `OrderStatus`,
+                 orderinventory.Currency AS `OrderCurrency`,
+                 orderinventory.PaymentStatus AS `OrderPaymentStatus`,
+                 marketplace.Id AS `MarketplaceId`,
+                 marketplace.MarketName AS `MarketplaceName`,
+                 product.Id AS `ProdId`
+         FROM orderinventory
+         LEFT JOIN marketplace
+            ON marketplace.Id = orderinventory.MarketPlaceId
+         LEFT JOIN product
+         ON product.Id = orderinventory.StoreProductId';
+
+        // Clear filter get all result
+        if (isset($filterData['clear_filter']) && !empty($filterData['clear_filter'])) {
+            $stmt = $this->db->query($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $is_or = false;
+        $or = '';
+        if (isset($filterData['SKU'], $filterData['Title']) && (!empty($filterData['SKU']) || !empty($filterData['Title']))) {
+            $query .= ' where ';
+        }
+        // sku filter
+        if (isset($filterData['SKU']) && !empty($filterData['SKU'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .=  $or . 'product.`SKU` LIKE "%' . $filterData['SKU'] . '%" ';
+            $is_or = true;
+        }
+
+        // title filter
+        if (isset($filterData['Title']) && !empty($filterData['Title'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`Name` LIKE "%' . $filterData['Title'] . '%" ';
+            $is_or = true;
+        }
+
+        // ISBN filter
+        if (isset($filterData['ISBN']) && !empty($filterData['ISBN'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`ProdId` LIKE "%' . $filterData['ISBN'] . '%" ';
+            $is_or = true;
+        }
+
+        // Author filter
+        if (isset($filterData['Author']) && !empty($filterData['Author'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`AddtionalData` LIKE "%' . $filterData['Author'] . '%" ';
+            $is_or = true;
+        }
+
+        // Order filter
+        if (isset($filterData['Order']) && !empty($filterData['Order'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' orderinventory.`OrderId` LIKE "%' . $filterData['Order'] . '%" ';
+            $is_or = true;
+        }
+
+        // Customer filter
+        if (isset($filterData['Customer']) && !empty($filterData['Customer'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`AddtionalData` LIKE "%' . $filterData['Customer'] . '%" ';
+            $is_or = true;
+        }
+
+        // Location filter
+        if (isset($filterData['Location']) && !empty($filterData['Location'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`AddtionalData` LIKE "%' . $filterData['Location'] . '%" ';
+            $is_or = true;
+        }
+
+        // Author filter
+        if (isset($filterData['Note']) && !empty($filterData['Note'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`Notes` LIKE "%' . $filterData['Note'] . '%" ';
+            $is_or = true;
+        }
+
+        $stmt = $this->db->query($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     /*
     * find - Find product by product record Id
     *
@@ -70,7 +169,7 @@ class product
     }
 
 
-   /*
+    /*
     * findBySKUProd - Find product by product record UserId and Status
     *
     * @param  UserId  - Table record Id of product to find

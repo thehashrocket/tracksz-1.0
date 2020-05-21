@@ -1,0 +1,1 @@
+ALTER TABLE `orderinventory` ADD `StoreId` INT(11) NULL AFTER `UserId`;

@@ -37,6 +37,69 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                     </div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
+            <div class="card-deck-xl">
+                <!-- .card-deck-xl starts -->
+                <div class="card card-fluid">
+                    <!-- .card card-fluid starts -->
+                    <div class="card-body">
+                        <!-- .card-body starts -->
+                        <div class="container">
+                            <form name="order_filter" id="order_filter" action="/order/filter_order" method="POST">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <h5 class="card-title"><?= _('Search') ?></h5>
+                                        <!-- form starts -->
+                                        <div class="form-group">
+                                            <label for="SKU"><?= _('SKU') ?></label>
+                                            <input type="text" class="form-control" id="SKU" name="SKU" placeholder="Enter SKU" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Title"><?= _('Title') ?></label>
+                                            <input type="text" class="form-control" id="Title" name="Title" placeholder="Enter Title" value="">
+                                        </div>
+                                    </div> <!-- col-sm -->
+                                    <div class="col-sm" style="margin-top: 2.1rem;">
+                                        <!-- form starts -->
+                                        <div class="form-group">
+                                            <label for="ISBN"><?= _('ISBN/UPC:') ?></label>
+                                            <input type="text" class="form-control" id="ISBN" name="ISBN" placeholder="Enter ISBN" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Author"><?= _('Author') ?></label>
+                                            <input type="text" class="form-control" id="Author" name="Author" placeholder="Enter Author" value="">
+                                        </div>
+                                    </div> <!-- col-sm -->
+                                    <div class="col-sm" style="margin-top: 2.1rem;">
+                                        <!-- form starts -->
+                                        <div class="form-group">
+                                            <label for="Order"><?= _('Order #:') ?></label>
+                                            <input type="text" class="form-control" id="Order" name="Order" placeholder="Enter Order" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Customer"><?= _('Customer') ?></label>
+                                            <input type="text" class="form-control" id="Customer" name="Customer" placeholder="Enter Customer" value="">
+                                        </div>
+                                    </div> <!-- col-sm -->
+                                    <div class="col-sm" style="margin-top: 2.1rem;">
+                                        <!-- form starts -->
+                                        <div class="form-group">
+                                            <label for="Location"><?= _('Location:') ?></label>
+                                            <input type="text" class="form-control" id="Location" name="Location" placeholder="Enter Location" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Note"><?= _('Note') ?></label>
+                                            <input type="text" class="form-control" id="Note" name="Note" placeholder="Enter Note" value="">
+                                        </div>
+                                        <input type='hidden' id='clear_filter' name='clear_filter' value=''>
+                                    </div> <!-- col-sm -->
+                                </div> <!-- Row -->
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary btn_clear">Clear</button>
+                            </form>
+                        </div> <!-- Container -->
+                    </div> <!-- Card Body -->
+                </div> <!-- .card card-fluid ends -->
+            </div>
             <div class="page-section">
                 <!-- .page-section starts -->
                 <div class="card card-fluid">

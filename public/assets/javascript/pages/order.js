@@ -28,9 +28,12 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on("click",".btn_clear",function() {
+            $('#clear_filter').val(true);
+    });
 
    /*-----mukesh js-------------*/
-     $(document).ready(function() {
+     
 
                 $("#from_date").hide();
                 $("#to_date").hide();
@@ -61,8 +64,12 @@ $(document).ready(function() {
                  $(".date_range").hide();
                  $('#current_time').hide();
 
+          }
 
-             }
+
+
+
+
             else
              {
                 $("#from_date").hide();
@@ -72,7 +79,4 @@ $(document).ready(function() {
                 $('#current_time').hide();
              }
         });
-               
-       });
-
 });

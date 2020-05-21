@@ -11,6 +11,7 @@ use App\Models\Order\PostageSetting;
 use App\Models\Order\LabelSetting;
 use App\Models\Order\Order;
 use App\Models\Product\Product;
+use App\Models\Account\Store;
 use App\Models\Marketplace\Marketplace;
 use Delight\Cookie\Cookie;
 use Laminas\Diactoros\ServerRequest;
@@ -38,6 +39,7 @@ class OrderController
     private $view;
     private $auth;
     private $db;
+    private $storeid;
     /**
      * _construct - create object
      *
@@ -51,6 +53,8 @@ class OrderController
         $this->view = $view;
         $this->auth = $auth;
         $this->db   = $db;
+        $store = (new Store($this->db))->find(Session::get('member_id'), 1);
+        $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
     }
     public function browse()
     {
@@ -445,7 +449,6 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
-           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -833,6 +836,7 @@ class OrderController
         $form_data['BillingCountry'] = (isset($form['BillingCountry']) && !empty($form['BillingCountry'])) ? $form['BillingCountry'] : null;
 
         $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
         $form_data['Created'] = date('Y-m-d H:I:S');
         return $form_data;
     }
@@ -1032,7 +1036,49 @@ class OrderController
         $form_data['BillingState'] = (isset($form['BillingState']) && !empty($form['BillingState'])) ? $form['BillingState'] : null;
         $form_data['BillingZipCode'] = (isset($form['BillingZipCode']) && !empty($form['BillingZipCode'])) ? $form['BillingZipCode'] : null;
         $form_data['BillingCountry'] = (isset($form['BillingCountry']) && !empty($form['BillingCountry'])) ? $form['BillingCountry'] : null;
+        $form_data['StoreId'] = $this->storeid;
         $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
+    }
+
+    /*
+    * searchOrder - Update Batch Move
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function searchOrder(ServerRequest $request)
+    {
+
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $result = (new Product($this->db))->searchProductFilter($methodData);
+
+            if (isset($result) && !empty($result)) {
+                $this->view->flash([
+                    'alert' => 'Order result get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->buildResponse('order/browse', ['all_order' => $result]);
+            } else {
+                throw new Exception("Search result not found...!", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/browse', []);
+        }
     }
 }

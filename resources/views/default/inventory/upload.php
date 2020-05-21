@@ -100,7 +100,6 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     <br />
                                     <!-- <button type="submit" class="btn btn-primary" id="submit-all">Upload</button> -->
                                 </div>
-
                                 <div class="col-sm mt-3 pt-3">
                                     <!-- col-sm Group Right Starts -->
                                 </div> <!-- col-sm Group Right Ends -->

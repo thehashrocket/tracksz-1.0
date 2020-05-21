@@ -70,7 +70,7 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                         <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
                                                     </label>
                                            
-                                               </div> -->
+                                               </div>
                                            </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>

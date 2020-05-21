@@ -51,6 +51,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/delete', Order\OrderController::class . '::deleteOrderData');
                 $route->get('/edit/{Id:number}', Order\OrderController::class . '::editOrder');
                 $route->post('/update', Order\OrderController::class . '::updateOrder');
+                $route->post('/filter_order', Order\OrderController::class . '::searchOrder');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));
