@@ -44,12 +44,16 @@ class product
 
 
 
+
+
+
     /*
     * searchProductFilter - get all product records
     *
     * @param  
     * @return associative array.
     */
+
     public function searchProductFilter($filterData = [])
     {
         if (empty($filterData))
@@ -140,6 +144,7 @@ class product
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     /*
     * find - Find product by product record Id
     *

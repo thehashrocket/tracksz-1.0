@@ -27,8 +27,9 @@ $(document).ready(function() {
           });
         }
     });
+$(document).on("click",".btn_clear",function() {
 
-    $(document).on("click",".btn_clear",function() {
+
             $('#clear_filter').val(true);
     });
 

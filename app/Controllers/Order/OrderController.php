@@ -449,6 +449,7 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
+           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -618,6 +619,24 @@ class OrderController
             $update_data['CancelEmail'] = $methodData['CancelEmail'];
             $update_data['DeferEmail'] = $methodData['DeferEmail'];
             $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy']))?1:null;
+            $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
+           /* for($i=1; $i <= $nooforderfoldercount;$i++)
+            {
+                $work1 = $methodData['NoAdditionalOrder'.$i];
+                //echo 'sadasda';
+                //print_r($work1); exit;
+            }
+            return $i;*/
+  /*          $sql = array;
+$yourArrFromCsv = explode(",", $nooforderfoldercount);
+//then insert to db
+foreach( $yourArrFromCsv as $row ) {
+    $sql[] = '('.$compProdId.', '.$row.')';
+}
+mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sql));*/
+
+
+
             $is_data = $this->orderinsertOrUpdate($update_data);
 
             if (isset($is_data) && !empty($is_data)) {

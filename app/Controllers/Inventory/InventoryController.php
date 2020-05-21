@@ -869,7 +869,7 @@ class InventoryController
 
             if ($export_type == 'xlsx' || $export_type == 'csv') {
                 $this->view->flash([
-                    'alert' => 'Inventory file suucessfully export..!',
+                    'alert' => 'Inventory file sucessfully export..!',
                     'alert_type' => 'success'
                 ]);
 

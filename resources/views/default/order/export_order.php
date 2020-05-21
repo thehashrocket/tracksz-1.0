@@ -131,6 +131,7 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
 <?php $this->start('footer_extras') ?>
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+        
     <script type="text/javascript">
         $(document).ready(function() {
              $('.input-daterange').datepicker({
