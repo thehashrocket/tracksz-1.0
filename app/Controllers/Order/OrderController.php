@@ -619,14 +619,16 @@ class OrderController
             $update_data['CancelEmail'] = $methodData['CancelEmail'];
             $update_data['DeferEmail'] = $methodData['DeferEmail'];
             $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy']))?1:null;
-            $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
-           /* for($i=1; $i <= $nooforderfoldercount;$i++)
+           
+           
+            for($i=1; $i <= $methodData['NoAdditionalOrder'];$i++)
             {
-                $work1 = $methodData['NoAdditionalOrder'.$i];
-                //echo 'sadasda';
-                //print_r($work1); exit;
+                $work[] = $methodData['NoAdditionalOrder'.$i];
+                
             }
-            return $i;*/
+$update_data['NoAdditionalOrder'] = implode(',',$work);
+
+
   /*          $sql = array;
 $yourArrFromCsv = explode(",", $nooforderfoldercount);
 //then insert to db

@@ -174,7 +174,7 @@ class product
     }
 
 
-    /*
+   /*
     * findBySKUProd - Find product by product record UserId and Status
     *
     * @param  UserId  - Table record Id of product to find

@@ -35,6 +35,7 @@ class OrderSetting
         $query .= 'ConfirmEmail = :ConfirmEmail, ';
         $query .= 'CancelEmail = :CancelEmail, ';
         $query .= 'DeferEmail = :DeferEmail, ';
+        $query .= 'NoAdditionalOrder = :NoAdditionalOrder, ';
         $query .= 'Updated = :Updated ';
         $query .= 'WHERE UserId = :UserId ';
         $stmt = $this->db->prepare($query);
@@ -54,9 +55,9 @@ class OrderSetting
     */
     public function addInventorySettings($form = array())
     {
-        $query  = 'INSERT INTO ordersettings (UserId,DontSendCopy,ConfirmEmail,CancelEmail,DeferEmail,Created)';
+        $query  = 'INSERT INTO ordersettings (UserId,DontSendCopy,ConfirmEmail,CancelEmail,DeferEmail,NoAdditionalOrder,Created)';
         $query .= ' VALUES (';
-        $query .= ':UserId,:DontSendCopy,:ConfirmEmail,:CancelEmail,:DeferEmail,:Created';
+        $query .= ':UserId,:DontSendCopy,:ConfirmEmail,:CancelEmail,:DeferEmail,:NoAdditionalOrder,:Created';
         $query .= ')';
 
         $stmt = $this->db->prepare($query);
