@@ -76,16 +76,15 @@ LEFT JOIN marketplace
     }
 
 
-   /*
+    /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *
     * @param  Id  - Table record Id of orderinventory to find
     * @return associative array.
     */
-    public function dateRangeSearchByOrderData($formD,$ToD)
+    public function dateRangeSearchByOrderData($formD, $ToD)
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "2020-05-12" And "2020-05-20"');
-       
         $stmt->execute(['Created' => $formD, 'Created' => $ToD]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -327,7 +326,6 @@ LEFT JOIN marketplace
         $query  = 'UPDATE orderinventory SET ';
         $query .= $update . ' ';
         $query .= 'WHERE Id = :Id';
-
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($values)) {
             var_dump($stmt->debugDumpParams());

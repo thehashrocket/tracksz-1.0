@@ -136,13 +136,13 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                     Update Selected
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#">New</a>
-                                                    <a class="dropdown-item" href="#">In Process</a>
-                                                    <a class="dropdown-item" href="#">Shipped</a>
-                                                    <a class="dropdown-item" href="#">Deferred</a>
-                                                    <a class="dropdown-item" href="#">Cancelled</a>
-                                                    <a class="dropdown-item" href="#">Shipped - No Email</a>
-                                                    <a class="dropdown-item" href="#">Cancelled - No Email</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="new">New</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="in-process">In Process</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="shipped">Shipped</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="deferred">Deferred</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="cancelled">Cancelled</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="shipped-noemail">Shipped - No Email</a>
+                                                    <a class="dropdown-item btn_status_update" href="#" status="cancelled-noemail">Cancelled - No Email</a>
                                                 </div>
                                             </div> &nbsp;
                                             <div class="dropdown">
@@ -177,6 +177,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                             <table id="order_table" name="order_table" class="table table-striped table-bordered nowrap" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th><input type="checkbox" name="select_all_chkbox" class="select_all_chkbox" value="0" id="select_all_chkbox"></th>
                                         <th><?= _('MarketName') ?></th>
                                         <th><?= _('OrderStatus') ?></th>
                                         <th><?= _('Currency') ?></th>
@@ -185,8 +186,10 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($all_order as $order) : ?>
+                                    <?php
+                                    foreach ($all_order as $order) : ?>
                                         <tr>
+                                            <td><input type="checkbox" class="child_chkbox" name="child_chkbox[]" value="<?php echo $order['OrderId']; ?>"></td>
                                             <td><?php echo $order['MarketplaceName']; ?></td>
                                             <td><?php echo $order['OrderStatus']; ?></td>
                                             <td><?php echo $order['OrderCurrency']; ?></td>
@@ -214,9 +217,9 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 <?= $this->stop() ?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
+<!-- <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
 <script src="/assets/javascript/pages/order.js"></script>
 <?= $this->stop() ?>
 
