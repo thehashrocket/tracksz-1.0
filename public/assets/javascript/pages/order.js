@@ -1,10 +1,10 @@
-$(document).ready(function() {
-    console.log('document ready test..!');
+$(document).ready(function () {
+  console.log("document ready test..!");
 
-    $('#order_table').DataTable( {
-        responsive: true,
-        "order": [[ 0, "desc" ]],     
-    });
+  $("#order_table").DataTable({
+    responsive: true,
+    order: [[0, "desc"]],
+  });
 
   $(document).on("click", ".btn_delete", function () {
     if (!confirm("Do you want to delete ?")) {
@@ -50,7 +50,7 @@ $(document).ready(function() {
   });
   // Handle click on "Select all" control Ends
 
-  // Handle click on "Select all" control Starts
+  // Handle click on "btn_status_update" control Starts
   $(document).on("click", ".btn_status_update", function () {
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
@@ -65,18 +65,28 @@ $(document).ready(function() {
     $.ajax({
       url: BASE_URL + "/order/update_status",
       type: "POST",
-      data: { ids: data_array, status: $(this).attr('status') },
+      data: { ids: data_array, status: $(this).attr("status") },
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-        if (data.status) {        
-            location.reload();
-        } else {   
-            location.reload();
+    
+        if (data.status) {
+          location.reload();
+        } else {
+          location.reload();
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {},
     });
   });
+
+  // Handle click on "btn_status_update" control Starts
+  $(document).on("change", "#OrderStatus", function () {
+    $("#order_change").submit();
+  });
+
+
+
+
 
 });

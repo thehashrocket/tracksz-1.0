@@ -36,7 +36,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/update-batchmove', Order\OrderController::class . '::updateBatchMove');
                 $route->get('/confirmation-file', Order\OrderController::class . '::loadConfirmationFile');
                 $route->get('/export-order', Order\OrderController::class . '::loadExportOrder');
-                 $route->post('/export-order-data', Order\OrderController::class . '::exportOrderData');
+                $route->post('/export-order-data', Order\OrderController::class . '::exportOrderData');
                 $route->get('/shipping', Order\OrderController::class . '::loadShippingOrder');
                 //$route->get('/order-settings', Order\OrderController::class . '::loadOrderSetting');
                 $route->get('/postage-settings', Order\OrderController::class . '::loadPostageSetting');
@@ -53,6 +53,10 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/update', Order\OrderController::class . '::updateOrder');
                 $route->post('/filter_order', Order\OrderController::class . '::searchOrder');
                 $route->post('/update_status', Order\OrderController::class . '::updateOrderStatus');
+                $route->post('/order_change', Order\OrderController::class . '::updateOrderChange');
+                $route->get('/pick', Order\OrderController::class . '::pickOrder');
+                $route->get('/packing', Order\OrderController::class . '::packingOrder');
+                $route->get('/mailing', Order\OrderController::class . '::mailingOrder');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));

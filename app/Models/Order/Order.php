@@ -76,17 +76,15 @@ LEFT JOIN marketplace
     }
 
 
-   
-  /*
+    /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *
     * @param  Id  - Table record Id of orderinventory to find
     * @return associative array.
     */
-    public function dateRangeSearchByOrderData($formD,$ToD)
+    public function dateRangeSearchByOrderData($formD, $ToD)
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "2020-05-12" And "2020-05-20"');
-       
         $stmt->execute(['Created' => $formD, 'Created' => $ToD]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -356,5 +354,40 @@ LEFT JOIN marketplace
 
         $stmt = null;
         return true;
+    }
+
+    /*
+    * find - Find getStatusOrders by orderinventory record status
+    *
+    * @param  Id  - Table record Id of orderinventory to find
+    * @return associative array.
+    */
+    public function getStatusOrders($Status)
+    {
+        if ($Status == 'all') {
+            $stmt = $this->db->prepare('SELECT orderinventory.Id AS `OrderId`,
+            orderinventory.Status AS `OrderStatus`,
+            orderinventory.Currency AS `OrderCurrency`,
+            orderinventory.PaymentStatus AS `OrderPaymentStatus`,
+            marketplace.Id AS `MarketplaceId`,
+            marketplace.MarketName AS `MarketplaceName`
+    FROM orderinventory
+    LEFT JOIN marketplace
+       ON marketplace.Id = orderinventory.MarketPlaceId');
+        } else {
+            $stmt = $this->db->prepare('SELECT orderinventory.Id AS `OrderId`,
+            orderinventory.Status AS `OrderStatus`,
+            orderinventory.Currency AS `OrderCurrency`,
+            orderinventory.PaymentStatus AS `OrderPaymentStatus`,
+            marketplace.Id AS `MarketplaceId`,
+            marketplace.MarketName AS `MarketplaceName`
+    FROM orderinventory
+    LEFT JOIN marketplace
+       ON marketplace.Id = orderinventory.MarketPlaceId Where orderinventory.Status = :Status');
+            $stmt->bindParam('Status', $Status, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

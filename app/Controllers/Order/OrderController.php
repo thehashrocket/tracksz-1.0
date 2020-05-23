@@ -178,7 +178,7 @@ class OrderController
     * @return view
     */
     public function loadExportOrder()
-    { 
+    {
         $all_order = (new Order($this->db))->getAllBelongsTo();
         return $this->view->buildResponse('order/export_order', ['all_order' => $all_order]);
         //return $this->view->buildResponse('order/defaults', []);
@@ -186,8 +186,7 @@ class OrderController
 
     public function exportOrderData(ServerRequest $request)
     {
-        try 
-        {
+        try {
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
 
@@ -1189,5 +1188,78 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
         } // Loops Ends
         return true;
+    }
+
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+    */
+    public function updateOrderChange(ServerRequest $request)
+    {
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+            $map_data = (new Order($this->db))->getStatusOrders($methodData['OrderStatus']);
+            if (isset($map_data) && !empty($map_data)) {
+                $this->view->flash([
+                    'alert' => 'Order Status get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->buildResponse('order/browse', ['all_order' => $map_data]);
+            } else {
+                throw new Exception("Order result not get...!", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/browse', []);
+        }
+    }
+
+
+
+    /*
+    * pickOrder - Update Batch Move
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function pickOrder()
+    {
+        return $this->view->buildResponse('order/pick', []);
+    }
+    /*
+    * packingOrder - load packinglist view
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function packingOrder()
+    {
+        return $this->view->buildResponse('order/packingslip', []);
+    }
+
+    /*
+    * mailingOrder - load mailinglist view
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function mailingOrder()
+    {
+        return $this->view->buildResponse('order/mailinglabel', []);
     }
 }

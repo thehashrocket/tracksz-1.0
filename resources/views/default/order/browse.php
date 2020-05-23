@@ -108,59 +108,64 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                     <div class="card-body">
                         <!-- .card-body starts -->
                         <div class="container">
-                            <form name="order_filter" id="order_filter" action="/order/filter_order" method="POST">
-                                <div class="row">
-                                    <div class="col-sm">
 
+                            <div class="row">
+                                <div class="col-sm">
+                                    <form name="order_change" id="order_change" action="/order/order_change" method="POST">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
                                             <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="">Order Status...</option>
+                                                <option value="all">All</option>
                                                 <option value="new">New</option>
+                                                <option value="packed">In Process</option>
+                                                <option value="shipped">Shipped</option>
+                                                <option value="unconfirm">Unconfirmed</option>
+                                                <option value="deferred">Deferred</option>
+                                                <option value="cancelled">Cancelled</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary">Pick List</button> &nbsp;
-                                            <button type="submit" class="btn btn-primary">Packing Slips</button> &nbsp;
-                                            <button type="submit" class="btn btn-primary">Mailing Labels</button>
-                                        </div>
-                                    </div> <!-- col-sm -->
+                                    </form>
+                                    <div class="form-group">
+                                        <a href="<?php echo \App\Library\Config::get('company_url') . "/order/pick" ?>" class="btn btn-primary" target="_blank">Pick List</a> &nbsp;
+                                        <a href="<?php echo \App\Library\Config::get('company_url') . "/order/packing" ?>" class="btn btn-primary" target="_blank">Packing Slips</a> &nbsp;
+                                        <a href="<?php echo \App\Library\Config::get('company_url') . "/order/mailing" ?>" class="btn btn-primary" target="_blank">Mailing Labels</a>
+                                    </div>
+                                </div> <!-- col-sm -->
 
-                                    <div class="col-sm" style="margin-top: 2.1rem;">
-                                        <!-- form starts -->
-                                        <label for="Location"><?= _('Selected Orders:') ?></label><br>
-                                        <div class="main_div d-flex">
-                                            <button type="submit" class="btn btn-primary">Ship Selected</button> &nbsp;
-                                            <div class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Update Selected
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item btn_status_update" href="#" status="new">New</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="in-process">In Process</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="shipped">Shipped</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="deferred">Deferred</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="cancelled">Cancelled</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="shipped-noemail">Shipped - No Email</a>
-                                                    <a class="dropdown-item btn_status_update" href="#" status="cancelled-noemail">Cancelled - No Email</a>
-                                                </div>
-                                            </div> &nbsp;
-                                            <div class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Export Selected
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#">Excel</a>
-                                                    <a class="dropdown-item" href="#">CSV</a>
-                                                </div>
+                                <div class="col-sm" style="margin-top: 2.1rem;">
+                                    <!-- form starts -->
+                                    <label for="Location"><?= _('Selected Orders:') ?></label><br>
+                                    <div class="main_div d-flex">
+                                        <button type="submit" class="btn btn-primary">Ship Selected</button> &nbsp;
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Update Selected
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item btn_status_update" href="#" status="new">New</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="in-process">In Process</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="shipped">Shipped</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="deferred">Deferred</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="cancelled">Cancelled</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="shipped-noemail">Shipped - No Email</a>
+                                                <a class="dropdown-item btn_status_update" href="#" status="cancelled-noemail">Cancelled - No Email</a>
                                             </div>
-
+                                        </div> &nbsp;
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Export Selected
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Excel</a>
+                                                <a class="dropdown-item" href="#">CSV</a>
+                                            </div>
                                         </div>
 
+                                    </div>
 
                                     </div> <!-- col-sm -->
                                 </div> <!-- Row -->
-                            </form>
                         </div> <!-- Container -->
                     </div> <!-- Card Body -->
                 </div> <!-- .card card-fluid ends -->
