@@ -36,7 +36,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/update-batchmove', Order\OrderController::class . '::updateBatchMove');
                 $route->get('/confirmation-file', Order\OrderController::class . '::loadConfirmationFile');
                 $route->get('/export-order', Order\OrderController::class . '::loadExportOrder');
-                $route->post('/export-order-data', Order\OrderController::class . '::exportOrderData');
+                 $route->post('/export-order-data', Order\OrderController::class . '::exportOrderData');
                 $route->get('/shipping', Order\OrderController::class . '::loadShippingOrder');
                 //$route->get('/order-settings', Order\OrderController::class . '::loadOrderSetting');
                 $route->get('/postage-settings', Order\OrderController::class . '::loadPostageSetting');

@@ -55,6 +55,7 @@ class OrderController
         $this->db   = $db;
         $store = (new Store($this->db))->find(Session::get('member_id'), 1);
         $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
+        ini_set('memory_limit', '-1');
     }
     public function browse()
     {
@@ -177,7 +178,7 @@ class OrderController
     * @return view
     */
     public function loadExportOrder()
-    {
+    { 
         $all_order = (new Order($this->db))->getAllBelongsTo();
         return $this->view->buildResponse('order/export_order', ['all_order' => $all_order]);
         //return $this->view->buildResponse('order/defaults', []);
@@ -185,7 +186,8 @@ class OrderController
 
     public function exportOrderData(ServerRequest $request)
     {
-        try {
+        try 
+        {
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
 
@@ -193,13 +195,41 @@ class OrderController
             $from_date = $form['from_date'];
             $to_date = $form['to_date'];
 
-            $formD =  date("Y-m-d", strtotime($from_date));
-            $ToD =  date("Y-m-d", strtotime($to_date));
+            $orderStatus = $form['orderStatus'];
+
+            $allorder   = $form['exportType'];
+
+             if($allorder == 'new')
+            {
+               $orderStatus = $allorder;
+               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($orderStatus);
+            }
 
 
-            $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
+            if($allorder == 'All')
+            {
+               $order_data = (new Order($this->db))->allorderSearchByOrderData();
+            }
 
-            $spreadsheet = new Spreadsheet();
+            if($orderStatus!= '')
+            {
+                 $order_data = (new Order($this->db))->orderstatusSearchByOrderData($orderStatus);
+            }
+
+            if($from_date!='')
+            {
+              
+             $formD  =  date("Y-m-d",strtotime($from_date));
+             $ToD    =  date("Y-m-d",strtotime($to_date));
+
+             $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
+            }
+
+            
+          
+
+
+           $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'MarketPlaceId');
             $sheet->setCellValue('B1', 'OrderId');
@@ -232,8 +262,10 @@ class OrderController
             $sheet->setCellValue('AC1', 'BillingState');
             $sheet->setCellValue('AD1', 'BillingZipCode');
             $sheet->setCellValue('AE1', 'BillingCountry');
+            
             $rows = 2;
             foreach ($order_data as $orderd) {
+                
                 $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
                 $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
                 $sheet->setCellValue('C' . $rows, $orderd['Status']);
@@ -250,7 +282,7 @@ class OrderController
                 $sheet->setCellValue('N' . $rows, $orderd['ShippingEmail']);
                 $sheet->setCellValue('O' . $rows, $orderd['ShippingAddress1']);
                 $sheet->setCellValue('P' . $rows, $orderd['ShippingAddress2']);
-                $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
+                 $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
                 $sheet->setCellValue('R' . $rows, $orderd['ShippingCity']);
                 $sheet->setCellValue('S' . $rows, $orderd['ShippingState']);
                 $sheet->setCellValue('T' . $rows, $orderd['ShippingZipCode']);
@@ -265,6 +297,7 @@ class OrderController
                 $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
                 $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
                 $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
+                
                 $rows++;
             }
 
@@ -288,8 +321,10 @@ class OrderController
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+               
             }
-        } catch (Exception $e) {
+    } catch (Exception $e) {
+        
 
             $res['status'] = false;
             $res['data'] = [];
@@ -304,6 +339,7 @@ class OrderController
             $this->view->flash($validated);
             return $this->view->redirect('/order/export-order');
         }
+            
     }
 
     /*
@@ -441,6 +477,7 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
+           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -463,7 +500,7 @@ class OrderController
 
             $update_data['UserId'] = Session::get('auth_user_id');
             // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
-            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? 1 : null;
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView']))?1:null;
             // print_r($update_data['SkipPDFView']);
             $update_data['DefaultAction'] = $methodData['DefaultAction'];
             $update_data['SortOrders'] = $methodData['SortOrders'];
@@ -501,6 +538,7 @@ class OrderController
             $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
             $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
             $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
+            
 
             $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
             $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
@@ -520,7 +558,9 @@ class OrderController
             $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
 
 
+            
             $is_data = $this->labelinsertOrUpdate($update_data);
+            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -606,16 +646,16 @@ class OrderController
             $update_data['ConfirmEmail'] = $methodData['ConfirmEmail'];
             $update_data['CancelEmail'] = $methodData['CancelEmail'];
             $update_data['DeferEmail'] = $methodData['DeferEmail'];
-            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : null;
-
-
-            for ($i = 1; $i <= $methodData['NoAdditionalOrder']; $i++) {
-                $work[] = $methodData['NoAdditionalOrder' . $i];
+            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy']))?1:null;
+            $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
+           /* for($i=1; $i <= $nooforderfoldercount;$i++)
+            {
+                $work1 = $methodData['NoAdditionalOrder'.$i];
+                //echo 'sadasda';
+                //print_r($work1); exit;
             }
-            $update_data['NoAdditionalOrder'] = implode(',', $work);
-
-
-            /*          $sql = array;
+            return $i;*/
+  /*          $sql = array;
 $yourArrFromCsv = explode(",", $nooforderfoldercount);
 //then insert to db
 foreach( $yourArrFromCsv as $row ) {
