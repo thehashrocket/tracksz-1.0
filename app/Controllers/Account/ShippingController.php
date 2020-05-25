@@ -169,18 +169,36 @@ class ShippingController
     }
 
     /**
-     *  viewAssignZones - View page to assign shipping zones to individual countries
+     *  viewAssignZonesIndividualCountries - View page to assign shipping zones to individual countries
      * 
-     *  @return view - /account/shipping-assign/individual
+     *  @return view - /account/shipping-assign/individual/countries
      */
-    public function viewAssignZonesIndividual()
+    public function viewAssignZonesIndividualCountries()
     {
-        $countryZones = (new ShippingZone($this->db))->getCountryAssignments();
-        $countries = (new Country($this->db))->all();
         $activeStoreId = Cookie::get('tracksz_active_store');
+        $shippingZoneObj = (new ShippingZone($this->db));
+        $countryZoneAssignments = $shippingZoneObj->getCountryAssignments($activeStoreId);
+        $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
+        return $this->view->buildResponse('/account/shipping_assign_countries', [
+            'countryZoneAssignments' => $countryZoneAssignments,
+            'shippingZones' => $shippingZones
+        ]);
+    }
+
+    /**
+     *  viewAssignZonesIndividualStates - View page to assign shipping zones to individual states
+     * 
+     *  @return view - /account/shipping-assign/individual/states
+     */
+    public function viewAssignZonesIndividualStates(ServerRequest $request, array $data)
+    {
+        // TODO: Make sure country id is valid (US, UK, AU, CA)
+        $activeStoreId = Cookie::get('tracksz_active_store');
+        $states = (new Country($this->db))->getStates($data['CountryId']);
         $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
-        return $this->view->buildResponse('/account/shipping_assign_individual', [
-            'countries' => $countries,
+        return $this->view->buildResponse('/account/shipping_assign_states', [
+            'countryId' => $data['CountryId'],
+            'states' => $states,
             'shippingZones' => $zones
         ]);
     }
@@ -385,14 +403,27 @@ class ShippingController
     public function bulkAssign(ServerRequest $request)
     {
         $data = $request->getParsedBody();
-        $zoneId = $data['ZoneId'];
-        $countryCode = $data['Country'];
-        $success = (new ShippingZone($this->db))->bulkAssign($zoneId, $countryCode);
+        if ($data['ZoneId'] !== 'null')
+        {
+            $success = (new ShippingZone($this->db))->bulkAssign($data['ZoneId'], $data['Country']);
+            $this->view->flash([
+                'alert' => $success ? 'Successfully assigned shipping zone to region(s).' : 'Failed to assign shipping zone to region(s).',
+                'alert_type' => $success ? 'success' : 'danger'
+            ]);
+        }
+
+        return $this->view->redirect('/account/shipping-assign');
+    }
+
+    public function assignZoneToState(ServerRequest $request)
+    {
+        $data = $request->getParsedBody();
+        $success = (new ShippingZone($this->db))->assignToState($data['ZoneId'], $data['CountryId'], $data['StateId']);
         $this->view->flash([
-            'alert' => $success ? 'Successfully assigned shipping zone to region(s).' : 'Failed to assign shipping zone to region(s).',
+            'alert' => $success ? 'Successfully assigned shipping zone to state.' : 'Failed to assign shipping zone to state.',
             'alert_type' => $success ? 'success' : 'danger'
         ]);
 
-        return $this->view->redirect('/account/shipping-assign');
+        return $this->view->redirect('/account/shipping-assign/individual/states/' . $data['CountryId']);
     }
 }

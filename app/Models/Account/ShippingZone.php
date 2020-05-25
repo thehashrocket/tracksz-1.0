@@ -2,6 +2,7 @@
 
 namespace App\Models\Account;
 
+use App\Models\Country;
 use PDO;
 
 class ShippingZone
@@ -127,6 +128,36 @@ class ShippingZone
         return $stmt->execute();
     }
 
+    public function getCountryAssignments($storeId)
+    {
+        $countries = (new Country($this->db))->all();
+        $map = [];
+
+        $query = 'SELECT ZoneId FROM ShippingZoneToRegion INNER JOIN ShippingZone ON ShippingZoneToRegion.ZoneId = ShippingZone.Id 
+                  WHERE ShippingZone.StoreId = :storeId AND ShippingZoneToRegion.CountryId = :countryId';
+
+        $stmt = $this->db->prepare($query);
+
+        foreach ($countries as $country)
+        {
+            $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+            $stmt->bindParam(':countryId', $country['Id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (boolval($result))
+            {
+                $zone = $this->find($result['ZoneId']);
+                $map[json_encode($country)] = $zone;
+            }
+            else
+            {
+                $map[json_encode($country)] = null;
+            }
+        }
+
+        return $map;
+    }
+
     /**
      *  isAssignedToRegion - Check if a zone is already assigned to a region
      * 
@@ -158,7 +189,7 @@ class ShippingZone
         {
             $countryId = $this->countryCodes[$countryCode];
 
-            // Delete redundant specific entries then bulk assign (save lots of space)
+            // Delete redundant specific entries then bulk assign (save a lot of space)
             $query = 'DELETE FROM ShippingZoneToRegion WHERE ZoneId = :zoneId AND CountryId = :countryId;';
             $query .= 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId) VALUES (:zoneId, :countryId)';
             $stmt = $this->db->prepare($query);
@@ -212,17 +243,13 @@ class ShippingZone
         return true;
     }
 
-    public function getCountryAssignments()
+    public function assignToState($zoneId, $countryId, $stateId)
     {
-        $map = [];
-        $query = 'SELECT ZoneId FROM ShippingZoneToRegion WHERE CountryId = :countryId';
+        $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId, StateId) VALUES (:zoneId, :countryId, :stateId)';
         $stmt = $this->db->prepare($query);
-
-        $countryIds = (new Country($this->db))->getAllIds();
-        foreach ($countryIds as $countryId)
-        {
-            $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
-
-        }
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }

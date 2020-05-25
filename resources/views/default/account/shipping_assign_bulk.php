@@ -75,7 +75,7 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                     </blockquote>
 
                     <br>
-                    <a href="/account/shipping-assign/individual">Assign shipping zones to individual countries</a>
+                    <a href="/account/shipping-assign/individual/countries">Assign shipping zones to individual countries</a>
                 </div>
             </div>
         </div><!-- /.page-inner -->

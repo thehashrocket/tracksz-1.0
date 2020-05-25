@@ -20,30 +20,35 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?=_('Assign Shipping Zones to Specific Regions')?> </h1>
                 </div>
-                <p class="text-muted"> <?=_('Here you can assign shipping zones to specific regions within countries.')?></p>
+                <p class="text-muted"> <?=_('Here you can assign shipping zones to individual states/provinces within countries.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/223">United States</a></li>
+                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/38">Canada</a></li>
+                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/13">Australia</a></li>
+                </ul>
             </header><!-- /.page-title-bar -->
             <!-- .card -->
             <div class="card card-fluid">
                 <div class="card-body">
-                    <p>Select an area to assign a shipping zone:</p>
                     <blockquote>
                         <table id="shipping-countries" class="table table-striped table-bordered nowrap" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Country</th>
+                                <th>State/Province</th>
                                 <th>Shipping Zones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($countries as $country): ?>
+                            <?php foreach($states as $state): ?>
                                 <tr>
-                                    <td><?= $country['Name'] ?></td>
+                                    <td><?= $state['Name'] ?></td>
                                     <td>
-                                        <form action="/account/shipping-assign/bulk-assign" method="POST">
-                                            <input type="hidden" name="Country" value="<?=$country['IsoCode2']?>">
+                                        <form action="/account/shipping-assign/individual/states" method="POST">
+                                            <input type="hidden" name="StateId" value="<?=$state['Id']?>">
+                                            <input type="hidden" name="CountryId" value="<?=$countryId?>">
                                             <select class="form-control" name="ZoneId" style="display: inline-block">
                                             <?php foreach($shippingZones as $zone): ?>
                                                 <option value="<?=$zone['Id']?>"><?=$zone['Name']?></option>
