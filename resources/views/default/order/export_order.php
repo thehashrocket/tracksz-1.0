@@ -69,7 +69,8 @@ endif ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Select export type:</label>
-                                <select class="form-control" id="exportType" name="exportType">
+                                <select class="form-control" id="exportType" name="exportType" required="">
+                                    <option value="">Select Export Type</option>
                                     <option label="New" value="new">New Since Last Export</option>
                                     <option label="By Date" value="range">By Date</option>
                                     <option label="By Status" value="status">By Status</option>
@@ -91,7 +92,7 @@ endif ?>
                                 <input type="checkbox" name="current" value="1" checked=""> Update Last Export Time on Request
                             </div>
                             <div class="col-md-4 orderStatus" id="orderStatus" style="display: none;">
-                                <select class="form-control"  name="orderStatus" required="">
+                                <select class="form-control"  name="orderStatus">
 
                                     <option value="">Select Status</option>
 

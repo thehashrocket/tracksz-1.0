@@ -178,7 +178,7 @@ class OrderController
     * @return view
     */
     public function loadExportOrder()
-    {
+    { 
         $all_order = (new Order($this->db))->getAllBelongsTo();
         return $this->view->buildResponse('order/export_order', ['all_order' => $all_order]);
         //return $this->view->buildResponse('order/defaults', []);
@@ -186,49 +186,42 @@ class OrderController
 
     public function exportOrderData(ServerRequest $request)
     {
-        try {
+        try 
+        {
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
+            $export_val   = $form['exportType'];
+            $from_date    = $form['from_date'];
+            $to_date         = $form['to_date'];
+            $orderStatus  = $form['orderStatus'];
 
-
-            $from_date = $form['from_date'];
-            $to_date = $form['to_date'];
-
-            $orderStatus = $form['orderStatus'];
-
-            $allorder   = $form['exportType'];
-
-             if($allorder == 'new')
+             if($export_val == 'new')
             {
-               $orderStatus = $allorder;
-               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($orderStatus);
+               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
             }
 
-
-            if($allorder == 'All')
+             if($export_val == 'range')
             {
-               $order_data = (new Order($this->db))->allorderSearchByOrderData();
+    
+                 $formD  =  date("Y-m-d",strtotime($from_date));
+                 $ToD    =  date("Y-m-d",strtotime($to_date));
+
+                 $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
             }
 
-            if($orderStatus!= '')
+             if($export_val == 'status')
             {
-                 $order_data = (new Order($this->db))->orderstatusSearchByOrderData($orderStatus);
+               $export_val = $orderStatus;
+               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
             }
 
-            if($from_date!='')
+             if($export_val == 'All')
             {
-              
-             $formD  =  date("Y-m-d",strtotime($from_date));
-             $ToD    =  date("Y-m-d",strtotime($to_date));
-
-             $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
+                $order_data = (new Order($this->db))->allorderSearchByOrderData();
             }
 
             
-          
-
-
-           $spreadsheet = new Spreadsheet();
+            $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'MarketPlaceId');
             $sheet->setCellValue('B1', 'OrderId');
