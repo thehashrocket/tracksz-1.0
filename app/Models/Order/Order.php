@@ -91,11 +91,11 @@ LEFT JOIN marketplace
     }
 
 
-    public function orderstatusSearchByOrderData($orderStatus)
+    public function orderstatusSearchByOrderData($export_val)
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Status = :Status');
        
-        $stmt->execute(['Status' => $orderStatus]);
+        $stmt->execute(['Status' => $export_val]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

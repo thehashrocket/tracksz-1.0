@@ -137,7 +137,8 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     <!-- form starts -->
                                     <label for="Location"><?= _('Selected Orders:') ?></label><br>
                                     <div class="main_div d-flex">
-                                        <button type="submit" class="btn btn-primary">Ship Selected</button> &nbsp;
+                                        <!-- <a href="#" class="btn btn-primary btn_shipping" status="shipped">Ship Selected</a>&nbsp; -->
+                                        <input type='button' class='btn btn-primary btn_shipping' value='Ship Selected' status="shipped">&nbsp;
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Update Selected
@@ -164,8 +165,8 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 
                                     </div>
 
-                                    </div> <!-- col-sm -->
-                                </div> <!-- Row -->
+                                </div> <!-- col-sm -->
+                            </div> <!-- Row -->
                         </div> <!-- Container -->
                     </div> <!-- Card Body -->
                 </div> <!-- .card card-fluid ends -->
