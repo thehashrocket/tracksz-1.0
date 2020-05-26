@@ -6,6 +6,7 @@ $(document).ready(function () {
     order: [[0, "desc"]],
   });
 
+  // Handle click on "btn_delete" control Starts
   $(document).on("click", ".btn_delete", function () {
     if (!confirm("Do you want to delete ?")) {
       return false;
@@ -25,6 +26,8 @@ $(document).ready(function () {
       });
     }
   });
+
+  // Handle click on "btn_clear" control Starts
   $(document).on("click", ".btn_clear", function () {
     $("#clear_filter").val(true);
   });
@@ -51,7 +54,7 @@ $(document).ready(function () {
   // Handle click on "Select all" control Ends
 
   // Handle click on "btn_status_update" control Starts
-  $(document).on("click", ".btn_status_update", function () {
+  $(document).on("click", ".btn_status_update,.btn_shipping", function () {
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
       data_array.push($(this).val());
@@ -69,84 +72,18 @@ $(document).ready(function () {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-    
-    $(document).on("click",".btn_delete",function() {
-        if (!confirm("Do you want to delete ?")){            
-            return false;
-        } else{
-            $.ajax({
-                type: 'POST',
-                url: BASE_URL+'/order/delete',
-                data: {'Id':$(this).attr('delete_id')},
-                dataType: "json",
-                success: function(resultData) {
-                    if(resultData.status){
-                        location.reload();
-                    }else{
-                        location.reload();
-                    }               
-                 }
-          });
+        if (data.status) {
+          location.reload();
+        } else {
+          location.reload();
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {},
     });
-$(document).on("click",".btn_clear",function() {
+  });
 
-  // Handle click on "btn_status_update" control Starts
+  // Handle click on "OrderStatus" control Starts
   $(document).on("change", "#OrderStatus", function () {
     $("#order_change").submit();
   });
-
-            $('#clear_filter').val(true);
-    });
-
-   /*-----mukesh js-------------*/
-     
-
-                $("#from_date").hide();
-                $("#to_date").hide();
-                $(".date_range").hide();
-                $('#orderStatus').hide();
-              $("#exportType").change(function () {
-            if ($(this).val() == "range")
-             {
-                $("#from_date").show();
-                $("#to_date").show();
-                $(".date_range").show();
-                $("#current_time").hide();
-                $('.orderStatus').hide();
-             }
-             else if($(this).val() == "current")
-             {
-                 $("#current_time").show();
-                 $("#from_date").hide();
-                 $("#to_date").hide();
-                 $(".date_range").hide();
-                 $('.orderStatus').hide();
-             }
-             else if($(this).val() == "status")
-             {
-                 $("#orderStatus").show();
-                 $("#from_date").hide();
-                 $("#to_date").hide();
-                 $(".date_range").hide();
-                 $('#current_time').hide();
-
-          }
-else
-             {
-                $("#from_date").hide();
-                $("#to_date").hide();
-                $("#orderStatus").hide();
-                $(".date_range").hide();
-                $('#current_time').hide();
-             }
-        });
-
-
-
-
-
 });
-

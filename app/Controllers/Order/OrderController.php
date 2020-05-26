@@ -32,6 +32,7 @@ use Laminas\Log\Logger;
 use Laminas\Log\Writer\Stream;
 use Laminas\Log\Formatter\Json;
 use App\Library\Email;
+use \Mpdf\Mpdf;
 // use Resque;
 
 class OrderController
@@ -179,7 +180,7 @@ class OrderController
     * @return view
     */
     public function loadExportOrder()
-    { 
+    {
         $all_order = (new Order($this->db))->getAllBelongsTo();
         return $this->view->buildResponse('order/export_order', ['all_order' => $all_order]);
         //return $this->view->buildResponse('order/defaults', []);
@@ -255,10 +256,8 @@ class OrderController
             $sheet->setCellValue('AC1', 'BillingState');
             $sheet->setCellValue('AD1', 'BillingZipCode');
             $sheet->setCellValue('AE1', 'BillingCountry');
-            
             $rows = 2;
             foreach ($order_data as $orderd) {
-                
                 $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
                 $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
                 $sheet->setCellValue('C' . $rows, $orderd['Status']);
@@ -275,7 +274,7 @@ class OrderController
                 $sheet->setCellValue('N' . $rows, $orderd['ShippingEmail']);
                 $sheet->setCellValue('O' . $rows, $orderd['ShippingAddress1']);
                 $sheet->setCellValue('P' . $rows, $orderd['ShippingAddress2']);
-                 $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
+                $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
                 $sheet->setCellValue('R' . $rows, $orderd['ShippingCity']);
                 $sheet->setCellValue('S' . $rows, $orderd['ShippingState']);
                 $sheet->setCellValue('T' . $rows, $orderd['ShippingZipCode']);
@@ -290,7 +289,6 @@ class OrderController
                 $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
                 $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
                 $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
-                
                 $rows++;
             }
 
@@ -314,10 +312,9 @@ class OrderController
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
-               
             }
-    } catch (Exception $e) {
-        
+        } catch (Exception $e) {
+
 
             $res['status'] = false;
             $res['data'] = [];
@@ -332,7 +329,6 @@ class OrderController
             $this->view->flash($validated);
             return $this->view->redirect('/order/export-order');
         }
-            
     }
 
     /*
@@ -470,7 +466,6 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
-           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -493,7 +488,7 @@ class OrderController
 
             $update_data['UserId'] = Session::get('auth_user_id');
             // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
-            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView']))?1:null;
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? 1 : null;
             // print_r($update_data['SkipPDFView']);
             $update_data['DefaultAction'] = $methodData['DefaultAction'];
             $update_data['SortOrders'] = $methodData['SortOrders'];
@@ -531,7 +526,6 @@ class OrderController
             $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
             $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
             $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
-            
 
             $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
             $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
@@ -551,9 +545,7 @@ class OrderController
             $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
 
 
-            
             $is_data = $this->labelinsertOrUpdate($update_data);
-            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -639,16 +631,16 @@ class OrderController
             $update_data['ConfirmEmail'] = $methodData['ConfirmEmail'];
             $update_data['CancelEmail'] = $methodData['CancelEmail'];
             $update_data['DeferEmail'] = $methodData['DeferEmail'];
-            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy']))?1:null;
+            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : null;
             $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
-           /* for($i=1; $i <= $nooforderfoldercount;$i++)
+            /* for($i=1; $i <= $nooforderfoldercount;$i++)
             {
                 $work1 = $methodData['NoAdditionalOrder'.$i];
                 //echo 'sadasda';
                 //print_r($work1); exit;
             }
             return $i;*/
-  /*          $sql = array;
+            /*          $sql = array;
 $yourArrFromCsv = explode(",", $nooforderfoldercount);
 //then insert to db
 foreach( $yourArrFromCsv as $row ) {
@@ -1222,9 +1214,6 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
             return $this->view->buildResponse('order/browse', []);
         }
     }
-
-
-
     /*
     * pickOrder - Update Batch Move
     * @param  $form  - Array of form fields, name match Database Fields
@@ -1255,5 +1244,107 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
     public function mailingOrder()
     {
         return $this->view->buildResponse('order/mailinglabel', []);
+    }
+
+
+    /*
+   @author    :: Tejas
+   @task_id   :: 
+   @task_desc :: load html view and generate pdf and download
+   @params    :: 
+   @return    :: pdf download
+  */
+    public function pdfGenerateLoad(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
+        try {
+            // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
+            $pdf_data = (new Order($this->db))->allorderSearchByOrderData();
+            $mailing_html = $this->loadMailinghtml($pdf_data);
+
+            $mpdf = new Mpdf();
+            $mpdf->WriteHTML($mailing_html);
+            $mpdf->Output();
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/mailing', []);
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+     @return    :: 
+    */
+    public function loadMailinghtml($pdf_data)
+    {
+        $html = "";
+        $html .= "";
+        $html .= "<!DOCTYPE html>";
+        $html .= "<html>";
+        $html .= "<head>";
+        $html .= "<title></title>";
+        $html .= "</head>";
+        $html .= "<style>table {
+            border:none;
+            border-collapse: collapse;
+        }        
+        table td {
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+        }        
+        table td:first-child {
+            border-left: none;
+        }        
+        table td:last-child {
+            border-right: none;
+        }</style>";
+        $html .= "<body>";
+        $html .= "<table class='table' id='custom_tbl' border='2' width='100%' style='border-collapse: collapse;'>";
+        $html .= "<thead>";
+        $html .= "<th style='border:1px solid black;'>";
+        $html .= "</th>";
+        $html .= "<th style='border:1px solid black;'>";
+        $html .= "</th>";
+        $html .= "<th style='border:1px solid black;'>";
+        $html .= "</th>";
+        $html .= "<tbody>";
+        if (isset($pdf_data) && !empty($pdf_data)) {
+            foreach (array_chunk($pdf_data, 3) as $row_key => $row_val) {
+                $html .= "<tr style='border:1px solid black;'>";
+                foreach ($row_val as $val_pdf) {
+                    $html .= "<td scope='col'>";
+                    $html .= $val_pdf['ShippingName'] . '<br>';
+                    $html .= $val_pdf['ShippingAddress1'] . '<br>';
+                    $html .= $val_pdf['ShippingAddress2'] . '<br>';
+                    $html .= $val_pdf['ShippingAddress3'] . '<br>';
+                    $html .= $val_pdf['ShippingCity'] . "," . $val_pdf['ShippingState'] . '<br>';
+                    $html .= $val_pdf['ShippingCountry'];
+                    $html .= "</td>";
+                }
+                $html .= "</tr>";
+            }
+        } else {
+            $html .= "<tr>No Records Found</tr>";
+        }
+        $html .= "</tbody>";
+        $html .= "</table>";
+        $html .= "</body>";
+        $html .= "</style>";
+        return $html;
     }
 }
