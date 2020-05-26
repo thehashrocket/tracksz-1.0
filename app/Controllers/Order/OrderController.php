@@ -169,7 +169,8 @@ class OrderController
     */
     public function loadConfirmationFile()
     {
-        return $this->view->buildResponse('order/defaults', []);
+        $all_order = (new Order($this->db))->getAllBelongsTo();
+        return $this->view->buildResponse('order/confirmation_file', ['all_order' => $all_order]);
     }
 
     /*
