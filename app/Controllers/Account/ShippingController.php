@@ -20,6 +20,12 @@ class ShippingController
     private $view;
     private $auth;
     private $db;
+    private $countryCodes = [
+        'US' => 223, 
+        'CA' => 38, 
+        'GB' => 222, 
+        'AU' => 13
+    ];
     
     /**
      * _construct - create object
@@ -403,9 +409,29 @@ class ShippingController
     public function bulkAssign(ServerRequest $request)
     {
         $data = $request->getParsedBody();
-        if ($data['ZoneId'] !== 'null')
+        $zoneId = $data['ZoneId'];
+        $countryCode = $data['Country'];
+        
+        if ($zoneId !== 'null')
         {
-            $success = (new ShippingZone($this->db))->bulkAssign($data['ZoneId'], $data['Country']);
+            if (array_key_exists($countryCode, $this->countryCodes))
+            {
+                $countryIDs = [$this->countryCodes[$countryCode]];
+            }
+            else if ($countryCode === 'US_CA') 
+            {
+                $countryIDs = [$this->countryCodes['US'], $this->countryCodes['CA']];
+            }
+            else if ($countryCode === 'GB_AU') 
+            {
+                $countryIDs = [$this->countryCodes['GB'], $this->countryCodes['AU']];
+            }
+            else 
+            {
+                $countryIDs = array_values($this->countryCodes);
+            }
+
+            $success = (new ShippingZone($this->db))->bulkAssignToCountry($zoneId, $countryIDs);
             $this->view->flash([
                 'alert' => $success ? 'Successfully assigned shipping zone to region(s).' : 'Failed to assign shipping zone to region(s).',
                 'alert_type' => $success ? 'success' : 'danger'
@@ -418,12 +444,16 @@ class ShippingController
     public function assignZoneToState(ServerRequest $request)
     {
         $data = $request->getParsedBody();
-        $success = (new ShippingZone($this->db))->assignToState($data['ZoneId'], $data['CountryId'], $data['StateId']);
+        $zoneId = $data['ZoneId'];
+        $countryId = $data['CountryId'];
+        $stateId = $data['StateId'];
+
+        $success = (new ShippingZone($this->db))->bulkAssignToState($zoneId, $countryId, $stateId);
         $this->view->flash([
             'alert' => $success ? 'Successfully assigned shipping zone to state.' : 'Failed to assign shipping zone to state.',
             'alert_type' => $success ? 'success' : 'danger'
         ]);
 
-        return $this->view->redirect('/account/shipping-assign/individual/states/' . $data['CountryId']);
+        return $this->view->redirect('/account/shipping-assign/individual/states/' . $countryId);
     }
 }

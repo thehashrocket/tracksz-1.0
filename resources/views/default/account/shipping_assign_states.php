@@ -18,16 +18,16 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
             <header class="page-title-bar">
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?=_('Assign Shipping Zones to Specific Regions')?> </h1>
+                    <h1 class="page-title"> <?=_('Assign Shipping Zones to Specific States')?> </h1>
                 </div>
                 <p class="text-muted"> <?=_('Here you can assign shipping zones to individual states/provinces within countries.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
                 <ul class="list-inline">
-                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/223">United States</a></li>
-                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/38">Canada</a></li>
-                    <li class="list-inline-item"><a href="/account/shipping-assign/individual/states/13">Australia</a></li>
+                    <li class="list-inline-item"><a <?php if($countryId != 223): ?>href="/account/shipping-assign/individual/states/223"<?php endif;?>>United States</a></li>
+                    <li class="list-inline-item"><a <?php if($countryId != 38): ?>href="/account/shipping-assign/individual/states/38"<?php endif;?>>Canada</a></li>
+                    <li class="list-inline-item"><a <?php if($countryId != 13): ?>href="/account/shipping-assign/individual/states/13"<?php endif;?>>Australia</a></li>
                 </ul>
             </header><!-- /.page-title-bar -->
             <!-- .card -->
