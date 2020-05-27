@@ -42,17 +42,28 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($states as $state): ?>
+                            <?php foreach($stateZoneAssignments as $state => $zone): ?>
+                                <?php $state = json_decode($state, true); ?>
                                 <tr>
                                     <td><?= $state['Name'] ?></td>
                                     <td>
                                         <form action="/account/shipping-assign/individual/states" method="POST">
-                                            <input type="hidden" name="StateId" value="<?=$state['Id']?>">
-                                            <input type="hidden" name="CountryId" value="<?=$countryId?>">
+                                            <input type="hidden" name="StateId" value="<?= $state['Id'] ?>">
+                                            <input type="hidden" name="CountryId" value="<?= $countryId ?>">
                                             <select class="form-control" name="ZoneId" style="display: inline-block">
-                                            <?php foreach($shippingZones as $zone): ?>
-                                                <option value="<?=$zone['Id']?>"><?=$zone['Name']?></option>
-                                            <?php endforeach; ?>
+                                            <?php if(!$zone): ?>
+                                                <option value="null">--</option>
+                                                <?php foreach($shippingZones as $shippingZone): ?>
+                                                    <option value="<?= $shippingZone['Id'] ?>"><?= $shippingZone['Name'] ?></option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <option value="<?= $zone['ZoneId'] ?>"><?= $zone['Name'] ?></option> 
+                                                <?php foreach($shippingZones as $shippingZone): ?>
+                                                    <?php if($shippingZone['Id'] != $zone['ZoneId']): ?>
+                                                        <option value="<?= $shippingZone['Id'] ?>"><?= $shippingZone['Name'] ?></option>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
                                             </select>
                                             <button type="submit" class="btn btn-primary">Update</button>
                                         </form>

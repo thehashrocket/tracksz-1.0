@@ -2,6 +2,7 @@
 
 namespace App\Models\Account;
 
+use Delight\Cookie\Cookie;
 use App\Models\Country;
 use PDO;
 
@@ -135,13 +136,20 @@ class ShippingZone
         return $stmt->execute();
     }
 
-    public function getCountryAssignments($storeId)
+    /**
+     *  getBulkCountryAssignments - Get mapping of countries to bulk assigned shipping zones
+     * 
+     *  @param $storeId - ID of store
+     *  @return array
+     */
+    public function getBulkCountryAssignmentMap($storeId)
     {
         $countries = (new Country($this->db))->all();
         $map = [];
 
-        $query = 'SELECT ZoneId FROM ShippingZoneToRegion INNER JOIN ShippingZone ON ShippingZoneToRegion.ZoneId = ShippingZone.Id 
-                  WHERE ShippingZone.StoreId = :storeId AND ShippingZoneToRegion.CountryId = :countryId';
+        $query = 'SELECT * FROM ShippingZone INNER JOIN ShippingZoneToRegion ON ShippingZoneToRegion.ZoneId = ShippingZone.Id
+                  WHERE ShippingZone.StoreId = :storeId AND ShippingZoneToRegion.CountryId = :countryId AND ShippingZoneToRegion.StateId IS NULL
+                  AND ShippingZoneToRegion.ZipCodeMin IS NULL AND ShippingZoneToRegion.ZipCodeMax IS NULL';
 
         $stmt = $this->db->prepare($query);
 
@@ -150,14 +158,12 @@ class ShippingZone
             $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
             $stmt->bindParam(':countryId', $country['Id'], PDO::PARAM_INT);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (boolval($result))
-            {
-                $zone = $this->find($result['ZoneId']);
+            $zone = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (boolval($zone)) {
                 $map[json_encode($country)] = $zone;
             }
-            else
-            {
+            else {
                 $map[json_encode($country)] = null;
             }
         }
@@ -166,21 +172,57 @@ class ShippingZone
     }
 
     /**
-     *  isBulkAssignedToRegion - Check if a zone is bulk assigned to a region
+     *  getBulkStateAssignments - Get mapping of states to bulk assigned shipping zones
      * 
-     *  @param $zoneId - Shipping zone ID
-     *  @param $countryId - Country ID
-     *  @return bool - Zone is assigned to region
+     *  @param $storeId - ID of store
+     *  @param $countryId - ID of country
+     *  @return array
      */
-    private function isBulkAssignedToRegion($zoneId, $countryId)
+    public function getStateAssignmentMap($storeId, $countryId)
     {
-        $query = 'SELECT Id FROM ShippingZoneToRegion WHERE ZoneId = :zoneId AND CountryId = :countryId AND StateId = NULL AND ZipCodeMin = NULL AND ZipCodeMax = NULL';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $states = (new Country($this->db))->getStates($countryId);
+        $map = [];
+
+        /* I would delegate these queries to separate functions but doing so would hurt performance,
+           as the same query template would have to be sent repeatedly
+        */
+        $bulkCountryQuery = 'SELECT * FROM ShippingZone INNER JOIN ShippingZoneToRegion ON ShippingZoneToRegion.ZoneId = ShippingZone.Id
+                             WHERE ShippingZone.StoreId = :storeId AND ShippingZoneToRegion.CountryId = :countryId AND ShippingZoneToRegion.StateId IS NULL
+                             AND ShippingZoneToRegion.ZipCodeMin IS NULL AND ShippingZoneToRegion.ZipCodeMax IS NULL';
+
+        $stmt = $this->db->prepare($bulkCountryQuery);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
         $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return boolval($result);
+        $countryAssignment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $bulkStateQuery = 'SELECT * FROM ShippingZone INNER JOIN ShippingZoneToRegion ON ShippingZoneToRegion.ZoneId = ShippingZone.Id
+                           WHERE ShippingZone.StoreId = :storeId AND ShippingZoneToRegion.StateId = :stateId AND ShippingZoneToRegion.ZipCodeMin IS NULL 
+                           AND ShippingZoneToRegion.ZipCodeMax IS NULL';
+
+        $stmt = $this->db->prepare($bulkStateQuery);
+
+        foreach ($states as $state)
+        {
+            $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+            $stmt->bindParam(':stateId', $state['Id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $stateAssignment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (boolval($stateAssignment)) {
+                $map[json_encode($state)] = $stateAssignment;
+            }
+            else {
+                if (boolval($countryAssignment)) {
+                    $map[json_encode($state)] = $countryAssignment;
+                }
+                else {
+                    $map[json_encode($state)] = null;
+                }
+            }
+        }
+        
+        return $map;
     }
 
     /**
@@ -216,22 +258,54 @@ class ShippingZone
 
     /**
      *  bulkAssignToState - Assign a shipping zone to an entire state
+     * 
+     *  @param $zoneId - ID of shipping zone
+     *  @param $countryId - ID of country
+     *  @param $stateId - ID of state
+     *  @return bool - Indicates succcess
      */
     public function bulkAssignToState($zoneId, $countryId, $stateId)
     {
+        $bulkCountryQuery = 'SELECT Id FROM ShippingZoneToRegion WHERE ZoneId = :zoneId AND CountryId = :countryId
+                             AND StateId IS NULL AND ZipCodeMin IS NULL AND ZipCodeMax IS NULL';
+
+        $stmt = $this->db->prepare($bulkCountryQuery);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+        $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+        $stmt->execute();
+        $bulkCountryAssignment = $stmt->fetch(PDO::FETCH_ASSOC);
+
         $storesZones = $this->findByStore($this->getStoreID($zoneId));
         $zoneIDs = array_map(function($zone) {
             return $zone['Id'];
         }, $storesZones);
         $idStr = implode(",", $zoneIDs);
 
-        // Delete redundant specific entries before bulk assigning to save space
-        $query = 'DELETE FROM ShippingZoneToRegion WHERE StateId = :stateId AND ZoneId IN (' . $idStr . ');';
-        $query .= 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId, StateId) VALUES (:zoneId, :countryId, :stateId)';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
-        $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
-        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
-        return $stmt->execute();
+        if (boolval($bulkCountryAssignment)) {
+            $query = 'DELETE FROM ShippingZoneToRegion WHERE StateId = :stateId AND ZoneId IN (' . $idStr . ')';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        else {
+            $query = 'SELECT Id FROM ShippingZoneToRegion WHERE StateId = :stateId AND ZoneId = :zoneId';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+            $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+            $stmt->execute();
+            $assignmentAlreadyExists = boolval($stmt->fetch(PDO::FETCH_ASSOC));
+
+            if ($assignmentAlreadyExists) {
+                return true;
+            }
+            else {
+                $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId, StateId) VALUES (:zoneId, :countryId, :stateId)';
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+                $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+                $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+                return $stmt->execute();
+            }
+        }
     }
 }

@@ -183,7 +183,7 @@ class ShippingController
     {
         $activeStoreId = Cookie::get('tracksz_active_store');
         $shippingZoneObj = (new ShippingZone($this->db));
-        $countryZoneAssignments = $shippingZoneObj->getCountryAssignments($activeStoreId);
+        $countryZoneAssignments = $shippingZoneObj->getBulkCountryAssignmentMap($activeStoreId);
         $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
         return $this->view->buildResponse('/account/shipping_assign_countries', [
             'countryZoneAssignments' => $countryZoneAssignments,
@@ -198,14 +198,15 @@ class ShippingController
      */
     public function viewAssignZonesIndividualStates(ServerRequest $request, array $data)
     {
-        // TODO: Make sure country id is valid (US, UK, AU, CA)
+        $countryId = $data['CountryId'];
         $activeStoreId = Cookie::get('tracksz_active_store');
-        $states = (new Country($this->db))->getStates($data['CountryId']);
-        $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
+        $shippingZoneObj = (new ShippingZone($this->db));
+        $stateZoneAssignments = $shippingZoneObj->getStateAssignmentMap($activeStoreId, $countryId);
+        $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
         return $this->view->buildResponse('/account/shipping_assign_states', [
-            'countryId' => $data['CountryId'],
-            'states' => $states,
-            'shippingZones' => $zones
+            'countryId' => $countryId,
+            'stateZoneAssignments' => $stateZoneAssignments,
+            'shippingZones' => $shippingZones
         ]);
     }
 

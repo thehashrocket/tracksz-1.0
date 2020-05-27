@@ -39,7 +39,6 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                     </div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
-            <a href="/account/shipping-methods/add" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
         <?php if (is_array($shippingMethods) &&  count($shippingMethods)> 0): ?>
             <!-- .card -->
             <div class="card card-fluid">
@@ -75,6 +74,7 @@ $description_meta = 'Shipping Methods at Tracksz, a Multiple Market Inventory Ma
                 </div>
             </div>
         <?php endif; ?>
+        <a href="/account/shipping-methods/add" class="btn btn-sm btn-primary" title="<?=_('Add a Shipping Method')?>"><?=_('Add Shipping Method')?></a>
         </div><!-- /.page-inner -->
 
         <!-- Modals to delete shipping methods -->
