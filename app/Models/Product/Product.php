@@ -334,4 +334,22 @@ class product
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function deletemultiple($ids = null)
+    {
+        $mParams = str_repeat('?,', count($ids) - 1) . '?';
+        $sth = $this->db->prepare("DELETE FROM product WHERE Id IN ($mParams)");
+        return $sth->execute($ids);
+     
+    }
+
+    public function select_multiple_ids($ids = null)
+    {
+        $in  = str_repeat('?,', count($ids) - 1) . '?';
+        $sql = "SELECT * FROM product WHERE Id IN ($in)";
+        $stm = $this->db->prepare($sql);
+        $stm->execute($ids);
+        return $stm->fetchAll(PDO::FETCH_ASSOC);
+     
+    }
 }

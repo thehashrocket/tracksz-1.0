@@ -70,6 +70,8 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/update', Inventory\ProductController::class . '::updateProduct');
                 $route->get('/upload', Inventory\ProductController::class . '::UploadProduct');
                 $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
+                $route->post('/delete_product', Inventory\ProductController::class . '::delete_productProductData');
+                 $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));

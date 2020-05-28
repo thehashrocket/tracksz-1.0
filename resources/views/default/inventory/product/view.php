@@ -31,11 +31,49 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                 </div>
                 <p class="text-muted"> <?= _('This is where you can modify, and delete Product for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
                 <a href="/product/add" class="btn btn-sm btn-primary" title="<?= _('Add Product') ?>"><?= _('Add Product') ?></a>
+                <br>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <form></form>
+                        <div class="btn-group"><button type="button" id="btn_delete" class="btn btn-danger">Delete Selected Items</button></div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                        <select class="form-control" id="selected_export_product" name="export_format" required="">
+                            <option value="" selected><?=_('Selected Export') ?></option>
+                            <option value="xlsx">Xlsx</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                   <div class="form-group">
+                       <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
+                        <option selected><?=_('Select Marketplace...')?></option>
+                        <?php
+                        if (isset($market_places) && !empty($market_places)) {
+                            foreach ($market_places as $mar_key => $mar_val) { ?>                                  
+                            <option value="<?php echo $mar_val; ?>"><?php echo $mar_val; ?></option>
+                            <?php }} else {?>
+                            <option selected><?=_('No Marketplace found...')?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                </div>
+               </div>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
             <div class="page-section">
+                <!--Drop search Box-->
+
+
+
+
+                <!--End search-->
+
+
                 <!-- .page-section starts -->
                 <div class="card card-fluid">
                     <!-- .card card-fluid starts -->
@@ -47,12 +85,11 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                             <table id="product_table" name="product_table" class="table table-striped table-bordered nowrap" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th><?= _('Name') ?></th>
-                                        <th><?= _('Notes') ?></th>
-                                        <th><?= _('SKU') ?></th>
-                                        <th><?= _('BasePrice') ?></th>
-                                        <th><?= _('Condition') ?></th>
-                                        <th><?= _('Image') ?></th>
+                                        <th><input type="checkbox" name="select_all_chkbox" class="select_all_chkbox" value="0" id="select_all_chkbox"></th>
+                                         <th><?= _('SKU') ?></th>
+                                         <th><?= _('Product ID') ?></th>
+                                         <th><?= _('QTY') ?></th>
+                                         <th><?= _('Condition') ?></th>
                                         <th><?= _('Action') ?></th>
                                     </tr>
                                 </thead>
@@ -64,10 +101,10 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                             $img_path = '';
                                             $img_path = \App\Library\Config::get('company_url') . '/assets/images/product/' . $product['Image'];
                                             ?>
-                                            <td><?= $product['Name'] ?></td>
-                                            <td><?= $product['Notes'] ?></td>
+                                              <td><input type="checkbox" class="child_chkbox" name="child_chkbox[]" value="<?php echo $product['Id']; ?>"></td>
                                             <td><?= $product['SKU'] ?></td>
-                                            <td><?= $product['BasePrice'] ?></td>
+                                            <td><?= $product['ProdId'] ?></td>
+                                            <td><?= $product['Qty'] ?></td>
                                             <td><?= $product['ProdCondition'] ?></td>
                                             <td><?= (isset($product['Image']) && !empty($product['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
                                             <td> <?php
@@ -94,9 +131,9 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
 <?= $this->stop() ?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
+<!-- <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
 <script src="/assets/javascript/pages/product.js"></script>
 <?= $this->stop() ?>
 
