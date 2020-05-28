@@ -42,10 +42,20 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                             </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            $zipCodes = include(__DIR__.'\..\..\..\..\config\zip_codes.php');
+                            $states = $zipCodes['US'];
+                            ?>
                             <?php foreach($stateZoneAssignments as $state => $zone): ?>
                                 <?php $state = json_decode($state, true); ?>
                                 <tr>
-                                    <td><?= $state['Name'] ?></td>
+                                    <td>
+                                        <?= $state['Name'] ?>
+                                        <?php if($countryId == 223 && array_key_exists($state['Id'], $states)): ?>
+                                            <br>
+                                            <small><a href="/account/shipping-assign/individual/zip/<?= $state['Id'] ?>">Zip code assignment</a></small>
+                                        <?php endif;?>
+                                    </td>
                                     <td>
                                         <form action="/account/shipping-assign/individual/states" method="POST">
                                             <input type="hidden" name="StateId" value="<?= $state['Id'] ?>">
