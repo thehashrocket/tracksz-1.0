@@ -12,11 +12,24 @@ use Delight\Cookie\Session;
 use Laminas\Diactoros\ServerRequest;
 use PDO;
 use App\Library\Config;
+use Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as WriteXlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as WriteCsv;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\Extension;
 use App\Library\ValidateSanitize\ValidateSanitize;
 use Exception;
 use App\Models\Marketplace\Marketplace;
+
+use Illuminate\Http\Request;
+
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Formatter\Json;
+use App\Library\Email;
 
 class ProductController
 {
@@ -224,9 +237,10 @@ class ProductController
     */
     public function browse()
     {
-        $prod_obj = new Product($this->db);
-        $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product]);
+         $market_places = Config::get('market_places');
+         $prod_obj = new Product($this->db);
+         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+         return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product,'market_places' => $market_places]);
     }
 
     /*
@@ -522,4 +536,140 @@ class ProductController
         ftp_close($ftp_connect);
         exit;
     }
+
+    public function delete_productProductData(ServerRequest $request)
+    {
+
+        $form = $request->getParsedBody();
+
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do 
+        $result_data = (new Product($this->db))->deletemultiple($form['ids']);
+        if (isset($result_data) && !empty($result_data)) {
+            $validated['alert'] = 'Product record deleted successfully..!';
+            $validated['alert_type'] = 'success';
+            $this->view->flash($validated);
+
+            $res['status'] = true;
+            $res['data'] = array();
+            $res['message'] = 'Records deleted successfully..!';
+            echo json_encode($res);
+            exit;
+        } else {
+            $validated['alert'] = 'Sorry, Product records not deleted..! Please try again.';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+
+            $res['status'] = false;
+            $res['data'] = array();
+            $res['message'] = 'Records not Deleted..!';
+            echo json_encode($res);
+            exit;
+        }
+
+        //die('muk');
+    }
+
+    public function export_ProductData(ServerRequest $request)
+    {
+
+         $form = $request->getParsedBody();
+         unset($form['__token']);
+
+         $export_type = $form['export_formate'];
+
+         $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
+           // echo "<pre>";
+           // print_r($result_data);
+           // die;
+
+         $spreadsheet = new Spreadsheet();
+         $sheet = $spreadsheet->getActiveSheet();
+         $sheet->setCellValue('A1', 'Id');
+         $sheet->setCellValue('B1', 'Name');
+         $sheet->setCellValue('C1', 'Notes');
+         $sheet->setCellValue('D1', 'SKU');
+         $sheet->setCellValue('E1', 'ProdId');
+         $sheet->setCellValue('F1', 'BasePrice');
+         $sheet->setCellValue('G1', 'ProdCondition');
+         $sheet->setCellValue('H1', 'ProdActive');
+         $sheet->setCellValue('I1', 'InternationalShip');
+         $sheet->setCellValue('J1', 'ExpectedShip');
+         $sheet->setCellValue('K1', 'EbayTitle');
+         $sheet->setCellValue('L1', 'Qty');
+         $sheet->setCellValue('M1', 'Image');
+         $sheet->setCellValue('N1', 'CategoryId');
+         $sheet->setCellValue('O1', 'Status');
+         $sheet->setCellValue('P1', 'UserId');
+         $sheet->setCellValue('Q1', 'AddtionalData');
+         $sheet->setCellValue('R1', 'Created');
+         $sheet->setCellValue('S1', 'Updated');
+
+
+     $rows = 2;
+     foreach ($result_data as $prodata) {
+
+
+        $sheet->setCellValue('A' . $rows, $prodata['Id']);
+        $sheet->setCellValue('B' . $rows, $prodata['Name']);
+        $sheet->setCellValue('C' . $rows, $prodata['Notes']);
+        $sheet->setCellValue('D' . $rows, $prodata['SKU']);
+        $sheet->setCellValue('E' . $rows, $prodata['ProdId']);
+        $sheet->setCellValue('F' . $rows, $prodata['BasePrice']);
+        $sheet->setCellValue('G' . $rows, $prodata['ProdCondition']);
+        $sheet->setCellValue('H' . $rows, $prodata['ProdActive']);
+        $sheet->setCellValue('I' . $rows, $prodata['InternationalShip']);
+        $sheet->setCellValue('J' . $rows, $prodata['ExpectedShip']);
+        $sheet->setCellValue('K' . $rows, $prodata['EbayTitle']);
+        $sheet->setCellValue('L' . $rows, $prodata['Qty']);
+        $sheet->setCellValue('M' . $rows, $prodata['Image']);
+        $sheet->setCellValue('N' . $rows, $prodata['CategoryId']);
+        $sheet->setCellValue('O' . $rows, $prodata['Status']);
+        $sheet->setCellValue('P' . $rows, $prodata['UserId']);
+        $sheet->setCellValue('Q' . $rows, $prodata['AddtionalData']);
+        $sheet->setCellValue('R' . $rows, $prodata['Created']);
+        $sheet->setCellValue('S' . $rows, $prodata['Updated']);
+
+        $rows++;
+    }
+
+    if ($export_type == 'xlsx' || $export_type == 'csv')
+    {
+        $this->view->flash([
+            'alert' => 'Product Data sucessfully export..!',
+            'alert_type' => 'success'
+        ]);
+
+        if ($export_type == 'xlsx')
+        {
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('export.xlsx');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename="export.xlsx"');
+            $writer->save("php://output");
+            exit;
+
+             //$writer = new WriteXlsx($spreadsheet);
+            // $writer->save("product." . $export_type);
+             // $writer->save('php://output');
+             // return $this->view->redirect('/inventory/browse');
+           
+            // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // header('Content-Disposition: attachment; filename="product.xlsx"');
+            // $writer->save("php://output");
+            // return $this->view->redirect('/inventory/browse');
+             exit;
+        } 
+        else if ($export_type == 'csv') 
+        {
+            $writer = new WriteCsv($spreadsheet);
+            $writer->save("product." . $export_type);
+            return $this->view->redirect('/inventory/browse');
+        }
+
+
+    } 
+
+}
 }
