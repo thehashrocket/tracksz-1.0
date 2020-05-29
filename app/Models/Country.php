@@ -77,4 +77,12 @@ class Country
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function getStates($countryId)
+    {
+        $query = 'SELECT * FROM `Zone` WHERE CountryId = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $countryId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

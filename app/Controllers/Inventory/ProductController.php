@@ -35,6 +35,7 @@ class ProductController
 {
     private $view;
     private $db;
+    private $storeid;
     /*
     * __construct - 
     * @param  $form  - Default View, PDO db   
@@ -44,6 +45,8 @@ class ProductController
     {
         $this->view = $view;
         $this->db   = $db;
+        $store = (new Store($this->db))->find(Session::get('member_id'), 1);
+        $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
     }
     /*
     * add - Load Add Product View
@@ -52,9 +55,10 @@ class ProductController
     */
     public function add()
     {
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category]);
+        return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
     }
 
     /*
@@ -128,16 +132,17 @@ class ProductController
             $insert_data = $this->PrepareInsertData($form);
             $insert_data['Image'] = $prod_img;
             $prod_obj = new Product($this->db);
-            $all_product = $prod_obj->addProduct($insert_data);
+            $all_product = $prod_obj->addProdInventory($insert_data);
 
             if (isset($all_product) && !empty($all_product)) {
                 $this->view->flash([
                     'alert' => _('Product added successfully..!'),
                     'alert_type' => 'success'
                 ]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
                 $cat_obj = new Category($this->db);
                 $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category]);
+                return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
             } else {
                 throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
             }
@@ -169,9 +174,10 @@ class ProductController
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
 
+            $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
             $cat_obj = new Category($this->db);
             $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-            return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'form' => $form]);
+            return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'form' => $form, 'market_places' => $result_data]);
         }
     }
 
@@ -196,6 +202,8 @@ class ProductController
         $form_data['EbayTitle'] = (isset($form['ProdTitleBayInput']) && !empty($form['ProdTitleBayInput'])) ? $form['ProdTitleBayInput'] : null;
         $form_data['Qty'] = (isset($form['ProdQtyInput']) && !empty($form['ProdQtyInput'])) ? $form['ProdQtyInput'] : 0;
         $form_data['CategoryId'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : 0;
+        $form_data['MarketPlaceId'] = (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : null;
+        $form_data['StoreId'] = $this->storeid;
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
@@ -237,10 +245,10 @@ class ProductController
     */
     public function browse()
     {
-         $market_places = Config::get('market_places');
-         $prod_obj = new Product($this->db);
-         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-         return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product,'market_places' => $market_places]);
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        $prod_obj = new Product($this->db);
+        $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data]);
     }
 
     /*
@@ -286,17 +294,19 @@ class ProductController
     {
         $form = (new Product($this->db))->findById($Id['Id']);
         $cat_obj = new Category($this->db);
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         if (is_array($form) && !empty($form)) {
             return $this->view->buildResponse('/inventory/product/edit', [
-                'form' => $form, 'all_category' => $all_category
+                'form' => $form, 'all_category' => $all_category, 'market_places' => $result_data
             ]);
         } else {
             $this->view->flash([
                 'alert' => 'Failed to fetch Product details. Please try again.',
                 'alert_type' => 'danger'
             ]);
-            return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product]);
+            $all_product = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+            return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'all_category' => $all_category, 'market_places' => $result_data]);
         }
     }
 
@@ -363,7 +373,7 @@ class ProductController
             $update_data = $this->PrepareUpdateData($methodData);
             $update_data['Updated'] = date('Y-m-d H:i:s');
             $update_data['Image'] = $prod_img;
-            $is_updated = (new Product($this->db))->editProduct($update_data);
+            $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
             if (isset($is_updated) && !empty($is_updated)) {
                 $this->view->flash([
                     'alert' => 'Product record updated successfully..!',
@@ -371,7 +381,8 @@ class ProductController
                 ]);
                 $prod_obj = new Product($this->db);
                 $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('/inventory/product/view', ['all_product' => $all_product]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data]);
                 unlink(getcwd() . "/assets/images/product/" . $methodData['ProductImageHidden']);
             } else {
                 throw new Exception("Failed to update category. Please ensure all input is filled out correctly.", 301);
@@ -422,7 +433,10 @@ class ProductController
         $form_data['CategoryId'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : 0;
 
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
-        // $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
+        $form_data['MarketPlaceId'] = (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : 0;
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -572,104 +586,85 @@ class ProductController
     public function export_ProductData(ServerRequest $request)
     {
 
-         $form = $request->getParsedBody();
-         unset($form['__token']);
+        $form = $request->getParsedBody();
+        unset($form['__token']);
 
-         $export_type = $form['export_formate'];
+        $export_type = $form['export_formate'];
 
-         $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
-           // echo "<pre>";
-           // print_r($result_data);
-           // die;
+        $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
+        // echo "<pre>";
+        // print_r($result_data);
+        // die;
 
-         $spreadsheet = new Spreadsheet();
-         $sheet = $spreadsheet->getActiveSheet();
-         $sheet->setCellValue('A1', 'Id');
-         $sheet->setCellValue('B1', 'Name');
-         $sheet->setCellValue('C1', 'Notes');
-         $sheet->setCellValue('D1', 'SKU');
-         $sheet->setCellValue('E1', 'ProdId');
-         $sheet->setCellValue('F1', 'BasePrice');
-         $sheet->setCellValue('G1', 'ProdCondition');
-         $sheet->setCellValue('H1', 'ProdActive');
-         $sheet->setCellValue('I1', 'InternationalShip');
-         $sheet->setCellValue('J1', 'ExpectedShip');
-         $sheet->setCellValue('K1', 'EbayTitle');
-         $sheet->setCellValue('L1', 'Qty');
-         $sheet->setCellValue('M1', 'Image');
-         $sheet->setCellValue('N1', 'CategoryId');
-         $sheet->setCellValue('O1', 'Status');
-         $sheet->setCellValue('P1', 'UserId');
-         $sheet->setCellValue('Q1', 'AddtionalData');
-         $sheet->setCellValue('R1', 'Created');
-         $sheet->setCellValue('S1', 'Updated');
-
-
-     $rows = 2;
-     foreach ($result_data as $prodata) {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Id');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('C1', 'Notes');
+        $sheet->setCellValue('D1', 'SKU');
+        $sheet->setCellValue('E1', 'ProdId');
+        $sheet->setCellValue('F1', 'BasePrice');
+        $sheet->setCellValue('G1', 'ProdCondition');
+        $sheet->setCellValue('H1', 'ProdActive');
+        $sheet->setCellValue('I1', 'InternationalShip');
+        $sheet->setCellValue('J1', 'ExpectedShip');
+        $sheet->setCellValue('K1', 'EbayTitle');
+        $sheet->setCellValue('L1', 'Qty');
+        $sheet->setCellValue('M1', 'Image');
+        $sheet->setCellValue('N1', 'CategoryId');
+        $sheet->setCellValue('O1', 'Status');
+        $sheet->setCellValue('P1', 'UserId');
+        $sheet->setCellValue('Q1', 'AddtionalData');
+        $sheet->setCellValue('R1', 'Created');
+        $sheet->setCellValue('S1', 'Updated');
 
 
-        $sheet->setCellValue('A' . $rows, $prodata['Id']);
-        $sheet->setCellValue('B' . $rows, $prodata['Name']);
-        $sheet->setCellValue('C' . $rows, $prodata['Notes']);
-        $sheet->setCellValue('D' . $rows, $prodata['SKU']);
-        $sheet->setCellValue('E' . $rows, $prodata['ProdId']);
-        $sheet->setCellValue('F' . $rows, $prodata['BasePrice']);
-        $sheet->setCellValue('G' . $rows, $prodata['ProdCondition']);
-        $sheet->setCellValue('H' . $rows, $prodata['ProdActive']);
-        $sheet->setCellValue('I' . $rows, $prodata['InternationalShip']);
-        $sheet->setCellValue('J' . $rows, $prodata['ExpectedShip']);
-        $sheet->setCellValue('K' . $rows, $prodata['EbayTitle']);
-        $sheet->setCellValue('L' . $rows, $prodata['Qty']);
-        $sheet->setCellValue('M' . $rows, $prodata['Image']);
-        $sheet->setCellValue('N' . $rows, $prodata['CategoryId']);
-        $sheet->setCellValue('O' . $rows, $prodata['Status']);
-        $sheet->setCellValue('P' . $rows, $prodata['UserId']);
-        $sheet->setCellValue('Q' . $rows, $prodata['AddtionalData']);
-        $sheet->setCellValue('R' . $rows, $prodata['Created']);
-        $sheet->setCellValue('S' . $rows, $prodata['Updated']);
+        $rows = 2;
+        foreach ($result_data as $prodata) {
 
-        $rows++;
-    }
 
-    if ($export_type == 'xlsx' || $export_type == 'csv')
-    {
-        $this->view->flash([
-            'alert' => 'Product Data sucessfully export..!',
-            'alert_type' => 'success'
-        ]);
+            $sheet->setCellValue('A' . $rows, $prodata['Id']);
+            $sheet->setCellValue('B' . $rows, $prodata['Name']);
+            $sheet->setCellValue('C' . $rows, $prodata['Notes']);
+            $sheet->setCellValue('D' . $rows, $prodata['SKU']);
+            $sheet->setCellValue('E' . $rows, $prodata['ProdId']);
+            $sheet->setCellValue('F' . $rows, $prodata['BasePrice']);
+            $sheet->setCellValue('G' . $rows, $prodata['ProdCondition']);
+            $sheet->setCellValue('H' . $rows, $prodata['ProdActive']);
+            $sheet->setCellValue('I' . $rows, $prodata['InternationalShip']);
+            $sheet->setCellValue('J' . $rows, $prodata['ExpectedShip']);
+            $sheet->setCellValue('K' . $rows, $prodata['EbayTitle']);
+            $sheet->setCellValue('L' . $rows, $prodata['Qty']);
+            $sheet->setCellValue('M' . $rows, $prodata['Image']);
+            $sheet->setCellValue('N' . $rows, $prodata['CategoryId']);
+            $sheet->setCellValue('O' . $rows, $prodata['Status']);
+            $sheet->setCellValue('P' . $rows, $prodata['UserId']);
+            $sheet->setCellValue('Q' . $rows, $prodata['AddtionalData']);
+            $sheet->setCellValue('R' . $rows, $prodata['Created']);
+            $sheet->setCellValue('S' . $rows, $prodata['Updated']);
 
-        if ($export_type == 'xlsx')
-        {
-
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-            $writer->save('export.xlsx');
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename="export.xlsx"');
-            $writer->save("php://output");
-            exit;
-
-             //$writer = new WriteXlsx($spreadsheet);
-            // $writer->save("product." . $export_type);
-             // $writer->save('php://output');
-             // return $this->view->redirect('/inventory/browse');
-           
-            // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
-            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            // header('Content-Disposition: attachment; filename="product.xlsx"');
-            // $writer->save("php://output");
-            // return $this->view->redirect('/inventory/browse');
-             exit;
-        } 
-        else if ($export_type == 'csv') 
-        {
-            $writer = new WriteCsv($spreadsheet);
-            $writer->save("product." . $export_type);
-            return $this->view->redirect('/inventory/browse');
+            $rows++;
         }
 
+        if ($export_type == 'xlsx' || $export_type == 'csv') {
+            $this->view->flash([
+                'alert' => 'Product Data sucessfully export..!',
+                'alert_type' => 'success'
+            ]);
 
-    } 
+            if ($export_type == 'xlsx') {
 
-}
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                $writer->save('export.xlsx');
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment; filename="export.xlsx"');
+                $writer->save("php://output");
+                exit;
+            } else if ($export_type == 'csv') {
+                $writer = new WriteCsv($spreadsheet);
+                $writer->save("product." . $export_type);
+                return $this->view->redirect('/inventory/browse');
+            }
+        }
+    }
 }

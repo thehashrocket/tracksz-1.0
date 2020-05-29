@@ -81,13 +81,11 @@ class product
 
         $is_or = false;
         $or = '';
-        if (isset($filterData['SKU'], $filterData['Title']) && (!empty($filterData['SKU']) || !empty($filterData['Title']))) {
-            $query .= ' where ';
-        }
+        $query .= ' where';
         // sku filter
         if (isset($filterData['SKU']) && !empty($filterData['SKU'])) {
             $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
-            $query .=  $or . 'product.`SKU` LIKE "%' . $filterData['SKU'] . '%" ';
+            $query .=  $or . ' product.`SKU` LIKE "%' . $filterData['SKU'] . '%" ';
             $is_or = true;
         }
 
@@ -172,8 +170,6 @@ class product
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-
     /*
     * findBySKUProd - Find product by product record UserId and Status
     *

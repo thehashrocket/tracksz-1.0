@@ -54,7 +54,7 @@ $(document).ready(function () {
   // Handle click on "Select all" control Ends
 
   // Handle click on "btn_status_update" control Starts
-  $(document).on("click", ".btn_status_update", function () {
+  $(document).on("click", ".btn_status_update,.btn_shipping", function () {
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
       data_array.push($(this).val());
@@ -72,7 +72,6 @@ $(document).ready(function () {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-    
         if (data.status) {
           location.reload();
         } else {
@@ -83,7 +82,7 @@ $(document).ready(function () {
     });
   });
 
-  // Handle click on "btn_status_update" control Starts
+  // Handle click on "OrderStatus" control Starts
   $(document).on("change", "#OrderStatus", function () {
     $("#order_change").submit();
   });

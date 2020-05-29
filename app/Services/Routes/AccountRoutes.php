@@ -95,9 +95,11 @@ class AccountRoutes extends AbstractServiceProvider
 
             $routes->group('/account/shipping-assign', function(\League\Route\RouteGroup $route) {
                 $route->get('/', Account\ShippingController::class.'::viewAssignZonesBulk');
-                $route->get('/individual', Account\ShippingController::class.'::viewAssignZonesIndividual');
+                $route->get('/individual/countries', Account\ShippingController::class.'::viewAssignZonesIndividualCountries');
+                $route->get('/individual/states/{CountryId:number}', Account\ShippingController::class.'::viewAssignZonesIndividualStates');
 
                 $route->post('/bulk-assign', Account\ShippingController::class.'::bulkAssign');
+                $route->post('/individual/states', Account\ShippingController::class.'::assignZoneToState');
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
