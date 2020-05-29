@@ -170,8 +170,7 @@ class OrderController
     */
     public function loadConfirmationFile()
     {
-        $all_order = (new Order($this->db))->getAllBelongsTo();
-        return $this->view->buildResponse('order/confirmation_file', ['all_order' => $all_order]);
+        return $this->view->buildResponse('order/defaults', []);
     }
 
     /*
@@ -180,7 +179,7 @@ class OrderController
     * @return view
     */
     public function loadExportOrder()
-    {
+    { 
         $all_order = (new Order($this->db))->getAllBelongsTo();
         return $this->view->buildResponse('order/export_order', ['all_order' => $all_order]);
         //return $this->view->buildResponse('order/defaults', []);
@@ -291,6 +290,7 @@ class OrderController
                 $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
                 $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
                 $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
+                
                 $rows++;
             }
 

@@ -47,18 +47,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                     </div>
                 </div>
                 <div class="col-md-3">
-                   <div class="form-group">
-                       <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
-                        <option selected><?=_('Select Marketplace...')?></option>
-                        <?php
-                        if (isset($market_places) && !empty($market_places)) {
-                            foreach ($market_places as $mar_key => $mar_val) { ?>                                  
-                            <option value="<?php echo $mar_val; ?>"><?php echo $mar_val; ?></option>
-                            <?php }} else {?>
-                            <option selected><?=_('No Marketplace found...')?></option>
-                            <?php }?>
-                        </select>
-                    </div>
+                   
                 </div>
                </div>
                 <?php if (isset($alert) && $alert) : ?>
@@ -106,7 +95,6 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                             <td><?= $product['ProdId'] ?></td>
                                             <td><?= $product['Qty'] ?></td>
                                             <td><?= $product['ProdCondition'] ?></td>
-                                            <td><?= (isset($product['Image']) && !empty($product['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
                                             <td> <?php
                                                     $button = '';
                                                     $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/product/edit/' . $product['Id'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
