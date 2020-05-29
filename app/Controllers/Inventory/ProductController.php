@@ -667,4 +667,46 @@ class ProductController
             }
         }
     }
+
+    public function marketplacebyproduct(ServerRequest $request)
+    {
+        try {
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+             $map_data = (new Product($this->db))->getmarketplace($methodData['MarketName']);
+            if (isset($map_data) && !empty($map_data)) {
+                $this->view->flash([
+                    'alert' => 'Marketplace product get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+
+                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $map_data, 'market_places' => $result_data]);
+            } else {
+                 $this->view->flash([
+                    'alert' => 'Product result not get...!',
+                    'alert_type' => 'success'
+                ]);
+                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                  return $this->view->buildResponse('inventory/product/browse', ['all_product' => '', 'market_places' => $result_data]);
+                //throw new Exception("Product result not get...!", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('inventory/product/browse', []);
+        }
+           
+        
+    }
 }

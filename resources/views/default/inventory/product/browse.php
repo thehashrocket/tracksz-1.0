@@ -38,6 +38,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                 <div class="row">
                     <div class="col-sm-12">
                         <form></form>
+                          <form name="change_marketplace" id="change_marketplace" action="/product/change_marketplace" method="POST">
                         <a href="/product/add" class="btn btn-primary" title="<?= _('Add Product') ?>"><?= _('Add Product') ?></a>
                         <div class="btn-group"><button type="button" id="btn_delete" class="btn btn-danger">Delete Selected Items</button></div>
                         <select class="browser-default custom-select" id="selected_export_product" name="export_format" required="" style="width: 150px;">
@@ -45,6 +46,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                             <option value="xlsx">Xlsx</option>
                             <option value="csv">CSV</option>
                         </select>
+                        
                         <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select" style="width: 200px;">
                             <option value="null" selected disabled><?= _('Select Marketplace...') ?></option>
                             <?php
@@ -56,6 +58,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                 <option selected><?= _('No Marketplace found...') ?></option>
                             <?php } ?>
                         </select>
+                    </form>
                     </div>
                     <!-- <div class="col-md-3">
                         <div class="form-group">
@@ -97,7 +100,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                         <th><?= _('Product ID') ?></th>
                                         <th><?= _('QTY') ?></th>
                                         <th><?= _('Condition') ?></th>
-                                        <th><?= _('Image') ?></th>
+                                        <th><?= _('Note') ?></th>
                                         <th><?= _('Action') ?></th>
                                     </tr>
                                 </thead>
@@ -114,7 +117,7 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                             <td><?= $product['ProdId'] ?></td>
                                             <td><?= $product['Qty'] ?></td>
                                             <td><?= $product['ProdCondition'] ?></td>
-                                            <td><?= (isset($product['Image']) && !empty($product['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
+                                            <td><?= $product['Notes'] ?></td>
                                             <td> <?php
                                                     $button = '';
                                                     $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/product/edit/' . $product['Id'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';

@@ -348,4 +348,12 @@ class product
         return $stm->fetchAll(PDO::FETCH_ASSOC);
      
     }
+
+     public function getmarketplace($MarketName)
+    { 
+
+        $stmt = $this->db->prepare('SELECT * FROM product WHERE MarketPlaceId = :MarketPlaceId');
+        $stmt->execute(['MarketPlaceId' => $MarketName]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

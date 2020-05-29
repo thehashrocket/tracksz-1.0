@@ -123,6 +123,10 @@ $(document).ready(function() {
     });
   });
 
+    $(document).on("change", "#MarketName", function () {
+    $("#change_marketplace").submit();
+  });
+
 
 
 
