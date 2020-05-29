@@ -165,8 +165,8 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
 
                                     </div>
 
-                                    </div> <!-- col-sm -->
-                                </div> <!-- Row -->
+                                </div> <!-- col-sm -->
+                            </div> <!-- Row -->
                         </div> <!-- Container -->
                     </div> <!-- Card Body -->
                 </div> <!-- .card card-fluid ends -->

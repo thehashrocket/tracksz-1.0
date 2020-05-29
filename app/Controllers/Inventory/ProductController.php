@@ -35,6 +35,7 @@ class ProductController
 {
     private $view;
     private $db;
+    private $storeid;
     /*
     * __construct - 
     * @param  $form  - Default View, PDO db   
@@ -44,6 +45,8 @@ class ProductController
     {
         $this->view = $view;
         $this->db   = $db;
+        $store = (new Store($this->db))->find(Session::get('member_id'), 1);
+        $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
     }
     /*
     * add - Load Add Product View
@@ -52,9 +55,11 @@ class ProductController
     */
     public function add()
     {
+
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $cat_obj = new Category($this->db);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category]);
+        return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
     }
 
     /*
@@ -128,7 +133,7 @@ class ProductController
             $insert_data = $this->PrepareInsertData($form);
             $insert_data['Image'] = $prod_img;
             $prod_obj = new Product($this->db);
-            $all_product = $prod_obj->addProduct($insert_data);
+            $all_product = $prod_obj->addProdInventory($insert_data);
 
             if (isset($all_product) && !empty($all_product)) {
                 $this->view->flash([
@@ -196,6 +201,8 @@ class ProductController
         $form_data['EbayTitle'] = (isset($form['ProdTitleBayInput']) && !empty($form['ProdTitleBayInput'])) ? $form['ProdTitleBayInput'] : null;
         $form_data['Qty'] = (isset($form['ProdQtyInput']) && !empty($form['ProdQtyInput'])) ? $form['ProdQtyInput'] : 0;
         $form_data['CategoryId'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : 0;
+        $form_data['MarketPlaceId'] = (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : null;
+        $form_data['StoreId'] = $this->storeid;
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;

@@ -1,0 +1,1 @@
+ALTER TABLE `product` ADD `MarketPlaceId` INT(11) NULL AFTER `AddtionalData`, ADD `StoreId` INT(11) NULL AFTER `MarketPlaceId`;

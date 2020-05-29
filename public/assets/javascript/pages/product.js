@@ -8,7 +8,7 @@ $(document).ready(function() {
         autoWidth: false,
         "scrollX": true
     });
-    // $('#product_table').columns.adjust().draw();
+    $('#product_table').columns.adjust().draw();
 
     $(document).on("click", "#ProductActive, #ProdInterShip, #ProdExpectedShip", function() {
         var attr = $(this).attr('checked');
@@ -45,6 +45,8 @@ $(document).ready(function() {
 
 
 });
+
+
 
  // Handle click on "Select all" control Starts
   $(document).on("click", "#select_all_chkbox", function () {

@@ -45,13 +45,13 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                         <div class="card-body">
                             <!-- .card-body starts -->
                             <div class="container">
-
+                                <form></form>
                                 <div class="row">
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
                                             <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="">In Status...</option>
+                                                <option value="" selected="" disabled>In Status...</option>
                                                 <option value="all">All</option>
                                                 <option value="new">New</option>
                                                 <option value="packed">In Process</option>
@@ -66,7 +66,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="">Sort By...</option>
+                                                <option value="" selected="" disabled>Sort By...</option>
                                                 <option value="all">All</option>
                                                 <option value="new">New</option>
                                             </select>
@@ -94,7 +94,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                             <!-- .card-body starts -->
                             <div class="container">
                                 <div class="row">
-                                    <button type="submit" class="btn btn-primary">Download PDF</button> &nbsp;<button type="submit" class="btn btn-primary">View PDF</button>
+                                    <button type="button" class="btn btn-primary btn_pick_download">Download PDF</button> &nbsp;<button type="button" class="btn btn-primary btn_pick_view">View PDF</button>
                                 </div>
                             </div> <!-- Container -->
                         </div> <!-- Card Body -->

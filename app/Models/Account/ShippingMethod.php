@@ -52,6 +52,8 @@ class ShippingMethod
     */
     public function belongsToMember($methodId, $memberId)
     {
+        // TODO: Pre-prepare these queries to reduce overhead
+        
         $query = 'SELECT StoreId FROM ShippingMethod WHERE Id = :methodId';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
@@ -184,10 +186,12 @@ class ShippingMethod
     public function assign($methodId, $zoneId)
     {
         $assigned = $this->isAssigned($methodId, $zoneId);
-        if ($assigned) {
+        if ($assigned)
+        {
             return true;
         }
-        else {
+        else
+        {
             $query = 'INSERT INTO ShippingMethodToZone (MethodId, ZoneId) VALUES (:methodId, :zoneId)';
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
@@ -206,14 +210,16 @@ class ShippingMethod
      public function unassign($methodId, $zoneId)
      {
         $assigned = $this->isAssigned($methodId, $zoneId);
-        if ($assigned) {
+        if ($assigned)
+        {
             $query = 'DELETE FROM ShippingMethodToZone WHERE MethodId = :methodId AND ZoneId = :zoneId';
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':methodId', $methodId, PDO::PARAM_INT);
             $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
             return $stmt->execute();
         }
-        else {
+        else
+        {
             return true;
         }
      }

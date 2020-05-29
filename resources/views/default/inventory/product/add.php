@@ -124,6 +124,20 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                                     <?php } ?>
                                                 </select>
                                             </div>
+
+                                            <div class="form-group">
+                                                <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
+                                                    <option selected><?= _('Select Marketplace...') ?></option>
+                                                    <?php
+                                                    if (isset($market_places) && !empty($market_places)) {
+                                                        foreach ($market_places as $mar_key => $mar_val) { ?>
+                                                            <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
+                                                        <?php }
+                                                    } else { ?>
+                                                        <option selected><?= _('No Marketplace found...') ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
                                         </div> <!-- col-sm -->
 
                                     </div> <!-- Row -->
