@@ -57,7 +57,9 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->get('/pick', Order\OrderController::class . '::pickOrder');
                 $route->get('/packing', Order\OrderController::class . '::packingOrder');
                 $route->get('/mailing', Order\OrderController::class . '::mailingOrder');
-                $route->post('/pdf_mailing', Order\OrderController::class . '::pdfGenerateLoad');
+                $route->post('/pdf_mailing', Order\OrderController::class . '::pdfGenerateMailingLoad');
+                $route->post('/pdf_packing', Order\OrderController::class . '::pdfGeneratePackingLoad');
+                $route->post('/pdf_pick', Order\OrderController::class . '::pdfGeneratePickLoad');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));

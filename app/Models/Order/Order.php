@@ -76,17 +76,15 @@ LEFT JOIN marketplace
     }
 
 
-   
-  /*
+    /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *
     * @param  Id  - Table record Id of orderinventory to find
     * @return associative array.
     */
-    public function dateRangeSearchByOrderData($formD,$ToD)
+    public function dateRangeSearchByOrderData($formD, $ToD)
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "2020-05-12" And "2020-05-20"');
-       
         $stmt->execute(['Created' => $formD, 'Created' => $ToD]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -96,18 +94,70 @@ LEFT JOIN marketplace
     public function orderstatusSearchByOrderData($export_val)
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Status = :Status');
-       
         $stmt->execute(['Status' => $export_val]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-     public function allorderSearchByOrderData()
+    public function allorderSearchByOrderData()
     {
         $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
-       
         $stmt->execute();
 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+    */
+    public function getPackingOrders($filter_data)
+    {
+        $stmt = $this->db->prepare('SELECT orderinventory.Id AS `OrderTableId`,
+        orderinventory.OrderId AS `OrderId`,
+        marketplace.MarketName AS `MarketplaceName`,
+        orderinventory.Created AS `OrderDate`,
+        orderinventory.ShippingMethod AS `ShippingMethod`,
+        -- shipping
+        orderinventory.ShippingName AS `ShippingName`,
+        orderinventory.ShippingAddress1 AS `ShippingAddress1`,
+        orderinventory.ShippingAddress2 AS `ShippingAddress2`,
+        orderinventory.ShippingAddress3 AS `ShippingAddress3`,
+        orderinventory.ShippingCity AS `ShippingCity`,
+        orderinventory.ShippingState AS `ShippingState`,
+        orderinventory.ShippingZipCode AS `ShippingZipCode`,
+        orderinventory.ShippingCountry AS `ShippingCountry`,
+        orderinventory.ShippingPhone AS `ShippingPhone`,
+        orderinventory.ShippingMethod AS `ShippingMethod`,
+        -- billing
+        orderinventory.BillingName AS `BillingName`,
+        orderinventory.BillingAddress1 AS `BillingAddress1`,
+        orderinventory.BillingAddress2 AS `BillingAddress2`,
+        orderinventory.BillingAddress3 AS `BillingAddress3`,
+        orderinventory.BillingCity AS `BillingCity`,
+        orderinventory.BillingState AS `BillingState`,
+        orderinventory.BillingZipCode AS `BillingZipCode`,
+        orderinventory.BillingCountry AS `BillingCountry`,
+        orderinventory.BillingPhone AS `BillingPhone`,
+        -- billing
+        product.Id AS `ProductTableId`,
+        product.Qty AS `ProductQty`,
+        product.ProdId AS `ProductISBN`,
+        product.Name AS `ProductName`,
+        product.Notes AS `ProductDescription`,
+        product.ProdCondition AS `ProductCondition`,
+        product.SKU AS `ProductSKU`,
+        orderinventory.BuyerNote AS `ProductBuyerNote`,
+        orderinventory.Id AS `MarketplaceId`
+        
+FROM orderinventory
+LEFT JOIN marketplace
+   ON marketplace.Id = orderinventory.MarketPlaceId
+   LEFT JOIN product
+   ON product.Id = orderinventory.StoreProductId');
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -389,6 +439,120 @@ LEFT JOIN marketplace
             $stmt->bindParam('Status', $Status, PDO::PARAM_STR);
         }
 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    /*
+    * find - Find getStatusOrders by orderinventory record status
+    *
+    * @param  Id  - Table record Id of orderinventory to find
+    * @return associative array.
+    */
+    public function getPickOrderStatus($Status)
+    {
+        if ($Status['status'] == 'all') {
+            $query = 'SELECT orderinventory.Id AS `OrderTableId`,
+            orderinventory.OrderId AS `OrderId`,
+            marketplace.MarketName AS `MarketplaceName`,
+            orderinventory.Created AS `OrderDate`,
+            orderinventory.ShippingMethod AS `ShippingMethod`,
+            -- shipping
+            orderinventory.ShippingName AS `ShippingName`,
+            orderinventory.ShippingAddress1 AS `ShippingAddress1`,
+            orderinventory.ShippingAddress2 AS `ShippingAddress2`,
+            orderinventory.ShippingAddress3 AS `ShippingAddress3`,
+            orderinventory.ShippingCity AS `ShippingCity`,
+            orderinventory.ShippingState AS `ShippingState`,
+            orderinventory.ShippingZipCode AS `ShippingZipCode`,
+            orderinventory.ShippingCountry AS `ShippingCountry`,
+            orderinventory.ShippingPhone AS `ShippingPhone`,
+            orderinventory.ShippingMethod AS `ShippingMethod`,
+            -- billing
+            orderinventory.BillingName AS `BillingName`,
+            orderinventory.BillingAddress1 AS `BillingAddress1`,
+            orderinventory.BillingAddress2 AS `BillingAddress2`,
+            orderinventory.BillingAddress3 AS `BillingAddress3`,
+            orderinventory.BillingCity AS `BillingCity`,
+            orderinventory.BillingState AS `BillingState`,
+            orderinventory.BillingZipCode AS `BillingZipCode`,
+            orderinventory.BillingCountry AS `BillingCountry`,
+            orderinventory.BillingPhone AS `BillingPhone`,
+            -- billing
+            product.Id AS `ProductTableId`,
+            product.Qty AS `ProductQty`,
+            product.ProdId AS `ProductISBN`,
+            product.Name AS `ProductName`,
+            product.Notes AS `ProductDescription`,
+            product.ProdCondition AS `ProductCondition`,
+            product.SKU AS `ProductSKU`,
+            product.BasePrice AS `ProductPrice`,
+            orderinventory.BuyerNote AS `ProductBuyerNote`,
+            orderinventory.Id AS `MarketplaceId`
+            
+    FROM orderinventory
+    LEFT JOIN marketplace
+       ON marketplace.Id = orderinventory.MarketPlaceId
+       LEFT JOIN product
+       ON product.Id = orderinventory.StoreProductId';
+        } else {
+            $query = 'SELECT orderinventory.Id AS `OrderTableId`,
+            orderinventory.OrderId AS `OrderId`,
+            marketplace.MarketName AS `MarketplaceName`,
+            orderinventory.Created AS `OrderDate`,
+            orderinventory.ShippingMethod AS `ShippingMethod`,
+            -- shipping
+            orderinventory.ShippingName AS `ShippingName`,
+            orderinventory.ShippingAddress1 AS `ShippingAddress1`,
+            orderinventory.ShippingAddress2 AS `ShippingAddress2`,
+            orderinventory.ShippingAddress3 AS `ShippingAddress3`,
+            orderinventory.ShippingCity AS `ShippingCity`,
+            orderinventory.ShippingState AS `ShippingState`,
+            orderinventory.ShippingZipCode AS `ShippingZipCode`,
+            orderinventory.ShippingCountry AS `ShippingCountry`,
+            orderinventory.ShippingPhone AS `ShippingPhone`,
+            orderinventory.ShippingMethod AS `ShippingMethod`,
+            -- billing
+            orderinventory.BillingName AS `BillingName`,
+            orderinventory.BillingAddress1 AS `BillingAddress1`,
+            orderinventory.BillingAddress2 AS `BillingAddress2`,
+            orderinventory.BillingAddress3 AS `BillingAddress3`,
+            orderinventory.BillingCity AS `BillingCity`,
+            orderinventory.BillingState AS `BillingState`,
+            orderinventory.BillingZipCode AS `BillingZipCode`,
+            orderinventory.BillingCountry AS `BillingCountry`,
+            orderinventory.BillingPhone AS `BillingPhone`,
+            -- billing
+            product.Id AS `ProductTableId`,
+            product.Qty AS `ProductQty`,
+            product.ProdId AS `ProductISBN`,
+            product.Name AS `ProductName`,
+            product.Notes AS `ProductDescription`,
+            product.ProdCondition AS `ProductCondition`,
+            product.SKU AS `ProductSKU`,
+            product.BasePrice AS `ProductPrice`,
+            orderinventory.BuyerNote AS `ProductBuyerNote`,
+            orderinventory.Id AS `MarketplaceId`
+            
+    FROM orderinventory
+    LEFT JOIN marketplace
+       ON marketplace.Id = orderinventory.MarketPlaceId
+       LEFT JOIN product
+       ON product.Id = orderinventory.StoreProductId';
+
+            $is_or = false;
+            $or = '';
+            $query .= ' where';
+            // sku filter
+            if (isset($Status['status']) && !empty($Status['status'])) {
+                $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+                $query .=  $or . ' orderinventory.`Status` LIKE "%' . $Status['status'] . '%" ';
+                $is_or = true;
+            }
+        }
+
+        $stmt = $this->db->query($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

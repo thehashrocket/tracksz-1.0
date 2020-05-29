@@ -51,7 +51,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="">Sort By...</option>
+                                                <option value="" selected="" disabled>Sort By...</option>
                                                 <option value="order">Order #</option>
                                                 <option value="location/sku">Location/SKU</option>
                                                 <option value="zipcode">ZIP Code</option>
@@ -97,7 +97,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                             <!-- .card-body starts -->
                             <div class="container">
                                 <div class="row">
-                                    <button type="submit" class="btn btn-primary">Download PDF</button> &nbsp;<button type="submit" class="btn btn-primary">View PDF</button>
+                                    <button type="button" class="btn btn-primary btn_packing_download">Download PDF</button> &nbsp;<button type="button" class="btn btn-primary btn_packing_view">View PDF</button>
                                 </div>
                             </div> <!-- Container -->
                         </div> <!-- Card Body -->
@@ -115,7 +115,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
 <!-- <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-<script src="/assets/javascript/pages/orderpick.js"></script>
+<script src="/assets/javascript/pages/orderpacking.js"></script>
 <?= $this->stop() ?>
 
 <?php $this->start('page_js') ?>

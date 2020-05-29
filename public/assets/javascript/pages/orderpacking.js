@@ -2,7 +2,8 @@ $(document).ready(function () {
   console.log("document ready pick..!");
 
   // Handle click on "btn_mailing_download" control Starts
-  $(document).on("click", ".btn_pick_download, .btn_pick_view", function () {
+  $(document).on("click", ".btn_packing_download, .btn_packing_view", function () {
+    
     // Ajax CSRF Token Setup
     $.ajaxSetup({
       headers: {
@@ -10,12 +11,9 @@ $(document).ready(function () {
       },
     });
     $.ajax({
-      url: BASE_URL + "/order/pdf_pick",
+      url: BASE_URL + "/order/pdf_packing",
       type: "POST",
-      data: {
-        status: $("#OrderStatus :selected").val(),
-        sortorder: $("#OrderSortBy :selected").val(),
-      },
+      data: { status: $("#OrderSortBy :selected").val() },
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
