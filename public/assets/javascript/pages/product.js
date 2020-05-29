@@ -7,8 +7,7 @@ $(document).ready(function() {
         responsive:false,
         autoWidth: false,
         "scrollX": true
-    });
-    $('#product_table').columns.adjust().draw();
+    });    
 
     $(document).on("click", "#ProductActive, #ProdInterShip, #ProdExpectedShip", function() {
         var attr = $(this).attr('checked');
@@ -42,11 +41,7 @@ $(document).ready(function() {
             });
         }
     });
-
-
 });
-
-
 
  // Handle click on "Select all" control Starts
   $(document).on("click", "#select_all_chkbox", function () {
@@ -103,13 +98,7 @@ $(document).ready(function() {
     });
   });
 
-
-
-
    $(document).on("change", "#selected_export_product", function () {
-    // if (!confirm("Do you want to delete ?")) {
-    //         return false;
-    //     }
     var export_type =  $( "#selected_export_product" ).val();
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
@@ -128,12 +117,7 @@ $(document).ready(function() {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-    
-        // if (data.status) {
-        //   location.reload();
-        // } else {
-        //   location.reload();
-        // }
+  
       },
       error: function (jqXHR, textStatus, errorThrown) {},
     });

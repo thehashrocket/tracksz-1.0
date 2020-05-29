@@ -98,13 +98,13 @@ if (substr($page, 0, 12) == 'example-page') {
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price'];
+                    $inventory_menu = ['product-add', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price'];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $inventory_menu)) {
                                                         echo ' has-active';
                                                     } ?>"><a href="/inventory/browse" class="menu-link" title="<?= _('Active Store Inventory') ?>"><span class="menu-icon fas fa-dolly-flatbed" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Inventory') ?></span></a> <!-- child menu -->
                         <ul class="menu">
-                            <li class="menu-item<?php if ($page == 'inventory-browse') {
+                            <li class="menu-item<?php if ($page == 'inventory-browse' || $page == 'product-add' || $page == 'inventory-edit') {
                                                     echo ' has-active';
                                                 } ?>">
                                 <a href="/inventory/browse" title="<?= _('View, Add, Edit, Delete Inventory') ?>" class="menu-link"><?= _('Browse') ?></a>

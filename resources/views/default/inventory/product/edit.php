@@ -13,6 +13,22 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
+
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse" title="View Store's Orders"><?= ('Inventory') ?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?= ('Edit') ?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?= _('Product Edit') ?> </h1>
@@ -78,13 +94,13 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
 
                                             <div class="form-group">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="ProdInterShip" id="ProdInterShip" data-parsley-required-message="<?= _('International Shipping') ?>" data-parsley-group="fieldset01" value="<?php echo ((isset($form['ProdInterShip']) && $form['ProdInterShip'] == 1) || (isset($form['ProdInterShip']) && $form['InternationalShip'] == 1)) ? 1 : 0; ?>" <?php echo ((isset($form['ProdInterShip']) && $form['ProdInterShip'] == 1) || (isset($form['InternationalShip']) && $form['InternationalShip'] == 1)) ? 'checked' : ''; ?>>
+                                                    <input class="form-check-input" type="checkbox" name="ProdInterShip" id="ProdInterShip" data-parsley-required-message="<?= _('International Shipping') ?>" data-parsley-group="fieldset01" value="<?php echo ((isset($form['ProdInterShip']) && $form['ProdInterShip'] == 1) || (isset($form['InternationalShip']) && $form['InternationalShip'] == 1)) ? 1 : 0; ?>" <?php echo ((isset($form['ProdInterShip']) && $form['ProdInterShip'] == 1) || (isset($form['InternationalShip']) && $form['InternationalShip'] == 1)) ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="ProdInterShip">
                                                         <?= _('International Shipping') ?>
                                                     </label>
                                                 </div>
                                             </div>
-                    
+
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="ProdExpectedShip" id="ProdExpectedShip" data-parsley-required-message="<?= _('Expected Shipping') ?>" data-parsley-group="fieldset01" value="<?php echo ((isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1) || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 1 : 0; ?>" <?php echo (isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1 || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 'checked' : ''; ?>>
@@ -113,7 +129,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                 </div>
                                             </div>
                                             <?php
-                                        
+
                                             $img_path = '';
                                             $img_path = \App\Library\Config::get('company_url') . '/assets/images/product/' . $form['Image'];
                                             ?>
@@ -127,10 +143,24 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                     <?php
                                                     if (isset($all_category) && is_array($all_category) && !empty($all_category)) {
                                                         foreach ($all_category as $cat_key => $cat_val) { ?>
-                                                            <option value="<?php echo $cat_val['Id']; ?>" <?php echo ((isset($form['ParentCategory']) && $form['ParentCategory'] == $cat_val['Id']) || (isset($form['CategoryId']) && $form['CategoryId'] == $cat_val['Id'])) ? 'selected' : '';?>><?php echo $cat_val['Name']; ?></option>
+                                                            <option value="<?php echo $cat_val['Id']; ?>" <?php echo ((isset($form['ParentCategory']) && $form['ParentCategory'] == $cat_val['Id']) || (isset($form['CategoryId']) && $form['CategoryId'] == $cat_val['Id'])) ? 'selected' : ''; ?>><?php echo $cat_val['Name']; ?></option>
                                                         <?php }
                                                     } else { ?>
                                                         <option selected><?= _('No Category found...') ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select">
+                                                    <option selected><?= _('Select Marketplace...') ?></option>
+                                                    <?php
+                                                    if (isset($market_places) && !empty($market_places)) {
+                                                        foreach ($market_places as $mar_key => $mar_val) { ?>
+                                                            <option value="<?php echo $mar_val['Id']; ?>" <?php echo (isset($form['MarketPlaceId']) && $form['MarketPlaceId'] == $mar_val['Id']) ? 'selected' : ''; ?>><?php echo $mar_val['MarketName']; ?></option>
+                                                        <?php }
+                                                    } else { ?>
+                                                        <option selected><?= _('No Marketplace found...') ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>

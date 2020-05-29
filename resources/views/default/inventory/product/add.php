@@ -13,6 +13,22 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
+
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse" title="View Store's Orders"><?= ('Inventory') ?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?= ('Add') ?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?= _('Product Add') ?> </h1>
@@ -131,7 +147,7 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                                     <?php
                                                     if (isset($market_places) && !empty($market_places)) {
                                                         foreach ($market_places as $mar_key => $mar_val) { ?>
-                                                            <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
+                                                            <option value="<?php echo $mar_val['Id']; ?>" <?php echo (isset($form['MarketName']) && $form['MarketName'] == $mar_val['Id']) ? 'selected' : ''; ?>><?php echo $mar_val['MarketName']; ?></option>
                                                         <?php }
                                                     } else { ?>
                                                         <option selected><?= _('No Marketplace found...') ?></option>
