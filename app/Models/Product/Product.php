@@ -336,7 +336,6 @@ class product
         $mParams = str_repeat('?,', count($ids) - 1) . '?';
         $sth = $this->db->prepare("DELETE FROM product WHERE Id IN ($mParams)");
         return $sth->execute($ids);
-     
     }
 
     public function select_multiple_ids($ids = null)
@@ -346,14 +345,69 @@ class product
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
-     
     }
-
-     public function getmarketplace($MarketName)
+   public function getmarketplace($MarketName)
     { 
 
         $stmt = $this->db->prepare('SELECT * FROM product WHERE MarketPlaceId = :MarketPlaceId');
         $stmt->execute(['MarketPlaceId' => $MarketName]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+
+
+
+
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+    */
+    public function getProductsBelongsTo($ProdId)
+    {
+        $stmt = $this->db->prepare('SELECT product.*, 
+        marketprice_master.Id as `MarketPriceId`,
+        marketprice_master.ProductId as `MarketPriceProductId`,
+        marketprice_master.AbeBooks as `AbeBooks`,
+        marketprice_master.Alibris as `Alibris`,
+        marketprice_master.Amazon as `Amazon`,
+        marketprice_master.AmazonEurope as `AmazonEurope`,
+        marketprice_master.BarnesAndNoble as `BarnesAndNoble`,
+        marketprice_master.Biblio as `Biblio`,
+        marketprice_master.Chrislands as `Chrislands`,
+        marketprice_master.eBay as `eBay`,
+        marketprice_master.eCampus as `eCampus`,
+        marketprice_master.TextbookRush as `TextbookRush`,
+        marketprice_master.TextbookX as `TextbookX`,
+        marketprice_master.Valore as `Valore`,
+
+        shipping_templates.Id as `ShipTemplateId`,
+        shipping_templates.ProductId as `ShipTemplateProductId`,
+        shipping_templates.AbeBooksTemplate as `AbeBooksTemplate`,
+        shipping_templates.AlibrisTemplate as `AlibrisTemplate`,
+        shipping_templates.AmazonTemplate as `AmazonTemplate`,
+        shipping_templates.AmazonEuropeTemplate as `AmazonEuropeTemplate`,
+        shipping_templates.BarnesAndNobleTemplate as `BarnesAndNobleTemplate`,
+        shipping_templates.BiblioTemplate as `BiblioTemplate`,
+        shipping_templates.ChrislandsTemplate as `ChrislandsTemplate`,
+        shipping_templates.eBayTemplate as `eBayTemplate`,
+        shipping_templates.eCampusTemplate as `eCampusTemplate`,
+        shipping_templates.TextbookRushTemplate as `TextbookRushTemplate`,
+        shipping_templates.TextbookXTemplate as `TextbookXTemplate`,
+        shipping_templates.ValoreTemplate as `ValoreTemplate`,
+        shipping_templates.DefaultTemplate as `DefaultTemplate`
+FROM product
+LEFT JOIN marketprice_master
+   ON marketprice_master.ProductId = product.Id
+LEFT JOIN shipping_templates
+   ON shipping_templates.ProductId = product.Id
+   WHERE product.Id = ' . $ProdId . '');
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

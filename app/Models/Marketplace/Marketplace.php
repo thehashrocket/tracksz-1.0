@@ -13,7 +13,7 @@ class Marketplace
     // Contains Resources
     private $db;
 
-  public function __construct(PDO $db)
+    public function __construct(PDO $db)
     {
         $this->db = $db;
     }
@@ -56,6 +56,45 @@ class Marketplace
     {
         $stmt = $this->db->prepare('SELECT * FROM marketplace WHERE Id = :Id');
         $stmt->execute(['Id' => $Id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /*
+    * find - Find Marketplace by marketplace record Id
+    *
+    * @param  Id  - Table record Id of marketplace to find
+    * @return associative array.
+    */
+    public function findPriceById($Id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `marketprice_master` WHERE Id = :Id');
+        $stmt->execute(['Id' => $Id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /*
+    * find - Find Marketplace by marketplace record Id
+    *
+    * @param  Id  - Table record Id of marketplace to find
+    * @return associative array.
+    */
+    public function findPriceProductId($ProductId)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `marketprice_master` WHERE ProductId = :ProductId');
+        $stmt->execute(['ProductId' => $ProductId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /*
+    * find - Find find Template ProductId record Id
+    *
+    * @param  Id  - Table record Id of marketplace to find
+    * @return associative array.
+    */
+    public function findTemplateProductId($ProductId)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `shipping_templates` WHERE ProductId = :ProductId');
+        $stmt->execute(['ProductId' => $ProductId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -168,6 +207,142 @@ class Marketplace
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+
+    /*
+     * addStore - add a new store for member
+     *
+     * @param  $form  - Array of form fields, name match Database Fields
+     *                  Form Field Names MUST MATCH Database Column Names
+     * @return boolean
+    */
+    public function addMarketPlacePrice($form)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($form as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO `marketprice_master` (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
+    }
+
+    public function updateMarketPrice($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['Id'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE `marketprice_master` SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE Id = :Id';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
+
+    public function updateMarketPriceProduct($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['ProductId'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE `marketprice_master` SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE ProductId = :ProductId';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
+
+
+    public function updateMarketTemplateProduct($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['ProductId'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE `shipping_templates` SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE ProductId = :ProductId';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
+
+
+    /*
+     * addMarketTemplateProduct - add a new template
+     *
+     * @param  $form  - Array of form fields, name match Database Fields
+     *                  Form Field Names MUST MATCH Database Column Names
+     * @return boolean
+    */
+    public function addMarketTemplateProduct($form)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($form as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO `shipping_templates` (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
     }
     /********************************* */
     // [0] => __construct

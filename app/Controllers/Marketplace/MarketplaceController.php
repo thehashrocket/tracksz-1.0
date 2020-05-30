@@ -7,21 +7,29 @@ namespace App\Controllers\Marketplace;
 use App\Library\Config;
 use App\Library\Views;
 use App\Models\Marketplace\Marketplace;
+use App\Models\Inventory\Category;
 use App\Library\ValidateSanitize\ValidateSanitize;
 use Laminas\Diactoros\ServerRequest;
 use Delight\Auth\Auth;
 use Delight\Cookie\Session;
+use App\Models\Account\Store;
+use App\Models\Product\Product;
 use PDO;
+use Exception;
 
 class MarketplaceController
 {
     private $view;
     private $db;
+    private $storeid;
 
     public function __construct(Views $view, PDO $db)
     {
         $this->view = $view;
         $this->db = $db;
+
+        $store = (new Store($this->db))->find(Session::get('member_id'), 1);
+        $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
     }
 
     public function view()
@@ -248,5 +256,278 @@ class MarketplaceController
             echo json_encode($res);
             exit;
         }
+    }
+
+
+    public function addMarketPrices(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        // Pre defined data starts
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        $cat_obj = new Category($this->db);
+        $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        // Pre defined data ends
+        try {
+            $insert_data = $this->PreparePriceInsertData($form);
+
+            $add_result = (new Marketplace($this->db))->addMarketPlacePrice($insert_data);
+            if (isset($add_result) && !empty($add_result)) {
+                $this->view->flash([
+                    'alert' => _('MarketSpecific Price added successfully..!'),
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $form['Id']);
+                // return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'form' => $form, 'market_places' => $result_data]);
+            } else {
+                throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = 'Marketplace Prices are not updated...!';
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $form['Id']);
+        }
+    }
+
+
+    /*
+    * PrepareInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PreparePriceInsertData($form = array())
+    {
+        $form_data = array();
+
+        $form_data['ProductId'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : 0;
+        $form_data['AbeBooks'] = (isset($form['AbeBooks']) && !empty($form['AbeBooks'])) ? $form['AbeBooks'] : 0.00;
+        $form_data['Alibris'] = (isset($form['Alibris']) && !empty($form['Alibris'])) ? $form['Alibris'] : 0.00;
+        $form_data['Amazon'] = (isset($form['Amazon']) && !empty($form['Amazon'])) ? $form['Amazon'] : 0.00;
+        $form_data['AmazonEurope'] = (isset($form['AmazonEurope']) && !empty($form['AmazonEurope'])) ? $form['AmazonEurope'] : 0.00;
+        $form_data['BarnesAndNoble'] = (isset($form['BarnesAndNoble']) && !empty($form['BarnesAndNoble'])) ? $form['BarnesAndNoble'] : 0.00;
+        $form_data['Biblio'] = (isset($form['Biblio']) && !empty($form['Biblio'])) ? $form['Biblio'] : 0.00;
+        $form_data['Chrislands'] = (isset($form['Chrislands']) && !empty($form['Chrislands'])) ? $form['Chrislands'] : 0.00;
+        $form_data['eBay'] = (isset($form['eBay']) && !empty($form['eBay'])) ? $form['eBay'] : 0.00;
+        $form_data['eCampus'] = (isset($form['eCampus']) && !empty($form['eCampus'])) ? $form['eCampus'] : 0.00;
+        $form_data['TextbookRush'] = (isset($form['TextbookRush']) && !empty($form['TextbookRush'])) ? $form['TextbookRush'] : 0.00;
+        $form_data['TextbookX'] = (isset($form['TextbookX']) && !empty($form['TextbookX'])) ? $form['TextbookX'] : 0.00;
+        $form_data['Valore'] = (isset($form['Valore']) && !empty($form['Valore'])) ? $form['Valore'] : 0.00;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Created'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+
+    /*
+    * updateMarketPrices - Update MarketSpecific Price
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateMarketPrices(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.     
+        try {
+            $is_data = $this->insertOrUpdateMarketPrice($methodData);
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Marketprice updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $methodData['Id']);
+            } else {
+                throw new Exception("Failed to update marketprice. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+
+    /*
+    * PreparePriceUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PreparePriceUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['AbeBooks'] = (isset($form['AbeBooks']) && !empty($form['AbeBooks'])) ? $form['AbeBooks'] : 0.00;
+        $form_data['Alibris'] = (isset($form['Alibris']) && !empty($form['Alibris'])) ? $form['Alibris'] : 0.00;
+        $form_data['Amazon'] = (isset($form['Amazon']) && !empty($form['Amazon'])) ? $form['Amazon'] : 0.00;
+        $form_data['AmazonEurope'] = (isset($form['AmazonEurope']) && !empty($form['AmazonEurope'])) ? $form['AmazonEurope'] : 0.00;
+        $form_data['BarnesAndNoble'] = (isset($form['BarnesAndNoble']) && !empty($form['BarnesAndNoble'])) ? $form['BarnesAndNoble'] : 0.00;
+        $form_data['Biblio'] = (isset($form['Biblio']) && !empty($form['Biblio'])) ? $form['Biblio'] : 0.00;
+        $form_data['Chrislands'] = (isset($form['Chrislands']) && !empty($form['Chrislands'])) ? $form['Chrislands'] : 0.00;
+        $form_data['eBay'] = (isset($form['eBay']) && !empty($form['eBay'])) ? $form['eBay'] : 0.00;
+        $form_data['eCampus'] = (isset($form['eCampus']) && !empty($form['eCampus'])) ? $form['eCampus'] : 0.00;
+        $form_data['TextbookRush'] = (isset($form['TextbookRush']) && !empty($form['TextbookRush'])) ? $form['TextbookRush'] : 0.00;
+        $form_data['TextbookX'] = (isset($form['TextbookX']) && !empty($form['TextbookX'])) ? $form['TextbookX'] : 0.00;
+        $form_data['Valore'] = (isset($form['Valore']) && !empty($form['Valore'])) ? $form['Valore'] : 0.00;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Updated'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * insertOrUpdateMarketPrice - find marketprice product
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    private function insertOrUpdateMarketPrice($data)
+    {
+        $market_details = (new Marketplace($this->db))->findPriceProductId($data['Id']);
+
+        if (isset($market_details) && !empty($market_details)) { // update
+            $update_data = $this->PreparePriceUpdateData($data);
+            $result = (new Marketplace($this->db))->updateMarketPriceProduct($data['Id'], $update_data);
+        } else { // insert
+            $insert_data = $this->PreparePriceInsertData($data);
+            $result = (new Marketplace($this->db))->addMarketPlacePrice($insert_data);
+        }
+        return $result;
+    }
+
+    /*
+    * updateMarketTemplate - update Market Template Price
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateMarketTemplate(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.     
+        try {
+
+            $is_data = $this->insertOrUpdateMarketTemplate($methodData);
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Market template updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $methodData['Id']);
+            } else {
+                throw new Exception("Failed to update template. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+    /*
+    * insertOrUpdateMarketTemplate - find insertOrUpdateMarketTemplate product
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    private function insertOrUpdateMarketTemplate($data)
+    {
+        $market_details = (new Marketplace($this->db))->findTemplateProductId($data['Id']);
+
+        if (isset($market_details) && !empty($market_details)) { // update
+            $update_data = $this->PrepareTemplateUpdateData($data);
+            $result = (new Marketplace($this->db))->updateMarketTemplateProduct($data['Id'], $update_data);
+        } else { // insert
+            $insert_data = $this->PrepareTemplateInsertData($data);
+            $result = (new Marketplace($this->db))->addMarketTemplateProduct($insert_data);
+        }
+        return $result;
+    }
+
+    /*
+    * PrepareTemplateUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareTemplateUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['DefaultTemplate'] = (isset($form['DefaultTemplate']) && !empty($form['DefaultTemplate'])) ? $form['DefaultTemplate'] : null;
+        $form_data['AbeBooksTemplate'] = (isset($form['AbeBooksTemplate']) && !empty($form['AbeBooksTemplate'])) ? $form['AbeBooksTemplate'] : null;
+        $form_data['AlibrisTemplate'] = (isset($form['AlibrisTemplate']) && !empty($form['AlibrisTemplate'])) ? $form['AlibrisTemplate'] : null;
+        $form_data['AmazonTemplate'] = (isset($form['AmazonTemplate']) && !empty($form['AmazonTemplate'])) ? $form['AmazonTemplate'] : null;
+        $form_data['AmazonEuropeTemplate'] = (isset($form['AmazonEurope']) && !empty($form['AmazonEurope'])) ? $form['AmazonEurope'] : null;
+        $form_data['BarnesAndNobleTemplate'] = (isset($form['BarnesAndNobleTemplate']) && !empty($form['BarnesAndNobleTemplate'])) ? $form['BarnesAndNobleTemplate'] : null;
+        $form_data['BiblioTemplate'] = (isset($form['BiblioTemplate']) && !empty($form['BiblioTemplate'])) ? $form['BiblioTemplate'] : null;
+        $form_data['ChrislandsTemplate'] = (isset($form['ChrislandsTemplate']) && !empty($form['ChrislandsTemplate'])) ? $form['ChrislandsTemplate'] : null;
+        $form_data['eBayTemplate'] = (isset($form['eBayTemplate']) && !empty($form['eBayTemplate'])) ? $form['eBayTemplate'] : null;
+        $form_data['eCampusTemplate'] = (isset($form['eCampusTemplate']) && !empty($form['eCampusTemplate'])) ? $form['eCampusTemplate'] : null;
+        $form_data['TextbookRushTemplate'] = (isset($form['TextbookRushTemplate']) && !empty($form['TextbookRushTemplate'])) ? $form['TextbookRushTemplate'] : null;
+        $form_data['TextbookXTemplate'] = (isset($form['TextbookXTemplate']) && !empty($form['TextbookXTemplate'])) ? $form['TextbookXTemplate'] : null;
+        $form_data['ValoreTemplate'] = (isset($form['ValoreTemplate']) && !empty($form['ValoreTemplate'])) ? $form['ValoreTemplate'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Updated'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * PrepareTemplateInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareTemplateInsertData($form = array())
+    {
+        $form_data = array();
+        $form_data['ProductId'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : 0;
+        $form_data['DefaultTemplate'] = (isset($form['DefaultTemplate']) && !empty($form['DefaultTemplate'])) ? $form['DefaultTemplate'] : null;
+        $form_data['AbeBooksTemplate'] = (isset($form['AbeBooksTemplate']) && !empty($form['AbeBooksTemplate'])) ? $form['AbeBooksTemplate'] : null;
+        $form_data['AlibrisTemplate'] = (isset($form['AlibrisTemplate']) && !empty($form['AlibrisTemplate'])) ? $form['AlibrisTemplate'] : null;
+        $form_data['AmazonTemplate'] = (isset($form['AmazonTemplate']) && !empty($form['AmazonTemplate'])) ? $form['AmazonTemplate'] : null;
+        $form_data['AmazonEuropeTemplate'] = (isset($form['AmazonEurope']) && !empty($form['AmazonEurope'])) ? $form['AmazonEurope'] : null;
+        $form_data['BarnesAndNobleTemplate'] = (isset($form['BarnesAndNobleTemplate']) && !empty($form['BarnesAndNobleTemplate'])) ? $form['BarnesAndNobleTemplate'] : null;
+        $form_data['BiblioTemplate'] = (isset($form['BiblioTemplate']) && !empty($form['BiblioTemplate'])) ? $form['BiblioTemplate'] : null;
+        $form_data['ChrislandsTemplate'] = (isset($form['ChrislandsTemplate']) && !empty($form['ChrislandsTemplate'])) ? $form['ChrislandsTemplate'] : null;
+        $form_data['eBayTemplate'] = (isset($form['eBayTemplate']) && !empty($form['eBayTemplate'])) ? $form['eBayTemplate'] : null;
+        $form_data['eCampusTemplate'] = (isset($form['eCampusTemplate']) && !empty($form['eCampusTemplate'])) ? $form['eCampusTemplate'] : null;
+        $form_data['TextbookRushTemplate'] = (isset($form['TextbookRushTemplate']) && !empty($form['TextbookRushTemplate'])) ? $form['TextbookRushTemplate'] : null;
+        $form_data['TextbookXTemplate'] = (isset($form['TextbookXTemplate']) && !empty($form['TextbookXTemplate'])) ? $form['TextbookXTemplate'] : null;
+        $form_data['ValoreTemplate'] = (isset($form['ValoreTemplate']) && !empty($form['ValoreTemplate'])) ? $form['ValoreTemplate'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Created'] = date('Y-m-d H:I:S');
+        return $form_data;
     }
 }

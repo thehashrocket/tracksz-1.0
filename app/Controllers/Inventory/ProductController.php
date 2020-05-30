@@ -142,7 +142,8 @@ class ProductController
                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
                 $cat_obj = new Category($this->db);
                 $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
+                // return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
+                return $this->view->redirect('/product/edit/' . $all_product);
             } else {
                 throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
             }
@@ -292,7 +293,9 @@ class ProductController
     */
     public function editProduct(ServerRequest $request, $Id = [])
     {
-        $form = (new Product($this->db))->findById($Id['Id']);
+        // $form = (new Product($this->db))->findById($Id['Id']);
+        // $form_price = (new Marketplace($this->db))->findPriceById($form['ProdId']);
+        $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
         $cat_obj = new Category($this->db);
         $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
@@ -371,7 +374,6 @@ class ProductController
             }
 
             $update_data = $this->PrepareUpdateData($methodData);
-            $update_data['Updated'] = date('Y-m-d H:i:s');
             $update_data['Image'] = $prod_img;
             $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
             if (isset($is_updated) && !empty($is_updated)) {
@@ -659,6 +661,18 @@ class ProductController
                 header('Content-Type: application/vnd.ms-excel');
                 header('Content-Disposition: attachment; filename="export.xlsx"');
                 $writer->save("php://output");
+                exit;
+
+                //$writer = new WriteXlsx($spreadsheet);
+                // $writer->save("product." . $export_type);
+                // $writer->save('php://output');
+                // return $this->view->redirect('/inventory/browse');
+
+                // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+                // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                // header('Content-Disposition: attachment; filename="product.xlsx"');
+                // $writer->save("php://output");
+                // return $this->view->redirect('/inventory/browse');
                 exit;
             } else if ($export_type == 'csv') {
                 $writer = new WriteCsv($spreadsheet);

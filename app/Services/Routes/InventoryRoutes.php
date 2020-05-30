@@ -9,6 +9,7 @@ use League\Route\Router;
 
 // For functionality
 use App\Controllers\Inventory;
+use App\Controllers\Marketplace;
 use App\Controllers\Job\UploadQueue;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -73,6 +74,12 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/delete_product', Inventory\ProductController::class . '::delete_productProductData');
                 $route->post('/change_marketplace', Inventory\ProductController::class . '::marketplacebyproduct');
                  $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
+
+
+                $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
+                $route->post('/market_price', Marketplace\MarketplaceController::class . '::addMarketPrices');
+                $route->post('/market_price_update', Marketplace\MarketplaceController::class . '::updateMarketPrices');
+                $route->post('/market_template_update', Marketplace\MarketplaceController::class . '::updateMarketTemplate');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
