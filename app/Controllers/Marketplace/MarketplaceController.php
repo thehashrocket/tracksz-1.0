@@ -530,4 +530,215 @@ class MarketplaceController
         $form_data['Created'] = date('Y-m-d H:I:S');
         return $form_data;
     }
+
+
+    /*
+    * updateMarketShipRates - update Market Ship Rates
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateMarketShipRates(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.     
+        try {
+
+            $is_data = $this->insertOrUpdateMarketShipRate($methodData);
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Market ship rate updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $methodData['Id']);
+            } else {
+                throw new Exception("Failed to update Market ship rate. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+    /*
+    * insertOrUpdateMarketTemplate - find insertOrUpdateMarketTemplate product
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    private function insertOrUpdateMarketShipRate($data)
+    {
+        $market_details = (new Marketplace($this->db))->findShipRateProductId($data['Id']);
+
+        if (isset($market_details) && !empty($market_details)) { // update
+            $update_data = $this->PrepareShipRateUpdateData($data);
+            $result = (new Marketplace($this->db))->updateMarketShipRateProduct($data['Id'], $update_data);
+        } else { // insert
+            $insert_data = $this->PrepareShipRateInsertData($data);
+            $result = (new Marketplace($this->db))->addMarketShipRateProduct($insert_data);
+        }
+        return $result;
+    }
+
+    /*
+    * PrepareShipRateUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareShipRateUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['Domestic'] = (isset($form['Domestic']) && !empty($form['Domestic'])) ? $form['Domestic'] : null;
+        $form_data['International'] = (isset($form['International']) && !empty($form['International'])) ? $form['International'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Updated'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * PrepareShipRateInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareShipRateInsertData($form = array())
+    {
+        $form_data = array();
+        $form_data['ProductId'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : 0;
+        $form_data['Domestic'] = (isset($form['Domestic']) && !empty($form['Domestic'])) ? $form['Domestic'] : null;
+        $form_data['International'] = (isset($form['International']) && !empty($form['International'])) ? $form['International'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Created'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * updateMarketHandling - update Market Ship Rates
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateMarketHandling(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.     
+        try {
+
+            $is_data = $this->insertOrUpdateMarketHandlingTime($methodData);
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Market handling updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $methodData['Id']);
+            } else {
+                throw new Exception("Failed to update Market handling Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+    /*
+    * insertOrUpdateMarketHandlingTime - find insertOrUpdateMarketHandlingTime product
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    private function insertOrUpdateMarketHandlingTime($data)
+    {
+        $market_details = (new Marketplace($this->db))->findHandlingTimeProductId($data['Id']);
+
+        if (isset($market_details) && !empty($market_details)) { // update
+            $update_data = $this->PrepareHandlingUpdateData($data);
+            $result = (new Marketplace($this->db))->updateMarketHindlingProduct($data['Id'], $update_data);
+        } else { // insert
+            $insert_data = $this->PrepareHindlingInsertData($data);
+            $result = (new Marketplace($this->db))->addMarketHindlingProduct($insert_data);
+        }
+        return $result;
+    }
+
+    /*
+    * PrepareHandlingUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareHandlingUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['DefaultHandlingTime'] = (isset($form['DefaultHandlingTime']) && !empty($form['DefaultHandlingTime'])) ? $form['DefaultHandlingTime'] : null;
+        $form_data['AbeBooksHandlingTime'] = (isset($form['AbeBooksHandlingTime']) && !empty($form['AbeBooksHandlingTime'])) ? $form['AbeBooksHandlingTime'] : null;
+        $form_data['AlibrisHandlingTime'] = (isset($form['AlibrisHandlingTime']) && !empty($form['AlibrisHandlingTime'])) ? $form['AlibrisHandlingTime'] : null;
+        $form_data['AmazonHandlingTime'] = (isset($form['AmazonHandlingTime']) && !empty($form['AmazonHandlingTime'])) ? $form['AmazonHandlingTime'] : null;
+        $form_data['AmazonEuropeHandlingTime'] = (isset($form['AmazonEuropeHandlingTime']) && !empty($form['AmazonEuropeHandlingTime'])) ? $form['AmazonEuropeHandlingTime'] : null;
+        $form_data['BarnesAndNobleHandlingTime'] = (isset($form['BarnesAndNobleHandlingTime']) && !empty($form['BarnesAndNobleHandlingTime'])) ? $form['BarnesAndNobleHandlingTime'] : null;
+        $form_data['BiblioHandlingTime'] = (isset($form['BiblioHandlingTime']) && !empty($form['BiblioHandlingTime'])) ? $form['BiblioHandlingTime'] : null;
+        $form_data['ChrislandsHandlingTime'] = (isset($form['ChrislandsHandlingTime']) && !empty($form['ChrislandsHandlingTime'])) ? $form['ChrislandsHandlingTime'] : null;
+        $form_data['eBayHandlingTime'] = (isset($form['eBayHandlingTime']) && !empty($form['eBayHandlingTime'])) ? $form['eBayHandlingTime'] : null;
+        $form_data['eCampusHandlingTime'] = (isset($form['eCampusHandlingTime']) && !empty($form['eCampusHandlingTime'])) ? $form['eCampusHandlingTime'] : null;
+        $form_data['TextbookRushHandlingTime'] = (isset($form['TextbookRushHandlingTime']) && !empty($form['TextbookRushHandlingTime'])) ? $form['TextbookRushHandlingTime'] : null;
+        $form_data['TextbookXHandlingTime'] = (isset($form['TextbookXHandlingTime']) && !empty($form['TextbookXHandlingTime'])) ? $form['TextbookXHandlingTime'] : null;
+        $form_data['ValoreHandlingTime'] = (isset($form['ValoreHandlingTime']) && !empty($form['ValoreHandlingTime'])) ? $form['ValoreHandlingTime'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Updated'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * PrepareHindlingInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareHindlingInsertData($form = array())
+    {
+        $form_data = array();
+        $form_data['ProductId'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : 0;
+        $form_data['DefaultHandlingTime'] = (isset($form['DefaultHandlingTime']) && !empty($form['DefaultHandlingTime'])) ? $form['DefaultHandlingTime'] : null;
+        $form_data['AbeBooksHandlingTime'] = (isset($form['AbeBooksHandlingTime']) && !empty($form['AbeBooksHandlingTime'])) ? $form['AbeBooksHandlingTime'] : null;
+        $form_data['AlibrisHandlingTime'] = (isset($form['AlibrisHandlingTime']) && !empty($form['AlibrisHandlingTime'])) ? $form['AlibrisHandlingTime'] : null;
+        $form_data['AmazonHandlingTime'] = (isset($form['AmazonHandlingTime']) && !empty($form['AmazonHandlingTime'])) ? $form['AmazonHandlingTime'] : null;
+        $form_data['AmazonEuropeHandlingTime'] = (isset($form['AmazonEuropeHandlingTime']) && !empty($form['AmazonEuropeHandlingTime'])) ? $form['AmazonEuropeHandlingTime'] : null;
+        $form_data['BarnesAndNobleHandlingTime'] = (isset($form['BarnesAndNobleHandlingTime']) && !empty($form['BarnesAndNobleHandlingTime'])) ? $form['BarnesAndNobleHandlingTime'] : null;
+        $form_data['BiblioHandlingTime'] = (isset($form['BiblioHandlingTime']) && !empty($form['BiblioHandlingTime'])) ? $form['BiblioHandlingTime'] : null;
+        $form_data['ChrislandsHandlingTime'] = (isset($form['ChrislandsHandlingTime']) && !empty($form['ChrislandsHandlingTime'])) ? $form['ChrislandsHandlingTime'] : null;
+        $form_data['eBayHandlingTime'] = (isset($form['eBayHandlingTime']) && !empty($form['eBayHandlingTime'])) ? $form['eBayHandlingTime'] : null;
+        $form_data['eCampusHandlingTime'] = (isset($form['eCampusHandlingTime']) && !empty($form['eCampusHandlingTime'])) ? $form['eCampusHandlingTime'] : null;
+        $form_data['TextbookRushHandlingTime'] = (isset($form['TextbookRushHandlingTime']) && !empty($form['TextbookRushHandlingTime'])) ? $form['TextbookRushHandlingTime'] : null;
+        $form_data['TextbookXHandlingTime'] = (isset($form['TextbookXHandlingTime']) && !empty($form['TextbookXHandlingTime'])) ? $form['TextbookXHandlingTime'] : null;
+        $form_data['ValoreHandlingTime'] = (isset($form['ValoreHandlingTime']) && !empty($form['ValoreHandlingTime'])) ? $form['ValoreHandlingTime'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Created'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
 }

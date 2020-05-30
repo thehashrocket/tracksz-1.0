@@ -73,13 +73,13 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
                 $route->post('/delete_product', Inventory\ProductController::class . '::delete_productProductData');
                 $route->post('/change_marketplace', Inventory\ProductController::class . '::marketplacebyproduct');
-                 $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
-
 
                 $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
                 $route->post('/market_price', Marketplace\MarketplaceController::class . '::addMarketPrices');
                 $route->post('/market_price_update', Marketplace\MarketplaceController::class . '::updateMarketPrices');
                 $route->post('/market_template_update', Marketplace\MarketplaceController::class . '::updateMarketTemplate');
+                $route->post('/market_shiprates', Marketplace\MarketplaceController::class . '::updateMarketShipRates');
+                $route->post('/market_handletime', Marketplace\MarketplaceController::class . '::updateMarketHandling');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));

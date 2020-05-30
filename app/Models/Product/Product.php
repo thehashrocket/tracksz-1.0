@@ -346,8 +346,8 @@ class product
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
     }
-   public function getmarketplace($MarketName)
-    { 
+    public function getmarketplace($MarketName)
+    {
 
         $stmt = $this->db->prepare('SELECT * FROM product WHERE MarketPlaceId = :MarketPlaceId');
         $stmt->execute(['MarketPlaceId' => $MarketName]);
@@ -400,12 +400,37 @@ class product
         shipping_templates.TextbookRushTemplate as `TextbookRushTemplate`,
         shipping_templates.TextbookXTemplate as `TextbookXTemplate`,
         shipping_templates.ValoreTemplate as `ValoreTemplate`,
-        shipping_templates.DefaultTemplate as `DefaultTemplate`
+        shipping_templates.DefaultTemplate as `DefaultTemplate`,
+
+        ebay_shipping_rates.Id as `ShipRateId`,
+        ebay_shipping_rates.ProductId as `ShipRateProductId`,
+        ebay_shipping_rates.Domestic as `Domestic`,
+        ebay_shipping_rates.International as `International`,
+
+        marketplace_handletime.Id as `HandlingTimeId`,
+        marketplace_handletime.ProductId as `HandlingTimeProductId`,
+        marketplace_handletime.AbeBooksHandlingTime as `AbeBooksHandlingTime`,
+        marketplace_handletime.AlibrisHandlingTime as `AlibrisHandlingTime`,
+        marketplace_handletime.AmazonHandlingTime as `AmazonHandlingTime`,
+        marketplace_handletime.AmazonEuropeHandlingTime as `AmazonEuropeHandlingTime`,
+        marketplace_handletime.BarnesAndNobleHandlingTime as `BarnesAndNobleHandlingTime`,
+        marketplace_handletime.BiblioHandlingTime as `BiblioHandlingTime`,
+        marketplace_handletime.ChrislandsHandlingTime as `ChrislandsHandlingTime`,
+        marketplace_handletime.eBayHandlingTime as `eBayHandlingTime`,
+        marketplace_handletime.eCampusHandlingTime as `eCampusHandlingTime`,
+        marketplace_handletime.TextbookRushHandlingTime as `TextbookRushHandlingTime`,
+        marketplace_handletime.TextbookXHandlingTime as `TextbookXHandlingTime`,
+        marketplace_handletime.ValoreHandlingTime as `ValoreHandlingTime`,
+        marketplace_handletime.DefaultHandlingTime as `DefaultHandlingTime`
 FROM product
 LEFT JOIN marketprice_master
    ON marketprice_master.ProductId = product.Id
 LEFT JOIN shipping_templates
    ON shipping_templates.ProductId = product.Id
+LEFT JOIN ebay_shipping_rates
+   ON ebay_shipping_rates.ProductId = product.Id
+LEFT JOIN marketplace_handletime
+   ON marketplace_handletime.ProductId = product.Id
    WHERE product.Id = ' . $ProdId . '');
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);

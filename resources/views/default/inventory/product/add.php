@@ -355,6 +355,147 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
 
                     </div><!-- /.page-inner -->
                 </div><!-- shipping_templates /.page -->
+
+
+                <!-- .page-section ebay shipping rates starts -->
+                <div class="card-deck-xl">
+                    <!-- .card-deck-xl starts -->
+                    <div class="card card-fluid">
+                        <!-- .card card-fluid starts -->
+
+                        <div class="card-body">
+                            <form name="market_ship_rates" id="market_ship_rates" action="/product/market_shiprates" method="POST">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h5 class="card-title"><?= _('eBay Shipping Rate Tables') ?></h5>
+                                            <input type="hidden" class="form-control" id="Id" name="Id" value="">
+                                            <div class="form-group">
+                                                <label for="Domestic"><?= _('Domestic Shipping Rate Table Id') ?></label>
+                                                <input type="text" class="form-control" id="Domestic" name="Domestic" placeholder="Enter Domestic Shipping Rate Table Id" data-parsley-group="fieldset01" value="<?php echo (isset($form['Domestic']) && !empty($form['Domestic'])) ? $form['Domestic'] : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+
+                                        <div class="col-sm">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <div class="form-group">
+                                                <label for="International"><?= _('International Shipping Rate Table Id') ?></label>
+                                                <input type="text" class="form-control" id="International" name="International" placeholder="Enter International Shipping Rate Table Id" data-parsley-group="fieldset01" value="<?php echo (isset($form['International']) && !empty($form['International'])) ? $form['International'] : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+                                    </div> <!-- Row -->
+
+                                </div> <!-- Container -->
+
+                                <button type="submit" class="btn btn-primary btn_market_shipping_rate" disabled><?= _('Submit') ?></button>
+                            </form>
+                        </div> <!-- Card Body -->
+
+                    </div><!-- /.page-inner -->
+                </div><!-- ebay shipping rates /.page -->
+
+
+                <!-- .page-section handling time starts -->
+                <div class="card-deck-xl">
+                    <!-- .card-deck-xl starts -->
+                    <div class="card card-fluid">
+                        <!-- .card card-fluid starts -->
+
+                        <div class="card-body">
+                            <form name="market_hindling_time" id="market_hindling_time" action="/product/market_handletime" method="POST">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h5 class="card-title"><?= _('Handling Time') ?></h5>
+                                            <input type="hidden" class="form-control" id="Id" name="Id" value="">
+                                            <div class="form-group">
+                                                <label for="DefaultHandlingTime"><?= _('Default Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="DefaultHandlingTime" name="DefaultHandlingTime" placeholder="Enter Default HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['DefaultHandlingTime']) && !empty($form['DefaultHandlingTime'])) ? $form['DefaultHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="AbeBooksHandlingTime"><?= _('AbeBooks Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="AbeBooksHandlingTime" name="AbeBooksHandlingTime" placeholder="Enter AbeBooks HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['AbeBooksHandlingTime']) && !empty($form['AbeBooksHandlingTime'])) ? $form['AbeBooksHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="AlibrisHandlingTime"><?= _('Alibris Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="AlibrisHandlingTime" name="AlibrisHandlingTime" placeholder="Enter Alibris HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['AlibrisHandlingTime']) && !empty($form['AlibrisHandlingTime'])) ? $form['AlibrisHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="AmazonHandlingTime"><?= _('Amazon Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="AmazonHandlingTime" name="AmazonHandlingTime" placeholder="Enter Amazon HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['AmazonHandlingTime']) && !empty($form['AmazonHandlingTime'])) ? $form['AmazonHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="AmazonEuropeHandlingTime"><?= _('AmazonEurope Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="AmazonEuropeHandlingTime" name="AmazonEuropeHandlingTime" placeholder="Enter Amazon Europe HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['AmazonEuropeHandlingTime']) && !empty($form['AmazonEuropeHandlingTime'])) ? $form['AmazonEuropeHandlingTime'] : ''; ?>">
+                                            </div>
+
+
+                                        </div> <!-- col-sm -->
+
+                                        <div class="col-sm">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <div class="form-group">
+                                                <label for="BarnesAndNobleHandlingTime"><?= _('Barnes And Noble Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="BarnesAndNobleHandlingTime" name="BarnesAndNobleHandlingTime" placeholder="Enter Barnes And Noble HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['BarnesAndNobleHandlingTime']) && !empty($form['BarnesAndNobleHandlingTime'])) ? $form['BarnesAndNobleHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="BiblioHandlingTime"><?= _('Biblio Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="BiblioHandlingTime" name="BiblioHandlingTime" placeholder="Enter Biblio HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['BiblioHandlingTime']) && !empty($form['BiblioHandlingTime'])) ? $form['BiblioHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ChrislandsHandlingTime"><?= _('Chrislands Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="ChrislandsHandlingTime" name="ChrislandsHandlingTime" placeholder="Enter Chrislands HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['ChrislandsHandlingTime']) && !empty($form['ChrislandsHandlingTime'])) ? $form['ChrislandsHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="eBayHandlingTime"><?= _('eBay Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="eBayHandlingTime" name="eBayHandlingTime" placeholder="Enter eBay HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['eBayHandlingTime']) && !empty($form['eBayHandlingTime'])) ? $form['eBayHandlingTime'] : ''; ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="eCampusHandlingTime"><?= _('eCampus Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="eCampusHandlingTime" name="eCampusHandlingTime" placeholder="Enter eCampus HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['eCampusHandlingTime']) && !empty($form['eCampusHandlingTime'])) ? $form['eCampusHandlingTime'] : ''; ?>">
+                                            </div>
+
+
+                                        </div> <!-- col-sm -->
+
+                                        <div class="col-sm">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <div class="form-group">
+                                                <label for="TextbookRushHandlingTime"><?= _('TextbookRush Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="TextbookRushHandlingTime" name="TextbookRushHandlingTime" placeholder="Enter TextbookRush HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['TextbookRushHandlingTime']) && !empty($form['TextbookRushHandlingTime'])) ? $form['TextbookRushHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TextbookXHandlingTime"><?= _('TextbookX Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="TextbookXHandlingTime" name="TextbookXHandlingTime" placeholder="Enter TextbookX HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['TextbookXHandlingTime']) && !empty($form['TextbookXHandlingTime'])) ? $form['TextbookXHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ValoreHandlingTime"><?= _('Valore Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="ValoreHandlingTime" name="ValoreHandlingTime" placeholder="Enter Valore HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['ValoreHandlingTime']) && !empty($form['ValoreHandlingTime'])) ? $form['ValoreHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ChrislandsHandlingTime"><?= _('Chrislands Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="ChrislandsHandlingTime" name="ChrislandsHandlingTime" placeholder="Enter Chrislands HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['ChrislandsHandlingTime']) && !empty($form['ChrislandsHandlingTime'])) ? $form['ChrislandsHandlingTime'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="eBayHandlingTime"><?= _('eBay Handling Time') ?></label>
+                                                <input type="text" class="form-control" id="eBayHandlingTime" name="eBayHandlingTime" placeholder="Enter eBay HandlingTime" data-parsley-group="fieldset01" value="<?php echo (isset($form['eBayHandlingTime']) && !empty($form['eBayHandlingTime'])) ? $form['eBayHandlingTime'] : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+
+                                    </div> <!-- Row -->
+
+                                </div> <!-- Container -->
+
+                                <button type="submit" class="btn btn-primary btn_market_shipping_rate" disabled><?= _('Submit') ?></button>
+                            </form>
+                        </div> <!-- Card Body -->
+
+                    </div><!-- /.page-inner -->
+                </div><!-- handling time /.page -->
             </div><!-- /.wrapper -->
             <?= $this->stop() ?>
 
