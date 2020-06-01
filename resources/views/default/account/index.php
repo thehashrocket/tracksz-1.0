@@ -66,7 +66,7 @@
 
 <?php $this->start('plugin_js') ?>
 <script src="/assets/vendor/pace/pace.min.js"></script>
-<script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
+<script src="/assets/vendor/stacked-menu/stacked-menu.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/vendor/flatpickr/flatpickr.min.js"></script>
 <script src="/assets/vendor/easy-pie-chart/jquery.easypiechart.min.js"></script>
@@ -74,7 +74,6 @@
 <?=$this->stop()?>
 
 <?php $this->start('page_js') ?>
-<script src="/assets/javascript/pages/dashboard.js"></script>
 <?=$this->stop()?>
 
 <?php $this->start('footer_extras') ?>
