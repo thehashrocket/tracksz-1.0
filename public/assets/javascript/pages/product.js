@@ -8,22 +8,14 @@ $(document).ready(function () {
     scrollX: true,
   });
 
-  $(document).on(
-    "click",
-    "#ProductActive, #ProdInterShip, #ProdExpectedShip",
-    function () {
-      var attr = $(this).attr("checked");
-      if (typeof attr !== typeof undefined && attr !== false) {
-        $(this).prop("checked", false);
-        $(this).removeAttr("checked");
-        $(this).val(0);
-      } else {
-        $(this).prop("checked", true);
-        $(this).attr("checked", "checked");
-        $(this).val(1);
-      }
-    }
-  );
+    $('#product_table').DataTable({
+        order: [
+            [1, "asc"] // asc OR desc
+        ],
+        responsive:false,
+        autoWidth: false,
+        "scrollX": true
+    });    
 
   $(document).on("click", ".btn_delete", function () {
     if (!confirm("Do you want to delete ?")) {

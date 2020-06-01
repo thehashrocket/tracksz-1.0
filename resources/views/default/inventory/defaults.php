@@ -45,9 +45,7 @@ $description_meta = 'Inventory Defaults for your store\'s product listings at Tr
                     <h6 class="card-header"><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?> - <?= _('Defaults') ?></h6><!-- .card-body -->
                     <div class="card-body">
                         <h4>Under Development</h4>
-                        <div align="center">
-                    <a href="/inventory/excel" class="btn btn-success">Export to Excel</a>
-                       </div>
+                     
                     </div><!-- /.card-body -->
                 </div><!-- /.card -->
             </div> <!-- /.page-section -->

@@ -336,6 +336,7 @@ class product
         $mParams = str_repeat('?,', count($ids) - 1) . '?';
         $sth = $this->db->prepare("DELETE FROM product WHERE Id IN ($mParams)");
         return $sth->execute($ids);
+     
     }
 
     public function select_multiple_ids($ids = null)
@@ -345,6 +346,7 @@ class product
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
+     
     }
     public function getmarketplace($MarketName)
     {

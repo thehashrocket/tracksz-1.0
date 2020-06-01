@@ -87,3 +87,31 @@ $(document).ready(function () {
     $("#order_change").submit();
   });
 });
+
+
+
+$(document).on("change", "#selected_export_order", function () {
+    var export_type =  $( "#selected_export_order" ).val();
+    var data_array = [];
+    $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
+      data_array.push($(this).val());
+    });
+    // Ajax CSRF Token Setup
+    $.ajaxSetup({
+      headers: {
+        "X-CSRF-Token": $('input[name="__token"]').val(),
+      },
+    });
+    $.ajax({
+     url: BASE_URL + "/order/export_order_list",
+      type: "POST",
+      data: { ids: data_array, export_formate: export_type },
+      dataType: "JSON",
+      beforeSend: function () {},
+      success: function (data, textStatus, jqXHR) {
+  
+      },
+      error: function (jqXHR, textStatus, errorThrown) {},
+    });
+  });
+

@@ -556,4 +556,13 @@ LEFT JOIN marketplace
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function select_multiple_ids($ids = null)
+    {
+        $in  = str_repeat('?,', count($ids) - 1) . '?';
+        $sql = "SELECT * FROM orderinventory WHERE Id IN ($in)";
+        $stm = $this->db->prepare($sql);
+        $stm->execute($ids);
+        return $stm->fetchAll(PDO::FETCH_ASSOC);
+     
+    }
 }
