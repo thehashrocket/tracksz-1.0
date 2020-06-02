@@ -86,11 +86,8 @@ $(document).ready(function () {
   $(document).on("change", "#OrderStatus", function () {
     $("#order_change").submit();
   });
-});
 
-
-
-$(document).on("change", "#selected_export_order", function () {
+  $(document).on("change", "#selected_export_order", function () {
     var export_type =  $( "#selected_export_order" ).val();
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
@@ -115,3 +112,4 @@ $(document).on("change", "#selected_export_order", function () {
     });
   });
 
+});

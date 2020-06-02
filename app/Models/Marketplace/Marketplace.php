@@ -13,7 +13,7 @@ class Marketplace
     // Contains Resources
     private $db;
 
-  public function __construct(PDO $db)
+    public function __construct(PDO $db)
     {
         $this->db = $db;
     }
@@ -120,6 +120,19 @@ class Marketplace
     public function findHandlingTimeProductId($ProductId)
     {
         $stmt = $this->db->prepare('SELECT * FROM `marketplace_handletime` WHERE ProductId = :ProductId');
+        $stmt->execute(['ProductId' => $ProductId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /*
+    * find - Find find Ship rate ProductId record Id
+    *
+    * @param  Id  - Table record Id of marketplace to find
+    * @return associative array.
+    */
+    public function findAdditionalProductId($ProductId)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `marketspecific_addtional` WHERE ProductId = :ProductId');
         $stmt->execute(['ProductId' => $ProductId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -473,6 +486,61 @@ class Marketplace
         $values = substr($values, 0, -2);
 
         $query  = 'INSERT INTO `marketplace_handletime` (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
+    }
+
+    public function updateAdditionalProduct($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['ProductId'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE `marketspecific_addtional` SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE ProductId = :ProductId';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
+
+
+    /*
+     * addAdditionalProduct - add a new ship rate
+     *
+     * @param  $form  - Array of form fields, name match Database Fields
+     *                  Form Field Names MUST MATCH Database Column Names
+     * @return boolean
+    */
+    public function addAdditionalProduct($form)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($form as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO `marketspecific_addtional` (' . $insert . ') ';
         $query .= 'VALUES(' . $values . ')';
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {

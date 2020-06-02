@@ -27,7 +27,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
-                    <?php $this->insert('partials/active_store'); ?>
+                    <?php $this->insert('partials/active_store'); ?> &nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
@@ -41,7 +41,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
 
             <div class="page-section">
                 <!-- .page-section starts -->
-                <div class="card-deck-xl">
+                <div class="card-deck-xl catelog <?php echo (isset($form['IsCatalog']) && $form['IsCatalog'] == 1) ? '' : 'd-none'; ?>">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">
                         <!-- .card card-fluid starts -->
@@ -181,6 +181,173 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
 
                     </div><!-- /.page-inner -->
                 </div><!-- /.page -->
+
+                <!-- .page-section Non Catlog starts -->
+                <div class="card-deck-xl none_catelog <?php echo (isset($form['IsCatalog']) && $form['IsCatalog'] == 1) ? 'd-none' : ''; ?>">
+                    <!-- .card-deck-xl starts -->
+                    <div class="card card-fluid">
+                        <!-- .card card-fluid starts -->
+
+                        <div class="card-body">
+                            <form name="product_nocatalog_request" id="product_nocatalog_request" action="/product/no_catalog_update" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h5 class="card-title"><?= _('Basic Information') ?></h5>
+                                            <div class="form-group">
+                                                <label for="ProductSKU"><?= _('SKU') ?></label>
+                                                <input type="text" class="form-control" id="ProductSKU" name="ProductSKU" placeholder="Enter SKU" data-parsley-required-message="<?= _('Enter SKU') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['SKU']) && !empty($form['SKU'])) ? $form['SKU'] : ''; ?>">
+                                                <input type="hidden" class="form-control" id="Id" name="Id" value="<?php echo (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : ''; ?>">
+                                            </div>
+                                            <?php
+                                            $additional_data = json_decode($form['AddtionalData']);
+                                            ?>
+                                            <div class="form-group">
+                                                <label for="ProductEAN"><?= _('EAN') ?></label>
+                                                <input type="text" class="form-control" id="ProductEAN" name="ProductEAN" placeholder="Enter EAN" data-parsley-required-message="<?= _('Enter Product SKU') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($additional_data->EAN) && !empty($additional_data->EAN)) ? $additional_data->EAN : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ProductBasePriceInput"><?= _('Base Price') ?></label>
+                                                <input type="number" class="form-control" id="ProductBasePriceInput" name="ProductBasePriceInput" placeholder="Enter Product Base Price" value="<?php echo (isset($form['BasePrice']) && !empty($form['BasePrice'])) ? $form['BasePrice'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="ProductType"><?= _('Type') ?></label>
+                                                    </div>
+                                                    <select class="custom-select" id="ProductType" name="ProductType">
+                                                        <option value="" selected><?= _('Choose...') ?></option>
+                                                        <option value="book" <?php echo (isset($additional_data->TYPE) && $additional_data->TYPE == 'book') ? 'selected' : ''; ?>>Book</option>
+                                                        <option value="music" <?php echo (isset($additional_data->TYPE) && $additional_data->TYPE == 'music') ? 'selected' : ''; ?>>Music</option>
+                                                        <option value="video" <?php echo (isset($additional_data->TYPE) && $additional_data->TYPE == 'video') ? 'selected' : ''; ?>>Video</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ProductAuthor"><?= _('Author') ?></label>
+                                                <input type="text" class="form-control" id="ProductAuthor" name="ProductAuthor" placeholder="Enter Author" data-parsley-required-message="<?= _('Enter Author') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($additional_data->Author) && !empty($additional_data->Author)) ? $additional_data->Author : ''; ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <select name="Language" id="Language" class="browser-default custom-select market_language">
+                                                    <option selected="">Select Language...</option>
+                                                    <option value="english" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'english') ? 'selected' : ''; ?>>English</option>
+                                                    <option value="french" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'french') ? 'selected' : ''; ?>>French</option>
+                                                    <option value="german" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'german') ? 'selected' : ''; ?>>German</option>
+                                                    <option value="italian" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'italian') ? 'selected' : ''; ?>>Italian</option>
+                                                    <option value="latin" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'latin') ? 'selected' : ''; ?>>Latin</option>
+                                                    <option value="spanish" <?php echo (isset($additional_data->Language) && $additional_data->Language == 'spanish') ? 'selected' : ''; ?>>Spanish</option>
+                                                </select>
+                                            </div>
+                                        </div> <!-- col-sm -->
+
+                                        <div class="col-sm">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <div class="form-group">
+                                                <label for="ProductUPC"><?= _('UPC') ?></label>
+                                                <input type="text" class="form-control" id="ProductUPC" name="ProductUPC" placeholder="Enter UPC" data-parsley-required-message="<?= _('Enter UPC') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['ProdId']) && !empty($form['ProdId'])) ? $form['ProdId'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ProductTitle"><?= _('Title') ?></label>
+                                                <input type="text" class="form-control" id="ProductTitle" name="ProductTitle" placeholder="Enter Title" data-parsley-required-message="<?= _('Enter Title') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['Name']) && !empty($form['Name'])) ? $form['Name'] : ''; ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ProductQty"><?= _('Qty') ?></label>
+                                                <input type="number" class="form-control" id="ProductQty" name="ProductQty" placeholder="Enter Product Qty" data-parsley-required-message="<?= _('Enter Qty') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['Qty']) && !empty($form['Qty'])) ? $form['Qty'] : ''; ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="ProductBindings"><?= _('Bindings') ?></label>
+                                                    </div>
+                                                    <select class="custom-select" id="ProductBindings" name="ProductBindings">
+                                                        <option value="" selected><?= _('Choose...') ?></option>
+                                                        <option value="accessory" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'accessory') ? 'selected' : ''; ?>>Accessory</option>
+                                                        <option value="album" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'album') ? 'selected' : ''; ?>>Album</option>
+                                                        <option value="bath_book" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'bath_book') ? 'selected' : ''; ?>>Bath Book</option>
+                                                        <option value="board_book" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'board_book') ? 'selected' : ''; ?>>Board Book</option>
+                                                        <option value="bonded_leather" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'bonded_leather') ? 'selected' : ''; ?>>Bonded Leather</option>
+                                                        <option value="calendar" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'calendar') ? 'selected' : ''; ?>>Calendar</option>
+                                                        <option value="card_book" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'card_book') ? 'selected' : ''; ?>>Card Book</option>
+                                                        <option value="cards" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'cards') ? 'selected' : ''; ?>>Cards</option>
+                                                        <option value="cassette" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'cassette') ? 'selected' : ''; ?>>Cassette</option>
+                                                        <option value="cd_audio" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'cd_audio') ? 'selected' : ''; ?>>Audio CD</option>
+                                                        <option value="cd_rom" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'cd_rom') ? 'selected' : ''; ?>>CD-ROM</option>
+                                                        <option value="comic" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'comic') ? 'selected' : ''; ?>>Comic</option>
+                                                        <option value="diary" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'diary') ? 'selected' : ''; ?>>Diary</option>
+                                                        <option value="dvd_rom" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'dvd_rom') ? 'selected' : ''; ?>>DVD-ROM</option>
+                                                        <option value="flexibound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'flexibound') ? 'selected' : ''; ?>>Flexibound</option>
+                                                        <option value="foam_book" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'foam_book') ? 'selected' : ''; ?>>Foam Book</option>
+                                                        <option value="game" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'game') ? 'selected' : ''; ?>>Game</option>
+                                                        <option value="hardcover" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'hardcover') ? 'selected' : ''; ?>>Hardcover</option>
+                                                        <option value="hardcover_comic" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'hardcover_comic') ? 'selected' : ''; ?>>Hardcover Comic</option>
+                                                        <option value="hardcover_spiral" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'hardcover_spiral') ? 'selected' : ''; ?>>Hardcover Spiral</option>
+                                                        <option value="imitation_leather" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'imitation_leather') ? 'selected' : ''; ?>>Imitation Leather</option>
+                                                        <option value="journal" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'journal') ? 'selected' : ''; ?>>Journal</option>
+                                                        <option value="leather_bound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'leather_bound') ? 'selected' : ''; ?>>Leather Bound</option>
+                                                        <option value="library" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'library') ? 'selected' : ''; ?>>Library</option>
+                                                        <option value="library_cd_audio" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'library_cd_audio') ? 'selected' : ''; ?>>Library Audio CD</option>
+                                                        <option value="library_cd_mp3" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'library_cd_mp3') ? 'selected' : ''; ?>>Library MP3 CD</option>
+                                                        <option value="loose_leaf" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'loose_leaf') ? 'selected' : ''; ?>>Loose Leaf</option>
+                                                        <option value="map" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'map') ? 'selected' : ''; ?>>Map</option>
+                                                        <option value="mass_market_paperback" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'mass_market_paperback') ? 'selected' : ''; ?>>Mass Market Paperback</option>
+                                                        <option value="microfiche" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'microfiche') ? 'selected' : ''; ?>>Microfiche</option>
+                                                        <option value="microfilm" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'microfilm') ? 'selected' : ''; ?>>Microfilm</option>
+                                                        <option value="misc_supplies" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'misc_supplies') ? 'selected' : ''; ?>>Misc Supplies</option>
+                                                        <option value="cd_mp3" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'cd_mp3') ? 'selected' : ''; ?>>MP3 CD</option>
+                                                        <option value="pamphlet" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'pamphlet') ? 'selected' : ''; ?>>Pamphlet</option>
+                                                        <option value="paperback" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'paperback') ? 'selected' : ''; ?>>Paperback</option>
+                                                        <option value="paperback_bunko" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'paperback_bunko') ? 'selected' : ''; ?>>Paperback Bunko</option>
+                                                        <option value="paperback_shinsho" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'paperback_shinsho') ? 'selected' : ''; ?>>Paperback Shinsho</option>
+                                                        <option value="perfect_paperback" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'perfect_paperback') ? 'selected' : ''; ?>>Perfect Paperback</option>
+                                                        <option value="plastic_comb" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'plastic_comb') ? 'selected' : ''; ?>>Plastic Comb</option>
+                                                        <option value="pop_up" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'pop_up') ? 'selected' : ''; ?>>Pop-up</option>
+                                                        <option value="poster" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'poster') ? 'selected' : ''; ?>>Poster</option>
+                                                        <option value="preloaded_digital_audio_player" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'preloaded_digital_audio_player') ? 'selected' : ''; ?>>Pre-loaded Digitial Audio Player</option>
+                                                        <option value="printed_access_code" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'printed_access_code') ? 'selected' : ''; ?>>Printed Access Code</option>
+                                                        <option value="rag_book" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'rag_book') ? 'selected' : ''; ?>>Rag Book</option>
+                                                        <option value="ring_bound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'ring_bound') ? 'selected' : ''; ?>>Ring Bound</option>
+                                                        <option value="roughcut" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'roughcut') ? 'selected' : ''; ?>>Rough-cut</option>
+                                                        <option value="school" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'school') ? 'selected' : ''; ?>>School</option>
+                                                        <option value="sheet_music" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'sheet_music') ? 'selected' : ''; ?>>Sheet Music</option>
+                                                        <option value="single_issue_magazine" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'pamphlet') ? 'single_issue_magazine' : ''; ?>>Single Issue Magazine</option>
+                                                        <option value="spiral_bound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'spiral_bound') ? 'selected' : ''; ?>>Spiral Bound</option>
+                                                        <option value="staple" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'staple') ? 'selected' : ''; ?>>Staple Bound</option>
+                                                        <option value="stationery" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'stationery') ? 'selected' : ''; ?>>Stationery</option>
+                                                        <option value="tankobon_hardcover" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'tankobon_hardcover') ? 'selected' : ''; ?>>Tankobon Hardcover</option>
+                                                        <option value="tankobon_softcover" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'tankobon_softcover') ? 'selected' : ''; ?>>Tankobon Softcover</option>
+                                                        <option value="textbook" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'textbook') ? 'selected' : ''; ?>>Textbook</option>
+                                                        <option value="toy" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'toy') ? 'selected' : ''; ?>>Toy</option>
+                                                        <option value="transparency" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'transparency') ? 'selected' : ''; ?>>Transparency</option>
+                                                        <option value="turtleback" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'turtleback') ? 'selected' : ''; ?>>Turtleback</option>
+                                                        <option value="unbound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'unbound') ? 'selected' : ''; ?>>Unbound</option>
+                                                        <option value="unknown" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'unknown') ? 'selected' : ''; ?>>Unknown</option>
+                                                        <option value="vinyl_bound" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'vinyl_bound') ? 'selected' : ''; ?>>Vinyl Bound</option>
+                                                        <option value="wall_chart" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'wall_chart') ? 'selected' : ''; ?>>Wall Chart</option>
+                                                        <option value="workbook" <?php echo (isset($additional_data->Bindings) && $additional_data->Bindings == 'workbook') ? 'selected' : ''; ?>>Workbook</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ProductPublisher"><?= _('Publisher') ?></label>
+                                                <input type="text" class="form-control" id="ProductPublisher" name="ProductPublisher" placeholder="Enter Publisher" data-parsley-required-message="<?= _('Enter Publisher') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($additional_data->Publisher) && !empty($additional_data->Publisher)) ? $additional_data->Publisher : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+                                    </div> <!-- Row -->
+                                </div> <!-- Container -->
+
+                                <button type="submit" class="btn btn-primary"><?= _('Submit') ?></button>
+                            </form>
+                        </div> <!-- Card Body -->
+
+                    </div><!-- /.page-inner -->
+                </div><!--  Non Catlog ends /.page -->
+
 
                 <!-- .page-section Market prices starts -->
                 <div class="card-deck-xl">
@@ -504,6 +671,76 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
 
                     </div><!-- /.page-inner -->
                 </div><!-- handling time /.page -->
+
+
+                <!-- .page-section Additional Information starts -->
+                <div class="card-deck-xl">
+                    <!-- .card-deck-xl starts -->
+                    <div class="card card-fluid">
+                        <!-- .card card-fluid starts -->
+
+                        <div class="card-body">
+                            <form name="market_additional_information" id="market_additional_information" action="/product/market_additional_info" method="POST">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h5 class="card-title"><?= _('Additional Information') ?></h5>
+                                            <input type="hidden" class="form-control" id="Id" name="Id" value="<?php echo (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : ''; ?>">
+                                            <div class="form-group">
+                                                <label for="Cost"><?= _('Cost') ?></label>
+                                                <input type="text" class="form-control" id="Cost" name="Cost" placeholder="Enter Cost" data-parsley-group="fieldset01" value="<?php echo (isset($form['Cost']) && !empty($form['Cost'])) ? $form['Cost'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Location"><?= _('Location') ?></label>
+                                                <input type="text" class="form-control" id="Location" name="Location" placeholder="Enter Location" data-parsley-group="fieldset01" value="<?php echo (isset($form['Location']) && !empty($form['Location'])) ? $form['Location'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Brand"><?= _('Brand') ?></label>
+                                                <input type="text" class="form-control" id="Brand" name="Brand" placeholder="Enter Brand" data-parsley-group="fieldset01" value="<?php echo (isset($form['Brand']) && !empty($form['Brand'])) ? $form['Brand'] : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+
+                                        <div class="col-sm">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <div class="form-group">
+                                                <select name="Language" id="Language" class="browser-default custom-select market_language">
+                                                    <option selected="">Select Language...</option>
+                                                    <option value="english" <?php echo (isset($form['Language']) && $form['Language'] == 'english') ? "selected" : ""; ?>>English</option>
+                                                    <option value="french" <?php echo (isset($form['Language']) && $form['Language'] == 'french') ? "selected" : ""; ?>>French</option>
+                                                    <option value="german" <?php echo (isset($form['Language']) && $form['Language'] == 'german') ? "selected" : ""; ?>>German</option>
+                                                    <option value="italian" <?php echo (isset($form['Language']) && $form['Language'] == 'italian') ? "selected" : ""; ?>>Italian</option>
+                                                    <option value="latin" <?php echo (isset($form['Language']) && $form['Language'] == 'latin') ? "selected" : ""; ?>>Latin</option>
+                                                    <option value="spanish" <?php echo (isset($form['Language']) && $form['Language'] == 'spanish') ? "selected" : ""; ?>>Spanish</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Source"><?= _('Source') ?></label>
+                                                <input type="text" class="form-control" id="Source" name="Source" placeholder="Enter Source" data-parsley-group="fieldset01" value="<?php echo (isset($form['Source']) && !empty($form['Source'])) ? $form['Source'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Category"><?= _('Category') ?></label>
+                                                <input type="text" class="form-control" id="Category" name="Category" placeholder="Enter Category" data-parsley-group="fieldset01" value="<?php echo (isset($form['Category']) && !empty($form['Category'])) ? $form['Category'] : ''; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ManufacturerPartNumber"><?= _('Manufacturer Part Number') ?></label>
+                                                <input type="text" class="form-control" id="ManufacturerPartNumber" name="ManufacturerPartNumber" placeholder="Enter Manufacturer Part Number" data-parsley-group="fieldset01" value="<?php echo (isset($form['ManufacturerPartNumber']) && !empty($form['ManufacturerPartNumber'])) ? $form['ManufacturerPartNumber'] : ''; ?>">
+                                            </div>
+
+                                        </div> <!-- col-sm -->
+                                    </div> <!-- Row -->
+                                    <div class="form-group">
+                                        <label for="AdditionalUIEE"><?= _('Additional UIEE') ?></label>
+                                        <textarea class="form-control" id="AdditionalUIEE" name="AdditionalUIEE" rows="3"><?php echo (isset($form['AdditionalUIEE']) && !empty($form['AdditionalUIEE'])) ? $form['AdditionalUIEE'] : ''; ?></textarea>
+                                    </div>
+                                </div> <!-- Container -->
+
+                                <button type="submit" class="btn btn-primary btn_market_shipping_rate"><?= _('Submit') ?></button>
+                            </form>
+                        </div> <!-- Card Body -->
+
+                    </div><!-- /.page-inner -->
+                </div><!-- Additional Information /.page -->
             </div><!-- /.wrapper -->
             <?= $this->stop() ?>
 

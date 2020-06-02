@@ -142,7 +142,8 @@ class ProductController
                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
                 $cat_obj = new Category($this->db);
                 $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
+                // return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
+                return $this->view->redirect('/product/edit/' . $all_product);
             } else {
                 throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
             }
@@ -204,6 +205,7 @@ class ProductController
         $form_data['CategoryId'] = (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : 0;
         $form_data['MarketPlaceId'] = (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : null;
         $form_data['StoreId'] = $this->storeid;
+        $form_data['IsCatalog'] = 1;
         $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
         $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
         return $form_data;
@@ -292,7 +294,8 @@ class ProductController
     */
     public function editProduct(ServerRequest $request, $Id = [])
     {
-        $form = (new Product($this->db))->findById($Id['Id']);
+        // $form = (new Product($this->db))->findById($Id['Id']);        
+        $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
         $cat_obj = new Category($this->db);
         $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
@@ -308,6 +311,93 @@ class ProductController
             $all_product = (new Product($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
             return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'all_category' => $all_category, 'market_places' => $result_data]);
         }
+    }
+
+    /*
+    * updateNoneCatalogProducts - Update none catalog Product data
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateNoneCatalogProducts(ServerRequest $request, $Id = [])
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.       
+        try {
+            // Sanitize and Validate
+            $validate = new ValidateSanitize();
+            $methodData = $validate->sanitize($methodData); // only trims & sanitizes strings (other filters available)
+
+            $validate->validation_rules(array(
+                'ProductSKU'    => 'required'
+            ));
+
+            $validated = $validate->run($methodData);
+            // use validated as it is filtered and validated        
+            if ($validated === false) {
+                throw new Exception("Please enter required fields...!", 301);
+            }
+
+            $update_data = $this->PrepareNoneCatalogUpdateData($methodData);
+            $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
+            if (isset($is_updated) && !empty($is_updated)) {
+                $this->view->flash([
+                    'alert' => 'Product record updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $prod_obj = new Product($this->db);
+                $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data]);
+            } else {
+                throw new Exception("Failed to update product. Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+    /*
+    * PrepareUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareNoneCatalogUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['Id'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : null;
+        $form_data['Name'] = (isset($form['ProductTitle']) && !empty($form['ProductTitle'])) ? $form['ProductTitle'] : null;
+        $form_data['SKU'] = (isset($form['ProductSKU']) && !empty($form['ProductSKU'])) ? $form['ProductSKU'] : null;
+        $form_data['ProdId'] = (isset($form['ProductUPC']) && !empty($form['ProductUPC'])) ? $form['ProductUPC'] : 0;
+        $form_data['BasePrice'] = (isset($form['ProductBasePriceInput']) && !empty($form['ProductBasePriceInput'])) ? $form['ProductBasePriceInput'] : 0;
+        $form_data['Qty'] = (isset($form['ProductQty']) && !empty($form['ProductQty'])) ? $form['ProductQty'] : 0;
+        $form_data['AddtionalData'] = json_encode([
+            'EAN' => (isset($form['ProductEAN']) && !empty($form['ProductEAN'])) ? $form['ProductEAN'] : null,
+            'TYPE' => (isset($form['ProductType']) && !empty($form['ProductType'])) ? $form['ProductType'] : null,
+            'Bindings' => (isset($form['ProductBindings']) && !empty($form['ProductBindings'])) ? $form['ProductBindings'] : null,
+            'Author' => (isset($form['ProductAuthor']) && !empty($form['ProductAuthor'])) ? $form['ProductAuthor'] : null,
+            'Publisher' => (isset($form['ProductPublisher']) && !empty($form['ProductPublisher'])) ? $form['ProductPublisher'] : null,
+            'Language' => (isset($form['Language']) && !empty($form['Language'])) ? $form['Language'] : null
+        ]);
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
+        $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
+        return $form_data;
     }
 
     /*
@@ -371,7 +461,6 @@ class ProductController
             }
 
             $update_data = $this->PrepareUpdateData($methodData);
-            $update_data['Updated'] = date('Y-m-d H:i:s');
             $update_data['Image'] = $prod_img;
             $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
             if (isset($is_updated) && !empty($is_updated)) {
@@ -674,22 +763,22 @@ class ProductController
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
-             $map_data = (new Product($this->db))->getmarketplace($methodData['MarketName']);
+            $map_data = (new Product($this->db))->getmarketplace($methodData['MarketName']);
             if (isset($map_data) && !empty($map_data)) {
                 $this->view->flash([
                     'alert' => 'Marketplace product get successfully..!',
                     'alert_type' => 'success'
                 ]);
 
-                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
                 return $this->view->buildResponse('inventory/product/browse', ['all_product' => $map_data, 'market_places' => $result_data]);
             } else {
-                 $this->view->flash([
+                $this->view->flash([
                     'alert' => 'Product result not get...!',
                     'alert_type' => 'success'
                 ]);
-                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                  return $this->view->buildResponse('inventory/product/browse', ['all_product' => '', 'market_places' => $result_data]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => '', 'market_places' => $result_data]);
                 //throw new Exception("Product result not get...!", 301);
             }
         } catch (Exception $e) {
@@ -706,7 +795,110 @@ class ProductController
             $this->view->flash($validated);
             return $this->view->buildResponse('inventory/product/browse', []);
         }
-           
-        
+    }
+
+    /*
+    @author    :: Tejas
+    @task_id   :: product attributes map
+    @task_desc :: product attributes mapping for different market stores
+    @params    :: product details array
+    */
+    public function addNoneCatalogProducts(ServerRequest $request)
+    {
+        try {
+            $form = $request->getParsedBody();
+            unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+            // Sanitize and Validate
+            $validate = new ValidateSanitize();
+            $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
+            $validate->validation_rules(array(
+                'ProductSKU'    => 'required'
+            ));
+
+            $validated = $validate->run($form);
+            // use validated as it is filtered and validated        
+            if ($validated === false) {
+                throw new Exception("Please enter required fields...!", 301);
+            }
+
+            $insert_data = $this->PrepareNoCatelogInsertData($form);
+
+            $prod_obj = new Product($this->db);
+            $all_product = $prod_obj->addProdInventory($insert_data);
+
+            if (isset($all_product) && !empty($all_product)) {
+                $this->view->flash([
+                    'alert' => _('Product added successfully..!'),
+                    'alert_type' => 'success'
+                ]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                $cat_obj = new Category($this->db);
+                $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                // return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'market_places' => $result_data]);
+                return $this->view->redirect('/product/edit/' . $all_product);
+            } else {
+                throw new Exception("Sorry we encountered an issue.  Please try again.", 301);
+            }
+
+            /* Mapping marketplace attributes Starts */
+            $market_stores = Config::get('market_stores');
+            $market_attributes = Config::get('market_attributes');
+            if (is_array($market_stores) && (count($market_stores) > 0 || !empty($market_stores))) {
+                foreach ($market_stores as $store_value) {
+                    $market_wise_data = $this->MapMarketAttributes($form, $market_attributes, $store_value);
+                    // echo '<pre> martplaces';
+                    // print_r($market_wise_data);
+                    // echo '</pre>';
+                    // exit;                        
+                } // Loops Ends                
+            }
+            /* Mapping marketplace attributes Ends */
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+
+            $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+            $cat_obj = new Category($this->db);
+            $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+            return $this->view->buildResponse('/inventory/product/add', ['all_category' => $all_category, 'form' => $form, 'market_places' => $result_data]);
+        }
+    }
+
+    /*
+    * PrepareInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareNoCatelogInsertData($form = array())
+    {
+        $form_data = array();
+        $form_data['Name'] = (isset($form['ProductTitle']) && !empty($form['ProductTitle'])) ? $form['ProductTitle'] : null;
+        $form_data['SKU'] = (isset($form['ProductSKU']) && !empty($form['ProductSKU'])) ? $form['ProductSKU'] : null;
+        $form_data['ProdId'] = (isset($form['ProductUPC']) && !empty($form['ProductUPC'])) ? $form['ProductUPC'] : 0;
+        $form_data['BasePrice'] = (isset($form['ProductBasePriceInput']) && !empty($form['ProductBasePriceInput'])) ? $form['ProductBasePriceInput'] : 0;
+        $form_data['Qty'] = (isset($form['ProdQtyInput']) && !empty($form['ProdQtyInput'])) ? $form['ProdQtyInput'] : 0;
+        $form_data['AddtionalData'] = json_encode([
+            'EAN' => (isset($form['ProductEAN']) && !empty($form['ProductEAN'])) ? $form['ProductEAN'] : null,
+            'TYPE' => (isset($form['ProductType']) && !empty($form['ProductType'])) ? $form['ProductType'] : null,
+            'Bindings' => (isset($form['ProductBindings']) && !empty($form['ProductBindings'])) ? $form['ProductBindings'] : null,
+            'Author' => (isset($form['ProductAuthor']) && !empty($form['ProductAuthor'])) ? $form['ProductAuthor'] : null,
+            'Publisher' => (isset($form['ProductPublisher']) && !empty($form['ProductPublisher'])) ? $form['ProductPublisher'] : null,
+            'Language' => (isset($form['Language']) && !empty($form['Language'])) ? $form['Language'] : null
+        ]);
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Status'] = (isset($form['Status']) && !empty($form['Status'])) ? $form['Status'] : 0;
+        $form_data['UserId'] = (isset($form['UserId']) && !empty($form['UserId'])) ? $form['UserId'] : Session::get('auth_user_id');
+        return $form_data;
     }
 }

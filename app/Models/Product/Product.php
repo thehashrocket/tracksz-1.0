@@ -336,7 +336,6 @@ class product
         $mParams = str_repeat('?,', count($ids) - 1) . '?';
         $sth = $this->db->prepare("DELETE FROM product WHERE Id IN ($mParams)");
         return $sth->execute($ids);
-     
     }
 
     public function select_multiple_ids($ids = null)
@@ -346,7 +345,6 @@ class product
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
-     
     }
     public function getmarketplace($MarketName)
     {
@@ -423,7 +421,18 @@ class product
         marketplace_handletime.TextbookRushHandlingTime as `TextbookRushHandlingTime`,
         marketplace_handletime.TextbookXHandlingTime as `TextbookXHandlingTime`,
         marketplace_handletime.ValoreHandlingTime as `ValoreHandlingTime`,
-        marketplace_handletime.DefaultHandlingTime as `DefaultHandlingTime`
+        marketplace_handletime.DefaultHandlingTime as `DefaultHandlingTime`,
+
+        marketspecific_addtional.Id as `HandlingTimeId`,
+        marketspecific_addtional.ProductId as `HandlingTimeProductId`,
+        marketspecific_addtional.Cost as `Cost`,
+        marketspecific_addtional.Location as `Location`,
+        marketspecific_addtional.Brand as `Brand`,
+        marketspecific_addtional.Language as `Language`,
+        marketspecific_addtional.AdditionalUIEE as `AdditionalUIEE`,
+        marketspecific_addtional.Source as `Source`,
+        marketspecific_addtional.Category as `Category`,
+        marketspecific_addtional.ManufacturerPartNumber as `ManufacturerPartNumber`
 FROM product
 LEFT JOIN marketprice_master
    ON marketprice_master.ProductId = product.Id
@@ -433,6 +442,8 @@ LEFT JOIN ebay_shipping_rates
    ON ebay_shipping_rates.ProductId = product.Id
 LEFT JOIN marketplace_handletime
    ON marketplace_handletime.ProductId = product.Id
+LEFT JOIN marketspecific_addtional
+   ON marketspecific_addtional.ProductId = product.Id
    WHERE product.Id = ' . $ProdId . '');
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
