@@ -79,8 +79,8 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                             <div class="form-group">
                                                 <label for="Default Action"><?= _('Default Action') ?></label>
                                                  <select name=" DefaultAction" id=" DefaultAction" class="browser-default custom-select order_carrier_select">
-                                                <option value="View" <?php if($all_order['DefaultAction'] == 'View') { echo 'selected'; } ?>>View</option>
-                                                <option value="Download" <?php if($all_order['DefaultAction'] == 'Download') { echo 'selected'; } ?>>Download</option>
+                                                <option value="View" <?php if(isset($all_order['DefaultAction']) == 'View') { echo 'selected'; } ?>>View</option>
+                                                <option value="Download" <?php if(isset($all_order['DefaultAction']) == 'Download') { echo 'selected'; } ?>>Download</option>
                                                 </select>
                                             </div>
                                         </div> <!-- col-sm -->
@@ -89,16 +89,16 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                             <div class="form-group">
                                                 <label for=" Sort Orders By (Mailing Labels and Packing Slips)"><?= _(' Sort Orders By (Mailing Labels and Packing Slips)') ?></label>
                                                  <select name=" SortOrders" id=" SortOrders" class="browser-default custom-select order_carrier_select">
-                                                <option value="Order#" <?php if($all_order['SortOrders'] == 'Order#') { echo 'selected'; } ?>>Order#</option>
-                                                <option value="Location/SKU" <?php if($all_order['SortOrders'] == 'Location/SKU') { echo 'selected'; } ?>>Location/SKU</option>
-                                                <option value="SKU" <?php if($all_order['SortOrders'] == 'SKU') { echo 'selected'; } ?>>SKU</option>
-                                                <option value="Zip Code" <?php if($all_order['SortOrders'] == 'Zip Code') { echo 'selected'; } ?>>Zip Code</option>
-                                                <option value="Country/Zip" <?php if($all_order['SortOrders'] == 'Country/Zip') { echo 'selected'; } ?>>Country/Zip</option>
-                                                 <option value="Author" <?php if($all_order['SortOrders'] == 'Author') { echo 'selected'; } ?>>Author</option>
-                                                  <option value="Title" <?php if($all_order['SortOrders'] == 'Title') { echo 'selected'; } ?>>Title</option>
-                                                  <option value="Marketplace/Order#" <?php if($all_order['SortOrders'] == 'Marketplace/Order#') { echo 'selected'; } ?>>Marketplace/Order#</option>
-                                                  <option value="Marketplace/Location" <?php if($all_order['SortOrders'] == 'Marketplace/Location') { echo 'selected'; } ?>>Marketplace/Location</option>
-                                                  <option value="Shipping Method" <?php if($all_order['SortOrders'] == 'Shipping Method') { echo 'selected'; } ?>>Shipping Method</option>
+                                                <option value="Order#" <?php if(isset($all_order['SortOrders']) == 'Order#') { echo 'selected'; } ?>>Order#</option>
+                                                <option value="Location/SKU" <?php if(isset($all_order['SortOrders']) == 'Location/SKU') { echo 'selected'; } ?>>Location/SKU</option>
+                                                <option value="SKU" <?php if(isset($all_order['SortOrders']) == 'SKU') { echo 'selected'; } ?>>SKU</option>
+                                                <option value="Zip Code" <?php if(isset($all_order['SortOrders']) == 'Zip Code') { echo 'selected'; } ?>>Zip Code</option>
+                                                <option value="Country/Zip" <?php if(isset($all_order['SortOrders']) == 'Country/Zip') { echo 'selected'; } ?>>Country/Zip</option>
+                                                 <option value="Author" <?php if(isset($all_order['SortOrders']) == 'Author') { echo 'selected'; } ?>>Author</option>
+                                                  <option value="Title" <?php if(isset($all_order['SortOrders']) == 'Title') { echo 'selected'; } ?>>Title</option>
+                                                  <option value="Marketplace/Order#" <?php if(isset($all_order['SortOrders']) == 'Marketplace/Order#') { echo 'selected'; } ?>>Marketplace/Order#</option>
+                                                  <option value="Marketplace/Location" <?php if(isset($all_order['SortOrders']) == 'Marketplace/Location') { echo 'selected'; } ?>>Marketplace/Location</option>
+                                                  <option value="Shipping Method" <?php if(isset($all_order['SortOrders']) == 'Shipping Method') { echo 'selected'; } ?>>Shipping Method</option>
                                                 </select>
                                                </div>
                                         </div> <!-- col-sm -->
@@ -152,17 +152,17 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                              <div class="form-group">
                                                 <label for="Barcode Type"><?= _('Barcode Type') ?></label>
                                                  <select name="BarcodeType" id="BarcodeType" class="browser-default custom-select order_carrier_select">
-                                                <option value="Code128" <?php if($all_order['BarcodeType'] == 'Code128') { echo 'selected'; } ?>>Code 128</option>
-                                                <option value="Code39" <?php if($all_order['BarcodeType'] == 'Code39') { echo 'selected'; } ?>>Code 39</option>
-                                                <option value="ITF" <?php if($all_order['BarcodeType'] == 'ITF') { echo 'selected'; } ?>>ITF</option>
+                                                <option value="Code128" <?php if(isset($all_order['BarcodeType']) == 'Code128') { echo 'selected'; } ?>>Code 128</option>
+                                                <option value="Code39" <?php if(isset($all_order['BarcodeType']) == 'Code39') { echo 'selected'; } ?>>Code 39</option>
+                                                <option value="ITF" <?php if(isset($all_order['BarcodeType']) == 'ITF') { echo 'selected'; } ?>>ITF</option>
                                                 </select>
                                             </div>
                                              <div class="form-group">
                                                 <label for="Sort Pick List By"><?= _('Sort Pick List By') ?></label>
                                                  <select name=" SortPickList" id=" SortPickList" class="browser-default custom-select order_carrier_select">
-                                                <option value="Location/SKU" <?php if($all_order['SortPickList'] == 'Location/SKU') { echo 'selected'; } ?>>Location/SKU</option>
-                                                <option value="Author" <?php if($all_order['SortPickList'] == 'Author') { echo 'selected'; } ?>>Author</option>
-                                                 <option value="Title" <?php if($all_order['SortPickList'] == 'Title') { echo 'selected'; } ?>>Title</option>
+                                                <option value="Location/SKU" <?php if(isset($all_order['SortPickList']) == 'Location/SKU') { echo 'selected'; } ?>>Location/SKU</option>
+                                                <option value="Author" <?php if(isset($all_order['SortPickList']) == 'Author') { echo 'selected'; } ?>>Author</option>
+                                                 <option value="Title" <?php if(isset($all_order['SortPickList']) == 'Title') { echo 'selected'; } ?>>Title</option>
                                                 </select>
                                             </div>
                                         </div> <!-- col-sm -->
@@ -187,7 +187,7 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
 
                                                 </style>
                                             <div class="form-group">
-                                                <?php if($all_order['BarcodeType'] == 'Code128') { ?>
+                                                <?php if(isset($all_order['BarcodeType']) == 'Code128') { ?>
                                                      <div id="Code128" class="myDiv" style="display: block;" >
                                                     <img src="http://localhost:8000/assets/images/Code128.png" alt="Manager" class="img-responsive img-thumbnail"/>
                                                 </div>
@@ -199,7 +199,7 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                             <?php }
                                             ?>
 
-                                             <?php if($all_order['BarcodeType'] == 'Code39') { ?>
+                                             <?php if(isset($all_order['BarcodeType']) == 'Code39') { ?>
                                                     <div id="Code39" class="myDiv" style="display: block;" >
                                                      <img src="http://localhost:8000/assets/images/code39.png" alt="HR" class="img-responsive img-thumbnail"/>
                                                 </div>
@@ -210,7 +210,7 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                                 </div>
                                             <?php }
                                             ?>
-                                            <?php if($all_order['BarcodeType'] == 'ITF') { ?>
+                                            <?php if(isset($all_order['BarcodeType']) == 'ITF') { ?>
                                                    <div id="ITF" class="myDiv" style="display: block;" >
                                                     <img src="http://localhost:8000/assets/images/itf.png" alt="Developer" class="img-responsive img-thumbnail"/>
                                                 </div>
@@ -256,12 +256,12 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                             <div class="form-group">
                                                 <label for="Default Template"><?= _('Default Template') ?></label>
                                                  <select name="DefaultTemplate" id="DefaultTemplate" class="browser-default custom-select order_carrier_select">
-                                                <option value="Full" <?php if($all_order['DefaultTemplate'] == 'Full') { echo 'selected'; } ?>>Full</option>
-                                                <option value="Small" <?php if($all_order['DefaultTemplate'] == 'Small') { echo 'selected'; } ?>>Small</option>
-                                                 <option value="Self-Stick Labels" <?php if($all_order['DefaultTemplate'] == 'Self-Stick Labels') { echo 'selected'; } ?>>Self-Stick Labels</option>
-                                                  <option value="92mm Fold" <?php if($all_order['DefaultTemplate'] == '92mm Fold') { echo 'selected'; } ?>>92mm Fold</option>
-                                                   <option value="Mailing Slip" <?php if($all_order['DefaultTemplate'] == 'Mailing Slip') { echo 'selected'; } ?>>Mailing Slip</option>
-                                                   <option value="Integrated Label" <?php if($all_order['DefaultTemplate'] == 'Integrated Label') { echo 'selected'; } ?>>Integrated Label</option>
+                                                <option value="Full" <?php if(isset($all_order['DefaultTemplate']) == 'Full') { echo 'selected'; } ?>>Full</option>
+                                                <option value="Small" <?php if(isset($all_order['DefaultTemplate']) == 'Small') { echo 'selected'; } ?>>Small</option>
+                                                 <option value="Self-Stick Labels" <?php if(isset($all_order['DefaultTemplate']) == 'Self-Stick Labels') { echo 'selected'; } ?>>Self-Stick Labels</option>
+                                                  <option value="92mm Fold" <?php if(isset($all_order['DefaultTemplate']) == '92mm Fold') { echo 'selected'; } ?>>92mm Fold</option>
+                                                   <option value="Mailing Slip" <?php if(isset($all_order['DefaultTemplate']) == 'Mailing Slip') { echo 'selected'; } ?>>Mailing Slip</option>
+                                                   <option value="Integrated Label" <?php if(isset($all_order['DefaultTemplate']) == 'Integrated Label') { echo 'selected'; } ?>>Integrated Label</option>
                                                 </select>
                                             </div>
                                             <b><label style="color: #f8ac59;">Note: The recommended image resolution for the header and footer is 1024px X 120px</label></b>
@@ -456,13 +456,13 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                             <div class="form-group">
                                                 <label for="Font size"><?= _('Font size') ?></label>
                                                  <select name="FontSize" id="FontSize" class="browser-default custom-select order_carrier_select">
-                                                <option value="xx-small" <?php if($all_order['FontSize'] == 'xx-small') { echo 'selected'; } ?>>xx-small</option>
-                                                <option value="x-small" <?php if($all_order['FontSize'] == 'x-small') { echo 'selected'; } ?>>x-small</option>
-                                                <option value="small" <?php if($all_order['FontSize'] == 'small') { echo 'selected'; } ?>>small</option>
-                                                <option value="medium" <?php if($all_order['FontSize'] == 'medium') { echo 'selected'; } ?>>medium</option>
-                                                 <option value="large" <?php if($all_order['FontSize'] == 'large') { echo 'selected'; } ?>>large</option>
-                                                  <option value="x-large" <?php if($all_order['FontSize'] == 'x-large') { echo 'selected'; } ?>>x-large</option>
-                                                  <option value="xx-large" <?php if($all_order['FontSize'] == 'xx-large') { echo 'selected'; } ?>>xx-large</option>
+                                                <option value="xx-small" <?php if(isset($all_order['FontSize']) == 'xx-small') { echo 'selected'; } ?>>xx-small</option>
+                                                <option value="x-small" <?php if(isset($all_order['FontSize']) == 'x-small') { echo 'selected'; } ?>>x-small</option>
+                                                <option value="small" <?php if(isset($all_order['FontSize']) == 'small') { echo 'selected'; } ?>>small</option>
+                                                <option value="medium" <?php if(isset($all_order['FontSize']) == 'medium') { echo 'selected'; } ?>>medium</option>
+                                                 <option value="large" <?php if(isset($all_order['FontSize'])== 'large') { echo 'selected'; } ?>>large</option>
+                                                  <option value="x-large" <?php if(isset($all_order['FontSize']) == 'x-large') { echo 'selected'; } ?>>x-large</option>
+                                                  <option value="xx-large" <?php if(isset($all_order['FontSize']) == 'xx-large') { echo 'selected'; } ?>>xx-large</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -497,8 +497,8 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                                   <input type="text" class="form-control" id="LabelWidth" name="LabelWidth" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['LabelWidth']) && !empty($all_order['LabelWidth'])) ? $all_order['LabelWidth'] : ''; ?>" style="width: 255px;">
                                                  <div class="input-group-prepend">
                                                        <select name="LabelWidthIn" id="LabelWidthIn" class="browser-default custom-select order_carrier_select">
-                                                        <option value="cm" <?php if($all_order['LabelWidthIn'] == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
-                                                        <option value="in" <?php if($all_order['LabelWidthIn'] == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
+                                                        <option value="cm" <?php if(isset($all_order['LabelWidthIn']) == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
+                                                        <option value="in" <?php if(isset($all_order['LabelWidthIn']) == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -526,8 +526,8 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                                   <input type="text" class="form-control"  id="PageMargins" name="PageMargins" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['PageMargins']) && !empty($all_order['PageMargins'])) ? $all_order['PageMargins'] : ''; ?>" style="width: 255px;">
                                                  <div class="input-group-prepend">
                                                        <select name="PageMarginsIn" id="PageMarginsIn" class="browser-default custom-select order_carrier_select">
-                                                        <option value="cm" <?php if($all_order['PageMarginsIn'] == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
-                                                        <option value="in" <?php if($all_order['PageMarginsIn'] == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
+                                                        <option value="cm" <?php if(isset($all_order['PageMarginsIn']) == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
+                                                        <option value="in" <?php if(isset($all_order['PageMarginsIn']) == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -539,8 +539,8 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                                   <input type="text" class="form-control"  id="LabelMargins" name="LabelMargins" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['LabelMargins']) && !empty($all_order['LabelMargins'])) ? $all_order['LabelMargins'] : ''; ?>" style="width: 255px;">
                                                  <div class="input-group-prepend">
                                                        <select name="LabelMarginsIn" id="LabelMarginsIn" class="browser-default custom-select order_carrier_select">
-                                                        <option value="cm" <?php if($all_order['LabelMarginsIn'] == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
-                                                        <option value="in" <?php if($all_order['LabelMarginsIn'] == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
+                                                        <option value="cm" <?php if(isset($all_order['LabelMarginsIn']) == 'cm') { echo 'selected'; } ?>><?= _('cm') ?></option>
+                                                        <option value="in" <?php if(isset($all_order['LabelMarginsIn']) == 'in') { echo 'selected'; } ?>><?= _('in') ?></option>
                                                     </select>
                                                 </div>
                                             </div>
