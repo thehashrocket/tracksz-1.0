@@ -741,4 +741,111 @@ class MarketplaceController
         $form_data['Created'] = date('Y-m-d H:I:S');
         return $form_data;
     }
+
+    /*
+    * updateMarketAdditionalInfo - update Market Ship Rates
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function updateMarketAdditionalInfo(ServerRequest $request)
+    {
+        $methodData = $request->getParsedBody();
+        unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.     
+        try {
+
+            $is_data = $this->insertOrUpdateMarketAdditional($methodData);
+            if (isset($is_data) && !empty($is_data)) {
+                $this->view->flash([
+                    'alert' => 'Market Additional Information updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->redirect('/product/edit/' . $methodData['Id']);
+            } else {
+                throw new Exception("Failed to update Market Additional Information Please ensure all input is filled out correctly.", 301);
+            }
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->redirect('/product/edit/' . $methodData['Id']);
+        }
+    }
+
+    /*
+    * insertOrUpdateMarketHandlingTime - find insertOrUpdateMarketHandlingTime product
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    private function insertOrUpdateMarketAdditional($data)
+    {
+        $market_details = (new Marketplace($this->db))->findAdditionalProductId($data['Id']);
+
+        if (isset($market_details) && !empty($market_details)) { // update
+            $update_data = $this->PrepareAdditionalUpdateData($data);
+            $result = (new Marketplace($this->db))->updateAdditionalProduct($data['Id'], $update_data);
+        } else { // insert
+
+            $insert_data = $this->PrepareAdditionalInsertData($data);
+            $result = (new Marketplace($this->db))->addAdditionalProduct($insert_data);
+        }
+        return $result;
+    }
+
+    /*
+    * PrepareAdditionalUpdateData - Assign Value to new array and prepare update data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareAdditionalUpdateData($form = array())
+    {
+        $form_data = array();
+        $form_data['Cost'] = (isset($form['Cost']) && !empty($form['Cost'])) ? $form['Cost'] : null;
+        $form_data['Location'] = (isset($form['Location']) && !empty($form['Location'])) ? $form['Location'] : null;
+        $form_data['Brand'] = (isset($form['Brand']) && !empty($form['Brand'])) ? $form['Brand'] : null;
+        $form_data['Language'] = (isset($form['Language']) && !empty($form['Language'])) ? $form['Language'] : null;
+        $form_data['Source'] = (isset($form['Source']) && !empty($form['Source'])) ? $form['Source'] : null;
+        $form_data['Category'] = (isset($form['Category']) && !empty($form['Category'])) ? $form['Category'] : null;
+        $form_data['ManufacturerPartNumber'] = (isset($form['ManufacturerPartNumber']) && !empty($form['ManufacturerPartNumber'])) ? $form['ManufacturerPartNumber'] : null;
+        $form_data['AdditionalUIEE'] = (isset($form['AdditionalUIEE']) && !empty($form['AdditionalUIEE'])) ? $form['AdditionalUIEE'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Updated'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
+
+    /*
+    * PrepareAdditionalInsertData - Assign Value to new array and prepare insert data    
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return array
+    */
+    private function PrepareAdditionalInsertData($form = array())
+    {
+        $form_data = array();
+        $form_data['ProductId'] = (isset($form['Id']) && !empty($form['Id'])) ? $form['Id'] : 0;
+        $form_data['Cost'] = (isset($form['Cost']) && !empty($form['Cost'])) ? $form['Cost'] : null;
+        $form_data['Location'] = (isset($form['Location']) && !empty($form['Location'])) ? $form['Location'] : null;
+        $form_data['Brand'] = (isset($form['Brand']) && !empty($form['Brand'])) ? $form['Brand'] : null;
+        $form_data['Language'] = (isset($form['Language']) && !empty($form['Language'])) ? $form['Language'] : null;
+        $form_data['Source'] = (isset($form['Source']) && !empty($form['Source'])) ? $form['Source'] : null;
+        $form_data['Category'] = (isset($form['Category']) && !empty($form['Category'])) ? $form['Category'] : null;
+        $form_data['ManufacturerPartNumber'] = (isset($form['ManufacturerPartNumber']) && !empty($form['ManufacturerPartNumber'])) ? $form['ManufacturerPartNumber'] : null;
+        $form_data['AdditionalUIEE'] = (isset($form['AdditionalUIEE']) && !empty($form['AdditionalUIEE'])) ? $form['AdditionalUIEE'] : null;
+        $form_data['UserId'] = Session::get('auth_user_id');
+        $form_data['StoreId'] = $this->storeid;
+        $form_data['Created'] = date('Y-m-d H:I:S');
+        return $form_data;
+    }
 }

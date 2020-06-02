@@ -1,0 +1,1 @@
+ALTER TABLE `product` ADD `IsCatalog` TINYINT(1) NOT NULL DEFAULT '0' AFTER `Location`;

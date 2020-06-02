@@ -8,14 +8,22 @@ $(document).ready(function () {
     scrollX: true,
   });
 
-    $('#product_table').DataTable({
-        order: [
-            [1, "asc"] // asc OR desc
-        ],
-        responsive:false,
-        autoWidth: false,
-        "scrollX": true
-    });    
+  $(document).on(
+    "click",
+    "#ProductActive, #ProdInterShip, #ProdExpectedShip",
+    function () {
+      var attr = $(this).attr("checked");
+      if (typeof attr !== typeof undefined && attr !== false) {
+        $(this).prop("checked", false);
+        $(this).removeAttr("checked");
+        $(this).val(0);
+      } else {
+        $(this).prop("checked", true);
+        $(this).attr("checked", "checked");
+        $(this).val(1);
+      }
+    }
+  );
 
   $(document).on("click", ".btn_delete", function () {
     if (!confirm("Do you want to delete ?")) {
@@ -116,5 +124,20 @@ $(document).ready(function () {
 
   $(document).on("change", "#MarketName", function () {
     $("#change_marketplace").submit();
+  });
+
+  $(document).on("click", ".btn_catelog", function () {
+    $('.catelog').show();
+    $('.none_catelog').hide();
+    $('.btn_none_catelog').removeClass('d-none');
+    $('.btn_catelog').addClass('d-none');
+  });
+
+  $(document).on("click", ".btn_none_catelog", function () {
+    $('.none_catelog').show();
+    $('.catelog').hide();
+
+    $('.btn_catelog').removeClass('d-none');
+    $('.btn_none_catelog').addClass('d-none');
   });
 });

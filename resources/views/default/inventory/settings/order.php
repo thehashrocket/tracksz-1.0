@@ -64,13 +64,13 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                     </label>
                                                 
                                             </div>
-                                           <!--  <div class="form-check">
+                                        <!--     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="ProductActive" id="ProductActive" data-parsley-required-message="<?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>" data-parsley-group="fieldset01" value="">
                                                     <label class="form-check-label" for="ProductActive">
                                                         <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
                                                     </label>
                                            
-                                               </div>
+                                               </div> -->
                                            </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>
@@ -89,7 +89,7 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                             <br>
                                              <div class="form-group">
                                                 <label for="NumberOfAdditionalOrderFolders">Number Of Additional Order Folders</label>
-                                                <select class="form-control" id="" name="">
+                                                <select class="form-control" id="" name="NoAdditionalOrder">
                                                     <option>Please select</option>
                                                     <option>0</option>
                                                     <option>1</option>
