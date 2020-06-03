@@ -76,6 +76,14 @@ LEFT JOIN marketplace
     }
 
 
+    public function findByorder_id($order_id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE OrderId = :OrderId');
+        $stmt->execute(['OrderId' => $order_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
     /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *

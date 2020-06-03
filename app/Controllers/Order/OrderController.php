@@ -85,11 +85,34 @@ class OrderController
     public function updateBatchMove(ServerRequest $request)
     {
         try {
+
+            $order_ids = array();
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $map_data = $this->mapBatchMove($methodData);
-            $is_data = $this->insertOrUpdate($map_data);
+
+            $order_ids = array_column($map_data, 'OrderId');
+
+             $is_data = $this->insertOrUpdate($map_data);
+
+             foreach ($order_ids as $order_id) 
+             {
+
+              $mail_data = (new Order($this->db))->findByorder_id($order_id);
+
+              $message['html']  = $this->view->make('emails/orderconfirm');
+              $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+              $mailer = new Email();
+              $mailer->sendEmail(
+                $mail_data['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'],'Carrier' => $mail_data['Carrier'],'Tracking' => $mail_data['Tracking']]
+            );
+
+          }
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -937,7 +960,24 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
 
             // Sanitize and Validate
             $validate = new ValidateSanitize();
-            $form = $validate->sanitize($methodData); // only trims & sanitizes strings (other filters available)
+            $form = $validate->sanitize($methodData); 
+
+             // start mail
+
+            $message['html']  = $this->view->make('emails/orderconfirm');
+            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+            $mailer = new Email();
+            $mailer->sendEmail(
+                $form['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $form['MarketPlaceOrder'], 'BillingName' => $form['BillingName'],'Carrier' => $form['CarrierOrder'],'Tracking' => $form['Tracking']]
+            );
+
+             //End mail
+
+            // only trims & sanitizes strings (other filters available)
             $validate->validation_rules(array(
                 'MarketPlaceOrder'    => 'required',
                 'PaymentMethod'       => 'required',
@@ -1163,10 +1203,29 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
     @task_desc :: 
     @params    :: 
     */
-    public function _mapOrderStatusUpdate($status_data = [])
+     public function _mapOrderStatusUpdate($status_data = [])
     {
-        foreach ($status_data['ids'] as $key_data => $value) {
+        foreach ($status_data['ids'] as $key_data => $value) 
+
+        {
+
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
+
+
+            $mail_data = (new Order($this->db))->findById($value);
+
+                $message['html']  = $this->view->make('emails/orderconfirm');
+                $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+                $mailer = new Email();
+                $mailer->sendEmail(
+                    $mail_data['ShippingEmail'],
+                    Config::get('company_name'),
+                    _('Order Confirmation'),
+                    $message,
+                    ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'],'Carrier' => $mail_data['Carrier'],'Tracking' => $mail_data['Tracking']]
+                );
+
+
         } // Loops Ends
         return true;
     }

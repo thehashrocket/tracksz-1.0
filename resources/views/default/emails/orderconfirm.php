@@ -12,6 +12,10 @@
 
             <p><?= _('By Carrier :') ?><?= $Carrier ?></p>
 
+             <p><?= _('By Customer Name :') ?><?= $BillingName ?></p>
+
+              <p><?= _('By Tracking :') ?><?= $Tracking ?></p>
+
             <p><?= _('Thank You!') ?></p>
 
             <p><em><?= \App\Library\Config::get('company_name') ?></em></p>
