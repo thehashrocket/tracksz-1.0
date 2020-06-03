@@ -127,15 +127,17 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".btn_catelog", function () {
-    $('.catelog').show();
-    $('.none_catelog').hide();
+    $('.catelog').removeClass('d-none');
+    $('.none_catelog').addClass('d-none');
+
+
     $('.btn_none_catelog').removeClass('d-none');
     $('.btn_catelog').addClass('d-none');
   });
 
   $(document).on("click", ".btn_none_catelog", function () {
-    $('.none_catelog').show();
-    $('.catelog').hide();
+    $('.none_catelog').removeClass('d-none');
+    $('.catelog').addClass('d-none');
 
     $('.btn_catelog').removeClass('d-none');
     $('.btn_none_catelog').addClass('d-none');
