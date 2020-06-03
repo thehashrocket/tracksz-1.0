@@ -748,7 +748,6 @@ class ProductController
                 header('Content-Type: application/vnd.ms-excel');
                 header('Content-Disposition: attachment; filename="export.xlsx"');
                 $writer->save("php://output");
- 
             } else if ($export_type == 'csv') {
                 $writer = new WriteCsv($spreadsheet);
                 $writer->save("product." . $export_type);

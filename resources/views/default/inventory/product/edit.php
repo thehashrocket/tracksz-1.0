@@ -183,7 +183,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                 </div><!-- /.page -->
 
                 <!-- .page-section Non Catlog starts -->
-                <div class="card-deck-xl none_catelog <?php echo (isset($form['IsCatalog']) && $form['IsCatalog'] == 1) ? 'd-none' : ''; ?>">
+                <div class="card-deck-xl none_catelog <?php echo (isset($form['IsCatalog']) && $form['IsCatalog'] == 0) ? '' : 'd-none'; ?>">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">
                         <!-- .card card-fluid starts -->

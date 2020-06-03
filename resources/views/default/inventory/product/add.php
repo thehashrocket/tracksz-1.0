@@ -175,7 +175,7 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                 </div><!--  Catlog ends /.page -->
 
                 <!-- .page-section Non Catlog starts -->
-                <div class="card-deck-xl none_catelog">
+                <div class="card-deck-xl none_catelog d-none">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">
                         <!-- .card card-fluid starts -->
