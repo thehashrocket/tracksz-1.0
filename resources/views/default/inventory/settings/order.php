@@ -25,7 +25,6 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                             <li class="breadcrumb-item active">
                                 <?= ('Order Setting') ?>
                             </li>
-                            
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
@@ -55,21 +54,12 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                     <div class="row">
                                         <div class="col-sm">
 
-                                           <div class="form-group">
-                                             <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="DontSendCopy" id="DontSendCopy" data-parsley-required-message="<?=_('Enter DontSendCopy')?>" data-parsley-group="fieldset01" 
-                                                <?php echo (isset($order_details['DontSendCopy']) && $order_details['DontSendCopy'] == 1) ? 'checked' : ''; ?>>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="DontSendCopy" id="DontSendCopy" data-parsley-required-message="<?= _('Enter DontSendCopy') ?>" data-parsley-group="fieldset01" <?php echo (isset($order_details['DontSendCopy']) && $order_details['DontSendCopy'] == 1) ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="DontSendCopy">
-                                                        <?=_('Do not send me a copy of any confirmation,cancellation or deferal emails')?>
-                                                    </label>
-                                                
-                                            </div>
-                                           <!--  <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="ProductActive" id="ProductActive" data-parsley-required-message="<?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>" data-parsley-group="fieldset01" value="">
-                                                    <label class="form-check-label" for="ProductActive">
                                                         <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
                                                     </label>
-                                           
                                                </div>
                                            </div>
                                             <div class="form-group">
@@ -81,13 +71,12 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                 <textarea class="form-control" id="CancelEmail" name="CancelEmail" rows="3" data-parsley-required-message="<?= _('Enter Cancel Email') ?>" placeholder="Enter Cancel Email" data-parsley-group="fieldset01" required><?php echo (isset($order_details['CancelEmail']) && !empty($order_details['CancelEmail'])) ? $order_details['CancelEmail'] : ''; ?></textarea>
                                             </div>
                                             <div class="form-group">
-                                        <label for="DeferMail">Defer(Backorder) Mail</label>
+                                                <label for="DeferMail">Defer(Backorder) Mail</label>
                                                 <textarea class="form-control" id="DeferEmail" name="DeferEmail" rows="3" data-parsley-required-message="<?= _('Enter Defer Email') ?>" placeholder="Enter Defer Email" data-parsley-group="fieldset01" required><?php echo (isset($order_details['DeferEmail']) && !empty($order_details['DeferEmail'])) ? $order_details['DeferEmail'] : ''; ?></textarea>
                                             </div>
-                                           
                                              <h6 class="card-header"> <?= _('Order Folders') ?></h6>
                                             <br>
-                                             <div class="form-group">
+                                            <div class="form-group">
                                                 <label for="NumberOfAdditionalOrderFolders">Number Of Additional Order Folders</label>
                                                 <select class="form-control" id="" name="NoAdditionalOrder">
                                                     <option>Please select</option>
@@ -104,14 +93,12 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                 </select>
                                             </div>
                                             <div class="col-sm mt-3 pt-3">
-                                            <div id="addfolderinput">
-  
+                                                <div id="addfolderinput">
+
                                                 </div>
-                                                </div>
+                                            </div>
                                         </div> <!-- col-sm -->
-                                         
                                         <div class="col-sm mt-3 pt-3">
-                                           
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container --><br>
@@ -140,26 +127,26 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
 <?php $this->start('footer_extras') ?>
 
 <script>
-     $(document).ready(function() {
-$('#NoAdditionalOrder').change(function() {
+    $(document).ready(function() {
+        $('#NoAdditionalOrder').change(function() {
 
-          var selectObj = $(this);
-          
-          var selectedOption = selectObj.find(":selected");
-          
-          var selectedValue = selectedOption.val();
-          
-    
-          var targetDiv = $("#addfolderinput");
-          
-          targetDiv.html("");
-          for(var i = 0; i < selectedValue; i++) {
-          var f = i+1;
-          
-            targetDiv.append($("<label>Work Folder #"+ f + " (work"+ f + ")</label><br><input type='text' class='form-control' id='NoAdditionalOrder"+f+"' name='NoAdditionalOrder"+f+"'><br>"));
-          }
-      }); 
-});
+            var selectObj = $(this);
+
+            var selectedOption = selectObj.find(":selected");
+
+            var selectedValue = selectedOption.val();
+
+
+            var targetDiv = $("#addfolderinput");
+
+            targetDiv.html("");
+            for (var i = 0; i < selectedValue; i++) {
+                var f = i + 1;
+
+                targetDiv.append($("<label>Work Folder #" + f + " (work" + f + ")</label><br><input type='text' class='form-control' id='NoAdditionalOrder" + f + "' name='NoAdditionalOrder" + f + "'><br>"));
+            }
+        });
+    });
 </script>
 <script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
 <?php $this->stop() ?>

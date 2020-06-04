@@ -106,7 +106,11 @@ $(document).ready(function () {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-  
+        var origin   = window.location.origin;
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = origin+data.filename;
+        link.click();  
       },
       error: function (jqXHR, textStatus, errorThrown) {},
     });

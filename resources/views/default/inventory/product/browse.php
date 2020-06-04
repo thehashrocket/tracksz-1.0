@@ -38,27 +38,27 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                 <div class="row">
                     <div class="col-sm-12">
                         <form></form>
-                          <form name="change_marketplace" id="change_marketplace" action="/product/change_marketplace" method="POST">
-                        <a href="/product/add" class="btn btn-primary" title="<?= _('Add Product') ?>"><?= _('Add Product') ?></a>
-                        <div class="btn-group"><button type="button" id="btn_delete" class="btn btn-danger">Delete Selected Items</button></div>
-                        <select class="browser-default custom-select" id="selected_export_product" name="export_format" required="" style="width: 150px;">
-                            <option value="" selected disabled><?= _('Selected Export') ?></option>
-                            <option value="xlsx">Xlsx</option>
-                            <option value="csv">CSV</option>
-                        </select>
-                        
-                        <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select" style="width: 200px;">
-                            <option value="null" selected disabled><?= _('Select Marketplace...') ?></option>
-                            <?php
-                            if (isset($market_places) && !empty($market_places)) {
-                                foreach ($market_places as $mar_key => $mar_val) { ?>
-                                    <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
-                                <?php }
-                            } else { ?>
-                                <option selected><?= _('No Marketplace found...') ?></option>
-                            <?php } ?>
-                        </select>
-                    </form>
+                        <form name="change_marketplace" id="change_marketplace" action="/product/change_marketplace" method="POST">
+                            <a href="/product/add" class="btn btn-primary" title="<?= _('Add Product') ?>"><?= _('Add Product') ?></a>
+                            <div class="btn-group"><button type="button" id="btn_delete" class="btn btn-danger">Delete Selected Items</button></div>
+                            <select class="browser-default custom-select" id="selected_export_product" name="export_format" required="" style="width: 150px;">
+                                <option value="" selected disabled><?= _('Selected Export') ?></option>
+                                <option value="xlsx">Xlsx</option>
+                                <option value="csv">CSV</option>
+                            </select>
+
+                            <select name="MarketName" id="MarketName" class="browser-default custom-select market_stores_select" style="width: 200px;">
+                                <option value="null" selected disabled><?= _('Select Marketplace...') ?></option>
+                                <?php
+                                if (isset($market_places) && !empty($market_places)) {
+                                    foreach ($market_places as $mar_key => $mar_val) { ?>
+                                        <option value="<?php echo $mar_val['Id']; ?>"><?php echo $mar_val['MarketName']; ?></option>
+                                    <?php }
+                                } else { ?>
+                                    <option selected><?= _('No Marketplace found...') ?></option>
+                                <?php } ?>
+                            </select>
+                        </form>
                     </div>
                     <!-- <div class="col-md-3">
                         <div class="form-group">

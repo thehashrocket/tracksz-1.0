@@ -13,6 +13,21 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse" title="Browse Store Inventory"><?= ('Inventory') ?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?= ('Import') ?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?= _('Inventory File Upload') ?> </h1>

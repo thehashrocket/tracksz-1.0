@@ -47,6 +47,8 @@ class ProductController
         $this->db   = $db;
         $store = (new Store($this->db))->find(Session::get('member_id'), 1);
         $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
+        ini_set('memory_limit', '-1');
+        ini_set("pcre.backtrack_limit", "1000000");
     }
     /*
     * add - Load Add Product View
@@ -679,11 +681,7 @@ class ProductController
         unset($form['__token']);
 
         $export_type = $form['export_formate'];
-
         $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
-        // echo "<pre>";
-        // print_r($result_data);
-        // die;
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -710,8 +708,6 @@ class ProductController
 
         $rows = 2;
         foreach ($result_data as $prodata) {
-
-
             $sheet->setCellValue('A' . $rows, $prodata['Id']);
             $sheet->setCellValue('B' . $rows, $prodata['Name']);
             $sheet->setCellValue('C' . $rows, $prodata['Notes']);
@@ -742,16 +738,20 @@ class ProductController
             ]);
 
             if ($export_type == 'xlsx') {
+                ob_clean();
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="inventory.xlsx"');
+                header('Cache-Control: max-age=0');
+                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+                $writer->save('inventory.xlsx');
 
-                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-                $writer->save('export.xlsx');
-                header('Content-Type: application/vnd.ms-excel');
-                header('Content-Disposition: attachment; filename="export.xlsx"');
-                $writer->save("php://output");
+                die(json_encode(['status' => true, 'filename' => '/inventory.xlsx']));
             } else if ($export_type == 'csv') {
                 $writer = new WriteCsv($spreadsheet);
-                $writer->save("product." . $export_type);
-                return $this->view->redirect('/inventory/browse');
+                header('Content-Type: application/csv');
+                header('Content-Disposition: attachment; filename="inventory.csv"');
+                $writer->save("inventory.csv");
+                die(json_encode(['status' => true, 'filename' => '/inventory.csv']));
             }
         }
     }
