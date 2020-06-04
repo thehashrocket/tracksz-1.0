@@ -317,7 +317,6 @@ class OrderController
                 ]);
 
                 if ($export_type == 'xlsx') {
-                    //$writer = new WriteXlsx($spreadsheet);
                     $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     header('Content-Disposition: attachment; filename="orders.xlsx"');
@@ -423,8 +422,8 @@ class OrderController
             $update_data['MaxPostageBatch'] = $methodData['MaxPostageBatch'];
             $update_data['CustomsSigner'] = $methodData['CustomsSigner'];
             $update_data['DefaultWeight'] = $methodData['DefaultWeight'];
-            $update_data['FlatRatePriority'] = $methodData['FlatRatePriority'];
-            $update_data['GlobalWeight'] = $methodData['GlobalWeight'];
+            $update_data['FlatRatePriority'] = (isset($methodData['FlatRatePriority'])) ? $methodData['FlatRatePriority'] : 0;
+            $update_data['GlobalWeight'] = (isset($methodData['GlobalWeight'])) ? $methodData['GlobalWeight'] : 0;
 
 
 
@@ -1738,15 +1737,20 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
             ]);
 
             if ($export_type == 'xlsx') {
-                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+                ob_clean();
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="orders.xlsx"');
-                $writer->save("php://output");
-                exit;
+                header('Content-Disposition: attachment; filename="order.xlsx"');
+                header('Cache-Control: max-age=0');
+                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+                $writer->save('order.xlsx');
+
+                die(json_encode(['status' => true, 'filename' => '/order.xlsx']));
             } else if ($export_type == 'csv') {
                 $writer = new WriteCsv($spreadsheet);
-                $writer->save("php://output");
-                exit;
+                header('Content-Type: application/csv');
+                header('Content-Disposition: attachment; filename="order.csv"');
+                $writer->save("order.csv");
+                die(json_encode(['status' => true, 'filename' => '/order.csv']));
             }
         }
     }

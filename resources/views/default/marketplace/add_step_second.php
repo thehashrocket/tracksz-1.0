@@ -13,10 +13,20 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
-                <!-- title -->
-                <div class="mb-3 d-flex justify-content-between">
-                    <h1 class="page-title"> <?= _('Add Marketplace') ?> </h1>
-                    <p> <a href="/account/panel"><?= _('Dashboard') ?></a> / <a href="/marketplace/dashboard"> <?= _('Marketplace') ?></a> </p>
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/marketplace/list" title="Browse Marketplace"><?= ('Marketplace') ?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?= ('Browse') ?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <p class="text-muted">
                     <?= _('This is where you can add, modify, and delete Marketplace for the current Active Store: ') ?><strong>

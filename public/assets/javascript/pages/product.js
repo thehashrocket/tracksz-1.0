@@ -117,9 +117,20 @@ $(document).ready(function () {
       data: { ids: data_array, export_formate: export_type },
       dataType: "JSON",
       beforeSend: function () {},
-      success: function (data, textStatus, jqXHR) {},
+      success: function (data, textStatus, jqXHR) {
+        var origin   = window.location.origin;
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = origin+data.filename;
+        link.click();
+      },
       error: function (jqXHR, textStatus, errorThrown) {},
     });
+  });
+
+  $(".test").click(function (e) {
+    // e.preventDefault();  //stop the browser from following
+    // window.location.href = 'uploads/file.doc';
   });
 
   $(document).on("change", "#MarketName", function () {
@@ -127,19 +138,18 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".btn_catelog", function () {
-    $('.catelog').removeClass('d-none');
-    $('.none_catelog').addClass('d-none');
+    $(".catelog").removeClass("d-none");
+    $(".none_catelog").addClass("d-none");
 
-
-    $('.btn_none_catelog').removeClass('d-none');
-    $('.btn_catelog').addClass('d-none');
+    $(".btn_none_catelog").removeClass("d-none");
+    $(".btn_catelog").addClass("d-none");
   });
 
   $(document).on("click", ".btn_none_catelog", function () {
-    $('.none_catelog').removeClass('d-none');
-    $('.catelog').addClass('d-none');
+    $(".none_catelog").removeClass("d-none");
+    $(".catelog").addClass("d-none");
 
-    $('.btn_catelog').removeClass('d-none');
-    $('.btn_none_catelog').addClass('d-none');
+    $(".btn_catelog").removeClass("d-none");
+    $(".btn_none_catelog").addClass("d-none");
   });
 });

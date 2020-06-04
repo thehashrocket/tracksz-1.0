@@ -840,13 +840,17 @@ class InventoryController
                 ]);
 
                 if ($export_type == 'xlsx') {
-                    $writer = new WriteXlsx($spreadsheet);
-                    $writer->save("inventory." . $export_type);
-                    return $this->view->redirect('/inventory/export');
+                    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment; filename="inventory.xlsx"');
+                    $writer->save("php://output");
+                    exit;
                 } else if ($export_type == 'csv') {
                     $writer = new WriteCsv($spreadsheet);
-                    $writer->save("inventory." . $export_type);
-                    return $this->view->redirect('/inventory/export');
+                    header('Content-Type: application/csv');
+                    header('Content-Disposition: attachment; filename="inventory.csv"');
+                    $writer->save("php://output");
+                    exit;
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
