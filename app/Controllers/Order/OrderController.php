@@ -94,25 +94,23 @@ class OrderController
 
             $order_ids = array_column($map_data, 'OrderId');
 
-             $is_data = $this->insertOrUpdate($map_data);
+            $is_data = $this->insertOrUpdate($map_data);
 
-             foreach ($order_ids as $order_id) 
-             {
+            foreach ($order_ids as $order_id) {
 
-              $mail_data = (new Order($this->db))->findByorder_id($order_id);
+                $mail_data = (new Order($this->db))->findByorder_id($order_id);
 
-              $message['html']  = $this->view->make('emails/orderconfirm');
-              $message['plain'] = $this->view->make('emails/plain/orderconfirm');
-              $mailer = new Email();
-              $mailer->sendEmail(
-                $mail_data['ShippingEmail'],
-                Config::get('company_name'),
-                _('Order Confirmation'),
-                $message,
-                ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'],'Carrier' => $mail_data['Carrier'],'Tracking' => $mail_data['Tracking']]
-            );
-
-          }
+                $message['html']  = $this->view->make('emails/orderconfirm');
+                $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+                $mailer = new Email();
+                $mailer->sendEmail(
+                    $mail_data['ShippingEmail'],
+                    Config::get('company_name'),
+                    _('Order Confirmation'),
+                    $message,
+                    ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+                );
+            }
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -506,62 +504,50 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
-            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? 1 : null;
-            // print_r($update_data['SkipPDFView']);
-            $update_data['DefaultAction'] = $methodData['DefaultAction'];
-            $update_data['SortOrders'] = $methodData['SortOrders'];
 
-            // $update_data['SplitOrders'] = $methodData['SplitOrders'];
-            $update_data['SplitOrders'] = (isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders'])) ? 1 : null;
-            $update_data['AddBarcode'] = (isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode'])) ? 1 : null;
-            //$update_data['AddBarcode'] = $methodData['AddBarcode'];
-            $update_data['BarcodeType'] = $methodData['BarcodeType'];
-            $update_data['SortPickList'] = $methodData['SortPickList'];
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? $methodData['SkipPDFView'] : 0;
+            $update_data['DefaultAction'] = (isset($methodData['DefaultAction']) && !empty($methodData['DefaultAction'])) ? $methodData['DefaultAction'] : null;
+            $update_data['SortOrders'] = (isset($methodData['SortOrders']) && !empty($methodData['SortOrders'])) ? $methodData['SortOrders'] : null;
 
-            $update_data['DefaultTemplate'] = $methodData['DefaultTemplate'];
-            $update_data['HeaderImageURL'] = $methodData['HeaderImageURL'];
-            $update_data['FooterImageURL'] = $methodData['FooterImageURL'];
-            $update_data['PackingSlipHeader'] = $methodData['PackingSlipHeader'];
-            $update_data['PackingSlipFooter'] = $methodData['PackingSlipFooter'];
-            $update_data['PackingSlipFrom'] = $methodData['PackingSlipFrom'];
-            // $update_data['IncludeOrderBarcodes'] = $methodData['IncludeOrderBarcodes'];
-            $update_data['IncludeOrderBarcodes'] = (isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes'])) ? 1 : null;
-            $update_data['IncludeItemBarcodes'] = (isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes'])) ? 1 : null;
-            $update_data['CentreHeaderText'] = (isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText'])) ? 1 : null;
-            $update_data['HideEmail'] = (isset($methodData['HideEmail']) && !empty($methodData['HideEmail'])) ? 1 : null;
-            $update_data['HidePhone'] = (isset($methodData['HidePhone']) && !empty($methodData['HidePhone'])) ? 1 : null;
-            $update_data['IncludeGSTExAus1'] = (isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1'])) ? 1 : null;
-            $update_data['CentreFooter'] = (isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter'])) ? 1 : null;
-            $update_data['ShowItemPrice'] = (isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice'])) ? 1 : null;
-            $update_data['IncludeMarketplaceOrder'] = (isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder'])) ? 1 : null;
-            $update_data['IncludePageNumbers'] = (isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers'])) ? 1 : null;
-            //$update_data['IncludeItemBarcodes'] = $methodData['IncludeItemBarcodes'];
-            //$update_data['CentreHeaderText'] = $methodData['CentreHeaderText'];
-            // $update_data['HideEmail'] = $methodData['HideEmail'];
-            //$update_data['HidePhone'] = $methodData['HidePhone'];
-            /*$update_data['IncludeGSTExAus1'] = $methodData['IncludeGSTExAus1'];
-            $update_data['CentreFooter'] = $methodData['CentreFooter'];
-            $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
-            $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
-            $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
+            $update_data['SplitOrders'] = (isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders'])) ? $methodData['SplitOrders'] : 0;
+            $update_data['AddBarcode'] = (isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode'])) ? $methodData['AddBarcode'] : 0;
 
-            $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
-            $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
-            $update_data['FontSize'] = $methodData['FontSize'];
-            $update_data['HideLabelBoundaries'] = (isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries'])) ? 1 : null;
-            $update_data['IncludeGSTExAus2'] = (isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2'])) ? 1 : null;
-            //$update_data['HideLabelBoundaries'] = $methodData['HideLabelBoundaries'];
-            //$update_data['IncludeGSTExAus2'] = $methodData['IncludeGSTExAus2'];
-            $update_data['LabelWidth'] = $methodData['LabelWidth'];
+            $update_data['BarcodeType'] = (isset($methodData['BarcodeType']) && !empty($methodData['BarcodeType'])) ? $methodData['BarcodeType'] : null;
+            $update_data['SortPickList'] = (isset($methodData['SortPickList']) && !empty($methodData['SortPickList'])) ? $methodData['SortPickList'] : null;
 
-            $update_data['LabelWidthIn'] = $methodData['LabelWidthIn'];
-            $update_data['LabelHeight'] = $methodData['LabelHeight'];
-            $update_data['LabelHeightIn'] = $methodData['LabelHeightIn'];
-            $update_data['PageMargins'] = $methodData['PageMargins'];
-            $update_data['PageMarginsIn'] = $methodData['PageMarginsIn'];
-            $update_data['LabelMargins'] = $methodData['LabelMargins'];
-            $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
+            $update_data['DefaultTemplate'] = (isset($methodData['DefaultTemplate']) && !empty($methodData['DefaultTemplate'])) ? $methodData['DefaultTemplate'] : null;
+            $update_data['HeaderImageURL'] = (isset($methodData['HeaderImageURL']) && !empty($methodData['HeaderImageURL'])) ? $methodData['HeaderImageURL'] : null;
+            $update_data['FooterImageURL'] = (isset($methodData['FooterImageURL']) && !empty($methodData['FooterImageURL'])) ? $methodData['FooterImageURL'] : null;
+            $update_data['PackingSlipHeader'] = (isset($methodData['PackingSlipHeader']) && !empty($methodData['PackingSlipHeader'])) ? $methodData['PackingSlipHeader'] : null;
+            $update_data['PackingSlipFooter'] = (isset($methodData['PackingSlipFooter']) && !empty($methodData['PackingSlipFooter'])) ? $methodData['PackingSlipFooter'] : null;
+            $update_data['PackingSlipFrom'] = (isset($methodData['PackingSlipFrom']) && !empty($methodData['PackingSlipFrom'])) ? $methodData['PackingSlipFrom'] : null;
+
+            $update_data['IncludeOrderBarcodes'] = (isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes'])) ? 1 : 0;
+            $update_data['IncludeItemBarcodes'] = (isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes'])) ? 1 : 0;
+            $update_data['CentreHeaderText'] = (isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText'])) ? 1 : 0;
+            $update_data['HideEmail'] = (isset($methodData['HideEmail']) && !empty($methodData['HideEmail'])) ? 1 : 0;
+            $update_data['HidePhone'] = (isset($methodData['HidePhone']) && !empty($methodData['HidePhone'])) ? 1 : 0;
+            $update_data['IncludeGSTExAus1'] = (isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1'])) ? 1 : 0;
+            $update_data['CentreFooter'] = (isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter'])) ? 1 : 0;
+            $update_data['ShowItemPrice'] = (isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice'])) ? 1 : 0;
+            $update_data['IncludeMarketplaceOrder'] = (isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder'])) ? 1 : 0;
+            $update_data['IncludePageNumbers'] = (isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers'])) ? 1 : 0;
+
+            $update_data['ColumnsPerPage'] = (isset($methodData['ColumnsPerPage']) && !empty($methodData['ColumnsPerPage'])) ? $methodData['ColumnsPerPage'] : 0;
+            $update_data['RowsPerPage'] = (isset($methodData['RowsPerPage']) && !empty($methodData['RowsPerPage'])) ? $methodData['RowsPerPage'] : 0;
+            $update_data['FontSize'] = (isset($methodData['FontSize']) && !empty($methodData['FontSize'])) ? $methodData['FontSize'] : 0;
+            $update_data['HideLabelBoundaries'] = (isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries'])) ? $methodData['HideLabelBoundaries'] : 0;
+            $update_data['IncludeGSTExAus2'] = (isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2'])) ? 1 : 0;
+
+            $update_data['LabelWidth'] = (isset($methodData['LabelWidth']) && !empty($methodData['LabelWidth'])) ? $methodData['LabelWidth'] : 0.00;
+
+            $update_data['LabelWidthIn'] = (isset($methodData['LabelWidthIn']) && !empty($methodData['LabelWidthIn'])) ? $methodData['LabelWidthIn'] : null;
+            $update_data['LabelHeight'] =  (isset($methodData['LabelHeight']) && !empty($methodData['LabelHeight'])) ? $methodData['LabelHeight'] : 0.00;
+            $update_data['LabelHeightIn'] = (isset($methodData['LabelHeightIn']) && !empty($methodData['LabelHeightIn'])) ? $methodData['LabelHeightIn'] : null;
+            $update_data['PageMargins'] = (isset($methodData['PageMargins']) && !empty($methodData['PageMargins'])) ? $methodData['PageMargins'] : 0.0;
+            $update_data['PageMarginsIn'] = (isset($methodData['PageMarginsIn']) && !empty($methodData['PageMarginsIn'])) ? $methodData['PageMarginsIn'] : null;
+            $update_data['LabelMargins'] = (isset($methodData['LabelMargins']) && !empty($methodData['LabelMargins'])) ? $methodData['LabelMargins'] : 0.00;
+            $update_data['LabelMarginsIn'] = (isset($methodData['LabelMarginsIn']) && !empty($methodData['LabelMarginsIn'])) ? $methodData['LabelMarginsIn'] : null;
 
 
             $is_data = $this->labelinsertOrUpdate($update_data);
@@ -572,9 +558,6 @@ class OrderController
                     'alert_type' => 'success'
                 ]);
                 $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-
-
-
                 return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
@@ -959,9 +942,9 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
 
             // Sanitize and Validate
             $validate = new ValidateSanitize();
-            $form = $validate->sanitize($methodData); 
+            $form = $validate->sanitize($methodData);
 
-             // start mail
+            // start mail
 
             $message['html']  = $this->view->make('emails/orderconfirm');
             $message['plain'] = $this->view->make('emails/plain/orderconfirm');
@@ -971,10 +954,10 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
                 Config::get('company_name'),
                 _('Order Confirmation'),
                 $message,
-                ['OrderId' => $form['MarketPlaceOrder'], 'BillingName' => $form['BillingName'],'Carrier' => $form['CarrierOrder'],'Tracking' => $form['Tracking']]
+                ['OrderId' => $form['MarketPlaceOrder'], 'BillingName' => $form['BillingName'], 'Carrier' => $form['CarrierOrder'], 'Tracking' => $form['Tracking']]
             );
 
-             //End mail
+            //End mail
 
             // only trims & sanitizes strings (other filters available)
             $validate->validation_rules(array(
@@ -1202,29 +1185,25 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
     @task_desc :: 
     @params    :: 
     */
-     public function _mapOrderStatusUpdate($status_data = [])
+    public function _mapOrderStatusUpdate($status_data = [])
     {
-        foreach ($status_data['ids'] as $key_data => $value) 
-
-        {
+        foreach ($status_data['ids'] as $key_data => $value) {
 
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
 
 
             $mail_data = (new Order($this->db))->findById($value);
 
-                $message['html']  = $this->view->make('emails/orderconfirm');
-                $message['plain'] = $this->view->make('emails/plain/orderconfirm');
-                $mailer = new Email();
-                $mailer->sendEmail(
-                    $mail_data['ShippingEmail'],
-                    Config::get('company_name'),
-                    _('Order Confirmation'),
-                    $message,
-                    ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'],'Carrier' => $mail_data['Carrier'],'Tracking' => $mail_data['Tracking']]
-                );
-
-
+            $message['html']  = $this->view->make('emails/orderconfirm');
+            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+            $mailer = new Email();
+            $mailer->sendEmail(
+                $mail_data['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+            );
         } // Loops Ends
         return true;
     }
