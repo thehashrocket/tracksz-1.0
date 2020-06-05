@@ -60,8 +60,8 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                     <label class="form-check-label" for="DontSendCopy">
                                                         <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
                                                     </label>
-                                               </div>
-                                           </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>
                                                 <textarea class="form-control" id="ConfirmEmail" name="ConfirmEmail" rows="3" data-parsley-required-message="<?= _('Enter Confirm Email') ?>" placeholder="Enter Confirm Email" data-parsley-group="fieldset01" required><?php echo (isset($order_details['ConfirmEmail']) && !empty($order_details['ConfirmEmail'])) ? $order_details['ConfirmEmail'] : ''; ?></textarea>
@@ -74,11 +74,11 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                 <label for="DeferMail">Defer(Backorder) Mail</label>
                                                 <textarea class="form-control" id="DeferEmail" name="DeferEmail" rows="3" data-parsley-required-message="<?= _('Enter Defer Email') ?>" placeholder="Enter Defer Email" data-parsley-group="fieldset01" required><?php echo (isset($order_details['DeferEmail']) && !empty($order_details['DeferEmail'])) ? $order_details['DeferEmail'] : ''; ?></textarea>
                                             </div>
-                                             <h6 class="card-header"> <?= _('Order Folders') ?></h6>
+                                            <h6 class="card-header"> <?= _('Order Folders') ?></h6>
                                             <br>
                                             <div class="form-group">
                                                 <label for="NumberOfAdditionalOrderFolders">Number Of Additional Order Folders</label>
-                                                <select class="form-control" id="" name="NoAdditionalOrder">
+                                                <select class="form-control" id="NoAdditionalOrder" name="NoAdditionalOrder">
                                                     <option>Please select</option>
                                                     <option>0</option>
                                                     <option>1</option>
@@ -119,34 +119,12 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/javascript/pages/order-setting.js"></script>
 <?= $this->stop() ?>
 
 <?php $this->start('page_js') ?>
 <?= $this->stop() ?>
 
 <?php $this->start('footer_extras') ?>
-
-<script>
-    $(document).ready(function() {
-        $('#NoAdditionalOrder').change(function() {
-
-            var selectObj = $(this);
-
-            var selectedOption = selectObj.find(":selected");
-
-            var selectedValue = selectedOption.val();
-
-
-            var targetDiv = $("#addfolderinput");
-
-            targetDiv.html("");
-            for (var i = 0; i < selectedValue; i++) {
-                var f = i + 1;
-
-                targetDiv.append($("<label>Work Folder #" + f + " (work" + f + ")</label><br><input type='text' class='form-control' id='NoAdditionalOrder" + f + "' name='NoAdditionalOrder" + f + "'><br>"));
-            }
-        });
-    });
-</script>
 <script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
 <?php $this->stop() ?>

@@ -571,6 +571,5 @@ LEFT JOIN marketplace
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
-     
     }
 }

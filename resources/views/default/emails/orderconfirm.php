@@ -12,9 +12,9 @@
 
             <p><?= _('By Carrier :') ?><?= $Carrier ?></p>
 
-             <p><?= _('By Customer Name :') ?><?= $BillingName ?></p>
+            <p><?= _('By Customer Name :') ?><?= $BillingName ?></p>
 
-              <p><?= _('By Tracking :') ?><?= $Tracking ?></p>
+            <p><?= _('By Tracking :') ?><?= $Tracking ?></p>
 
             <p><?= _('Thank You!') ?></p>
 

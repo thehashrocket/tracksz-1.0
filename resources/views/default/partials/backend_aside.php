@@ -33,7 +33,8 @@ if (substr($page, 0, 12) == 'example-page') {
 
                     $orders_menu = [
                         'order-browse', 'order-add', 'order-edit', 'order-batch-move', 'order-confirmation-file', 'order-export-order',
-                        'order-shipping', 'order-order-settings', 'order-postage-settings', 'order-label-settings'
+                        'order-shipping', 'order-order-settings', 'order-postage-settings', 'order-label-settings', 'order-add_update_postage_setting',
+                        'order-order_update_settings', 'order-add_update_label_setting'
                     ];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $orders_menu)) echo ' has-active'; ?>"><a href="/order/browse" class="menu-link menu-item" title="<?= _('Active Store Orders') ?>"><span class="menu-icon fa fa-dollar-sign"></span> <span class="menu-text"><?= _('Orders') ?></span></a>
@@ -57,7 +58,7 @@ if (substr($page, 0, 12) == 'example-page') {
                             <!-- .menu-item -->
                             <?php
                             // determine if sub-menu has active page - set up array for in_array
-                            $setting_menu = ['order-order-settings', 'order-postage-settings', 'order-label-settings'];
+                            $setting_menu = ['order-add_update_label_setting', 'order-order-settings', 'order-postage-settings', 'order-label-settings', 'order-add_update_postage_setting', 'order-order_update_settings'];
                             ?>
                             <li class="menu-item has-child<?php if (in_array($page, $setting_menu)) {
                                                                 echo ' has-active';
@@ -65,19 +66,19 @@ if (substr($page, 0, 12) == 'example-page') {
                                                             ?>">
                                 <a href="/order/order-settings" class="menu-link" title="<?= _('Active Store Order') ?>"><span class="menu-icon fa fa-cog" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Settings') ?></span></a> <!-- child menu -->
                                 <ul class="menu">
-                                    <li class="menu-item<?php if ($page == 'order-order-settings') {
+                                    <li class="menu-item<?php if ($page == 'order-order-settings' || $page == 'order-order_update_settings') {
                                                             echo ' has-active';
                                                         }
                                                         ?>">
                                         <a href="/order/order-settings" title="<?= _('Order Settings') ?>" class="menu-link"><?= _('Order Settings') ?></a>
                                     </li>
-                                    <li class="menu-item<?php if ($page == 'order-postage-settings') {
+                                    <li class="menu-item<?php if ($page == 'order-postage-settings'  || $page == 'order-add_update_postage_setting') {
                                                             echo ' has-active';
                                                         }
                                                         ?>">
                                         <a href="/order/postage-settings" title="<?= _('Postage Settings') ?>" class="menu-link"><?= _('Postage Settings') ?></a>
                                     </li>
-                                    <li class="menu-item<?php if ($page == 'order-label-settings') {
+                                    <li class="menu-item<?php if ($page == 'order-label-settings' || $page == 'order-add_update_label_setting') {
                                                             echo ' has-active';
                                                         }
                                                         ?>">
