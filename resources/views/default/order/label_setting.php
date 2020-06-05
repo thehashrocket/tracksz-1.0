@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Order Defaults for Your Store Product Listings, a Multiple Market Order Management Service';
-$description_meta = 'Order Defaults for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
+$title_meta = 'Label Settings for Your Store Product Listings, a Multiple Market Order Management Service';
+$description_meta = 'Label Settings for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -224,33 +224,33 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                                 } */
                                             </style>
                                             <div class="form-group">
-                                                <?php if (isset($all_order['BarcodeType']) == 'Code128') { ?>
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code128') { ?>
                                                     <div id="Code128" class="myDiv" style="display: block;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/Code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="Code128" class="myDiv">
+                                                    <div id="Code128" class="myDiv" style="display: none;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/Code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }
                                                 ?>
 
-                                                <?php if (isset($all_order['BarcodeType']) == 'Code39') { ?>
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code39') { ?>
                                                     <div id="Code39" class="myDiv" style="display: block;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code39.png'; ?>" alt="HR" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="Code39" class="myDiv">
+                                                    <div id="Code39" class="myDiv" style="display: none;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code39.png'; ?>" alt="HR" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }
                                                 ?>
-                                                <?php if (isset($all_order['BarcodeType']) == 'ITF') { ?>
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'ITF') { ?>
                                                     <div id="ITF" class="myDiv" style="display: block;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/itf.png'; ?>" alt="Developer" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="ITF" class="myDiv">
+                                                    <div id="ITF" class="myDiv" style="display: none;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/itf.png'; ?>" alt="Developer" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }

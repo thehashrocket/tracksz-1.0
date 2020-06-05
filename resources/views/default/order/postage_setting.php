@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Order Defaults for Your Store Product Listings, a Multiple Market Order Management Service';
-$description_meta = 'Order Defaults for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
+$title_meta = 'Postage Settings for Your Store Product Listings, a Multiple Market Order Management Service';
+$description_meta = 'Postage Settings for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 

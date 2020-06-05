@@ -624,7 +624,31 @@ class OrderController
             $update_data['CancelEmail'] = (isset($methodData['CancelEmail']) && !empty($methodData['CancelEmail'])) ? $methodData['CancelEmail'] : null;
             $update_data['DeferEmail'] = (isset($methodData['DeferEmail']) && !empty($methodData['DeferEmail'])) ? $methodData['DeferEmail'] : null;
             $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : 0;
-            $update_data['NoAdditionalOrder'] = (isset($methodData['NoAdditionalOrder']) && !empty($methodData['NoAdditionalOrder'])) ? $methodData['NoAdditionalOrder'] : null;
+            $update_data['NoAdditionalOrder'] = json_encode([
+                'AdditionalOrder' => (isset($methodData['NoAdditionalOrder']) && !empty($methodData['NoAdditionalOrder'])) ? $methodData['NoAdditionalOrder'] : null,
+                'AdditionalOrderData' => [
+                    'work1' => (isset($methodData['NoAdditionalOrder1']) && !empty($methodData['NoAdditionalOrder1'])) ? $methodData['NoAdditionalOrder1'] : null,
+                    'work2' => (isset($methodData['NoAdditionalOrder2']) && !empty($methodData['NoAdditionalOrder2'])) ? $methodData['NoAdditionalOrder2'] : null,
+                    'work3' => (isset($methodData['NoAdditionalOrder3']) && !empty($methodData['NoAdditionalOrder3'])) ? $methodData['NoAdditionalOrder3'] : null,
+                    'work4' => (isset($methodData['NoAdditionalOrder4']) && !empty($methodData['NoAdditionalOrder4'])) ? $methodData['NoAdditionalOrder4'] : null,
+                    'work5' => (isset($methodData['NoAdditionalOrder5']) && !empty($methodData['NoAdditionalOrder5'])) ? $methodData['NoAdditionalOrder5'] : null,
+                    'work6' => (isset($methodData['NoAdditionalOrder6']) && !empty($methodData['NoAdditionalOrder6'])) ? $methodData['NoAdditionalOrder6'] : null,
+                    'work7' => (isset($methodData['NoAdditionalOrder7']) && !empty($methodData['NoAdditionalOrder7'])) ? $methodData['NoAdditionalOrder7'] : null,
+                    'work8' => (isset($methodData['NoAdditionalOrder8']) && !empty($methodData['NoAdditionalOrder8'])) ? $methodData['NoAdditionalOrder8'] : null,
+                    'work9' => (isset($methodData['NoAdditionalOrder9']) && !empty($methodData['NoAdditionalOrder9'])) ? $methodData['NoAdditionalOrder9'] : null,
+                    'work10' => (isset($methodData['NoAdditionalOrder10']) && !empty($methodData['NoAdditionalOrder10'])) ? $methodData['NoAdditionalOrder10'] : null,
+                    'work11' => (isset($methodData['NoAdditionalOrder11']) && !empty($methodData['NoAdditionalOrder11'])) ? $methodData['NoAdditionalOrder11'] : null,
+                    'work12' => (isset($methodData['NoAdditionalOrder12']) && !empty($methodData['NoAdditionalOrder12'])) ? $methodData['NoAdditionalOrder12'] : null,
+                    'work13' => (isset($methodData['NoAdditionalOrder13']) && !empty($methodData['NoAdditionalOrder13'])) ? $methodData['NoAdditionalOrder13'] : null,
+                    'work14' => (isset($methodData['NoAdditionalOrder14']) && !empty($methodData['NoAdditionalOrder14'])) ? $methodData['NoAdditionalOrder14'] : null,
+                    'work15' => (isset($methodData['NoAdditionalOrder15']) && !empty($methodData['NoAdditionalOrder15'])) ? $methodData['NoAdditionalOrder15'] : null,
+                    'work16' => (isset($methodData['NoAdditionalOrder16']) && !empty($methodData['NoAdditionalOrder16'])) ? $methodData['NoAdditionalOrder16'] : null,
+                    'work17' => (isset($methodData['NoAdditionalOrder17']) && !empty($methodData['NoAdditionalOrder17'])) ? $methodData['NoAdditionalOrder17'] : null,
+                    'work18' => (isset($methodData['NoAdditionalOrder18']) && !empty($methodData['NoAdditionalOrder18'])) ? $methodData['NoAdditionalOrder18'] : null,
+                    'work19' => (isset($methodData['NoAdditionalOrder19']) && !empty($methodData['NoAdditionalOrder19'])) ? $methodData['NoAdditionalOrder19'] : null,
+                    'work20' => (isset($methodData['NoAdditionalOrder20']) && !empty($methodData['NoAdditionalOrder20'])) ? $methodData['NoAdditionalOrder20'] : null
+                ],
+            ]);
 
             $is_data = $this->orderinsertOrUpdate($update_data);
 

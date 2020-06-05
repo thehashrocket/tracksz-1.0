@@ -1,8 +1,7 @@
 $(document).ready(function () {
-  $(".myDiv").hide();
+  
   $("#BarcodeType").on("change", function () {
     var demovalue = $(this).val();
-
     $("div.myDiv").hide();
     $("#" + demovalue).show();
   });
