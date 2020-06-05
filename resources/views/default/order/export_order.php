@@ -97,7 +97,7 @@ $description_meta = 'Order Export for your store\'s product listings at Tracksz,
 
                                         <option value="new">New</option>
 
-                                        <option value="packed">In Process</option>
+                                        <option value="in-process">In Process</option>
 
                                         <option value="shipped">Shipped</option>
 
