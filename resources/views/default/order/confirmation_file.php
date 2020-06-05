@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Order Defaults for Your Store Product Listings, a Multiple Market Order Management Service';
-$description_meta = 'Order Defaults for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
+$title_meta = 'Order Confirm Files for Your Store Product Listings, a Multiple Market Order Management Service';
+$description_meta = 'Order Confirm Files for your store\'s product listings at Tracksz, a Multiple Market Order Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -31,7 +31,6 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                 <!-- title -->
                 <h1 class="page-title"> <?= _('Confirmation Files') ?> </h1>
                 <p class="text-muted"> <?= _('Configure default settings for your Active Store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
-               
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
@@ -44,17 +43,17 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                 <div class="card card-fluid">
                     <h6 class="card-header"> <?= _('Confirmation Files') ?></h6><!-- .card-body -->
                     <div class="card-body">
-                         <div id="card-filebrowse">
-                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/importupload" method="POST" enctype="multipart/form-data">
+                        <div id="card-filebrowse">
+                            <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/importupload" method="POST" enctype="multipart/form-data">
 
-                                    </form>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <!-- <button type="submit" class="btn btn-primary" id="submit-all">Upload</button> -->
-                                </div>
+                            </form>
+                            <br />
+                            <br />
+                            <br />
+                            <!-- <button type="submit" class="btn btn-primary" id="submit-all">Upload</button> -->
+                        </div>
                     </div><!-- /.card-body -->
-                     <div class="card-body">
+                    <div class="card-body">
                         <!-- .card-body starts -->
                         <?php
 
@@ -70,7 +69,6 @@ $description_meta = 'Order Defaults for your store\'s product listings at Tracks
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
                                 </tbody>
                             </table>
                         <?php endif; ?>

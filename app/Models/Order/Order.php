@@ -92,9 +92,9 @@ LEFT JOIN marketplace
     */
     public function dateRangeSearchByOrderData($formD, $ToD)
     {
-        $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "2020-05-12" And "2020-05-20"');
+        $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "'.$formD.'" And "'.$ToD.'"');
         $stmt->execute(['Created' => $formD, 'Created' => $ToD]);
-
+       
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -571,6 +571,5 @@ LEFT JOIN marketplace
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
-     
     }
 }

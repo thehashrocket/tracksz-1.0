@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Category Add for Your Tracksz Store, a Multiple Market Product Management Service';
-$description_meta = 'Category Add for your Tracksz Store, a Multiple Market Product Management Service';
+$title_meta = 'Category Edit for Your Tracksz Store, a Multiple Market Product Management Service';
+$description_meta = 'Category Edit for your Tracksz Store, a Multiple Market Product Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 

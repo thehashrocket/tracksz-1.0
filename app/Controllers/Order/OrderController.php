@@ -405,44 +405,36 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            $update_data['OperatingSystem'] = $methodData['OperatingSystem'];
-            $update_data['MaxWeight'] = $methodData['MaxWeight'];
-            $update_data['DeliveryConfirmation'] = $methodData['DeliveryConfirmation'];
-            $update_data['MinOrderTotalDelivery'] = $methodData['MinOrderTotalDelivery'];
-            $update_data['SignatureConfirmation'] = $methodData['SignatureConfirmation'];
-            $update_data['ConsolidatorLabel'] = $methodData['ConsolidatorLabel'];
+            $update_data['OperatingSystem'] = (isset($methodData['OperatingSystem']) && !empty($methodData['OperatingSystem'])) ? $methodData['OperatingSystem'] : null;
+            $update_data['MaxWeight'] = (isset($methodData['MaxWeight']) && !empty($methodData['MaxWeight'])) ? $methodData['MaxWeight'] : 0;
+            $update_data['DeliveryConfirmation'] = (isset($methodData['DeliveryConfirmation']) && !empty($methodData['DeliveryConfirmation'])) ? $methodData['DeliveryConfirmation'] : null;
+            $update_data['MinOrderTotalDelivery'] = (isset($methodData['MinOrderTotalDelivery']) && !empty($methodData['MinOrderTotalDelivery'])) ? $methodData['MinOrderTotalDelivery'] : 0.00;
+            $update_data['SignatureConfirmation'] = (isset($methodData['SignatureConfirmation']) && !empty($methodData['SignatureConfirmation'])) ? $methodData['SignatureConfirmation'] : null;
+            $update_data['ConsolidatorLabel'] = (isset($methodData['ConsolidatorLabel']) && !empty($methodData['ConsolidatorLabel'])) ? $methodData['ConsolidatorLabel'] : null;
 
-            $update_data['IncludeInsurance'] = $methodData['IncludeInsurance'];
-            $update_data['MinOrderTotalInsurance'] = $methodData['MinOrderTotalInsurance'];
-            $update_data['RoundDownPartial'] = $methodData['RoundDownPartial'];
+            $update_data['IncludeInsurance'] = (isset($methodData['IncludeInsurance']) && !empty($methodData['IncludeInsurance'])) ? $methodData['IncludeInsurance'] : null;
+            $update_data['MinOrderTotalInsurance'] = (isset($methodData['MinOrderTotalInsurance']) && !empty($methodData['MinOrderTotalInsurance'])) ? $methodData['MinOrderTotalInsurance'] : 0.00;
+            $update_data['RoundDownPartial'] = (isset($methodData['RoundDownPartial']) && !empty($methodData['RoundDownPartial'])) ? $methodData['RoundDownPartial'] : null;
 
-            $update_data['EstimatePostage'] = $methodData['EstimatePostage'];
-            $update_data['MaxPostageBatch'] = $methodData['MaxPostageBatch'];
-            $update_data['CustomsSigner'] = $methodData['CustomsSigner'];
-            $update_data['DefaultWeight'] = $methodData['DefaultWeight'];
+            $update_data['EstimatePostage'] = (isset($methodData['EstimatePostage']) && !empty($methodData['EstimatePostage'])) ? $methodData['EstimatePostage'] : null;
+            $update_data['MaxPostageBatch'] = (isset($methodData['MaxPostageBatch']) && !empty($methodData['MaxPostageBatch'])) ? $methodData['MaxPostageBatch'] : null;
+            $update_data['CustomsSigner'] = (isset($methodData['CustomsSigner']) && !empty($methodData['CustomsSigner'])) ? $methodData['CustomsSigner'] : null;
+            $update_data['DefaultWeight'] = (isset($methodData['DefaultWeight']) && !empty($methodData['DefaultWeight'])) ? $methodData['DefaultWeight'] : null;
             $update_data['FlatRatePriority'] = (isset($methodData['FlatRatePriority'])) ? $methodData['FlatRatePriority'] : 0;
             $update_data['GlobalWeight'] = (isset($methodData['GlobalWeight'])) ? $methodData['GlobalWeight'] : 0;
 
-
-
             $is_data = $this->postageinsertOrUpdate($update_data);
-
-
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
                     'alert' => 'Postage settings updated successfully..!',
                     'alert_type' => 'success'
                 ]);
                 $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
-
-
-
                 return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
             }
         } catch (Exception $e) {
-
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = $e->getMessage();
@@ -454,8 +446,6 @@ class OrderController
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            /*$user_details = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
-            return $this->view->buildResponse('order/postage_setting', ['all_settings' => $user_details]);*/
 
             $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
             return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
@@ -630,27 +620,35 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            $update_data['ConfirmEmail'] = $methodData['ConfirmEmail'];
-            $update_data['CancelEmail'] = $methodData['CancelEmail'];
-            $update_data['DeferEmail'] = $methodData['DeferEmail'];
-            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : null;
-            $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
-            /* for($i=1; $i <= $nooforderfoldercount;$i++)
-            {
-                $work1 = $methodData['NoAdditionalOrder'.$i];
-                //echo 'sadasda';
-                //print_r($work1); exit;
-            }
-            return $i;*/
-            /*          $sql = array;
-$yourArrFromCsv = explode(",", $nooforderfoldercount);
-//then insert to db
-foreach( $yourArrFromCsv as $row ) {
-    $sql[] = '('.$compProdId.', '.$row.')';
-}
-mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sql));*/
-
-
+            $update_data['ConfirmEmail'] = (isset($methodData['ConfirmEmail']) && !empty($methodData['ConfirmEmail'])) ? $methodData['ConfirmEmail'] : null;
+            $update_data['CancelEmail'] = (isset($methodData['CancelEmail']) && !empty($methodData['CancelEmail'])) ? $methodData['CancelEmail'] : null;
+            $update_data['DeferEmail'] = (isset($methodData['DeferEmail']) && !empty($methodData['DeferEmail'])) ? $methodData['DeferEmail'] : null;
+            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : 0;
+            $update_data['NoAdditionalOrder'] = json_encode([
+                'AdditionalOrder' => (isset($methodData['NoAdditionalOrder']) && !empty($methodData['NoAdditionalOrder'])) ? $methodData['NoAdditionalOrder'] : null,
+                'AdditionalOrderData' => [
+                    'work1' => (isset($methodData['NoAdditionalOrder1']) && !empty($methodData['NoAdditionalOrder1'])) ? $methodData['NoAdditionalOrder1'] : null,
+                    'work2' => (isset($methodData['NoAdditionalOrder2']) && !empty($methodData['NoAdditionalOrder2'])) ? $methodData['NoAdditionalOrder2'] : null,
+                    'work3' => (isset($methodData['NoAdditionalOrder3']) && !empty($methodData['NoAdditionalOrder3'])) ? $methodData['NoAdditionalOrder3'] : null,
+                    'work4' => (isset($methodData['NoAdditionalOrder4']) && !empty($methodData['NoAdditionalOrder4'])) ? $methodData['NoAdditionalOrder4'] : null,
+                    'work5' => (isset($methodData['NoAdditionalOrder5']) && !empty($methodData['NoAdditionalOrder5'])) ? $methodData['NoAdditionalOrder5'] : null,
+                    'work6' => (isset($methodData['NoAdditionalOrder6']) && !empty($methodData['NoAdditionalOrder6'])) ? $methodData['NoAdditionalOrder6'] : null,
+                    'work7' => (isset($methodData['NoAdditionalOrder7']) && !empty($methodData['NoAdditionalOrder7'])) ? $methodData['NoAdditionalOrder7'] : null,
+                    'work8' => (isset($methodData['NoAdditionalOrder8']) && !empty($methodData['NoAdditionalOrder8'])) ? $methodData['NoAdditionalOrder8'] : null,
+                    'work9' => (isset($methodData['NoAdditionalOrder9']) && !empty($methodData['NoAdditionalOrder9'])) ? $methodData['NoAdditionalOrder9'] : null,
+                    'work10' => (isset($methodData['NoAdditionalOrder10']) && !empty($methodData['NoAdditionalOrder10'])) ? $methodData['NoAdditionalOrder10'] : null,
+                    'work11' => (isset($methodData['NoAdditionalOrder11']) && !empty($methodData['NoAdditionalOrder11'])) ? $methodData['NoAdditionalOrder11'] : null,
+                    'work12' => (isset($methodData['NoAdditionalOrder12']) && !empty($methodData['NoAdditionalOrder12'])) ? $methodData['NoAdditionalOrder12'] : null,
+                    'work13' => (isset($methodData['NoAdditionalOrder13']) && !empty($methodData['NoAdditionalOrder13'])) ? $methodData['NoAdditionalOrder13'] : null,
+                    'work14' => (isset($methodData['NoAdditionalOrder14']) && !empty($methodData['NoAdditionalOrder14'])) ? $methodData['NoAdditionalOrder14'] : null,
+                    'work15' => (isset($methodData['NoAdditionalOrder15']) && !empty($methodData['NoAdditionalOrder15'])) ? $methodData['NoAdditionalOrder15'] : null,
+                    'work16' => (isset($methodData['NoAdditionalOrder16']) && !empty($methodData['NoAdditionalOrder16'])) ? $methodData['NoAdditionalOrder16'] : null,
+                    'work17' => (isset($methodData['NoAdditionalOrder17']) && !empty($methodData['NoAdditionalOrder17'])) ? $methodData['NoAdditionalOrder17'] : null,
+                    'work18' => (isset($methodData['NoAdditionalOrder18']) && !empty($methodData['NoAdditionalOrder18'])) ? $methodData['NoAdditionalOrder18'] : null,
+                    'work19' => (isset($methodData['NoAdditionalOrder19']) && !empty($methodData['NoAdditionalOrder19'])) ? $methodData['NoAdditionalOrder19'] : null,
+                    'work20' => (isset($methodData['NoAdditionalOrder20']) && !empty($methodData['NoAdditionalOrder20'])) ? $methodData['NoAdditionalOrder20'] : null
+                ],
+            ]);
 
             $is_data = $this->orderinsertOrUpdate($update_data);
 
@@ -769,7 +767,7 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
                 Config::get('company_name'),
                 _('Order Confirmation'),
                 $message,
-                ['OrderId' => $form['MarketPlaceOrder'], 'Carrier' => $form['CarrierOrder']]
+                ['OrderId' => $form['MarketPlaceOrder'], 'Carrier' => $form['CarrierOrder'], 'BillingName' => $form['BillingName'], 'Tracking' => $form['Tracking']]
             );
             // Email End
             if (isset($all_order) && !empty($all_order)) {
@@ -871,7 +869,7 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
 
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:I:s');
         return $form_data;
     }
 
