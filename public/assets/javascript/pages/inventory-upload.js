@@ -41,7 +41,6 @@ $(document).ready(function () {
   var myDropzone = new Dropzone("#dropzone_request", {
     url: "/inventory/importupload",
     success: function (file, response) {
-
       var parse_obj = JSON.parse(response);
       $("#ajaxMsg").empty();
       if (parse_obj.status) {

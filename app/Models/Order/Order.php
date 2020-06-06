@@ -83,6 +83,20 @@ LEFT JOIN marketplace
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function confirmation_file()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `confirmation_file` ORDER BY `ID` DESC');
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllConfirmationFiles()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `confirmation_file` ORDER BY `ID` DESC');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
@@ -92,9 +106,8 @@ LEFT JOIN marketplace
     */
     public function dateRangeSearchByOrderData($formD, $ToD)
     {
-        $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "'.$formD.'" And "'.$ToD.'"');
+        $stmt = $this->db->prepare('SELECT * FROM orderinventory WHERE Created between "' . $formD . '" And "' . $ToD . '"');
         $stmt->execute(['Created' => $formD, 'Created' => $ToD]);
-       
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -571,5 +584,34 @@ LEFT JOIN marketplace
         $stm = $this->db->prepare($sql);
         $stm->execute($ids);
         return $stm->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /*
+     * addStore - add a new store for member
+     *
+     * @param  $form  - Array of form fields, name match Database Fields
+     *                  Form Field Names MUST MATCH Database Column Names
+     * @return boolean
+    */
+    public function addConfirmFileHandle($form)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($form as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO confirmation_file (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
     }
 }

@@ -192,7 +192,7 @@ class OrderController
     */
     public function loadConfirmationFile()
     {
-        $all_order = (new Order($this->db))->getAllBelongsTo();
+        $all_order = (new Order($this->db))->getAllConfirmationFiles();
         return $this->view->buildResponse('order/confirmation_file', ['all_order' => $all_order]);
     }
 
@@ -1730,5 +1730,133 @@ class OrderController
                 die(json_encode(['status' => true, 'filename' => '/order.csv']));
             }
         }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files upload via dropzone
+     @task_desc :: confiramtion text file upload read text file and update the orderinventory table
+     @params    :: File with txt extention
+    */
+    public function confirmFilesUpload(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
+        try {
+
+            /* File upload validation ends */
+            if (isset($_FILES['file']['error']) && $_FILES['file']['error'] > 0) {
+                throw new Exception('Please Upload Inventory file...!', 301);
+            }
+
+            $allowed_extentions = ['txt'];
+            $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            if (!isset($ext, $allowed_extentions) && !in_array($ext, $allowed_extentions)) {
+                throw new Exception('File type ' . $ext . ' is not allowed...! File types allowed are ' . implode(', ', $allowed_extentions), 1);
+            }
+
+            $file = fopen($_FILES['file']['tmp_name'], "r");
+            $uiee_arr = array();
+            while (!feof($file)) {
+                $uiee_arr[] = fgets($file);
+            }
+
+            $order_arr = [];
+            $set_order_arr = [];
+            if (isset($uiee_arr) && !empty($uiee_arr)) {
+                foreach ($uiee_arr as $key_data => $val_data) {
+                    if ($key_data == 0)
+                        continue;
+
+                    if (!empty($val_data)) {
+                        $temp_order = explode(" ", $val_data);
+                        // $order_arr[] = [
+                        //     'order_id' => (isset($temp_order[0]) && !empty($temp_order[0])) ? $temp_order[0] : "",
+                        //     'status' => (isset($temp_order[1]) && !empty($temp_order[1])) ? $temp_order[1] : "",
+                        //     'tracking' => (isset($temp_order[2]) && !empty($temp_order[2])) ? $temp_order[2] : "",
+                        //     'carrier' => (isset($temp_order[3]) && !empty($temp_order[3])) ? $temp_order[3] : ""
+                        // ];
+
+                        $order_arr['OrderId'] = (isset($temp_order[0]) && !empty($temp_order[0])) ? $temp_order[0] : "";
+                        $order_arr['Status'] = (isset($temp_order[1]) && !empty($temp_order[1])) ? $temp_order[1] : "";
+                        $order_arr['IsConfirmFiles'] = 1;
+                        if (isset($temp_order[2]) && !empty($temp_order[2])) {
+                            $order_arr['Tracking'] = (isset($temp_order[2]) && !empty($temp_order[2])) ? $temp_order[2] : "";
+                        } else {
+                            unset($order_arr['Tracking']);
+                        }
+
+                        if (isset($temp_order[3]) && !empty($temp_order[3])) {
+                            $order_arr['Carrier'] = (isset($temp_order[3]) && !empty($temp_order[3])) ? $temp_order[3] : "";
+                        } else {
+                            unset($order_arr['Carrier']);
+                        }
+                        $set_order_arr[] = $order_arr;
+                    }
+                } // Loops Ends
+            }
+
+            $is_update = $this->insertOrUpdateConfirmFiles($set_order_arr);
+            $file_details = (new Order($this->db))->confirmation_file();
+            $counter = (isset($file_details) && !empty($file_details)) ? $file_details['FileId'] + 1 : 1;
+
+            $file_name['FileName'] = 'Trackz confirm ' . $counter . '.txt';
+            $file_name['UploadDate'] = date('Y-m-d H:i:s');
+            $file_name['Status'] = 1;
+            $file_name['FileId'] = $counter;
+
+            $file_details = (new Order($this->db))->addConfirmFileHandle($file_name);
+            if (isset($file_details) && !empty($file_details)) {
+                $this->view->flash([
+                    'alert' => 'Order are updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $res['status'] = true;
+                $res['data'] = [];
+                $res['message'] = 'Order are updated successfully..!';
+                die(json_encode($res));
+            } else {
+                throw new Exception("Order are not updated...!", 301);
+            }
+
+            fclose($file);
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null]));
+        }
+    }
+
+    /*
+    * insertOrUpdateConfirmFiles - find order update or insert
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function insertOrUpdateConfirmFiles($data)
+    {
+        $result = false;
+        foreach ($data as $key => $value) {
+            $user_details = (new Order($this->db))->findByOrderID($value['OrderId'], Session::get('auth_user_id'));
+            if (isset($user_details) && !empty($user_details)) { // update 
+                // If not updated than only  update records to avoid duplication
+                if (isset($user_details['IsConfirmFiles']) && $user_details['IsConfirmFiles'] == 0) {
+                    $data['Updated'] = date('Y-m-d H:i:s');
+                    $result = (new Order($this->db))->editOrder($user_details['Id'], $value);
+                }
+            }
+        } // Loops Ends        
+        return $result;
     }
 }

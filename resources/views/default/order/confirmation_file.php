@@ -44,7 +44,7 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                     <h6 class="card-header"> <?= _('Confirmation Files') ?></h6><!-- .card-body -->
                     <div class="card-body">
                         <div id="card-filebrowse">
-                            <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/importupload" method="POST" enctype="multipart/form-data">
+                            <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/confirmation_files" method="POST" enctype="multipart/form-data">
 
                             </form>
                             <br />
@@ -69,6 +69,17 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php
+
+                                    foreach ($all_order as $order) : ?>
+                                        <tr>
+                                            <td><?php echo $order['OrderId']; ?></td>
+                                            <td><?php echo $order['FileName']; ?></td>
+                                            <td><?php echo $order['UploadDate']; ?></td>
+                                            <td><?php echo (isset($order['Status']) && $order['Status'] = 1) ? 'Done' : 'Fail'; ?></td>
+                                            <td> <button type='button' class='btn btn-primary' id='test_btn' name='test_btn'>Download</button></td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         <?php endif; ?>
@@ -85,7 +96,7 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/javascript/pages/order.js"></script>
+<script src="/assets/javascript/pages/confirmationfiles.js"></script>
 <?= $this->stop() ?>
 
 <?php $this->start('page_js') ?>

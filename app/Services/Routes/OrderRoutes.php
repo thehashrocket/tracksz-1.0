@@ -44,7 +44,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->get('/label-settings', Order\OrderController::class . '::loadLabelSetting');
                 $route->post('/add_update_label_setting', Order\OrderController::class . '::labelAddUpdateSettings');
 
-                 $route->post('/export_order_list', Order\OrderController::class . '::export_Orderlist');
+                $route->post('/export_order_list', Order\OrderController::class . '::export_Orderlist');
 
                 $route->get('/order-settings', Order\OrderController::class . '::orderSettingsBrowse');
                 $route->post('/order_update_settings', Order\OrderController::class . '::orderUpdateSettings');
@@ -62,6 +62,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/pdf_mailing', Order\OrderController::class . '::pdfGenerateMailingLoad');
                 $route->post('/pdf_packing', Order\OrderController::class . '::pdfGeneratePackingLoad');
                 $route->post('/pdf_pick', Order\OrderController::class . '::pdfGeneratePickLoad');
+                $route->post('/confirmation_files', Order\OrderController::class . '::confirmFilesUpload');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));
