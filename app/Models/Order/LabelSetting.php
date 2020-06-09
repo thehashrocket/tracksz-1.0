@@ -72,8 +72,10 @@ class LabelSetting
         $query .= 'WHERE UserId = :UserId ';
         $stmt = $this->db->prepare($query);
         if (!$stmt->execute($form)) {
+          
             return 0;
         }
+        
         $stmt = null;
         return $form['UserId'];
     }

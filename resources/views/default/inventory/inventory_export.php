@@ -29,6 +29,7 @@ $description_meta = 'Inventory Export for your store\'s product listings at Trac
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <!-- title -->
+               
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>

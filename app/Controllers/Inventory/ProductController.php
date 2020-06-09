@@ -7,6 +7,7 @@ namespace App\Controllers\Inventory;
 use App\Library\Views;
 use App\Models\Inventory\Category;
 use App\Models\Product\Product;
+use App\Models\Inventory\Inventory;
 use App\Models\Account\Store;
 use Delight\Cookie\Session;
 use Laminas\Diactoros\ServerRequest;
@@ -249,10 +250,53 @@ class ProductController
     */
     public function browse()
     {
-        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        $prod_obj = new Product($this->db);
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);$prod_obj = (new Product($this->db));
+        $getProdcondition = $prod_obj->getProdconditionData();
+        
         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data,'getProdcondition' => $getProdcondition]);
+    }
+
+    /*
+    * searchProduct - Filter Product
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function searchInventoryFilter(ServerRequest $request)
+    {
+
+       try {
+
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+           $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
+          // print_r($result); die;
+            if (isset($result) && !empty($result)) {
+                $this->view->flash([
+                    'alert' => 'Inventory result get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                return $this->view->buildResponse('product/browse', ['all_product' => $result]);
+            } else {
+                throw new Exception("Search result not found...!", 301);
+            }
+        } catch (Exception $e) {
+           // echo 'asdsadasd';exit;
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+
+            $this->view->flash($validated);
+            return $this->view->buildResponse('product/browse', []);
+        }
     }
 
     /*
@@ -296,8 +340,7 @@ class ProductController
     */
     public function editProduct(ServerRequest $request, $Id = [])
     {
-        // $form = (new Product($this->db))->findById($Id['Id']);        
-        $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
+       $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
         $cat_obj = new Category($this->db);
         $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
@@ -463,6 +506,7 @@ class ProductController
             }
 
             $update_data = $this->PrepareUpdateData($methodData);
+            $update_data['Updated'] = date('Y-m-d H:i:s');
             $update_data['Image'] = $prod_img;
             $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
             if (isset($is_updated) && !empty($is_updated)) {
@@ -683,6 +727,7 @@ class ProductController
         $export_type = $form['export_formate'];
         $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
 
+        
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'Id');
@@ -708,6 +753,7 @@ class ProductController
 
         $rows = 2;
         foreach ($result_data as $prodata) {
+
             $sheet->setCellValue('A' . $rows, $prodata['Id']);
             $sheet->setCellValue('B' . $rows, $prodata['Name']);
             $sheet->setCellValue('C' . $rows, $prodata['Notes']);

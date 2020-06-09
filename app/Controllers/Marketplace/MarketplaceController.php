@@ -48,14 +48,14 @@ class MarketplaceController
     {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-
-        if (is_array($form) && $form['MarketName'] == 'Select Marketplace...') {
+     
+        if(is_array($form) && $form['MarketName'] == 'Select Marketplace...'){
             $form['MarketName'] = '';
         }
 
         $validate = new ValidateSanitize();
         $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
-
+      
         $validate->validation_rules(array(
             'MarketName'    => 'required'
         ));
@@ -77,9 +77,10 @@ class MarketplaceController
     {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-
+     
         $validate = new ValidateSanitize();
         $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
+      
         $validate->validation_rules(array(
             'EmailAddress'    => 'required|valid_email',
             'MarketName'    => 'required',
@@ -107,7 +108,7 @@ class MarketplaceController
         $validate->filter_rules(array(
             'EmailAddress'    => 'trim|sanitize_email',
         ));
-
+        
         $validated = $validate->run($form);
         // use validated as it is filtered and validated        
         if ($validated === false) {
@@ -117,6 +118,7 @@ class MarketplaceController
             $market_price = Config::get('market_price');
             return $this->view->buildResponse('marketplace/add_step_second', ['form' => $form, 'market_price' => $market_price]);
         }
+      
         $form_insert_data = array(
             'EmailAddress' => (isset($form['EmailAddress']) && !empty($form['EmailAddress'])) ? $form['EmailAddress'] : null,
             'MarketName' => (isset($form['MarketName']) && !empty($form['MarketName'])) ? $form['MarketName'] : null,
@@ -152,6 +154,7 @@ class MarketplaceController
             $this->view->flash($validated);
             return $this->view->redirect('/marketplace/dashboard/step2');
         }
+        
         $this->view->flash($validated);
         return $this->view->redirect('/marketplace/dashboard/step2');
     }

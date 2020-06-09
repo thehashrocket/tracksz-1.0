@@ -31,6 +31,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                 <!-- title -->
                 <h1 class="page-title"> <?= _('Label Settings') ?> </h1>
                 <p class="text-muted"> <?= _('Configure default settings for your Active Store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+             
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
@@ -51,23 +52,23 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('PDF Options') ?></h5>
-
+                                           
                                             <hr>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-
+                                            
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="SkipPDFView" id="SkipPDFView" data-parsley-required-message="<?= _('Enter SkipPDFView') ?>" data-parsley-group="fieldset01" value="<?php echo (isset($all_order['SkipPDFView']) && $all_order['SkipPDFView'] == 1) ? 1 : 0; ?>" <?php echo (isset($all_order['SkipPDFView']) && $all_order['SkipPDFView'] == 1) ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="SkipPDFView">
                                                         <?= _('Skip PDF View/Download page and perform the default action instead') ?>
                                                     </label>
-
-                                                </div>
-
-
+                                                
+                                            </div>
+                                                
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -88,7 +89,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-6">
-
+                                            
                                             <div class="form-group">
                                                 <label for="Sort Orders By (Mailing Labels and Packing Slips)"><?= _(' Sort Orders By (Mailing Labels and Packing Slips)') ?></label>
                                                 <select name="SortOrders" id="SortOrders" class="browser-default custom-select order_carrier_select">
@@ -128,7 +129,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
+                            
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -146,21 +147,20 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('Pick List & Barcode') ?></h5>
                                             <hr>
-
+                                           
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm">
                                             <!-- form starts -->
-
+                                            
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="SplitOrders" id="SplitOrders" data-parsley-required-message="<?= _('Enter SplitOrders') ?>" data-parsley-group="fieldset01" value="<?php echo (isset($all_order['SplitOrders']) && $all_order['SplitOrders'] == 1) ? 1 : 0; ?>" <?php echo (isset($all_order['SplitOrders']) && $all_order['SplitOrders'] == 1) ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="SplitOrders">
                                                         <?= _('Split orders') ?>
                                                     </label>
-
-                                                </div>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <div class="form-check">
@@ -168,8 +168,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="AddBarcode">
                                                         <?= _('Add barcode to pick list') ?>
                                                     </label>
-
-                                                </div>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <label for="Barcode Type"><?= _('Barcode Type') ?></label>
@@ -208,9 +207,14 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     display: none;
                                                     text-align: center;
                                                 }
-
-                                                .myDiv img {
-                                                    margin: 0 auto;
+                                                .myDiv span{
+                                                text-align: center;
+                                                background: #ffdede;
+                                                padding: 6px 10px;
+                                                display: block;
+                                                width: 100px;
+                                                border: 1px solid #d47c7c;
+                                                margin: 8px auto;
                                                 }
 
                                                 .myDiv span {
@@ -259,7 +263,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
+                            
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -277,12 +281,12 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('Paking Slips') ?></h5>
                                             <hr>
-
+                                           
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-
+                                            
                                             <div class="form-group">
                                                 <label for="Default Template"><?= _('Default Template') ?></label>
                                                 <select name="DefaultTemplate" id="DefaultTemplate" class="browser-default custom-select order_carrier_select">
@@ -435,6 +439,119 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     </div>
                                                 </div>
                                             </div>
+                                                
+                                              </div>
+                                              <div class="form-group">
+                                               
+                                                    <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="IncludeItemBarcodes" id="IncludeItemBarcodes" data-parsley-required-message="<?=_('Enter IncludeItemBarcodes')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['IncludeItemBarcodes']) && $all_order['IncludeItemBarcodes'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="IncludeItemBarcodes">
+                                                        <?=_('Include item barcodes')?>
+                                                    </label>
+                                                
+                                            </div>
+                                               
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="CentreHeaderText" id="CentreHeaderText" data-parsley-required-message="<?=_('Enter CentreHeaderText')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['CentreHeaderText']) && $all_order['CentreHeaderText'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="CentreHeaderText">
+                                                        <?=_('Centre Header Text')?>
+                                                    </label>
+                                                
+                                            </div>
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="HideEmail" id="HideEmail" data-parsley-required-message="<?=_('Enter HideEmail')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['HideEmail']) && $all_order['HideEmail'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="HideEmail">
+                                                        <?=_('Hide e-mail address')?>
+                                                    </label>
+                                                
+                                            </div>
+                                                
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="HidePhone" id="HidePhone" data-parsley-required-message="<?=_('Enter HidePhone')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['HidePhone']) && $all_order['HidePhone'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="HidePhone">
+                                                        <?=_('Hide phone number')?>
+                                                    </label>
+                                                
+                                            </div>
+                                               
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="IncludeGSTExAus1" id="IncludeGSTExAus1" data-parsley-required-message="<?=_('Enter IncludeGSTExAus1')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['IncludeGSTExAus1']) && $all_order['IncludeGSTExAus1'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="IncludeGSTExAus1">
+                                                        <?=_('Include GST Exemptions - Australia')?>
+                                                    </label>
+                                                
+                                            </div>
+                                               
+                                                
+                                            </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                  <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="CentreFooter" id="CentreFooter" data-parsley-required-message="<?=_('Enter CentreFooter')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['CentreFooter']) && $all_order['CentreFooter'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="CentreFooter">
+                                                        <?=_('Centre footer text')?>
+                                                    </label>
+                                                
+                                            </div>
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="ShowItemPrice" id="ShowItemPrice" data-parsley-required-message="<?=_('Enter ShowItemPrice')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['ShowItemPrice']) && $all_order['ShowItemPrice'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="ShowItemPrice">
+                                                        <?=_('Show item price')?>
+                                                    </label>
+                                                
+                                            </div>
+                                               
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="IncludeMarketplaceOrder" id="IncludeMarketplaceOrder" data-parsley-required-message="<?=_('Enter IncludeMarketplaceOrder')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['IncludeMarketplaceOrder']) && $all_order['IncludeMarketplaceOrder'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="IncludeMarketplaceOrder">
+                                                        <?=_('Include marketplace order barcode (Full template only)')?>
+                                                    </label>
+                                                
+                                            </div>
+                                                
+                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="IncludePageNumbers" id="IncludePageNumbers" data-parsley-required-message="<?=_('Enter IncludePageNumbers')?>" data-parsley-group="fieldset01" 
+                                                <?php echo (isset($all_order['IncludePageNumbers']) && $all_order['IncludePageNumbers'] == 1) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="IncludePageNumbers">
+                                                        <?=_('Include page numbers')?>
+                                                    </label>
+                                                
+                                            </div>
+                                                
+                                                
+                                            </div>
+                                            </div>
+                                        </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-6">
 
@@ -453,7 +570,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
+                            
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -519,9 +636,9 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="HideLabelBoundaries">
                                                         <?= _('Hide label boundaries') ?>
                                                     </label>
-
-                                                </div>
-
+                                                
+                                            </div>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <div class="form-check">
@@ -529,10 +646,10 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="IncludeGSTExAus2">
                                                         <?= _('Include GST Exemptions - Australia') ?>
                                                     </label>
-
-                                                </div>
-
-
+                                                
+                                            </div>
+                                               
+                                                
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
@@ -572,9 +689,10 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
-
+                                            
                                             <div class="form-group">
                                                 <label for=" Page margins"><?= _(' Page margins') ?></label>
                                                 <div class="input-group mb-3">
@@ -611,10 +729,11 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
+                            
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -638,5 +757,30 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
 <?= $this->stop() ?>
 
 <?php $this->start('footer_extras') ?>
+<script>
+$(document).ready(function(){
+    $('#BarcodeType').on('change', function(){
+        var demovalue = $(this).val(); 
+       
+        $("div.myDiv").hide();
+        $("#"+demovalue).show();
+        // $("#"+demovalue).css("display", "block");
+       // var div = document.querySelector("div."+demovalue);
+        //div.style.display = "block";
+        //$("div.myDiv").hide();"#show"+demovalue
+        //$("#"+demovalue).show();
+    });
+});
+/*$(document).ready(function(){
+        $('input[type="checkbox"]').click(function(){
+            if($(this).is(":checked")){
+                alert($(this).val());
+            }
+            else if($(this).is(":not(:checked)")){
+                alert($(this).val());
+            }
+        });
+    });*/
+</script>
 <script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
 <?= $this->stop() ?>

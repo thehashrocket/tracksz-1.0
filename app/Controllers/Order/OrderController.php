@@ -239,6 +239,7 @@ class OrderController
                 $order_data = (new Order($this->db))->allorderSearchByOrderData();
             }
 
+            
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'MarketPlaceId');
@@ -272,8 +273,10 @@ class OrderController
             $sheet->setCellValue('AC1', 'BillingState');
             $sheet->setCellValue('AD1', 'BillingZipCode');
             $sheet->setCellValue('AE1', 'BillingCountry');
+            
             $rows = 2;
             foreach ($order_data as $orderd) {
+                
                 $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
                 $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
                 $sheet->setCellValue('C' . $rows, $orderd['Status']);
@@ -305,6 +308,7 @@ class OrderController
                 $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
                 $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
                 $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
+                
                 $rows++;
             }
 
@@ -315,6 +319,7 @@ class OrderController
                 ]);
 
                 if ($export_type == 'xlsx') {
+                   
                     $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     header('Content-Disposition: attachment; filename="orders.xlsx"');
@@ -329,6 +334,7 @@ class OrderController
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
+               
             }
         } catch (Exception $e) {
 
@@ -346,6 +352,7 @@ class OrderController
             $this->view->flash($validated);
             return $this->view->redirect('/order/export-order');
         }
+            
     }
 
     /*
@@ -473,6 +480,7 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
+           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -494,6 +502,7 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
+           
 
             $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? $methodData['SkipPDFView'] : 0;
             $update_data['DefaultAction'] = (isset($methodData['DefaultAction']) && !empty($methodData['DefaultAction'])) ? $methodData['DefaultAction'] : null;
@@ -541,6 +550,7 @@ class OrderController
 
 
             $is_data = $this->labelinsertOrUpdate($update_data);
+            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -1187,10 +1197,11 @@ class OrderController
     {
         foreach ($status_data['ids'] as $key_data => $value) {
 
+
+
+
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
-
-
-            $mail_data = (new Order($this->db))->findById($value);
+        $mail_data = (new Order($this->db))->findById($value);
 
             $message['html']  = $this->view->make('emails/orderconfirm');
             $message['plain'] = $this->view->make('emails/plain/orderconfirm');

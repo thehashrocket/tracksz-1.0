@@ -76,6 +76,7 @@ $description_meta = 'Marketplace Listing for your Tracksz Store, a Multiple Mark
                                 </tbody>
                             </table>
                         <?php endif; ?>
+                        
                     </div><!-- card-body ends --> 
                 </div><!-- /.card card-fluid ends --> 
              </div><!-- /.page-section ends -->  

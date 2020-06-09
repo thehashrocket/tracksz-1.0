@@ -32,6 +32,11 @@ var ProfileSettings =
 
       this.init();
     }
+  }, {
+    key: "handleFileUploadAvatar",
+    value: function handleFileUploadAvatar() {
+      // Change this to the location of your server-side upload handler:
+      var url = '/ajax/member/avatar'; 
 
     _createClass(ProfileSettings, [
       {

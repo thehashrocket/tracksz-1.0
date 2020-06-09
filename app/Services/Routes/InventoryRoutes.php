@@ -51,6 +51,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
                 $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
+                $route->post('/filter_inventory', Inventory\InventoryController::class . '::searchInventoryFilter');
                 $route->get('/excel', Inventory\InventoryController::class . '::excel');
                 $route->post('/update_settings', Inventory\InventoryController::class . '::updateSettings');
             })->middleware($this->container->get('Csrf'))

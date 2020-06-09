@@ -91,6 +91,8 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                 </div>
                                             </div>
                                             <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
+                                            <a href="<?php echo \App\Library\Config::get('company_url') . '/inventory/queue'; ?>" class="btn btn-warning"><?= _('Queue Sample') ?> </a>
+
                                         </form> <!-- form ends -->
                                     </div>
                                 </div> <!-- col-sm Group Left Ends -->
