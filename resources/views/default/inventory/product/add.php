@@ -662,7 +662,7 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                     </div><!-- /.page-inner -->
                 </div><!-- handling time /.page -->
 
-            <!-- .page-section Additional Information starts -->
+                <!-- .page-section Additional Information starts -->
                 <div class="card-deck-xl">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">
@@ -730,7 +730,7 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
 
                     </div><!-- /.page-inner -->
                 </div><!-- Additional Information /.page -->
- </div><!-- /.wrapper -->
+            </div><!-- /.wrapper -->
             <?= $this->stop() ?>
 
             <?php $this->start('plugin_js') ?>

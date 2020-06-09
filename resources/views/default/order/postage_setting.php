@@ -31,7 +31,6 @@ $description_meta = 'Postage Settings for your store\'s product listings at Trac
                 <!-- title -->
                 <h1 class="page-title"> <?= _('Postage Settings') ?> </h1>
                 <p class="text-muted"> <?= _('Configure default settings for your Active Store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
-             
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>

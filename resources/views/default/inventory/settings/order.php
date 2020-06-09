@@ -25,7 +25,6 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
                             <li class="breadcrumb-item active">
                                 <?= ('Order Setting') ?>
                             </li>
-                            
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
@@ -63,14 +62,6 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
                                                     </label>
                                                 </div>
                                             </div>
-                                           <!--  <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="ProductActive" id="ProductActive" data-parsley-required-message="<?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>" data-parsley-group="fieldset01" value="">
-                                                    <label class="form-check-label" for="ProductActive">
-                                                        <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
-                                                    </label>
-                                           
-                                               </div>
-                                           </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>
                                                 <textarea class="form-control" id="ConfirmEmail" name="ConfirmEmail" rows="3" data-parsley-required-message="<?= _('Enter Confirm Email') ?>" placeholder="Enter Confirm Email" data-parsley-group="fieldset01" required><?php echo (isset($order_details['ConfirmEmail']) && !empty($order_details['ConfirmEmail'])) ? $order_details['ConfirmEmail'] : ''; ?></textarea>
@@ -135,9 +126,7 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
                                                 </div>
                                             </div>
                                         </div> <!-- col-sm -->
-                                         
                                         <div class="col-sm mt-3 pt-3">
-                                           
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container --><br>
@@ -168,27 +157,5 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
 
 
 
-<script>
-     $(document).ready(function() {
-$('#NoAdditionalOrder').change(function() {
-
-          var selectObj = $(this);
-          
-          var selectedOption = selectObj.find(":selected");
-          
-          var selectedValue = selectedOption.val();
-          
-    
-          var targetDiv = $("#addfolderinput");
-          
-          targetDiv.html("");
-          for(var i = 0; i < selectedValue; i++) {
-          var f = i+1;
-          
-            targetDiv.append($("<label>Work Folder #"+ f + " (work"+ f + ")</label><br><input type='text' class='form-control' id='NoAdditionalOrder"+f+"' name='NoAdditionalOrder"+f+"'><br>"));
-          }
-      }); 
-});
-</script>
 <script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
 <?php $this->stop() ?>

@@ -158,9 +158,6 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
 
 
                 <!--End search-->
-
-            
-           
                 <!-- .page-section starts -->
                 <div class="card card-fluid">
                     <!-- .card card-fluid starts -->
@@ -211,7 +208,6 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
 
                     </div><!-- card-body ends -->
                 </div><!-- /.card card-fluid ends -->
-            
             </div><!-- /.page-section ends -->
 
         </div><!-- /.page-inner -->
@@ -230,7 +226,4 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
 <?= $this->stop() ?>
 
 <?php $this->start('footer_extras') ?>
-
-
-
 <?= $this->stop() ?>

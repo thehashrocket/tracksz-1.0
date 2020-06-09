@@ -14,8 +14,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
             <!-- .page-title-bar -->
             <header class="page-title-bar">
 
-                
-<div class="d-flex flex-column flex-md-row">
+                <div class="d-flex flex-column flex-md-row">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
@@ -102,7 +101,6 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                     </label>
                                                 </div>
                                             </div>
-                    
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="ProdExpectedShip" id="ProdExpectedShip" data-parsley-required-message="<?= _('Expected Shipping') ?>" data-parsley-group="fieldset01" value="<?php echo ((isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1) || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 1 : 0; ?>" <?php echo (isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1 || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 'checked' : ''; ?>>
@@ -132,7 +130,6 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                 </div>
                                             </div>
                                             <?php
-                                        
                                             $img_path = '';
                                             $img_path = \App\Library\Config::get('company_url') . '/assets/images/product/' . $form['Image'];
                                             ?>
@@ -183,9 +180,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                     </div><!-- /.page-inner -->
                 </div><!-- /.page -->
 
-
-
-<!-- .page-section Non Catlog starts -->
+                <!-- .page-section Non Catlog starts -->
                 <div class="card-deck-xl none_catelog <?php echo (isset($form['IsCatalog']) && $form['IsCatalog'] == 0) ? '' : 'd-none'; ?>">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">
@@ -675,8 +670,8 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                     </div><!-- /.page-inner -->
                 </div><!-- handling time /.page -->
 
-             <!-- .page-section Additional Information starts -->
 
+                <!-- .page-section Additional Information starts -->
                 <div class="card-deck-xl">
                     <!-- .card-deck-xl starts -->
                     <div class="card card-fluid">

@@ -63,6 +63,8 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/pdf_packing', Order\OrderController::class . '::pdfGeneratePackingLoad');
                 $route->post('/pdf_pick', Order\OrderController::class . '::pdfGeneratePickLoad');
                 $route->post('/confirmation_files', Order\OrderController::class . '::confirmFilesUpload');
+                $route->get('/download/{Id:number}', Order\OrderController::class . '::confirmFilesDownload');
+                $route->get('/view/{Id:number}', Order\OrderController::class . '::confirmFilesView');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));

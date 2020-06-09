@@ -59,6 +59,19 @@ class OrderController
         ini_set('memory_limit', '-1');
         ini_set("pcre.backtrack_limit", "1000000");
     }
+
+    public function random_strings($length_of_string)
+    {
+        // String of all alphanumeric character 
+        $str_result = '0123456789abcdefghijklmnopqrstuvwxyz';
+        // Shufle the $str_result and returns substring 
+        // of specified length 
+        return substr(
+            str_shuffle($str_result),
+            0,
+            $length_of_string
+        );
+    }
     public function browse()
     {
         $all_order = (new Order($this->db))->getAllBelongsTo();
@@ -239,7 +252,6 @@ class OrderController
                 $order_data = (new Order($this->db))->allorderSearchByOrderData();
             }
 
-            
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'MarketPlaceId');
@@ -273,10 +285,8 @@ class OrderController
             $sheet->setCellValue('AC1', 'BillingState');
             $sheet->setCellValue('AD1', 'BillingZipCode');
             $sheet->setCellValue('AE1', 'BillingCountry');
-            
             $rows = 2;
             foreach ($order_data as $orderd) {
-                
                 $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
                 $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
                 $sheet->setCellValue('C' . $rows, $orderd['Status']);
@@ -308,7 +318,6 @@ class OrderController
                 $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
                 $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
                 $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
-                
                 $rows++;
             }
 
@@ -319,7 +328,6 @@ class OrderController
                 ]);
 
                 if ($export_type == 'xlsx') {
-                   
                     $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     header('Content-Disposition: attachment; filename="orders.xlsx"');
@@ -334,7 +342,6 @@ class OrderController
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
-               
             }
         } catch (Exception $e) {
 
@@ -352,7 +359,6 @@ class OrderController
             $this->view->flash($validated);
             return $this->view->redirect('/order/export-order');
         }
-            
     }
 
     /*
@@ -480,7 +486,6 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
-           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -502,7 +507,6 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-           
 
             $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? $methodData['SkipPDFView'] : 0;
             $update_data['DefaultAction'] = (isset($methodData['DefaultAction']) && !empty($methodData['DefaultAction'])) ? $methodData['DefaultAction'] : null;
@@ -550,7 +554,6 @@ class OrderController
 
 
             $is_data = $this->labelinsertOrUpdate($update_data);
-            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -610,7 +613,6 @@ class OrderController
     */
     public function orderSettingsBrowse()
     {
-
         $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
         return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
     }
@@ -624,7 +626,6 @@ class OrderController
     */
     public function orderUpdateSettings(ServerRequest $request)
     {
-
         try {
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
@@ -1197,11 +1198,10 @@ class OrderController
     {
         foreach ($status_data['ids'] as $key_data => $value) {
 
-
-
-
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
-        $mail_data = (new Order($this->db))->findById($value);
+
+
+            $mail_data = (new Order($this->db))->findById($value);
 
             $message['html']  = $this->view->make('emails/orderconfirm');
             $message['plain'] = $this->view->make('emails/plain/orderconfirm');
@@ -1781,13 +1781,6 @@ class OrderController
 
                     if (!empty($val_data)) {
                         $temp_order = explode(" ", $val_data);
-                        // $order_arr[] = [
-                        //     'order_id' => (isset($temp_order[0]) && !empty($temp_order[0])) ? $temp_order[0] : "",
-                        //     'status' => (isset($temp_order[1]) && !empty($temp_order[1])) ? $temp_order[1] : "",
-                        //     'tracking' => (isset($temp_order[2]) && !empty($temp_order[2])) ? $temp_order[2] : "",
-                        //     'carrier' => (isset($temp_order[3]) && !empty($temp_order[3])) ? $temp_order[3] : ""
-                        // ];
-
                         $order_arr['OrderId'] = (isset($temp_order[0]) && !empty($temp_order[0])) ? $temp_order[0] : "";
                         $order_arr['Status'] = (isset($temp_order[1]) && !empty($temp_order[1])) ? $temp_order[1] : "";
                         $order_arr['IsConfirmFiles'] = 1;
@@ -1808,16 +1801,18 @@ class OrderController
             }
 
             $is_update = $this->insertOrUpdateConfirmFiles($set_order_arr);
-            $file_details = (new Order($this->db))->confirmation_file();
+            $file_details = (new Order($this->db))->getAllConfirmationFiles();
             $counter = (isset($file_details) && !empty($file_details)) ? $file_details['FileId'] + 1 : 1;
 
-            $file_name['FileName'] = 'Trackz confirm ' . $counter . '.txt';
+            $file_name['FileName'] = 'Trackz Confirm ' . $counter . '.txt';
             $file_name['UploadDate'] = date('Y-m-d H:i:s');
-            $file_name['Status'] = 1;
+            $file_name['Status'] = (isset($is_update['status']) && $is_update['status'] == true) ? 1 : 0;
             $file_name['FileId'] = $counter;
+            $file_name['OrderId'] = date('Ymd') . 'trackz-' . $this->random_strings(6);
+            $file_name['AdditionalData'] = (isset($is_update['data']['addtional_info']) && !empty($is_update['data']['addtional_info'])) ? $is_update['data']['addtional_info'] : [];
 
             $file_details = (new Order($this->db))->addConfirmFileHandle($file_name);
-            if (isset($file_details) && !empty($file_details)) {
+            if (isset($is_update['status']) && $is_update['status']) {
                 $this->view->flash([
                     'alert' => 'Order are updated successfully..!',
                     'alert_type' => 'success'
@@ -1840,7 +1835,6 @@ class OrderController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
@@ -1857,17 +1851,157 @@ class OrderController
     */
     public function insertOrUpdateConfirmFiles($data)
     {
-        $result = false;
+        $is_update = false;
+        $addtional_info = [];
         foreach ($data as $key => $value) {
+            $addtional_info[] = $value;
             $user_details = (new Order($this->db))->findByOrderID($value['OrderId'], Session::get('auth_user_id'));
             if (isset($user_details) && !empty($user_details)) { // update 
                 // If not updated than only  update records to avoid duplication
                 if (isset($user_details['IsConfirmFiles']) && $user_details['IsConfirmFiles'] == 0) {
                     $data['Updated'] = date('Y-m-d H:i:s');
                     $result = (new Order($this->db))->editOrder($user_details['Id'], $value);
+                    $is_update = true;
                 }
             }
-        } // Loops Ends        
-        return $result;
+        } // Loops Ends  
+        if ($is_update == true) {
+            $resp['status'] = true;
+            $resp['message'] = 'Record found successfully...!';
+            $resp['data'] = ['addtional_info' => json_encode($addtional_info)];
+        } else {
+            $resp['status'] = false;
+            $resp['message'] = 'Record not found...!';
+            $resp['data'] = ['addtional_info' => json_encode($addtional_info)];
+        }
+        return $resp;
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files download
+     @task_desc :: confiramtion text file download write file
+     @params    :: File with txt extention
+    */
+    public function confirmFilesDownload($Id)
+    {
+        $Id = $Id->getattributes();
+        try {
+            if ((isset($Id) && is_array($Id)) && sizeof($Id) > 0) {
+                $fileData = (new Order($this->db))->findConfirmFileId($Id['Id']);
+                $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $AdditionalData = (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) ? json_decode($fileData['AdditionalData']) : null;
+
+                if (isset($fileData) && !empty($fileData)) {
+                    $fp = fopen(getcwd() . "/assets/" . $fileData['OrderId'] . ".txt", 'w');
+                    fwrite($fp, 'File ID: ' . $fileData['OrderId'] . "\n");
+                    fwrite($fp, "Summary: \n");
+                    fwrite($fp, 'Total Orders Processed:' . sizeof(json_decode($fileData['AdditionalData'])) . "\n");
+                    fwrite($fp, "Success Count: $success_count \n");
+                    fwrite($fp, "Error Count: $error_count \n");
+                    fwrite($fp, "\n");
+                    fwrite($fp, "Detailed Report: \n");
+                    if (isset($AdditionalData) && !empty($AdditionalData)) {
+                        foreach ($AdditionalData as $key_data => $val_data) {
+                            fwrite($fp, "[" . date("H:i:s", strtotime($fileData['UploadDate'])) . "]" . " set status of " . $val_data->OrderId . " to " . $val_data->Status . "\n");
+                        } // Loops Ends
+                    }
+                    fclose($fp);
+
+                    $validated['alert'] = 'Order file downloaded successfully..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+
+                    $res['status'] = true;
+                    $res['data'] = array();
+                    $res['message'] = 'Order file downloaded successfully..!';
+                    $res['filename'] = '/assets/' . $fileData['OrderId'] . ".txt";
+                    echo json_encode($res);
+                    exit;
+                } else {
+                    throw new Exception("No Orders found to write file", 1);
+                }
+            } else {
+                throw new Exception("Error Processing Request", 1);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null, 'filename' => 'null']));
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files view
+     @task_desc :: confiramtion text file download write file
+     @params    :: File with txt extention
+    */
+    public function confirmFilesView($Id)
+    {
+        $Id = $Id->getattributes();
+        try {
+            if ((isset($Id) && is_array($Id)) && sizeof($Id) > 0) {
+                $fileData = (new Order($this->db))->findConfirmFileId($Id['Id']);
+                $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $AdditionalData = (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) ? json_decode($fileData['AdditionalData']) : null;
+
+                if (isset($fileData) && !empty($fileData)) {
+                    $fp = fopen(getcwd() . "/assets/" . $fileData['OrderId'] . ".txt", 'w');
+                    fwrite($fp, 'File ID: ' . $fileData['OrderId'] . "\n");
+                    fwrite($fp, "Summary: \n");
+                    fwrite($fp, 'Total Orders Processed:' . sizeof(json_decode($fileData['AdditionalData'])) . "\n");
+                    fwrite($fp, "Success Count: $success_count \n");
+                    fwrite($fp, "Error Count: $error_count \n");
+                    fwrite($fp, "\n");
+                    fwrite($fp, "Detailed Report: \n");
+                    if (isset($AdditionalData) && !empty($AdditionalData)) {
+                        foreach ($AdditionalData as $key_data => $val_data) {
+                            fwrite($fp, "[" . date("H:i:s", strtotime($fileData['UploadDate'])) . "]" . " set status of " . $val_data->OrderId . " to " . $val_data->Status . "\n");
+                        } // Loops Ends
+                    }
+                    fclose($fp);
+
+                    $validated['alert'] = 'Order file downloaded successfully..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+
+                    $res['status'] = true;
+                    $res['data'] = array();
+                    $res['message'] = 'Order file downloaded successfully..!';
+                    $res['filename'] = '/assets/' . $fileData['OrderId'] . ".txt";
+                    echo json_encode($res);
+                    exit;
+                } else {
+                    throw new Exception("No Orders found to write file", 1);
+                }
+            } else {
+                throw new Exception("Error Processing Request", 1);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null, 'filename' => 'null']));
+        }
     }
 }

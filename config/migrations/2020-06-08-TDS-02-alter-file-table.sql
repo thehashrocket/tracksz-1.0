@@ -1,0 +1,1 @@
+ALTER TABLE `confirmation_file` ADD `AdditionalData` TEXT NULL DEFAULT NULL AFTER `Status`;

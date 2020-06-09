@@ -506,7 +506,6 @@ class ProductController
             }
 
             $update_data = $this->PrepareUpdateData($methodData);
-            $update_data['Updated'] = date('Y-m-d H:i:s');
             $update_data['Image'] = $prod_img;
             $is_updated = (new Product($this->db))->updateProdInventory($methodData['Id'], $update_data);
             if (isset($is_updated) && !empty($is_updated)) {
@@ -727,7 +726,6 @@ class ProductController
         $export_type = $form['export_formate'];
         $result_data = (new Product($this->db))->select_multiple_ids($form['ids']);
 
-        
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'Id');
@@ -753,7 +751,6 @@ class ProductController
 
         $rows = 2;
         foreach ($result_data as $prodata) {
-
             $sheet->setCellValue('A' . $rows, $prodata['Id']);
             $sheet->setCellValue('B' . $rows, $prodata['Name']);
             $sheet->setCellValue('C' . $rows, $prodata['Notes']);

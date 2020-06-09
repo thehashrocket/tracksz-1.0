@@ -55,10 +55,8 @@ use Delight\Cookie\Cookie;
                     </div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
-            
             <!-- .page-section -->
             <div class="page-section">
-            
             </div><!-- /.page-section -->
         </div><!-- /.page-inner -->
     </div><!-- /.page -->

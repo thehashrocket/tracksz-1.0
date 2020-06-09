@@ -37,9 +37,3 @@ $(document).ready(function () {
     format: "yyyy-mm-dd",
   });
 });
-
- $(document).ready(function() {
-             $('.input-daterange').datepicker({
-                 format: 'yyyy-mm-dd',
-              });
-        });
