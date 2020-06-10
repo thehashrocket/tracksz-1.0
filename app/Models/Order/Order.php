@@ -572,6 +572,22 @@ LEFT JOIN marketplace
                 $query .=  $or . ' orderinventory.`Status` LIKE "%' . $Status['status'] . '%" ';
                 $is_or = true;
             }
+            if($Status['sortorder'] =='all')
+            {
+                if (!empty($Status['sortorder']) && !empty($Status['status'])) {
+               $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+                $query .=  $or . ' orderinventory.`Status` LIKE "%' . $Status['status'] . '%" ORDER BY orderinventory.Id asc';
+                $is_or = true;
+                }
+            }
+            else
+            {
+                if (!empty($Status['sortorder']) && !empty($Status['status'])) {
+               $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+                $query .=  $or . ' orderinventory.`Status` LIKE "%' . $Status['status'] . '%" ORDER BY orderinventory.Id DESC';
+                $is_or = true;
+                 }
+            }
         }
 
         $stmt = $this->db->query($query);
