@@ -1301,7 +1301,7 @@ class OrderController
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
             // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
-            $pdf_data = (new Order($this->db))->allorderSearchByOrderData();
+            $pdf_data = (new Order($this->db))->allorderSearchByOrderData($form);
             $mailing_html = $this->loadMailinghtml($pdf_data);
 
             $mpdf = new Mpdf();

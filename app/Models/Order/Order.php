@@ -121,11 +121,87 @@ LEFT JOIN marketplace
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function allorderSearchByOrderData()
-    {
-        $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
-        $stmt->execute();
+    // public function allorderSearchByOrderData()
+    // {
+    //     $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
+    //     $stmt->execute();
 
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+    public function allorderSearchByOrderData($filter_data)
+    {
+       $query = 'SELECT orderinventory.Id AS `OrderTableId`,
+        orderinventory.OrderId AS `OrderId`,
+        marketplace.MarketName AS `MarketplaceName`,
+        orderinventory.Created AS `OrderDate`,
+        orderinventory.ShippingMethod AS `ShippingMethod`,
+        -- shipping
+        orderinventory.ShippingName AS `ShippingName`,
+        orderinventory.ShippingAddress1 AS `ShippingAddress1`,
+        orderinventory.ShippingAddress2 AS `ShippingAddress2`,
+        orderinventory.ShippingAddress3 AS `ShippingAddress3`,
+        orderinventory.ShippingCity AS `ShippingCity`,
+        orderinventory.ShippingState AS `ShippingState`,
+        orderinventory.ShippingZipCode AS `ShippingZipCode`,
+        orderinventory.ShippingCountry AS `ShippingCountry`,
+        orderinventory.ShippingPhone AS `ShippingPhone`,
+        orderinventory.ShippingMethod AS `ShippingMethod`,
+        -- billing
+        orderinventory.BillingName AS `BillingName`,
+        orderinventory.BillingAddress1 AS `BillingAddress1`,
+        orderinventory.BillingAddress2 AS `BillingAddress2`,
+        orderinventory.BillingAddress3 AS `BillingAddress3`,
+        orderinventory.BillingCity AS `BillingCity`,
+        orderinventory.BillingState AS `BillingState`,
+        orderinventory.BillingZipCode AS `BillingZipCode`,
+        orderinventory.BillingCountry AS `BillingCountry`,
+        orderinventory.BillingPhone AS `BillingPhone`,
+        -- billing
+        product.Id AS `ProductTableId`,
+        product.Qty AS `ProductQty`,
+        product.ProdId AS `ProductISBN`,
+        product.Name AS `ProductName`,
+        product.Notes AS `ProductDescription`,
+        product.ProdCondition AS `ProductCondition`,
+        product.SKU AS `ProductSKU`,
+        orderinventory.BuyerNote AS `ProductBuyerNote`,
+        orderinventory.Id AS `MarketplaceId`
+        
+FROM orderinventory
+LEFT JOIN marketplace
+   ON marketplace.Id = orderinventory.MarketPlaceId
+   LEFT JOIN product
+   ON product.Id = orderinventory.StoreProductId';
+            if($filter_data['status'] =='order')
+            {
+                $query .=' ORDER BY orderinventory.Id DESC';
+            }
+            if($filter_data['status'] =='zipcode')
+            {
+                $query .=' ORDER BY orderinventory.ShippingZipCode DESC';
+            }
+            if($filter_data['status'] =='location/sku')
+            {
+                $query .=' ORDER BY product.SKU DESC';
+            }
+            if($filter_data['status'] =='country/zip')
+            {
+                $query .=' ORDER BY orderinventory.ShippingCountry DESC';
+            }
+            if($filter_data['status'] =='title')
+            {
+                $query .=' ORDER BY product.Name DESC';
+            }
+            if($filter_data['status'] =='marketplace/order')
+            {
+                $query .=' ORDER BY orderinventory.MarketPlaceId DESC';
+            }
+            if($filter_data['status'] =='shippingmethod')
+            {
+                $query .=' ORDER BY orderinventory.ShippingMethod DESC';
+            }
+            $stmt = $this->db->query($query);
+            $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
