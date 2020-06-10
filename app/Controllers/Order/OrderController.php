@@ -1437,7 +1437,8 @@ class OrderController
     */
     public function loadPackinghtml($pdf_data)
     {
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/code39.PNG'));
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/'.$all_order['BarcodeType'].'.png'));
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";

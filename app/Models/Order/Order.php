@@ -137,7 +137,7 @@ LEFT JOIN marketplace
     */
     public function getPackingOrders($filter_data)
     {
-        $stmt = $this->db->prepare('SELECT orderinventory.Id AS `OrderTableId`,
+        $query = 'SELECT orderinventory.Id AS `OrderTableId`,
         orderinventory.OrderId AS `OrderId`,
         marketplace.MarketName AS `MarketplaceName`,
         orderinventory.Created AS `OrderDate`,
@@ -178,8 +178,37 @@ FROM orderinventory
 LEFT JOIN marketplace
    ON marketplace.Id = orderinventory.MarketPlaceId
    LEFT JOIN product
-   ON product.Id = orderinventory.StoreProductId');
-        $stmt->execute();
+   ON product.Id = orderinventory.StoreProductId';
+        if($filter_data['status'] =='order')
+            {
+                $query .=' ORDER BY orderinventory.Id';
+            }
+            if($filter_data['status'] =='zipcode')
+            {
+                $query .=' ORDER BY orderinventory.ShippingZipCode';
+            }
+            if($filter_data['status'] =='location/sku')
+            {
+                $query .=' ORDER BY product.SKU';
+            }
+            if($filter_data['status'] =='country/zip')
+            {
+                $query .=' ORDER BY orderinventory.ShippingCountry';
+            }
+            if($filter_data['status'] =='title')
+            {
+                $query .=' ORDER BY product.Name';
+            }
+            if($filter_data['status'] =='marketplace/order')
+            {
+                $query .=' ORDER BY orderinventory.MarketPlaceId';
+            }
+            if($filter_data['status'] =='shippingmethod')
+            {
+                $query .=' ORDER BY orderinventory.ShippingMethod';
+            }
+            $stmt = $this->db->query($query);
+            $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
