@@ -31,10 +31,11 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                 <!-- title -->
                 <h1 class="page-title"> <?= _('Confirmation Files') ?> </h1>
                 <p class="text-muted"> <?= _('Configure default settings for your Active Store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+                <div id="ajaxMsg"></div>
                 <?php if (isset($alert) && $alert) : ?>
-                    <div class="row text-center">
+                    <!-- <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
-                    </div>
+                    </div> -->
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
             <!-- .page-section -->
@@ -58,7 +59,7 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                         <?php
 
                         if (isset($all_order) && is_array($all_order) &&  count($all_order) > 0) : ?>
-                            <table id="order_table" name="order_table" class="table table-striped table-bordered nowrap" style="width:100%">
+                            <table id="confirm_table" name="confirm_table" class="table table-striped table-bordered nowrap" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th><?= _('File ID') ?></th>
@@ -76,8 +77,16 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                                             <td><?php echo $order['OrderId']; ?></td>
                                             <td><?php echo $order['FileName']; ?></td>
                                             <td><?php echo $order['UploadDate']; ?></td>
-                                            <td><?php echo (isset($order['Status']) && $order['Status'] = 1) ? 'Done' : 'Fail'; ?></td>
-                                            <td> <button type='button' class='btn btn-primary' id='test_btn' name='test_btn'>Download</button></td>
+                                            <td><?php echo (isset($order['Status']) && $order['Status'] == 1) ? 'Done' : 'Fail'; ?></td>
+                                            <td> <?php
+                                                    $button = '';
+                                                    $download = '<a href="#" class="btn btn-xs btn-warning btn_download" id="' . $order['Id'] . '"><i class="fas fa-download"></i> Download</a> &nbsp;';
+                                                    $view_button = '<a href="#view-' . $order['Id'] . '" view_id="' . $order['Id'] . '" class="btn btn-xs btn-danger btn_view"><i class="fas fa-file-code"></i> View</a>';
+                                                    $button .= $download;
+                                                    $button .= $view_button;
+                                                    echo $button;
+
+                                                    ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -92,7 +101,6 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
 <?= $this->stop() ?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/javascript/pages/confirmation_upload.js"></script>
 <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>

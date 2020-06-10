@@ -154,5 +154,8 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
 <?= $this->stop() ?>
 
 <?php $this->start('footer_extras') ?>
+
+
+
 <script src="/assets/vendor/parsleyjs/parsley.min.js"></script>
 <?php $this->stop() ?>

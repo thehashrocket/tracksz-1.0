@@ -101,7 +101,6 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                     </label>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="ProdExpectedShip" id="ProdExpectedShip" data-parsley-required-message="<?= _('Expected Shipping') ?>" data-parsley-group="fieldset01" value="<?php echo ((isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1) || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 1 : 0; ?>" <?php echo (isset($form['ProdExpectedShip']) && $form['ProdExpectedShip'] == 1 || (isset($form['ExpectedShip']) && $form['ExpectedShip'] == 1)) ? 'checked' : ''; ?>>
@@ -131,7 +130,6 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                 </div>
                                             </div>
                                             <?php
-
                                             $img_path = '';
                                             $img_path = \App\Library\Config::get('company_url') . '/assets/images/product/' . $form['Image'];
                                             ?>

@@ -51,13 +51,11 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('PDF Options') ?></h5>
-
                                             <hr>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="SkipPDFView" id="SkipPDFView" data-parsley-required-message="<?= _('Enter SkipPDFView') ?>" data-parsley-group="fieldset01" value="<?php echo (isset($all_order['SkipPDFView']) && $all_order['SkipPDFView'] == 1) ? 1 : 0; ?>" <?php echo (isset($all_order['SkipPDFView']) && $all_order['SkipPDFView'] == 1) ? 'checked' : ''; ?>>
@@ -88,7 +86,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-6">
-
                                             <div class="form-group">
                                                 <label for="Sort Orders By (Mailing Labels and Packing Slips)"><?= _(' Sort Orders By (Mailing Labels and Packing Slips)') ?></label>
                                                 <select name="SortOrders" id="SortOrders" class="browser-default custom-select order_carrier_select">
@@ -128,7 +125,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -146,13 +142,11 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('Pick List & Barcode') ?></h5>
                                             <hr>
-
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm">
                                             <!-- form starts -->
-
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="SplitOrders" id="SplitOrders" data-parsley-required-message="<?= _('Enter SplitOrders') ?>" data-parsley-group="fieldset01" value="<?php echo (isset($all_order['SplitOrders']) && $all_order['SplitOrders'] == 1) ? 1 : 0; ?>" <?php echo (isset($all_order['SplitOrders']) && $all_order['SplitOrders'] == 1) ? 'checked' : ''; ?>>
@@ -208,9 +202,14 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     display: none;
                                                     text-align: center;
                                                 }
-
-                                                .myDiv img {
-                                                    margin: 0 auto;
+                                                .myDiv span{
+                                                text-align: center;
+                                                background: #ffdede;
+                                                padding: 6px 10px;
+                                                display: block;
+                                                width: 100px;
+                                                border: 1px solid #d47c7c;
+                                                margin: 8px auto;
                                                 }
 
                                                 .myDiv span {
@@ -259,7 +258,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -277,12 +275,10 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         <div class="col-md-12">
                                             <h5 class="card-title"><?= _('Paking Slips') ?></h5>
                                             <hr>
-
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-
                                             <div class="form-group">
                                                 <label for="Default Template"><?= _('Default Template') ?></label>
                                                 <select name="DefaultTemplate" id="DefaultTemplate" class="browser-default custom-select order_carrier_select">
@@ -453,7 +449,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 
@@ -519,9 +514,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="HideLabelBoundaries">
                                                         <?= _('Hide label boundaries') ?>
                                                     </label>
-
                                                 </div>
-
                                             </div>
                                             <div class="form-group">
                                                 <div class="form-check">
@@ -529,10 +522,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="IncludeGSTExAus2">
                                                         <?= _('Include GST Exemptions - Australia') ?>
                                                     </label>
-
-                                                </div>
-
-
+                                            </div>
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
@@ -574,7 +564,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
-
                                             <div class="form-group">
                                                 <label for=" Page margins"><?= _(' Page margins') ?></label>
                                                 <div class="input-group mb-3">
@@ -614,7 +603,6 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                     </div> <!-- Row -->
                                 </div> <!-- Container -->
-
                             </div> <!-- Card Body -->
                         </div> <!-- .card card-fluid ends -->
 

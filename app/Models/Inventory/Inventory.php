@@ -195,4 +195,93 @@ class Inventory
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+
+    /*
+    * searchProductFilter - get all product records
+    *
+    * @param  
+    * @return associative array.
+    */
+
+    public function searchInventoryFilter($filterData = [])
+    {
+
+        
+        if (empty($filterData))
+            return false;
+
+        $query = 'SELECT * FROM  product';
+
+        // Clear filter get all result
+        if (isset($filterData['clear_filter']) && !empty($filterData['clear_filter'])) {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $is_or = false;
+        $or = '';
+        $query .= ' where';
+        // sku filter
+        if (isset($filterData['SKU']) && !empty($filterData['SKU'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .=  $or . ' product.`SKU` LIKE "%' . $filterData['SKU'] . '%" ';
+            $is_or = true;
+        }
+
+        // title filter
+        if (isset($filterData['EbayTitle']) && !empty($filterData['EbayTitle'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`Name` LIKE "%' . $filterData['Title'] . '%" ';
+            $is_or = true;
+        }
+
+        // ISBN filter
+        if (isset($filterData['ProdId']) && !empty($filterData['ProdId'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`ProdId` LIKE "%' . $filterData['ProdId'] . '%" ';
+            $is_or = true;
+        }
+
+        // Author filter
+        if (isset($filterData['Notes']) && !empty($filterData['Notes'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`Notes` LIKE "%' . $filterData['Notes'] . '%" ';
+            $is_or = true;
+        }
+
+        // Order filter
+        if (isset($filterData['BasePrice']) && !empty($filterData['BasePrice'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`BasePrice` LIKE "%' . $filterData['BasePrice'] . '%" ';
+            $is_or = true;
+        }
+
+        // Customer filter
+        if (isset($filterData['ProdCondition']) && !empty($filterData['ProdCondition'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`ProdCondition` LIKE "%' . $filterData['ProdCondition'] . '%" ';
+            $is_or = true;
+        }
+
+        // Location filter
+        if (isset($filterData['Location']) && !empty($filterData['Location'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`AddtionalData` LIKE "%' . $filterData['Location'] . '%" ';
+            $is_or = true;
+        }
+
+        // Author filter
+        if (isset($filterData['status']) && !empty($filterData['status'])) {
+            $or = (isset($is_or) && $is_or == true) ? 'OR' : '';
+            $query .= $or . ' product.`status` LIKE "%' . $filterData['status'] . '%" ';
+            $is_or = true;
+        }
+
+        $stmt = $this->db->prepare($query);
+       
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

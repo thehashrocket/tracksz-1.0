@@ -907,6 +907,59 @@ class InventoryController
 
         return $result;
     }
+
+    /*
+    * searchProduct - Filter Product
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function searchInventoryFilter(ServerRequest $request)
+    {
+
+       try {
+
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+           $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
+           //print_r($result); die;
+            if (isset($result) && !empty($result) && sizeof($result) != 0) {
+                $this->view->flash([
+                    'alert' => 'Inventory result get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $prod_obj = (new Product($this->db));
+                $getProdcondition = $prod_obj->getProdconditionData();
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $result,'getProdcondition' => $getProdcondition]);
+            } else {
+                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+
+        
+        $prod_obj = (new Product($this->db));
+        $getProdcondition = $prod_obj->getProdconditionData();
+        //echo 'sdfsdfds'; 
+        //print_r($getProdcondition); die;
+        $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data,'getProdcondition' => $getProdcondition]);
+                throw new Exception("Search result not found...!", 301);
+            }
+        } catch (Exception $e) {
+            //echo 'asdsadasd';exit;
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+
+            $this->view->flash($validated);
+            return $this->view->buildResponse('inventory/product/browse', []);
+        }
+    }
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

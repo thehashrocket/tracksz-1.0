@@ -42,7 +42,21 @@ class product
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /*
+    * Product Condition all records - get all product Condition records
+    *
+    * @param  
+    * @return associative array.
+    */
 
+     public function getProdconditionData()
+    {
+       
+        $stmt = $this->db->prepare("SELECT ProdCondition FROM product GROUP BY ProdCondition ORDER BY `Id` DESC");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
 
@@ -74,7 +88,7 @@ class product
 
         // Clear filter get all result
         if (isset($filterData['clear_filter']) && !empty($filterData['clear_filter'])) {
-            $stmt = $this->db->query($query);
+            $stmt = $this->db->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }

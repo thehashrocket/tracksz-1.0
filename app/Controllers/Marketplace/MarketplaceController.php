@@ -77,7 +77,6 @@ class MarketplaceController
     {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
-
         $validate = new ValidateSanitize();
         $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
         $validate->validation_rules(array(
@@ -107,7 +106,6 @@ class MarketplaceController
         $validate->filter_rules(array(
             'EmailAddress'    => 'trim|sanitize_email',
         ));
-
         $validated = $validate->run($form);
         // use validated as it is filtered and validated        
         if ($validated === false) {

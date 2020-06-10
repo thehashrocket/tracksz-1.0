@@ -10,6 +10,12 @@ class ShippingZone
 {
     // Contains Resources
     private $db;
+    private $countryCodes = [
+        'US' => 223, 
+        'CA' => 38, 
+        'GB' => 222, 
+        'AU' => 13
+    ];
     
     public function __construct(PDO $db)
     {
@@ -55,6 +61,8 @@ class ShippingZone
     */
     public function belongsToMember($zoneId, $memberId)
     {
+        // TODO: Pre-prepare these queries to reduce overhead
+        
         $query = 'SELECT StoreId FROM ShippingZone WHERE Id = :zoneId';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);

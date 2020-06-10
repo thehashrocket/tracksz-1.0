@@ -730,7 +730,6 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
 
                     </div><!-- /.page-inner -->
                 </div><!-- Additional Information /.page -->
-
             </div><!-- /.wrapper -->
             <?= $this->stop() ?>
 
