@@ -79,7 +79,7 @@ class AuthController
         }
         catch (\Delight\Auth\UnknownUsernameException $e) {
             $valid = false;
-            $data['alert'] = _('Cannot find Usernamedf.');
+            $data['alert'] = _('Cannot find username.');
         }
         catch (\Delight\Auth\InvalidPasswordException $e) {
             $valid = false;
@@ -191,7 +191,7 @@ class AuthController
         
         // Create empty record in Store table
         $member = new Member($this->db);
-        if (!$member->createMember($this->auth->getUserID())) {
+        if (!$member->createMember($this->auth->getUserId())) {
             $data['alert'] = _('Something went wrong with your registration, please try again.');
             $data['alert_type'] = 'danger';
             $this->view->flash($data);

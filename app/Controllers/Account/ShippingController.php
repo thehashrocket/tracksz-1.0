@@ -113,16 +113,14 @@ class ShippingController
     public function viewUpdateZone(ServerRequest $request, array $data)
     {
         $shippingZoneObj = new ShippingZone($this->db);
-        if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId()))
-        {
-            $zone = (new ShippingZone($this->db))->find($data['Id']);
+        if ($shippingZoneObj->belongsToMember($data['ZoneId'], $this->auth->getUserId())) {
+            $zone = (new ShippingZone($this->db))->find($data['ZoneId']);
             return $this->view->buildResponse('/account/shipping_zone_add', [
-                'update_id' => $data['Id'],
+                'update_id' => $data['ZoneId'],
                 'update_name' => $zone['Name']
             ]);
         }
-        else
-        {
+        else {
             return $this->view->redirect('/account/shipping-methods');
         }
     }
@@ -150,9 +148,9 @@ class ShippingController
     {
         $storeId = Cookie::get('tracksz_active_store');
         $shippingMethodObj = (new ShippingMethod($this->db));
-        $zone = (new ShippingZone($this->db))->find($data['Id']);
-        $assigned = $shippingMethodObj->getAssigned($storeId);
-        $unassigned = $shippingMethodObj->getUnassigned($storeId);
+        $zone = (new ShippingZone($this->db))->find($data['ZoneId']);
+        $assigned = $shippingMethodObj->getAssignedByZone($data['ZoneId']);
+        $unassigned = $shippingMethodObj->getUnassignedByStore($storeId, $data['ZoneId']);
         return $this->view->buildResponse('/account/shipping_zone_manage', [
             'zone' => $zone,
             'assignedMethods' => $assigned,
@@ -215,16 +213,14 @@ class ShippingController
         $methodData = $request->getParsedBody();
         $methodData['StoreId'] = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
         $newMethod = (new ShippingMethod($this->db))->create($methodData);
-        if ($newMethod)
-        {
+        if ($newMethod) {
             $this->view->flash([
                 'alert' => 'Successfully created new shipping method.',
                 'alert_type' => 'success'
             ]);
             return $this->view->redirect('/account/shipping-methods');
         }
-        else
-        {
+        else {
             $this->view->flash([
                 'alert' => 'Failed to create shipping method. Please ensure all input is filled out',
                 'alert_type' => 'danger'
@@ -244,16 +240,14 @@ class ShippingController
         $zoneData = $request->getParsedBody();
         $zoneData['StoreId'] = Cookie::get('tracksz_active_store');
         $newZone = (new ShippingZone($this->db))->create($zoneData);
-        if ($newZone)
-        {
+        if ($newZone) {
             $this->view->flash([
                 'alert' => 'Successfully created new shipping zone.',
                 'alert_type' => 'success'
             ]);
             return $this->view->redirect('/account/shipping-zones');
         }
-        else
-        {
+        else {
             $this->view->flash([
                 'alert' => 'Failed to add shipping zone. Please ensure name is filled out.',
                 'alert_type' => 'danger'
@@ -272,18 +266,15 @@ class ShippingController
     {
         $shippingMethodObj = new ShippingMethod($this->db);
         $methodData = $request->getParsedBody();
-        if ($shippingMethodObj->belongsToMember($methodData['update_id'], $this->auth->getUserId()))
-        {
+        if ($shippingMethodObj->belongsToMember($methodData['update_id'], $this->auth->getUserId())) {
             $updated = $shippingMethodObj->update($methodData);
-            if ($updated)
-            {
+            if ($updated) {
                 $this->view->flash([
                     'alert' => 'Successfully updated shipping method.',
                     'alert_type' => 'success'
                 ]);
             }
-            else
-            {
+            else {
                 $this->view->flash([
                     'alert' => 'Failed to update shipping method. Please ensure all input is filled out correctly.',
                     'alert_type' => 'danger'
@@ -313,19 +304,16 @@ class ShippingController
         $shippingZoneObj = new ShippingZone($this->db);
         $zoneData = $request->getParsedBody();
 
-        if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId()))
-        {
+        if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId())) {
             $zoneData['Id'] = $data['Id'];
             $updated = $shippingZoneObj->update($zoneData);
-            if ($updated)
-            {
+            if ($updated) {
                 $this->view->flash([
                     'alert' => 'Successfully updated shipping zone.',
                     'alert_type' => 'success'
                 ]);
             }
-            else
-            {
+            else {
                 $this->view->flash([
                     'alert' => 'Failed to update shipping zone. Please ensure all input is filled out correctly.',
                     'alert_type' => 'danger'
@@ -350,8 +338,7 @@ class ShippingController
     {
         $shippingMethodObj = new ShippingMethod($this->db);
 
-        if ($shippingMethodObj->belongsToMember($data['Id'], $this->auth->getUserId()))
-        {
+        if ($shippingMethodObj->belongsToMember($data['Id'], $this->auth->getUserId())) {
             $deleted = $shippingMethodObj->delete($data['Id']);
             $this->view->flash([
                 'alert' => $deleted ? 'Successfully deleted shipping method.' : 'Failed to delete shipping method.',
@@ -365,8 +352,7 @@ class ShippingController
     public function deleteZone(ServerRequest $request, array $data)
     {
         $shippingZoneObj = new ShippingZone($this->db);
-        if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId()))
-        {
+        if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId())) {
             $deleted = $shippingZoneObj->delete($data['Id']);
             $this->view->flash([
                 'alert' => $deleted ? 'Successfully deleted shipping zone.' : 'Failed to delete shipping zone.',
@@ -380,8 +366,7 @@ class ShippingController
     public function assignMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
-        if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId()))
-        {
+        if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId())) {
             $success = $shippingMethodObj->assign($data['MethodId'], $data['ZoneId']);
             $this->view->flash([
                 'alert' => $success ? 'Successfully assigned shipping method.' : 'Failed to assign shipping method.',
@@ -395,8 +380,7 @@ class ShippingController
     public function unassignMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
-        if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId()))
-        {
+        if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId())) {
             $success = $shippingMethodObj->unassign($data['MethodId'], $data['ZoneId']);
             $this->view->flash([
                 'alert' => $success ? 'Successfully unassigned shipping method.' : 'Failed to unassign shipping method.',
@@ -413,8 +397,7 @@ class ShippingController
         $zoneId = $data['ZoneId'];
         $countryCode = $data['Country'];
         
-        if ($zoneId !== 'null')
-        {
+        if ($zoneId !== 'null') {
             if (array_key_exists($countryCode, $this->countryCodes))
             {
                 $countryIDs = [$this->countryCodes[$countryCode]];

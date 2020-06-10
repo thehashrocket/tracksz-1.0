@@ -83,8 +83,8 @@ class AccountRoutes extends AbstractServiceProvider
             $routes->group('/account/shipping-zones', function (\League\Route\RouteGroup $route) {
                 $route->get('/', Account\ShippingController::class.'::viewZones');
                 $route->get('/add', Account\ShippingController::class.'::viewAddZone');
-                $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateZone');
-                $route->get('/manage/{Id:number}', Account\ShippingController::class.'::viewManageZone');
+                $route->get('/edit/{ZoneId:number}', Account\ShippingController::class.'::viewUpdateZone');
+                $route->get('/manage/{ZoneId:number}', Account\ShippingController::class.'::viewManageZone');
     
                 $route->post('/create', Account\ShippingController::class.'::createZone');
                 $route->post('/edit/{Id:number}', Account\ShippingController::class.'::updateZone');

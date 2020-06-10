@@ -32,6 +32,8 @@ class DefaultRoutes extends AbstractServiceProvider
             $routes->group('/', function (\League\Route\RouteGroup $route) {
                 $route->get('/', Controllers\HomeController::class . '::index');
                 $route->post('/interested', Controllers\HomeController::class . '::interested');
+
+                $route->get('/fuck', Controllers\Account\ShippingController::class.'::fuck');
                 
                 // these are not done as much keep at end
                 $route->get('/register', Controllers\AuthController::class . '::showRegister');

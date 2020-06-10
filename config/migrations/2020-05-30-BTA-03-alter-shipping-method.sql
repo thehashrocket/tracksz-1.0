@@ -1,0 +1,1 @@
+ALTER TABLE `ShippingMethod` CHANGE COLUMN `MemberId` `StoreId` INT UNSIGNED NOT NULL;
