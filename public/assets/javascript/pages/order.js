@@ -54,7 +54,7 @@ $(document).ready(function () {
   // Handle click on "Select all" control Ends
 
   // Handle click on "btn_status_update" control Starts
-  $(document).on("click", ".btn_status_update", function () {
+  $(document).on("click", ".btn_status_update,.btn_shipping", function () {
     var data_array = [];
     $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
       data_array.push($(this).val());
@@ -72,7 +72,6 @@ $(document).ready(function () {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-    
         if (data.status) {
           location.reload();
         } else {
@@ -83,8 +82,37 @@ $(document).ready(function () {
     });
   });
 
-  // Handle click on "btn_status_update" control Starts
+  // Handle click on "OrderStatus" control Starts
   $(document).on("change", "#OrderStatus", function () {
     $("#order_change").submit();
+  });
+
+  $(document).on("change", "#selected_export_order", function () {
+    var export_type = $("#selected_export_order").val();
+    var data_array = [];
+    $.each($("input[name='child_chkbox[]']:checked"), function (key, value) {
+      data_array.push($(this).val());
+    });
+    // Ajax CSRF Token Setup
+    $.ajaxSetup({
+      headers: {
+        "X-CSRF-Token": $('input[name="__token"]').val(),
+      },
+    });
+    $.ajax({
+      url: BASE_URL + "/order/export_order_list",
+      type: "POST",
+      data: { ids: data_array, export_formate: export_type },
+      dataType: "JSON",
+      beforeSend: function () {},
+      success: function (data, textStatus, jqXHR) {
+        var origin = window.location.origin;
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = origin + data.filename;
+        link.click();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {},
+    });
   });
 });

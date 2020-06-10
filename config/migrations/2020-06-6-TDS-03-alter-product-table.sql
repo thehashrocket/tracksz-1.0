@@ -1,0 +1,1 @@
+ALTER TABLE `orderinventory` ADD `IsConfirmFiles` INT(11) NULL DEFAULT '0' AFTER `StoreId`;

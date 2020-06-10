@@ -179,6 +179,8 @@ class ShippingController
      */
     public function viewAssignZonesIndividualCountries()
     {
+        $countryZones = (new ShippingZone($this->db))->getCountryAssignments();
+        $countries = (new Country($this->db))->all();
         $activeStoreId = Cookie::get('tracksz_active_store');
         $shippingZoneObj = (new ShippingZone($this->db));
         $countryZoneAssignments = $shippingZoneObj->getBulkCountryAssignmentMap($activeStoreId);

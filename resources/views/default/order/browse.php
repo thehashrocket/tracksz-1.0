@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Inventory Listing for Your Tracksz Store, a Multiple Market Inventory Management Service';
-$description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market Inventory Management Service';
+$title_meta = 'Order Listing for Your Tracksz Store, a Multiple Market Inventory Management Service';
+$description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inventory Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -154,19 +154,17 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                             </div>
                                         </div> &nbsp;
                                         <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Export Selected
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Excel</a>
-                                                <a class="dropdown-item" href="#">CSV</a>
-                                            </div>
+                                            <select class="browser-default custom-select" id="selected_export_order" name="export_format" required="" style="width: 150px;">
+                                                <option value="" selected disabled><?= _('Selected Export') ?></option>
+                                                <option value="xlsx">Xlsx</option>
+                                                <option value="csv">CSV</option>
+                                            </select>
                                         </div>
 
                                     </div>
 
-                                    </div> <!-- col-sm -->
-                                </div> <!-- Row -->
+                                </div> <!-- col-sm -->
+                            </div> <!-- Row -->
                         </div> <!-- Container -->
                     </div> <!-- Card Body -->
                 </div> <!-- .card card-fluid ends -->

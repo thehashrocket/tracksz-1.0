@@ -57,6 +57,20 @@ class OrderController
         $store = (new Store($this->db))->find(Session::get('member_id'), 1);
         $this->storeid   = (isset($store[0]['Id']) && !empty($store[0]['Id'])) ? $store[0]['Id'] : 0;
         ini_set('memory_limit', '-1');
+        ini_set("pcre.backtrack_limit", "1000000");
+    }
+
+    public function random_strings($length_of_string)
+    {
+        // String of all alphanumeric character 
+        $str_result = '0123456789abcdefghijklmnopqrstuvwxyz';
+        // Shufle the $str_result and returns substring 
+        // of specified length 
+        return substr(
+            str_shuffle($str_result),
+            0,
+            $length_of_string
+        );
     }
     public function browse()
     {
@@ -84,11 +98,32 @@ class OrderController
     public function updateBatchMove(ServerRequest $request)
     {
         try {
+
+            $order_ids = array();
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $map_data = $this->mapBatchMove($methodData);
+
+            $order_ids = array_column($map_data, 'OrderId');
+
             $is_data = $this->insertOrUpdate($map_data);
+
+            foreach ($order_ids as $order_id) {
+
+                $mail_data = (new Order($this->db))->findByorder_id($order_id);
+
+                $message['html']  = $this->view->make('emails/orderconfirm');
+                $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+                $mailer = new Email();
+                $mailer->sendEmail(
+                    $mail_data['ShippingEmail'],
+                    Config::get('company_name'),
+                    _('Order Confirmation'),
+                    $message,
+                    ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+                );
+            }
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -170,7 +205,7 @@ class OrderController
     */
     public function loadConfirmationFile()
     {
-        $all_order = (new Order($this->db))->getAllBelongsTo();
+        $all_order = (new Order($this->db))->getAllConfirmationFiles();
         return $this->view->buildResponse('order/confirmation_file', ['all_order' => $all_order]);
     }
 
@@ -188,8 +223,7 @@ class OrderController
 
     public function exportOrderData(ServerRequest $request)
     {
-        try 
-        {
+        try {
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
             $export_val   = $form['exportType'];
@@ -197,32 +231,27 @@ class OrderController
             $to_date         = $form['to_date'];
             $orderStatus  = $form['orderStatus'];
 
-             if($export_val == 'new')
-            {
-               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
+            if ($export_val == 'new') {
+                $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
             }
 
-             if($export_val == 'range')
-            {
-    
-                 $formD  =  date("Y-m-d",strtotime($from_date));
-                 $ToD    =  date("Y-m-d",strtotime($to_date));
+            if ($export_val == 'range') {
 
-                 $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
+                $formD  =  date("Y-m-d", strtotime($from_date));
+                $ToD    =  date("Y-m-d", strtotime($to_date));
+
+                $order_data = (new Order($this->db))->dateRangeSearchByOrderData($formD, $ToD);
             }
 
-             if($export_val == 'status')
-            {
-               $export_val = $orderStatus;
-               $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
+            if ($export_val == 'status') {
+                $export_val = $orderStatus;
+                $order_data = (new Order($this->db))->orderstatusSearchByOrderData($export_val);
             }
 
-             if($export_val == 'All')
-            {
+            if ($export_val == 'All') {
                 $order_data = (new Order($this->db))->allorderSearchByOrderData();
             }
 
-            
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'MarketPlaceId');
@@ -256,10 +285,8 @@ class OrderController
             $sheet->setCellValue('AC1', 'BillingState');
             $sheet->setCellValue('AD1', 'BillingZipCode');
             $sheet->setCellValue('AE1', 'BillingCountry');
-            
             $rows = 2;
             foreach ($order_data as $orderd) {
-                
                 $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
                 $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
                 $sheet->setCellValue('C' . $rows, $orderd['Status']);
@@ -301,23 +328,23 @@ class OrderController
                 ]);
 
                 if ($export_type == 'xlsx') {
-                    //$writer = new WriteXlsx($spreadsheet);
                     $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                    header('Content-Disposition: attachment; filename="order.xlsx"');
+                    header('Content-Disposition: attachment; filename="orders.xlsx"');
                     $writer->save("php://output");
-                    return $this->view->redirect('/order/export-order');
+                    exit;
                 } else if ($export_type == 'csv') {
                     $writer = new WriteCsv($spreadsheet);
-                    $writer->save("order." . $export_type);
-                    return $this->view->redirect('/order/export-order');
+                    header('Content-Type: application/csv');
+                    header('Content-Disposition: attachment; filename="orders.csv"');
+                    $writer->save("php://output");
+                    exit;
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
-               
             }
-    } catch (Exception $e) {
-        
+        } catch (Exception $e) {
+
 
             $res['status'] = false;
             $res['data'] = [];
@@ -332,7 +359,6 @@ class OrderController
             $this->view->flash($validated);
             return $this->view->redirect('/order/export-order');
         }
-            
     }
 
     /*
@@ -392,44 +418,36 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            $update_data['OperatingSystem'] = $methodData['OperatingSystem'];
-            $update_data['MaxWeight'] = $methodData['MaxWeight'];
-            $update_data['DeliveryConfirmation'] = $methodData['DeliveryConfirmation'];
-            $update_data['MinOrderTotalDelivery'] = $methodData['MinOrderTotalDelivery'];
-            $update_data['SignatureConfirmation'] = $methodData['SignatureConfirmation'];
-            $update_data['ConsolidatorLabel'] = $methodData['ConsolidatorLabel'];
+            $update_data['OperatingSystem'] = (isset($methodData['OperatingSystem']) && !empty($methodData['OperatingSystem'])) ? $methodData['OperatingSystem'] : null;
+            $update_data['MaxWeight'] = (isset($methodData['MaxWeight']) && !empty($methodData['MaxWeight'])) ? $methodData['MaxWeight'] : 0;
+            $update_data['DeliveryConfirmation'] = (isset($methodData['DeliveryConfirmation']) && !empty($methodData['DeliveryConfirmation'])) ? $methodData['DeliveryConfirmation'] : null;
+            $update_data['MinOrderTotalDelivery'] = (isset($methodData['MinOrderTotalDelivery']) && !empty($methodData['MinOrderTotalDelivery'])) ? $methodData['MinOrderTotalDelivery'] : 0.00;
+            $update_data['SignatureConfirmation'] = (isset($methodData['SignatureConfirmation']) && !empty($methodData['SignatureConfirmation'])) ? $methodData['SignatureConfirmation'] : null;
+            $update_data['ConsolidatorLabel'] = (isset($methodData['ConsolidatorLabel']) && !empty($methodData['ConsolidatorLabel'])) ? $methodData['ConsolidatorLabel'] : null;
 
-            $update_data['IncludeInsurance'] = $methodData['IncludeInsurance'];
-            $update_data['MinOrderTotalInsurance'] = $methodData['MinOrderTotalInsurance'];
-            $update_data['RoundDownPartial'] = $methodData['RoundDownPartial'];
+            $update_data['IncludeInsurance'] = (isset($methodData['IncludeInsurance']) && !empty($methodData['IncludeInsurance'])) ? $methodData['IncludeInsurance'] : null;
+            $update_data['MinOrderTotalInsurance'] = (isset($methodData['MinOrderTotalInsurance']) && !empty($methodData['MinOrderTotalInsurance'])) ? $methodData['MinOrderTotalInsurance'] : 0.00;
+            $update_data['RoundDownPartial'] = (isset($methodData['RoundDownPartial']) && !empty($methodData['RoundDownPartial'])) ? $methodData['RoundDownPartial'] : null;
 
-            $update_data['EstimatePostage'] = $methodData['EstimatePostage'];
-            $update_data['MaxPostageBatch'] = $methodData['MaxPostageBatch'];
-            $update_data['CustomsSigner'] = $methodData['CustomsSigner'];
-            $update_data['DefaultWeight'] = $methodData['DefaultWeight'];
-            $update_data['FlatRatePriority'] = $methodData['FlatRatePriority'];
-            $update_data['GlobalWeight'] = $methodData['GlobalWeight'];
-
-
+            $update_data['EstimatePostage'] = (isset($methodData['EstimatePostage']) && !empty($methodData['EstimatePostage'])) ? $methodData['EstimatePostage'] : null;
+            $update_data['MaxPostageBatch'] = (isset($methodData['MaxPostageBatch']) && !empty($methodData['MaxPostageBatch'])) ? $methodData['MaxPostageBatch'] : null;
+            $update_data['CustomsSigner'] = (isset($methodData['CustomsSigner']) && !empty($methodData['CustomsSigner'])) ? $methodData['CustomsSigner'] : null;
+            $update_data['DefaultWeight'] = (isset($methodData['DefaultWeight']) && !empty($methodData['DefaultWeight'])) ? $methodData['DefaultWeight'] : null;
+            $update_data['FlatRatePriority'] = (isset($methodData['FlatRatePriority'])) ? $methodData['FlatRatePriority'] : 0;
+            $update_data['GlobalWeight'] = (isset($methodData['GlobalWeight'])) ? $methodData['GlobalWeight'] : 0;
 
             $is_data = $this->postageinsertOrUpdate($update_data);
-
-
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
                     'alert' => 'Postage settings updated successfully..!',
                     'alert_type' => 'success'
                 ]);
                 $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
-
-
-
                 return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
             }
         } catch (Exception $e) {
-
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = $e->getMessage();
@@ -441,8 +459,6 @@ class OrderController
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            /*$user_details = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
-            return $this->view->buildResponse('order/postage_setting', ['all_settings' => $user_details]);*/
 
             $all_order = (new PostageSetting($this->db))->PostageSettingfindByUserId(Session::get('auth_user_id'));
             return $this->view->buildResponse('order/postage_setting', ['all_order' => $all_order]);
@@ -470,7 +486,6 @@ class OrderController
             $data['Updated'] = date('Y-m-d H:i:s');
 
             $result = (new LabelSetting($this->db))->editLabelSettings($data);
-           
         } else { // insert
             $data['Created'] = date('Y-m-d H:i:s');
             $result = (new LabelSetting($this->db))->addLabelSettings($data);
@@ -492,68 +507,53 @@ class OrderController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            // $update_data['SkipPDFView'] = $methodData['SkipPDFView'];
-            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView']))?1:null;
-            // print_r($update_data['SkipPDFView']);
-            $update_data['DefaultAction'] = $methodData['DefaultAction'];
-            $update_data['SortOrders'] = $methodData['SortOrders'];
 
-            // $update_data['SplitOrders'] = $methodData['SplitOrders'];
-            $update_data['SplitOrders'] = (isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders'])) ? 1 : null;
-            $update_data['AddBarcode'] = (isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode'])) ? 1 : null;
-            //$update_data['AddBarcode'] = $methodData['AddBarcode'];
-            $update_data['BarcodeType'] = $methodData['BarcodeType'];
-            $update_data['SortPickList'] = $methodData['SortPickList'];
+            $update_data['SkipPDFView'] = (isset($methodData['SkipPDFView']) && !empty($methodData['SkipPDFView'])) ? $methodData['SkipPDFView'] : 0;
+            $update_data['DefaultAction'] = (isset($methodData['DefaultAction']) && !empty($methodData['DefaultAction'])) ? $methodData['DefaultAction'] : null;
+            $update_data['SortOrders'] = (isset($methodData['SortOrders']) && !empty($methodData['SortOrders'])) ? $methodData['SortOrders'] : null;
 
-            $update_data['DefaultTemplate'] = $methodData['DefaultTemplate'];
-            $update_data['HeaderImageURL'] = $methodData['HeaderImageURL'];
-            $update_data['FooterImageURL'] = $methodData['FooterImageURL'];
-            $update_data['PackingSlipHeader'] = $methodData['PackingSlipHeader'];
-            $update_data['PackingSlipFooter'] = $methodData['PackingSlipFooter'];
-            $update_data['PackingSlipFrom'] = $methodData['PackingSlipFrom'];
-            // $update_data['IncludeOrderBarcodes'] = $methodData['IncludeOrderBarcodes'];
-            $update_data['IncludeOrderBarcodes'] = (isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes'])) ? 1 : null;
-            $update_data['IncludeItemBarcodes'] = (isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes'])) ? 1 : null;
-            $update_data['CentreHeaderText'] = (isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText'])) ? 1 : null;
-            $update_data['HideEmail'] = (isset($methodData['HideEmail']) && !empty($methodData['HideEmail'])) ? 1 : null;
-            $update_data['HidePhone'] = (isset($methodData['HidePhone']) && !empty($methodData['HidePhone'])) ? 1 : null;
-            $update_data['IncludeGSTExAus1'] = (isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1'])) ? 1 : null;
-            $update_data['CentreFooter'] = (isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter'])) ? 1 : null;
-            $update_data['ShowItemPrice'] = (isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice'])) ? 1 : null;
-            $update_data['IncludeMarketplaceOrder'] = (isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder'])) ? 1 : null;
-            $update_data['IncludePageNumbers'] = (isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers'])) ? 1 : null;
-            //$update_data['IncludeItemBarcodes'] = $methodData['IncludeItemBarcodes'];
-            //$update_data['CentreHeaderText'] = $methodData['CentreHeaderText'];
-            // $update_data['HideEmail'] = $methodData['HideEmail'];
-            //$update_data['HidePhone'] = $methodData['HidePhone'];
-            /*$update_data['IncludeGSTExAus1'] = $methodData['IncludeGSTExAus1'];
-            $update_data['CentreFooter'] = $methodData['CentreFooter'];
-            $update_data['ShowItemPrice'] = $methodData['ShowItemPrice'];
-            $update_data['IncludeMarketplaceOrder'] = $methodData['IncludeMarketplaceOrder'];
-            $update_data['IncludePageNumbers'] = $methodData['IncludePageNumbers'];*/
-            
+            $update_data['SplitOrders'] = (isset($methodData['SplitOrders']) && !empty($methodData['SplitOrders'])) ? $methodData['SplitOrders'] : 0;
+            $update_data['AddBarcode'] = (isset($methodData['AddBarcode']) && !empty($methodData['AddBarcode'])) ? $methodData['AddBarcode'] : 0;
 
-            $update_data['ColumnsPerPage'] = $methodData['ColumnsPerPage'];
-            $update_data['RowsPerPage'] = $methodData['RowsPerPage'];
-            $update_data['FontSize'] = $methodData['FontSize'];
-            $update_data['HideLabelBoundaries'] = (isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries'])) ? 1 : null;
-            $update_data['IncludeGSTExAus2'] = (isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2'])) ? 1 : null;
-            //$update_data['HideLabelBoundaries'] = $methodData['HideLabelBoundaries'];
-            //$update_data['IncludeGSTExAus2'] = $methodData['IncludeGSTExAus2'];
-            $update_data['LabelWidth'] = $methodData['LabelWidth'];
+            $update_data['BarcodeType'] = (isset($methodData['BarcodeType']) && !empty($methodData['BarcodeType'])) ? $methodData['BarcodeType'] : null;
+            $update_data['SortPickList'] = (isset($methodData['SortPickList']) && !empty($methodData['SortPickList'])) ? $methodData['SortPickList'] : null;
 
-            $update_data['LabelWidthIn'] = $methodData['LabelWidthIn'];
-            $update_data['LabelHeight'] = $methodData['LabelHeight'];
-            $update_data['LabelHeightIn'] = $methodData['LabelHeightIn'];
-            $update_data['PageMargins'] = $methodData['PageMargins'];
-            $update_data['PageMarginsIn'] = $methodData['PageMarginsIn'];
-            $update_data['LabelMargins'] = $methodData['LabelMargins'];
-            $update_data['LabelMarginsIn'] = $methodData['LabelMarginsIn'];
+            $update_data['DefaultTemplate'] = (isset($methodData['DefaultTemplate']) && !empty($methodData['DefaultTemplate'])) ? $methodData['DefaultTemplate'] : null;
+            $update_data['HeaderImageURL'] = (isset($methodData['HeaderImageURL']) && !empty($methodData['HeaderImageURL'])) ? $methodData['HeaderImageURL'] : null;
+            $update_data['FooterImageURL'] = (isset($methodData['FooterImageURL']) && !empty($methodData['FooterImageURL'])) ? $methodData['FooterImageURL'] : null;
+            $update_data['PackingSlipHeader'] = (isset($methodData['PackingSlipHeader']) && !empty($methodData['PackingSlipHeader'])) ? $methodData['PackingSlipHeader'] : null;
+            $update_data['PackingSlipFooter'] = (isset($methodData['PackingSlipFooter']) && !empty($methodData['PackingSlipFooter'])) ? $methodData['PackingSlipFooter'] : null;
+            $update_data['PackingSlipFrom'] = (isset($methodData['PackingSlipFrom']) && !empty($methodData['PackingSlipFrom'])) ? $methodData['PackingSlipFrom'] : null;
+
+            $update_data['IncludeOrderBarcodes'] = (isset($methodData['IncludeOrderBarcodes']) && !empty($methodData['IncludeOrderBarcodes'])) ? 1 : 0;
+            $update_data['IncludeItemBarcodes'] = (isset($methodData['IncludeItemBarcodes']) && !empty($methodData['IncludeItemBarcodes'])) ? 1 : 0;
+            $update_data['CentreHeaderText'] = (isset($methodData['CentreHeaderText']) && !empty($methodData['CentreHeaderText'])) ? 1 : 0;
+            $update_data['HideEmail'] = (isset($methodData['HideEmail']) && !empty($methodData['HideEmail'])) ? 1 : 0;
+            $update_data['HidePhone'] = (isset($methodData['HidePhone']) && !empty($methodData['HidePhone'])) ? 1 : 0;
+            $update_data['IncludeGSTExAus1'] = (isset($methodData['IncludeGSTExAus1']) && !empty($methodData['IncludeGSTExAus1'])) ? 1 : 0;
+            $update_data['CentreFooter'] = (isset($methodData['CentreFooter']) && !empty($methodData['CentreFooter'])) ? 1 : 0;
+            $update_data['ShowItemPrice'] = (isset($methodData['ShowItemPrice']) && !empty($methodData['ShowItemPrice'])) ? 1 : 0;
+            $update_data['IncludeMarketplaceOrder'] = (isset($methodData['IncludeMarketplaceOrder']) && !empty($methodData['IncludeMarketplaceOrder'])) ? 1 : 0;
+            $update_data['IncludePageNumbers'] = (isset($methodData['IncludePageNumbers']) && !empty($methodData['IncludePageNumbers'])) ? 1 : 0;
+
+            $update_data['ColumnsPerPage'] = (isset($methodData['ColumnsPerPage']) && !empty($methodData['ColumnsPerPage'])) ? $methodData['ColumnsPerPage'] : 0;
+            $update_data['RowsPerPage'] = (isset($methodData['RowsPerPage']) && !empty($methodData['RowsPerPage'])) ? $methodData['RowsPerPage'] : 0;
+            $update_data['FontSize'] = (isset($methodData['FontSize']) && !empty($methodData['FontSize'])) ? $methodData['FontSize'] : 0;
+            $update_data['HideLabelBoundaries'] = (isset($methodData['HideLabelBoundaries']) && !empty($methodData['HideLabelBoundaries'])) ? $methodData['HideLabelBoundaries'] : 0;
+            $update_data['IncludeGSTExAus2'] = (isset($methodData['IncludeGSTExAus2']) && !empty($methodData['IncludeGSTExAus2'])) ? 1 : 0;
+
+            $update_data['LabelWidth'] = (isset($methodData['LabelWidth']) && !empty($methodData['LabelWidth'])) ? $methodData['LabelWidth'] : 0.00;
+
+            $update_data['LabelWidthIn'] = (isset($methodData['LabelWidthIn']) && !empty($methodData['LabelWidthIn'])) ? $methodData['LabelWidthIn'] : null;
+            $update_data['LabelHeight'] =  (isset($methodData['LabelHeight']) && !empty($methodData['LabelHeight'])) ? $methodData['LabelHeight'] : 0.00;
+            $update_data['LabelHeightIn'] = (isset($methodData['LabelHeightIn']) && !empty($methodData['LabelHeightIn'])) ? $methodData['LabelHeightIn'] : null;
+            $update_data['PageMargins'] = (isset($methodData['PageMargins']) && !empty($methodData['PageMargins'])) ? $methodData['PageMargins'] : 0.0;
+            $update_data['PageMarginsIn'] = (isset($methodData['PageMarginsIn']) && !empty($methodData['PageMarginsIn'])) ? $methodData['PageMarginsIn'] : null;
+            $update_data['LabelMargins'] = (isset($methodData['LabelMargins']) && !empty($methodData['LabelMargins'])) ? $methodData['LabelMargins'] : 0.00;
+            $update_data['LabelMarginsIn'] = (isset($methodData['LabelMarginsIn']) && !empty($methodData['LabelMarginsIn'])) ? $methodData['LabelMarginsIn'] : null;
 
 
-            
             $is_data = $this->labelinsertOrUpdate($update_data);
-            
 
             if (isset($is_data) && !empty($is_data)) {
                 $this->view->flash([
@@ -561,9 +561,6 @@ class OrderController
                     'alert_type' => 'success'
                 ]);
                 $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-
-
-
                 return $this->view->buildResponse('order/label_setting', ['all_order' => $all_order]);
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
@@ -616,7 +613,6 @@ class OrderController
     */
     public function orderSettingsBrowse()
     {
-
         $order_details = (new OrderSetting($this->db))->OrderSettingfindByUserId(Session::get('auth_user_id'));
         return $this->view->buildResponse('inventory/settings/order', ['order_details' => $order_details]);
     }
@@ -630,33 +626,40 @@ class OrderController
     */
     public function orderUpdateSettings(ServerRequest $request)
     {
-
         try {
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $update_data['UserId'] = Session::get('auth_user_id');
-            $update_data['ConfirmEmail'] = $methodData['ConfirmEmail'];
-            $update_data['CancelEmail'] = $methodData['CancelEmail'];
-            $update_data['DeferEmail'] = $methodData['DeferEmail'];
-            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy']))?1:null;
-            $update_data['NoAdditionalOrder'] = $methodData['NoAdditionalOrder'];
-           /* for($i=1; $i <= $nooforderfoldercount;$i++)
-            {
-                $work1 = $methodData['NoAdditionalOrder'.$i];
-                //echo 'sadasda';
-                //print_r($work1); exit;
-            }
-            return $i;*/
-  /*          $sql = array;
-$yourArrFromCsv = explode(",", $nooforderfoldercount);
-//then insert to db
-foreach( $yourArrFromCsv as $row ) {
-    $sql[] = '('.$compProdId.', '.$row.')';
-}
-mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sql));*/
-
-
+            $update_data['ConfirmEmail'] = (isset($methodData['ConfirmEmail']) && !empty($methodData['ConfirmEmail'])) ? $methodData['ConfirmEmail'] : null;
+            $update_data['CancelEmail'] = (isset($methodData['CancelEmail']) && !empty($methodData['CancelEmail'])) ? $methodData['CancelEmail'] : null;
+            $update_data['DeferEmail'] = (isset($methodData['DeferEmail']) && !empty($methodData['DeferEmail'])) ? $methodData['DeferEmail'] : null;
+            $update_data['DontSendCopy'] = (isset($methodData['DontSendCopy']) && !empty($methodData['DontSendCopy'])) ? 1 : 0;
+            $update_data['NoAdditionalOrder'] = json_encode([
+                'AdditionalOrder' => (isset($methodData['NoAdditionalOrder']) && !empty($methodData['NoAdditionalOrder'])) ? $methodData['NoAdditionalOrder'] : null,
+                'AdditionalOrderData' => [
+                    'work1' => (isset($methodData['NoAdditionalOrder1']) && !empty($methodData['NoAdditionalOrder1'])) ? $methodData['NoAdditionalOrder1'] : null,
+                    'work2' => (isset($methodData['NoAdditionalOrder2']) && !empty($methodData['NoAdditionalOrder2'])) ? $methodData['NoAdditionalOrder2'] : null,
+                    'work3' => (isset($methodData['NoAdditionalOrder3']) && !empty($methodData['NoAdditionalOrder3'])) ? $methodData['NoAdditionalOrder3'] : null,
+                    'work4' => (isset($methodData['NoAdditionalOrder4']) && !empty($methodData['NoAdditionalOrder4'])) ? $methodData['NoAdditionalOrder4'] : null,
+                    'work5' => (isset($methodData['NoAdditionalOrder5']) && !empty($methodData['NoAdditionalOrder5'])) ? $methodData['NoAdditionalOrder5'] : null,
+                    'work6' => (isset($methodData['NoAdditionalOrder6']) && !empty($methodData['NoAdditionalOrder6'])) ? $methodData['NoAdditionalOrder6'] : null,
+                    'work7' => (isset($methodData['NoAdditionalOrder7']) && !empty($methodData['NoAdditionalOrder7'])) ? $methodData['NoAdditionalOrder7'] : null,
+                    'work8' => (isset($methodData['NoAdditionalOrder8']) && !empty($methodData['NoAdditionalOrder8'])) ? $methodData['NoAdditionalOrder8'] : null,
+                    'work9' => (isset($methodData['NoAdditionalOrder9']) && !empty($methodData['NoAdditionalOrder9'])) ? $methodData['NoAdditionalOrder9'] : null,
+                    'work10' => (isset($methodData['NoAdditionalOrder10']) && !empty($methodData['NoAdditionalOrder10'])) ? $methodData['NoAdditionalOrder10'] : null,
+                    'work11' => (isset($methodData['NoAdditionalOrder11']) && !empty($methodData['NoAdditionalOrder11'])) ? $methodData['NoAdditionalOrder11'] : null,
+                    'work12' => (isset($methodData['NoAdditionalOrder12']) && !empty($methodData['NoAdditionalOrder12'])) ? $methodData['NoAdditionalOrder12'] : null,
+                    'work13' => (isset($methodData['NoAdditionalOrder13']) && !empty($methodData['NoAdditionalOrder13'])) ? $methodData['NoAdditionalOrder13'] : null,
+                    'work14' => (isset($methodData['NoAdditionalOrder14']) && !empty($methodData['NoAdditionalOrder14'])) ? $methodData['NoAdditionalOrder14'] : null,
+                    'work15' => (isset($methodData['NoAdditionalOrder15']) && !empty($methodData['NoAdditionalOrder15'])) ? $methodData['NoAdditionalOrder15'] : null,
+                    'work16' => (isset($methodData['NoAdditionalOrder16']) && !empty($methodData['NoAdditionalOrder16'])) ? $methodData['NoAdditionalOrder16'] : null,
+                    'work17' => (isset($methodData['NoAdditionalOrder17']) && !empty($methodData['NoAdditionalOrder17'])) ? $methodData['NoAdditionalOrder17'] : null,
+                    'work18' => (isset($methodData['NoAdditionalOrder18']) && !empty($methodData['NoAdditionalOrder18'])) ? $methodData['NoAdditionalOrder18'] : null,
+                    'work19' => (isset($methodData['NoAdditionalOrder19']) && !empty($methodData['NoAdditionalOrder19'])) ? $methodData['NoAdditionalOrder19'] : null,
+                    'work20' => (isset($methodData['NoAdditionalOrder20']) && !empty($methodData['NoAdditionalOrder20'])) ? $methodData['NoAdditionalOrder20'] : null
+                ],
+            ]);
 
             $is_data = $this->orderinsertOrUpdate($update_data);
 
@@ -775,7 +778,7 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
                 Config::get('company_name'),
                 _('Order Confirmation'),
                 $message,
-                ['OrderId' => $form['MarketPlaceOrder'], 'Carrier' => $form['CarrierOrder']]
+                ['OrderId' => $form['MarketPlaceOrder'], 'Carrier' => $form['CarrierOrder'], 'BillingName' => $form['BillingName'], 'Tracking' => $form['Tracking']]
             );
             // Email End
             if (isset($all_order) && !empty($all_order)) {
@@ -877,7 +880,7 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
 
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:I:s');
         return $form_data;
     }
 
@@ -948,7 +951,24 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
 
             // Sanitize and Validate
             $validate = new ValidateSanitize();
-            $form = $validate->sanitize($methodData); // only trims & sanitizes strings (other filters available)
+            $form = $validate->sanitize($methodData);
+
+            // start mail
+
+            $message['html']  = $this->view->make('emails/orderconfirm');
+            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+            $mailer = new Email();
+            $mailer->sendEmail(
+                $form['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $form['MarketPlaceOrder'], 'BillingName' => $form['BillingName'], 'Carrier' => $form['CarrierOrder'], 'Tracking' => $form['Tracking']]
+            );
+
+            //End mail
+
+            // only trims & sanitizes strings (other filters available)
             $validate->validation_rules(array(
                 'MarketPlaceOrder'    => 'required',
                 'PaymentMethod'       => 'required',
@@ -1089,13 +1109,11 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
     */
     public function searchOrder(ServerRequest $request)
     {
-
         try {
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $result = (new Product($this->db))->searchProductFilter($methodData);
-
             if (isset($result) && !empty($result)) {
                 $this->view->flash([
                     'alert' => 'Order result get successfully..!',
@@ -1179,7 +1197,22 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
     public function _mapOrderStatusUpdate($status_data = [])
     {
         foreach ($status_data['ids'] as $key_data => $value) {
+
             $update_result = (new Order($this->db))->editOrder($value, ['Status' => $status_data['status']]);
+
+
+            $mail_data = (new Order($this->db))->findById($value);
+
+            $message['html']  = $this->view->make('emails/orderconfirm');
+            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+            $mailer = new Email();
+            $mailer->sendEmail(
+                $mail_data['ShippingEmail'],
+                Config::get('company_name'),
+                _('Order Confirmation'),
+                $message,
+                ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+            );
         } // Loops Ends
         return true;
     }
@@ -1262,13 +1295,13 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
    @params    :: 
    @return    :: pdf download
   */
-    public function pdfGenerateLoad(ServerRequest $request)
+    public function pdfGenerateMailingLoad(ServerRequest $request)
     {
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
             // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
-            $pdf_data = (new Order($this->db))->allorderSearchByOrderData();
+            $pdf_data = (new Order($this->db))->allorderSearchByOrderData($form);
             $mailing_html = $this->loadMailinghtml($pdf_data);
 
             $mpdf = new Mpdf();
@@ -1352,7 +1385,625 @@ mysql_query('INSERT INTO table (comp_prod, product_id) VALUES '.implode(',', $sq
         $html .= "</tbody>";
         $html .= "</table>";
         $html .= "</body>";
-        $html .= "</style>";
+        $html .= "</html>";
         return $html;
+    }
+
+    /*
+   @author    :: Tejas
+   @task_id   :: 
+   @task_desc :: load html view and generate pdf and download
+   @params    :: 
+   @return    :: pdf download
+  */
+    public function pdfGeneratePackingLoad(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
+        try {
+            // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
+            $pdf_data = (new Order($this->db))->getPackingOrders($form);
+            // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
+
+            $packing_html = $this->loadPackinghtml($pdf_data);
+            $mpdf = new Mpdf();
+            $mpdf->use_kwt = true;
+            // $mpdf->showImageErrors = true;
+            // $mpdf->imageVars['myvariable'] = file_get_contents('/assets/images/code39.PNG');
+            $mpdf->WriteHTML($packing_html);
+            $mpdf->Output();
+        } catch (\Mpdf\MpdfException $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/packingslip', []);
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+     @return    :: 
+    */
+    public function loadPackinghtml($pdf_data)
+    {
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/'.$all_order['BarcodeType'].'.png'));
+        // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
+        $html = "";
+        $html .= "";
+        $html .= "<!DOCTYPE html>";
+        $html .= "<html>";
+        $html .= "<head>";
+        $html .= "<title></title>";
+        $html .= "</head>";
+        $html .= "<body>";
+        if (isset($pdf_data) && !empty($pdf_data)) {
+            foreach ($pdf_data as $key_data => $val_data) {
+                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' style='border-collapse: collapse;page-break-after: always;'>";
+                $html .= "<thead>";
+                $html .= "</thead>";
+                $html .= "<tbody>";
+                $html .= "<tr>";
+                $html .= "<td>";
+                $html .= "<div class='main_packing'>";
+                $html .= "<div class='main_packing_left'>";
+                $html .= "<h3>Order: " . $val_data['OrderId'] . "</h3>";
+                $html .= "<p>(" . $val_data['MarketplaceName'] . "Order: #" . $val_data['OrderId'] . ")</p>";
+                $html .= "<h4>Order Date: &nbsp;" . $val_data['OrderDate'] . "</h4>";
+                $html .= "<p><b>Shipping Method: </b>&nbsp;" . $val_data['ShippingMethod'] . "</p>";
+                $html .= "</div>";
+                $html .= "<div class='main_packing_right'>";
+                $html .= "</div>";
+                $html .= "</div>";
+                $html .= "</td>";
+                $html .= "<td></td>";
+                $html .= "<td></td>";
+                $html .= "<td></td>";
+                $html .= "<td><img src='" . $image . "'></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td colspan='5'><b>Selling and Buying</b></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td colspan='3'><b>Ship To</b></td>";
+                $html .= "<td colspan='2'><b>Bill To</b></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td colspan='3'><b>" . $val_data['ShippingName'] . "</b><br>";
+                $html .= $val_data['ShippingAddress1'] . "<br>";
+                $html .=  $val_data['ShippingAddress2'] . "<br>";
+                $html .= $val_data['ShippingAddress3'] . "<br>";
+                $html .= $val_data['ShippingCity'] . "," . $val_data['ShippingState'] . "<br>";
+                $html .= $val_data['ShippingCountry'] . "<br>";
+                $html .= $val_data['ShippingPhone'] . "</td>";
+                $html .= "<td colspan='2'><b>" . $val_data['BillingName'] . "</b><br>";
+                $html .= $val_data['BillingAddress1'] . "<br>";
+                $html .= $val_data['BillingAddress2'] . "<br>";
+                $html .= $val_data['BillingAddress3'] . "<br>";
+                $html .= $val_data['BillingCity'] . "," . $val_data['ShippingState'] . "<br>";
+                $html .= $val_data['BillingCountry'] . "<br>";
+                $html .= $val_data['BillingPhone'] . "</td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;'><b>QTY</b></td>";
+                $html .= "<td style='border:1px solid black;'><b>ISBN/UPC</b></td>";
+                $html .= "<td style='border:1px solid black;'><b>Condition</b></td>";
+                $html .= "<td width='30%' style='border:1px solid black;'><b>Description</b></td>";
+                $html .= "<td style='border:1px solid black;'><b>Media</b></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;'>" . $val_data['ProductQty'] . "</td>";
+                $html .= "<td style='border:1px solid black;'>" . $val_data['ProductISBN'] . "</td>";
+                $html .= "<td style='border:1px solid black;'>" . $val_data['ProductCondition'] . "</td>";
+                $html .= "<td width='30%'>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "<td>Hardcover</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='5'><b>SKU : </b>" . $val_data['ProductSKU'] . "</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='5'><b>Location : </b>" . $val_data['ProductSKU'] . "</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='5'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "</tr>";
+                $html .= "</tbody>";
+                $html .= "</table>";
+            } // Loops Ends
+        } else {
+            $html .= "<h1>No Records found</h1>";
+        }
+        $html .= "</body>";
+        $html .= "</html>";
+        return $html;
+    }
+
+    /*
+   @author    :: Tejas
+   @task_id   :: 
+   @task_desc :: load html view and generate pdf and download
+   @params    :: 
+   @return    :: pdf download
+  */
+    public function pdfGeneratePickLoad(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
+        try {
+            // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
+            $pdf_data = (new Order($this->db))->getPickOrderStatus($form);
+
+            // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
+            $packing_html = $this->loadPickinghtml($pdf_data);
+
+            $mpdf = new Mpdf();
+            $mpdf->use_kwt = true;
+            $mpdf->WriteHTML($packing_html);
+            $mpdf->Output();
+        } catch (\Mpdf\MpdfException $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            return $this->view->buildResponse('order/packingslip', []);
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: 
+     @params    :: 
+     @return    :: 
+    */
+    public function loadPickinghtml($pdf_data)
+    {
+
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/'.$all_order['BarcodeType'].'.png'));
+        // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
+        //$img_barcode = 'test';
+        $html = "";
+        $html .= "";
+        $html .= "<!DOCTYPE html>";
+        $html .= "<html>";
+        $html .= "<head>";
+        $html .= "<title></title>";
+        $html .= "</head>";
+        $html .= "<body>";
+        if (isset($pdf_data) && !empty($pdf_data)) {
+            foreach ($pdf_data as $key_data => $val_data) {
+                $html .= "<table class='table' id='custom_tbl' border='2' width='100%' style='border-collapse: collapse;'>";
+                $html .= "<thead>";
+                $html .= "</thead>";
+                $html .= "<tbody>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;'>Order </td>";
+                $html .= "<td style='border:1px solid black;'>SKU/ASIN/UPC</td>";
+                $html .= "<td style='border:1px solid black;'>Location</td>";
+                $html .= "<td style='border:1px solid black;'>Category</td>";
+                $html .= "<td style='border:1px solid black;'>Price</td>";
+                $html .= "<td style='border:1px solid black;'>QTY</td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;'>Barcode </td>";
+                $html .= "<td style='border:1px solid black;'>Description</td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'>Condition</td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'>Note</td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "<td style='border:1px solid black;'></td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td><img src='" . $image . "' width='150'/></td>";
+                $html .= "<td>" . $val_data['ProductSKU'] . "</td>";
+                $html .= "<td>" . $val_data['ProductISBN'] . "<br>" . $val_data['ProductDescription'] . "<br>" . $val_data['BillingCity'] . " ," . $val_data['BillingState'];
+                $html .= "</td>";
+                $html .= "<td>Hardcore<br>";
+                $html .= $val_data['ProductBuyerNote'] . " - " . $val_data['ProductCondition'] . "<br></td>";
+                $html .= "<td>" . $val_data['ProductPrice'] . "</td>";
+                $html .= "<td>" . $val_data['ProductQty'] . "</td>";
+                $html .= "</tr>";
+                $html .= "</tbody>";
+                $html .= "</table>";
+                $html .= "<br><br><br><br><br><br>";
+            } // Loops Ends
+        } else {
+            $html .= "<h1>No Records found</h1>";
+        }
+        $html .= "</body>";
+        $html .= "</html>";
+        return $html;
+    }
+
+    public function export_Orderlist(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']);
+
+        $export_type = $form['export_formate'];
+
+        $result_data = (new Order($this->db))->select_multiple_ids($form['ids']);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'MarketPlaceId');
+        $sheet->setCellValue('B1', 'OrderId');
+        $sheet->setCellValue('C1', 'Status');
+        $sheet->setCellValue('D1', 'Currency');
+        $sheet->setCellValue('E1', 'PaymentStatus');
+        $sheet->setCellValue('F1', 'PaymentMethod');
+        $sheet->setCellValue('G1', 'BuyerNote');
+        $sheet->setCellValue('H1', 'SellerNote');
+        $sheet->setCellValue('I1', 'ShippingMethod');
+        $sheet->setCellValue('J1', 'Tracking');
+        $sheet->setCellValue('K1', 'Carrier');
+        $sheet->setCellValue('L1', 'ShippingName');
+        $sheet->setCellValue('M1', 'ShippingPhone');
+        $sheet->setCellValue('N1', 'ShippingEmail');
+        $sheet->setCellValue('O1', 'ShippingAddress1');
+        $sheet->setCellValue('P1', 'ShippingAddress2');
+        $sheet->setCellValue('Q1', 'ShippingAddress3');
+        $sheet->setCellValue('R1', 'ShippingCity');
+        $sheet->setCellValue('S1', 'ShippingState');
+        $sheet->setCellValue('T1', 'ShippingZipCode');
+        $sheet->setCellValue('U1', 'ShippingCountry');
+        $sheet->setCellValue('V1', 'BillingName');
+        $sheet->setCellValue('W1', 'BillingPhone');
+        $sheet->setCellValue('X1', 'BillingEmail');
+        $sheet->setCellValue('Y1', 'BillingAddress1');
+        $sheet->setCellValue('Z1', 'BillingAddress2');
+        $sheet->setCellValue('AA1', 'BillingAddress3');
+        $sheet->setCellValue('AB1', 'BillingCity');
+        $sheet->setCellValue('AC1', 'BillingState');
+        $sheet->setCellValue('AD1', 'BillingZipCode');
+        $sheet->setCellValue('AE1', 'BillingCountry');
+        $rows = 2;
+        foreach ($result_data as $orderd) {
+            $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
+            $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
+            $sheet->setCellValue('C' . $rows, $orderd['Status']);
+            $sheet->setCellValue('D' . $rows, $orderd['Currency']);
+            $sheet->setCellValue('E' . $rows, $orderd['PaymentStatus']);
+            $sheet->setCellValue('F' . $rows, $orderd['PaymentMethod']);
+            $sheet->setCellValue('G' . $rows, $orderd['BuyerNote']);
+            $sheet->setCellValue('H' . $rows, $orderd['SellerNote']);
+            $sheet->setCellValue('I' . $rows, $orderd['ShippingMethod']);
+            $sheet->setCellValue('J' . $rows, $orderd['Tracking']);
+            $sheet->setCellValue('K' . $rows, $orderd['Carrier']);
+            $sheet->setCellValue('L' . $rows, $orderd['ShippingName']);
+            $sheet->setCellValue('M' . $rows, $orderd['ShippingPhone']);
+            $sheet->setCellValue('N' . $rows, $orderd['ShippingEmail']);
+            $sheet->setCellValue('O' . $rows, $orderd['ShippingAddress1']);
+            $sheet->setCellValue('P' . $rows, $orderd['ShippingAddress2']);
+            $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
+            $sheet->setCellValue('R' . $rows, $orderd['ShippingCity']);
+            $sheet->setCellValue('S' . $rows, $orderd['ShippingState']);
+            $sheet->setCellValue('T' . $rows, $orderd['ShippingZipCode']);
+            $sheet->setCellValue('U' . $rows, $orderd['ShippingCountry']);
+            $sheet->setCellValue('V' . $rows, $orderd['BillingName']);
+            $sheet->setCellValue('W' . $rows, $orderd['BillingPhone']);
+            $sheet->setCellValue('X' . $rows, $orderd['BillingEmail']);
+            $sheet->setCellValue('Y' . $rows, $orderd['BillingAddress1']);
+            $sheet->setCellValue('Z' . $rows, $orderd['BillingAddress2']);
+            $sheet->setCellValue('AA' . $rows, $orderd['BillingAddress3']);
+            $sheet->setCellValue('AB' . $rows, $orderd['BillingCity']);
+            $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
+            $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
+            $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
+
+            $rows++;
+        }
+
+        if ($export_type == 'xlsx' || $export_type == 'csv') {
+            $this->view->flash([
+                'alert' => 'Order Data sucessfully export..!',
+                'alert_type' => 'success'
+            ]);
+
+            if ($export_type == 'xlsx') {
+                ob_clean();
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="order.xlsx"');
+                header('Cache-Control: max-age=0');
+                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+                $writer->save('order.xlsx');
+
+                die(json_encode(['status' => true, 'filename' => '/order.xlsx']));
+            } else if ($export_type == 'csv') {
+                $writer = new WriteCsv($spreadsheet);
+                header('Content-Type: application/csv');
+                header('Content-Disposition: attachment; filename="order.csv"');
+                $writer->save("order.csv");
+                die(json_encode(['status' => true, 'filename' => '/order.csv']));
+            }
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files upload via dropzone
+     @task_desc :: confiramtion text file upload read text file and update the orderinventory table
+     @params    :: File with txt extention
+    */
+    public function confirmFilesUpload(ServerRequest $request)
+    {
+        $form = $request->getParsedBody();
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
+        try {
+
+            /* File upload validation ends */
+            if (isset($_FILES['file']['error']) && $_FILES['file']['error'] > 0) {
+                throw new Exception('Please Upload Inventory file...!', 301);
+            }
+
+            $allowed_extentions = ['txt'];
+            $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            if (!isset($ext, $allowed_extentions) && !in_array($ext, $allowed_extentions)) {
+                throw new Exception('File type ' . $ext . ' is not allowed...! File types allowed are ' . implode(', ', $allowed_extentions), 1);
+            }
+
+            $file = fopen($_FILES['file']['tmp_name'], "r");
+            $uiee_arr = array();
+            while (!feof($file)) {
+                $uiee_arr[] = fgets($file);
+            }
+
+            $order_arr = [];
+            $set_order_arr = [];
+            if (isset($uiee_arr) && !empty($uiee_arr)) {
+                foreach ($uiee_arr as $key_data => $val_data) {
+                    if ($key_data == 0)
+                        continue;
+
+                    if (!empty($val_data)) {
+                        $temp_order = explode(" ", $val_data);
+                        $order_arr['OrderId'] = (isset($temp_order[0]) && !empty($temp_order[0])) ? $temp_order[0] : "";
+                        $order_arr['Status'] = (isset($temp_order[1]) && !empty($temp_order[1])) ? $temp_order[1] : "";
+                        $order_arr['IsConfirmFiles'] = 1;
+                        if (isset($temp_order[2]) && !empty($temp_order[2])) {
+                            $order_arr['Tracking'] = (isset($temp_order[2]) && !empty($temp_order[2])) ? $temp_order[2] : "";
+                        } else {
+                            unset($order_arr['Tracking']);
+                        }
+
+                        if (isset($temp_order[3]) && !empty($temp_order[3])) {
+                            $order_arr['Carrier'] = (isset($temp_order[3]) && !empty($temp_order[3])) ? $temp_order[3] : "";
+                        } else {
+                            unset($order_arr['Carrier']);
+                        }
+                        $set_order_arr[] = $order_arr;
+                    }
+                } // Loops Ends
+            }
+
+            $is_update = $this->insertOrUpdateConfirmFiles($set_order_arr);
+            $file_details = (new Order($this->db))->getAllConfirmationFiles();
+            $counter = (isset($file_details) && !empty($file_details)) ? $file_details['FileId'] + 1 : 1;
+
+            $file_name['FileName'] = 'Trackz Confirm ' . $counter . '.txt';
+            $file_name['UploadDate'] = date('Y-m-d H:i:s');
+            $file_name['Status'] = (isset($is_update['status']) && $is_update['status'] == true) ? 1 : 0;
+            $file_name['FileId'] = $counter;
+            $file_name['OrderId'] = date('Ymd') . 'trackz-' . $this->random_strings(6);
+            $file_name['AdditionalData'] = (isset($is_update['data']['addtional_info']) && !empty($is_update['data']['addtional_info'])) ? $is_update['data']['addtional_info'] : [];
+
+            $file_details = (new Order($this->db))->addConfirmFileHandle($file_name);
+            if (isset($is_update['status']) && $is_update['status']) {
+                $this->view->flash([
+                    'alert' => 'Order are updated successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $res['status'] = true;
+                $res['data'] = [];
+                $res['message'] = 'Order are updated successfully..!';
+                die(json_encode($res));
+            } else {
+                throw new Exception("Order are not updated...!", 301);
+            }
+
+            fclose($file);
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null]));
+        }
+    }
+
+    /*
+    * insertOrUpdateConfirmFiles - find order update or insert
+    *
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names
+    * @return boolean
+    */
+    public function insertOrUpdateConfirmFiles($data)
+    {
+        $is_update = false;
+        $addtional_info = [];
+        foreach ($data as $key => $value) {
+            $addtional_info[] = $value;
+            $user_details = (new Order($this->db))->findByOrderID($value['OrderId'], Session::get('auth_user_id'));
+            if (isset($user_details) && !empty($user_details)) { // update 
+                // If not updated than only  update records to avoid duplication
+                if (isset($user_details['IsConfirmFiles']) && $user_details['IsConfirmFiles'] == 0) {
+                    $data['Updated'] = date('Y-m-d H:i:s');
+                    $result = (new Order($this->db))->editOrder($user_details['Id'], $value);
+                    $is_update = true;
+                }
+            }
+        } // Loops Ends  
+        if ($is_update == true) {
+            $resp['status'] = true;
+            $resp['message'] = 'Record found successfully...!';
+            $resp['data'] = ['addtional_info' => json_encode($addtional_info)];
+        } else {
+            $resp['status'] = false;
+            $resp['message'] = 'Record not found...!';
+            $resp['data'] = ['addtional_info' => json_encode($addtional_info)];
+        }
+        return $resp;
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files download
+     @task_desc :: confiramtion text file download write file
+     @params    :: File with txt extention
+    */
+    public function confirmFilesDownload($Id)
+    {
+        $Id = $Id->getattributes();
+        try {
+            if ((isset($Id) && is_array($Id)) && sizeof($Id) > 0) {
+                $fileData = (new Order($this->db))->findConfirmFileId($Id['Id']);
+                $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $AdditionalData = (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) ? json_decode($fileData['AdditionalData']) : null;
+
+                if (isset($fileData) && !empty($fileData)) {
+                    $fp = fopen(getcwd() . "/assets/" . $fileData['OrderId'] . ".txt", 'w');
+                    fwrite($fp, 'File ID: ' . $fileData['OrderId'] . "\n");
+                    fwrite($fp, "Summary: \n");
+                    fwrite($fp, 'Total Orders Processed:' . sizeof(json_decode($fileData['AdditionalData'])) . "\n");
+                    fwrite($fp, "Success Count: $success_count \n");
+                    fwrite($fp, "Error Count: $error_count \n");
+                    fwrite($fp, "\n");
+                    fwrite($fp, "Detailed Report: \n");
+                    if (isset($AdditionalData) && !empty($AdditionalData)) {
+                        foreach ($AdditionalData as $key_data => $val_data) {
+                            fwrite($fp, "[" . date("H:i:s", strtotime($fileData['UploadDate'])) . "]" . " set status of " . $val_data->OrderId . " to " . $val_data->Status . "\n");
+                        } // Loops Ends
+                    }
+                    fclose($fp);
+
+                    $validated['alert'] = 'Order file downloaded successfully..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+
+                    $res['status'] = true;
+                    $res['data'] = array();
+                    $res['message'] = 'Order file downloaded successfully..!';
+                    $res['filename'] = '/assets/' . $fileData['OrderId'] . ".txt";
+                    echo json_encode($res);
+                    exit;
+                } else {
+                    throw new Exception("No Orders found to write file", 1);
+                }
+            } else {
+                throw new Exception("Error Processing Request", 1);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null, 'filename' => 'null']));
+        }
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: confirmation files view
+     @task_desc :: confiramtion text file download write file
+     @params    :: File with txt extention
+    */
+    public function confirmFilesView($Id)
+    {
+        $Id = $Id->getattributes();
+        try {
+            if ((isset($Id) && is_array($Id)) && sizeof($Id) > 0) {
+                $fileData = (new Order($this->db))->findConfirmFileId($Id['Id']);
+                $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                $AdditionalData = (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) ? json_decode($fileData['AdditionalData']) : null;
+
+                if (isset($fileData) && !empty($fileData)) {
+                    $fp = fopen(getcwd() . "/assets/" . $fileData['OrderId'] . ".txt", 'w');
+                    fwrite($fp, 'File ID: ' . $fileData['OrderId'] . "\n");
+                    fwrite($fp, "Summary: \n");
+                    fwrite($fp, 'Total Orders Processed:' . sizeof(json_decode($fileData['AdditionalData'])) . "\n");
+                    fwrite($fp, "Success Count: $success_count \n");
+                    fwrite($fp, "Error Count: $error_count \n");
+                    fwrite($fp, "\n");
+                    fwrite($fp, "Detailed Report: \n");
+                    if (isset($AdditionalData) && !empty($AdditionalData)) {
+                        foreach ($AdditionalData as $key_data => $val_data) {
+                            fwrite($fp, "[" . date("H:i:s", strtotime($fileData['UploadDate'])) . "]" . " set status of " . $val_data->OrderId . " to " . $val_data->Status . "\n");
+                        } // Loops Ends
+                    }
+                    fclose($fp);
+
+                    $validated['alert'] = 'Order file downloaded successfully..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+
+                    $res['status'] = true;
+                    $res['data'] = array();
+                    $res['message'] = 'Order file downloaded successfully..!';
+                    $res['filename'] = '/assets/' . $fileData['OrderId'] . ".txt";
+                    echo json_encode($res);
+                    exit;
+                } else {
+                    throw new Exception("No Orders found to write file", 1);
+                }
+            } else {
+                throw new Exception("Error Processing Request", 1);
+            }
+        } catch (Exception $e) {
+
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode(['status' => false, 'message' => 'File not uploaded', 'data' => null, 'filename' => 'null']));
+        }
     }
 }

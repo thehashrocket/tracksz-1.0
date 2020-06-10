@@ -13,15 +13,30 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
         <div class="page-inner">
             <!-- .page-title-bar -->
             <header class="page-title-bar">
+                <div class="d-flex flex-column flex-md-row">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/inventory/browse" title="Browse Store Inventory"><?= ('Inventory') ?></a>
+                            </li>
+                            <li class="breadcrumb-item active"><?= ('Import') ?></li>
+                        </ol>
+                    </nav>
+                    <!-- Insert Active Store Header -->
+                    <?php $this->insert('partials/active_store'); ?>
+                </div>
                 <!-- title -->
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?= _('Inventory File Upload') ?> </h1>
                 </div>
                 <p class="text-muted"> <?= _('This is where upload inventory for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
                 <div id="ajaxMsg"></div>
-              <!--  <?php if (isset($alert) && $alert) : ?>
+                <?php if (isset($alert) && $alert) : ?>
                     <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
-                <?php endif ?> -->
+                <?php endif ?>
             </header><!-- /.page-title-bar -->
             <div class="page-section">
                 <div class="col-lg-12">
@@ -76,8 +91,6 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                                 </div>
                                             </div>
                                             <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
-                                            <a href="<?php echo \App\Library\Config::get('company_url') . '/inventory/queue'; ?>" class="btn btn-warning"><?= _('Queue Sample') ?> </a>
-
                                         </form> <!-- form ends -->
                                     </div>
                                 </div> <!-- col-sm Group Left Ends -->

@@ -675,40 +675,6 @@ class InventoryController
     {
         return $this->view->buildResponse('inventory/item', []);
     }
-    public function defaults()
-    {
-        $settings = require __DIR__ . '/../../../config/inventory.php';
-        $types = (new Category($this->db))->findParents();
-        $default = (new Store($this->db))->columns(
-            Cookie::get('tracksz_active_store'),
-            ['Defaults']
-        );
-        $defaults = json_decode($default['Defaults'], true);
-        return $this->view->buildResponse('inventory/defaults', [
-            'types'     => $types,
-            'settings'  => $settings,
-            'defaults'  => $defaults
-        ]);
-    }
-    public function updateDefaults(ServerRequest $request)
-    {
-        $form = $request->getParsedBody();
-        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do every time.
-        if (!Cookie::exists('tracksz_active_store')) {
-            $this->view->flash([
-                'alert'     => _('Sorry we encountered an issue.  Please try again.'),
-                'alert_type' => 'danger',
-                'defaults'  => $form,
-            ]);
-            return $this->view->redirect('/inventory/defaults');
-        }
-        $updated = (new Store($this->db))->updateColumns(
-            Cookie::get('tracksz_active_store'),
-            ['Defaults' => json_encode($form)]
-        );
-        var_dump($updated);
-        exit();
-    }
 
     /*
     * uploadInventory - Upload inventory file via ftp
@@ -827,8 +793,8 @@ class InventoryController
             $form = $request->getParsedBody();
             $export_type = $form['export_format'];
 
-           $product_data = (new Inventory($this->db))->getAll();
-           $spreadsheet = new Spreadsheet();
+            $product_data = (new Inventory($this->db))->getAll();
+            $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setCellValue('A1', 'Name');
             $sheet->setCellValue('B1', 'Notes');
@@ -874,13 +840,17 @@ class InventoryController
                 ]);
 
                 if ($export_type == 'xlsx') {
-                    $writer = new WriteXlsx($spreadsheet);
-                    $writer->save("inventory." . $export_type);
-                    return $this->view->redirect('/inventory/export');
+                    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment; filename="inventory.xlsx"');
+                    $writer->save("php://output");
+                    exit;
                 } else if ($export_type == 'csv') {
                     $writer = new WriteCsv($spreadsheet);
-                    $writer->save("inventory." . $export_type);
-                    return $this->view->redirect('/inventory/export');
+                    header('Content-Type: application/csv');
+                    header('Content-Disposition: attachment; filename="inventory.csv"');
+                    $writer->save("php://output");
+                    exit;
                 }
             } else {
                 throw new Exception("Failed to update Settings. Please ensure all input is filled out correctly.", 301);
@@ -904,7 +874,7 @@ class InventoryController
             $this->view->flash($validated);
             return $this->view->redirect('/inventory/export');
         }
-            /*if($export_type == 'xlsx')
+        /*if($export_type == 'xlsx')
                {
                      $writer = new WriteXlsx($spreadsheet);
                      $writer->save("inventory.".$export_type);
@@ -938,8 +908,58 @@ class InventoryController
         return $result;
     }
 
+    /*
+    * searchProduct - Filter Product
+    * @param  $form  - Array of form fields, name match Database Fields
+    *                  Form Field Names MUST MATCH Database Column Names   
+    * @return boolean 
+    */
+    public function searchInventoryFilter(ServerRequest $request)
+    {
 
-    
+       try {
+
+            $methodData = $request->getParsedBody();
+            unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
+
+           $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
+           //print_r($result); die;
+            if (isset($result) && !empty($result) && sizeof($result) != 0) {
+                $this->view->flash([
+                    'alert' => 'Inventory result get successfully..!',
+                    'alert_type' => 'success'
+                ]);
+                $prod_obj = (new Product($this->db));
+                $getProdcondition = $prod_obj->getProdconditionData();
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $result,'getProdcondition' => $getProdcondition]);
+            } else {
+                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+
+        
+        $prod_obj = (new Product($this->db));
+        $getProdcondition = $prod_obj->getProdconditionData();
+        //echo 'sdfsdfds'; 
+        //print_r($getProdcondition); die;
+        $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data,'getProdcondition' => $getProdcondition]);
+                throw new Exception("Search result not found...!", 301);
+            }
+        } catch (Exception $e) {
+            //echo 'asdsadasd';exit;
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $e->getMessage();
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+
+            $this->view->flash($validated);
+            return $this->view->buildResponse('inventory/product/browse', []);
+        }
+    }
     /*********** Save for Review - Delete if Not Used ************/
     /***********        Keep at End of File           ************/
     /*

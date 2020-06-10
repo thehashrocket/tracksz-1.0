@@ -9,6 +9,7 @@ use League\Route\Router;
 
 // For functionality
 use App\Controllers\Inventory;
+use App\Controllers\Marketplace;
 use App\Controllers\Job\UploadQueue;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -50,6 +51,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');
                 $route->get('/advanced-settings', Inventory\InventoryController::class . '::advancedSettingsBrowse');
+                $route->post('/filter_inventory', Inventory\InventoryController::class . '::searchInventoryFilter');
                 $route->get('/excel', Inventory\InventoryController::class . '::excel');
                 $route->post('/update_settings', Inventory\InventoryController::class . '::updateSettings');
             })->middleware($this->container->get('Csrf'))
@@ -71,7 +73,18 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/upload', Inventory\ProductController::class . '::UploadProduct');
                 $route->post('/ftpupload', Inventory\ProductController::class . '::UploadInventoryFTP');
                 $route->post('/delete_product', Inventory\ProductController::class . '::delete_productProductData');
-                 $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
+                $route->post('/change_marketplace', Inventory\ProductController::class . '::marketplacebyproduct');
+
+                $route->post('/export_product', Inventory\ProductController::class . '::export_ProductData');
+                $route->post('/market_price', Marketplace\MarketplaceController::class . '::addMarketPrices');
+                $route->post('/market_price_update', Marketplace\MarketplaceController::class . '::updateMarketPrices');
+                $route->post('/market_template_update', Marketplace\MarketplaceController::class . '::updateMarketTemplate');
+                $route->post('/market_shiprates', Marketplace\MarketplaceController::class . '::updateMarketShipRates');
+                $route->post('/market_handletime', Marketplace\MarketplaceController::class . '::updateMarketHandling');
+                $route->post('/market_additional_info', Marketplace\MarketplaceController::class . '::updateMarketAdditionalInfo');
+
+                $route->post('/no_catalog', Inventory\ProductController::class . '::addNoneCatalogProducts');
+                $route->post('/no_catalog_update', Inventory\ProductController::class . '::updateNoneCatalogProducts');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
