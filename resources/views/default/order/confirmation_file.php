@@ -33,9 +33,9 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                 <p class="text-muted"> <?= _('Configure default settings for your Active Store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <div id="ajaxMsg"></div>
                 <?php if (isset($alert) && $alert) : ?>
-                    <!-- <div class="row text-center">
+                    <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
-                    </div> -->
+                    </div>
                 <?php endif ?>
             </header><!-- /.page-title-bar -->
             <!-- .page-section -->
@@ -48,13 +48,22 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
                             <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/confirmation_files" method="POST" enctype="multipart/form-data">
 
                             </form>
-                            <br />
-                            <br />
-                            <br />
                             <!-- <button type="submit" class="btn btn-primary" id="submit-all">Upload</button> -->
                         </div>
                     </div><!-- /.card-body -->
                     <div class="card-body">
+                        <form name="confirm_form" id="confirm_form" action="/order/confirm_status" method="post">
+                            <div class="dropdown">
+                                <select class="browser-default custom-select" id="file_status" name="file_status" required="" style="width: 150px;">
+                                    <option value="" selected disabled><?= _('Select File Status') ?></option>
+                                    <option value="all">All</option>
+                                    <option value="submitted">Submitted</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="done">Done</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div><br>
+                        </form>
                         <!-- .card-body starts -->
                         <?php
 

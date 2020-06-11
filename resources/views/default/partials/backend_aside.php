@@ -32,7 +32,7 @@ if (substr($page, 0, 12) == 'example-page') {
                     }
 
                     $orders_menu = [
-                        'order-browse', 'order-add', 'order-edit', 'order-batch-move', 'order-confirmation-file', 'order-export-order',
+                        'order-browse', 'order-add', 'order-edit', 'order-batch-move', 'order-confirm_status', 'order-confirmation-file', 'order-export-order',
                         'order-shipping', 'order-order-settings', 'order-postage-settings', 'order-label-settings', 'order-add_update_postage_setting',
                         'order-order_update_settings', 'order-add_update_label_setting'
                     ];
@@ -40,7 +40,7 @@ if (substr($page, 0, 12) == 'example-page') {
                     <li class="menu-item has-child<?php if (in_array($page, $orders_menu)) echo ' has-active'; ?>"><a href="/order/browse" class="menu-link menu-item" title="<?= _('Active Store Orders') ?>"><span class="menu-icon fa fa-dollar-sign"></span> <span class="menu-text"><?= _('Orders') ?></span></a>
                         <!-- child menu -->
                         <ul class="menu">
-                            <li class="menu-item<?php if ($page == 'order-browse' || $page == 'order-add' || $page == 'order-edit') echo ' has-active'; ?>">
+                            <li class="menu-item<?php if ($page == 'order-browse' || $page == 'order-add' || $page == 'order-edit' || $page == 'order-confirm_status') echo ' has-active'; ?>">
                                 <a href="/order/browse" title="<?= _('View, Add, Edit, Delete Orders') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
                             <li class="menu-item<?php if ($page == 'order-batch-move') echo ' has-active'; ?>">

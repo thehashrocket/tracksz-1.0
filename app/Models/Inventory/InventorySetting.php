@@ -73,7 +73,7 @@ class InventorySetting
     */
     public function findByUserId($UserId)
     {
-        $stmt = $this->db->prepare('SELECT * FROM InventorySettings WHERE UserId = :UserId');
+        $stmt = $this->db->prepare('SELECT * FROM inventorysettings WHERE UserId = :UserId');
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

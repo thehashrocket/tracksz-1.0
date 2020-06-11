@@ -99,6 +99,16 @@ LEFT JOIN marketplace
     }
 
 
+    public function findConfirmFileStatus($FileStatus)
+    {
+        $Status = implode(',', $FileStatus); // WITHOUT WHITESPACES BEFORE AND AFTER THE COMMA
+
+        $stmt = $this->db->prepare("SELECT * FROM confirmation_file WHERE Status IN ($Status)");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *

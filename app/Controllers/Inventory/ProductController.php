@@ -250,11 +250,12 @@ class ProductController
     */
     public function browse()
     {
-        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);$prod_obj = (new Product($this->db));
+        $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+        $prod_obj = (new Product($this->db));
         $getProdcondition = $prod_obj->getProdconditionData();
-        
+
         $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data,'getProdcondition' => $getProdcondition]);
+        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data, 'getProdcondition' => $getProdcondition]);
     }
 
     /*
@@ -266,13 +267,13 @@ class ProductController
     public function searchInventoryFilter(ServerRequest $request)
     {
 
-       try {
+        try {
 
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
-           $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
-          // print_r($result); die;
+            $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
+        
             if (isset($result) && !empty($result)) {
                 $this->view->flash([
                     'alert' => 'Inventory result get successfully..!',
@@ -283,7 +284,7 @@ class ProductController
                 throw new Exception("Search result not found...!", 301);
             }
         } catch (Exception $e) {
-           // echo 'asdsadasd';exit;
+           
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = $e->getMessage();
@@ -340,7 +341,7 @@ class ProductController
     */
     public function editProduct(ServerRequest $request, $Id = [])
     {
-       $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
+        $form = (new Product($this->db))->getProductsBelongsTo($Id['Id']);
         $cat_obj = new Category($this->db);
         $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
         $all_category = $cat_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
@@ -801,6 +802,8 @@ class ProductController
 
     public function marketplacebyproduct(ServerRequest $request)
     {
+        $prod_obj = (new Product($this->db));
+        $getProdcondition = $prod_obj->getProdconditionData();
         try {
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
@@ -813,14 +816,14 @@ class ProductController
                 ]);
 
                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $map_data, 'market_places' => $result_data]);
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $map_data, 'market_places' => $result_data, 'getProdcondition' => $getProdcondition]);
             } else {
                 $this->view->flash([
                     'alert' => 'Product result not get...!',
                     'alert_type' => 'success'
                 ]);
                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-                return $this->view->buildResponse('inventory/product/browse', ['all_product' => '', 'market_places' => $result_data]);
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => '', 'market_places' => $result_data, 'getProdcondition' => $getProdcondition]);
                 //throw new Exception("Product result not get...!", 301);
             }
         } catch (Exception $e) {

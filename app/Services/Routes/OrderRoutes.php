@@ -65,6 +65,7 @@ class OrderRoutes extends AbstractServiceProvider
                 $route->post('/confirmation_files', Order\OrderController::class . '::confirmFilesUpload');
                 $route->get('/download/{Id:number}', Order\OrderController::class . '::confirmFilesDownload');
                 $route->get('/view/{Id:number}', Order\OrderController::class . '::confirmFilesView');
+                $route->post('/confirm_status', Order\OrderController::class . '::filterConfirmFileStatus');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Store'))
                 ->middleware($this->container->get('Auth'));
