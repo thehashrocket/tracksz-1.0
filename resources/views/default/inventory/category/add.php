@@ -66,24 +66,14 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                     <label class="input-group-text" for="ParentCategory"><?= _('Parent Category') ?></label>
                                                 </div>
                                                 <select class="custom-select" id="ParentCategory" name="ParentCategory">
-                                                    <option value="" selected><?= _('Select Parent Category...') ?></option>
-                                                    <?php
-                                                    if (isset($all_category) && !empty($all_category)) {
-                                                        foreach ($all_category as $cat_key => $cat_val) { ?>
-                                                            <div class="page-section">
-                                                                <!-- .page-section starts -->
-                                                                <div class="card-deck-xl">
-                                                                    <!-- .card-deck-xl starts -->
-                                                                    <div class="card card-fluid">
-                                                                        <!-- .card card-fluid starts -->
-                                                                        <div class="card-body">
-                                                                            <!-- .card-body starts -->
-
-                                                                            <form name="category_market_requ                             <option value=" <?php echo $cat_val['Id']; ?>" <?php echo (isset($form['ParentCategory']) && $form['ParentCategory'] == $cat_val['Id']) ? 'selected' : ''; ?>><?php echo $cat_val['Name']; ?></option>
-                                                                            <?php }
-                                                                    } else { ?>
-                                                                            <option selected><?= _('No Parent Category found...') ?></option>
-                                                                        <?php } ?>
+                                                    <option value="" selected disabled><?= _('Select Parent Category...') ?></option> <?php
+                                                                                                                                        if (isset($all_category) && !empty($all_category)) {
+                                                                                                                                            foreach ($all_category as $cat_key => $cat_val) { ?> <option value="<?php echo $cat_val['Id']; ?>" <?php echo (isset($form['ParentCategory']) && $form['ParentCategory'] == $cat_val['Id']) ? 'selected' : ''; ?>><?php echo $cat_val['Name']; ?>
+                                                            </option>
+                                                        <?php }
+                                                                                                                                        } else { ?>
+                                                        <option value="" selected disabled><?= _('No Parent Category found...') ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                             <div class="form-group">

@@ -322,7 +322,7 @@ class MarketplaceController
         $form_data['Valore'] = (isset($form['Valore']) && !empty($form['Valore'])) ? $form['Valore'] : 0.00;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -388,7 +388,7 @@ class MarketplaceController
         $form_data['Valore'] = (isset($form['Valore']) && !empty($form['Valore'])) ? $form['Valore'] : 0.00;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Updated'] = date('Y-m-d H:I:S');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -402,7 +402,6 @@ class MarketplaceController
     private function insertOrUpdateMarketPrice($data)
     {
         $market_details = (new Marketplace($this->db))->findPriceProductId($data['Id']);
-
         if (isset($market_details) && !empty($market_details)) { // update
             $update_data = $this->PreparePriceUpdateData($data);
             $result = (new Marketplace($this->db))->updateMarketPriceProduct($data['Id'], $update_data);
@@ -496,7 +495,7 @@ class MarketplaceController
         $form_data['ValoreTemplate'] = (isset($form['ValoreTemplate']) && !empty($form['ValoreTemplate'])) ? $form['ValoreTemplate'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Updated'] = date('Y-m-d H:I:S');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -525,7 +524,7 @@ class MarketplaceController
         $form_data['ValoreTemplate'] = (isset($form['ValoreTemplate']) && !empty($form['ValoreTemplate'])) ? $form['ValoreTemplate'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -602,7 +601,7 @@ class MarketplaceController
         $form_data['International'] = (isset($form['International']) && !empty($form['International'])) ? $form['International'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Updated'] = date('Y-m-d H:I:S');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -620,7 +619,7 @@ class MarketplaceController
         $form_data['International'] = (isset($form['International']) && !empty($form['International'])) ? $form['International'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -707,7 +706,7 @@ class MarketplaceController
         $form_data['ValoreHandlingTime'] = (isset($form['ValoreHandlingTime']) && !empty($form['ValoreHandlingTime'])) ? $form['ValoreHandlingTime'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Updated'] = date('Y-m-d H:I:S');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -736,7 +735,7 @@ class MarketplaceController
         $form_data['ValoreHandlingTime'] = (isset($form['ValoreHandlingTime']) && !empty($form['ValoreHandlingTime'])) ? $form['ValoreHandlingTime'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -819,7 +818,7 @@ class MarketplaceController
         $form_data['AdditionalUIEE'] = (isset($form['AdditionalUIEE']) && !empty($form['AdditionalUIEE'])) ? $form['AdditionalUIEE'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Updated'] = date('Y-m-d H:I:S');
+        $form_data['Updated'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 
@@ -843,7 +842,7 @@ class MarketplaceController
         $form_data['AdditionalUIEE'] = (isset($form['AdditionalUIEE']) && !empty($form['AdditionalUIEE'])) ? $form['AdditionalUIEE'] : null;
         $form_data['UserId'] = Session::get('auth_user_id');
         $form_data['StoreId'] = $this->storeid;
-        $form_data['Created'] = date('Y-m-d H:I:S');
+        $form_data['Created'] = date('Y-m-d H:i:s');
         return $form_data;
     }
 }

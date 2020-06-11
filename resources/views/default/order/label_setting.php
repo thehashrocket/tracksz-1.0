@@ -169,13 +169,13 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <label for="Barcode Type"><?= _('Barcode Type') ?></label>
                                                 <select name="BarcodeType" id="BarcodeType" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Barcode Type') ?></option>
-                                                    <option value="Code128" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code128') {
+                                                    <option value="code128" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code128') {
                                                                                 echo 'selected';
                                                                             } ?>>Code 128</option>
-                                                    <option value="Code39" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code39') {
+                                                    <option value="code39" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code39') {
                                                                                 echo 'selected';
                                                                             } ?>>Code 39</option>
-                                                    <option value="ITF" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'ITF') {
+                                                    <option value="itf" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'ITF') {
                                                                             echo 'selected';
                                                                         } ?>>ITF</option>
                                                 </select>
@@ -223,33 +223,33 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 } */
                                             </style>
                                             <div class="form-group">
-                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code128') { ?>
-                                                    <div id="Code128" class="myDiv" style="display: block;">
-                                                        <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/Code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'code128') { ?>
+                                                    <div id="code128" class="myDiv" style="display: block;">
+                                                        <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="Code128" class="myDiv" style="display: none;">
-                                                        <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/Code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
+                                                    <div id="code128" class="myDiv" style="display: none;">
+                                                        <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code128.png'; ?>" alt="Manager" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }
                                                 ?>
 
-                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code39') { ?>
-                                                    <div id="Code39" class="myDiv" style="display: block;">
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'code39') { ?>
+                                                    <div id="code39" class="myDiv" style="display: block;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code39.png'; ?>" alt="HR" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="Code39" class="myDiv" style="display: none;">
+                                                    <div id="code39" class="myDiv" style="display: none;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/code39.png'; ?>" alt="HR" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }
                                                 ?>
-                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'ITF') { ?>
-                                                    <div id="ITF" class="myDiv" style="display: block;">
+                                                <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'itf') { ?>
+                                                    <div id="itf" class="myDiv" style="display: block;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/itf.png'; ?>" alt="Developer" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php } else { ?>
-                                                    <div id="ITF" class="myDiv" style="display: none;">
+                                                    <div id="itf" class="myDiv" style="display: none;">
                                                         <img src="<?php echo \App\Library\Config::get('company_url') . '/assets/images/itf.png'; ?>" alt="Developer" class="img-responsive img-thumbnail" />
                                                     </div>
                                                 <?php }
@@ -522,7 +522,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                     <label class="form-check-label" for="IncludeGSTExAus2">
                                                         <?= _('Include GST Exemptions - Australia') ?>
                                                     </label>
-                                            </div>
+                                                </div>
                                             </div>
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
@@ -545,7 +545,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for=" Label height"><?= _(' Label height') ?></label>
+                                                <label for="Label height"><?= _(' Label height') ?></label>
                                                 <div class="input-group mb-3">
 
                                                     <input type="number" class="form-control" id="LabelHeight" name="LabelHeight" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['LabelHeight']) && !empty($all_order['LabelHeight'])) ? $all_order['LabelHeight'] : ''; ?>" style="width: 255px;">
@@ -565,7 +565,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                         </div> <!-- col-sm -->
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for=" Page margins"><?= _(' Page margins') ?></label>
+                                                <label for="Page margins"><?= _(' Page margins') ?></label>
                                                 <div class="input-group mb-3">
 
                                                     <input type="number" class="form-control" id="PageMargins" name="PageMargins" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['PageMargins']) && !empty($all_order['PageMargins'])) ? $all_order['PageMargins'] : ''; ?>" style="width: 255px;">
@@ -587,7 +587,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <div class="input-group mb-3">
 
                                                     <input type="number" class="form-control" id="LabelMargins" name="LabelMargins" data-parsley-group="fieldset01" required value="<?php echo (isset($all_order['LabelMargins']) && !empty($all_order['LabelMargins'])) ? $all_order['LabelMargins'] : ''; ?>">
-                                                    <div class=" input-group-prepend">
+                                                    <div class="input-group-prepend">
                                                         <select name="LabelMarginsIn" id="LabelMarginsIn" class="browser-default custom-select order_carrier_select">
                                                             <option value="" selected disabled><?= _('Select Label Margin') ?></option>
                                                             <option value="cm" <?php if (isset($all_order['LabelMarginsIn']) && $all_order['LabelMarginsIn'] == 'cm') {

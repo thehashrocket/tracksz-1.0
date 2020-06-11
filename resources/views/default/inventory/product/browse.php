@@ -33,82 +33,86 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                     <h1 class="page-title"> <?= _('Product Listing') ?> </h1>
                 </div>
                 <p class="text-muted"> <?= _('This is where you can modify, and delete Product for the current Active Store: ') ?><strong> <?= \Delight\Cookie\Cookie::get('tracksz_active_name') ?></strong></p>
-<div class="card-deck-xl">
-                <!-- .card-deck-xl starts -->
-                <div class="card card-fluid">
-                    <!-- .card card-fluid starts -->
-                    <div class="card-body">
-                        <!-- .card-body starts -->
-                        <div class="container">
-                            <form name="product_filter" id="product_filter" action="/inventory/filter_inventory" method="POST"> 
-                           
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <h5 class="card-title"><?= _('Search') ?></h5>
-                                        <!-- form starts -->
-                                        <div class="form-group">
-                                            <label for="SKU"><?= _('SKU') ?></label>
-                                            <input type="text" class="form-control" id="SKU" name="SKU" placeholder="Enter SKU" value="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Title"><?= _('Title') ?></label>
-                                            <input type="text" class="form-control" id="EbayTitle" name="EbayTitle" placeholder="Enter Title" value="">
-                                        </div>
-                                    </div> <!-- col-sm -->
-                                    <div class="col-sm" style="margin-top: 2.1rem;">
-                                        <!-- form starts -->
-                                        <div class="form-group">
-                                            <label for="ISBN"><?= _('Product Id') ?></label>
-                                            <input type="text" class="form-control" id="ProdId" name="ProdId" placeholder="Enter Product Id" value="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Author"><?= _('Note') ?></label>
-                                            <input type="text" class="form-control" id="Notes" name="Notes" placeholder="Enter Notes" value="">
-                                        </div>
-                                    </div> <!-- col-sm -->
-                                    <div class="col-sm" style="margin-top: 2.1rem;">
-                                        <!-- form starts -->
-                                        <div class="form-group">
-                                            <label for="Order"><?= _('Price') ?></label>
-                                            <input type="text" class="form-control" id="BasePrice" name="BasePrice" placeholder="Enter BasePrice" value="">
+                <div class="card-deck-xl">
+                    <!-- .card-deck-xl starts -->
+                    <div class="card card-fluid">
+                        <!-- .card card-fluid starts -->
+                        <div class="card-body">
+                            <!-- .card-body starts -->
+                            <div class="container">
+                                <form name="product_filter" id="product_filter" action="/inventory/filter_inventory" method="POST">
 
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Customer"><?= _('Condition') ?></label>
-                                           
-                                            <select id="ProdCondition" name="ProdCondition" class="form-control">
-                                                <option value="all">All Condition</option>
-                                          <?php foreach($getProdcondition as $getProd)
-                                            { ?>
-                                                <option value="<?php echo $getProd['ProdCondition'];?>"><?php echo $getProd['ProdCondition'];?></option>
-                                            <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div> <!-- col-sm -->
-                                    <div class="col-sm" style="margin-top: 2.1rem;">
-                                        <!-- form starts -->
-                                        <div class="form-group">
-                                            <label for="Location"><?= _('Location:') ?></label>
-                                            <input type="text" class="form-control" id="Location" name="Location" placeholder="Enter Location" value="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Note"><?= _('Display') ?></label>
-                                            <select id="status" name="status" class="form-control">
-                                                <option value="all">All Display</option>
-                                                <option value="1">Active</option>
-                                                <option value="0">In Active</option>
-                                            </select>
-                                        </div>
-                                        <input type='hidden' id='clear_filter' name='clear_filter' value=''>
-                                    </div> <!-- col-sm -->
-                                </div> <!-- Row -->
-                                <button type="submit" class="btn btn-primary" >Submit</button>
-                                <button type="submit" class="btn btn-primary btn_clear">Clear</button>
-                            </form>
-                        </div> <!-- Container -->
-                    </div> <!-- Card Body -->
-                </div> <!-- .card card-fluid ends -->
-            </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h5 class="card-title"><?= _('Search') ?></h5>
+                                            <!-- form starts -->
+                                            <div class="form-group">
+                                                <label for="SKU"><?= _('SKU') ?></label>
+                                                <input type="text" class="form-control" id="SKU" name="SKU" placeholder="Enter SKU" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Title"><?= _('Title') ?></label>
+                                                <input type="text" class="form-control" id="EbayTitle" name="EbayTitle" placeholder="Enter Title" value="">
+                                            </div>
+                                        </div> <!-- col-sm -->
+                                        <div class="col-sm" style="margin-top: 2.1rem;">
+                                            <!-- form starts -->
+                                            <div class="form-group">
+                                                <label for="ISBN"><?= _('Product Id') ?></label>
+                                                <input type="text" class="form-control" id="ProdId" name="ProdId" placeholder="Enter Product Id" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Author"><?= _('Note') ?></label>
+                                                <input type="text" class="form-control" id="Notes" name="Notes" placeholder="Enter Notes" value="">
+                                            </div>
+                                        </div> <!-- col-sm -->
+                                        <div class="col-sm" style="margin-top: 2.1rem;">
+                                            <!-- form starts -->
+                                            <div class="form-group">
+                                                <label for="Order"><?= _('Price') ?></label>
+                                                <input type="text" class="form-control" id="BasePrice" name="BasePrice" placeholder="Enter BasePrice" value="">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Customer"><?= _('Condition') ?></label>
+
+                                                <select id="ProdCondition" name="ProdCondition" class="form-control">
+                                                    <option value="all">All Condition</option>
+                                                    <?php
+                                                    if (isset($getProdcondition) && !empty($getProdcondition)) {
+                                                        foreach ($getProdcondition as $getProd) { ?>
+                                                            <option value="<?php echo $getProd['ProdCondition']; ?>"><?php echo $getProd['ProdCondition']; ?></option>
+                                                        <?php }
+                                                    } else { ?>
+                                                        <option>No Records found</option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div> <!-- col-sm -->
+                                        <div class="col-sm" style="margin-top: 2.1rem;">
+                                            <!-- form starts -->
+                                            <div class="form-group">
+                                                <label for="Location"><?= _('Location:') ?></label>
+                                                <input type="text" class="form-control" id="Location" name="Location" placeholder="Enter Location" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Note"><?= _('Display') ?></label>
+                                                <select id="status" name="status" class="form-control">
+                                                    <option value="all">All Display</option>
+                                                    <option value="1">Active</option>
+                                                    <option value="0">In Active</option>
+                                                </select>
+                                            </div>
+                                            <input type='hidden' id='clear_filter' name='clear_filter' value=''>
+                                        </div> <!-- col-sm -->
+                                    </div> <!-- Row -->
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn_clear">Clear</button>
+                                </form>
+                            </div> <!-- Container -->
+                        </div> <!-- Card Body -->
+                    </div> <!-- .card card-fluid ends -->
+                </div>
 
                 <br>
                 <div class="row">

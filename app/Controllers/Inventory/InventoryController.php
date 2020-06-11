@@ -100,6 +100,12 @@ class InventoryController
     public function browseInventoryUpload()
     {
         try {
+            $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+
+            // if (!isset($market_places) && empty($market_places))
+            //     throw new Exception("Error Processing Request", 1);
+
+
             $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
             $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
             if (isset($mime_settings[$user_details['FileType']])) {
@@ -898,6 +904,7 @@ class InventoryController
     public function insertOrUpdate($data)
     {
         $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+
         if (isset($user_details) && !empty($user_details)) { // update
             $data['Updated'] = date('Y-m-d H:i:s');
             $result = (new InventorySetting($this->db))->editInventorySettings($data);
@@ -917,13 +924,13 @@ class InventoryController
     public function searchInventoryFilter(ServerRequest $request)
     {
 
-       try {
+        try {
 
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
-           $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
-           //print_r($result); die;
+            $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
+            //print_r($result); die;
             if (isset($result) && !empty($result) && sizeof($result) != 0) {
                 $this->view->flash([
                     'alert' => 'Inventory result get successfully..!',
@@ -931,17 +938,16 @@ class InventoryController
                 ]);
                 $prod_obj = (new Product($this->db));
                 $getProdcondition = $prod_obj->getProdconditionData();
-                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $result,'getProdcondition' => $getProdcondition]);
+                return $this->view->buildResponse('inventory/product/browse', ['all_product' => $result, 'getProdcondition' => $getProdcondition]);
             } else {
-                 $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                $result_data = (new Marketplace($this->db))->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
 
-        
-        $prod_obj = (new Product($this->db));
-        $getProdcondition = $prod_obj->getProdconditionData();
-        //echo 'sdfsdfds'; 
-        //print_r($getProdcondition); die;
-        $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
-        return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data,'getProdcondition' => $getProdcondition]);
+                $prod_obj = (new Product($this->db));
+                $getProdcondition = $prod_obj->getProdconditionData();
+                //echo 'sdfsdfds'; 
+                //print_r($getProdcondition); die;
+                $all_product = $prod_obj->getActiveUserAll(Session::get('auth_user_id'), [0, 1]);
+                return $this->view->buildResponse('/inventory/product/browse', ['all_product' => $all_product, 'market_places' => $result_data, 'getProdcondition' => $getProdcondition]);
                 throw new Exception("Search result not found...!", 301);
             }
         } catch (Exception $e) {
