@@ -300,6 +300,36 @@ class product
         return true;
     }
 
+    public function updateProdInventoryPrice($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['Id'] = $Id;
+
+        foreach ($columns as $column => $value) {
+            if($column=='BasePrice')
+            {
+                $update .= $column . ' = :' . $column . ', ';
+                $values[$column] = $value;
+            }
+        }
+
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE product SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE Id = :Id';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            exit();
+            return false;
+        };
+
+        $stmt = null;
+        return true;
+    }
+
 
     /*
      * addStore - add a new store for member
