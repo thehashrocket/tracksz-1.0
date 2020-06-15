@@ -31,7 +31,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                 <h1 class="page-title"> <?= _('Packing Listing') ?> </h1>
                 <p class="text-muted"> <?= _('Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
-                    <div class="row text-center">
+                    <div class="row text-center error_class">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
                     </div>
                 <?php endif ?>

@@ -131,7 +131,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 </div>
                                 <div class="tab-pane fade" id="card-filedelete">
                                     <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
-                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzone_filedelete" id="dropzone_filedelete" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />
