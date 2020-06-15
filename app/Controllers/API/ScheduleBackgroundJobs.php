@@ -29,7 +29,7 @@ class ScheduleBackgroundJobs
          $ftpHost      = 'ftp.valorebooks.com';
          $ftpUsername  = 'chrislands_348442';
          $ftpPassword  = 'F23MRTJ8';
-
+       
           $file_list = array();
 
           // open an FTP connection
@@ -87,84 +87,9 @@ class ScheduleBackgroundJobs
              closedir($handle);
           }
 
-           foreach($fileArray as $filepath){
-
-            $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-
-            if($ext == 'csv')
-            {
-                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            
             }
-            else
-            {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-            }
-
-             $spreadsheet = $reader->load($filepath);
-
-             $sheetData = $spreadsheet->getActiveSheet()->toArray();
-
-
-            $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
-            unset($sheetData[0]);
-
-           
-         foreach ($sheetData as  $value) {
-                 # code...
-           
-           $insert_order = array(
-
-            'MarketPlaceId'   =>$value[0],
-            'OrderId'         =>$value[1],
-            'StoreProductId'  =>$value[2],
-            'Status'          =>$value[3],
-            'Currency'        =>$value[4],
-            'PaymentStatus'   =>$value[5],
-            'PaymentMethod'   =>$value[6],
-            'BuyerNote'       =>$value[7],
-            'SellerNote'      =>$value[8],
-            'ShippingMethod'  =>$value[9],
-            'Tracking'        =>$value[10],
-            'Carrier'         =>$value[11],
-            'ShippingName'    =>$value[12],
-            'ShippingPhone'   =>$value[13],
-            'ShippingEmail'   =>$value[14],
-            'ShippingAddress1'=>$value[15],
-            'ShippingAddress2'=>$value[16],
-            'ShippingAddress3'=>$value[17],
-            'ShippingCity'    =>$value[18],
-            'ShippingState'   =>$value[19],
-            'ShippingZipCode' =>$value[20],
-            'ShippingCountry' =>$value[21],
-            'BillingName'     =>$value[22],
-            'BillingPhone'    =>$value[23],
-            'BillingEmail'    =>$value[24],
-            'BillingAddress1' =>$value[25],
-            'BillingAddress2' =>$value[26],
-            'BillingAddress3' =>$value[27],
-            'BillingCity'     =>$value[28],
-            'BillingState'    =>$value[29],
-            'BillingZipCode'  =>$value[30],
-            'BillingCountry'  =>$value[31],
-            'UserId'          =>$value[32],
-            'StoreId'         =>$value[33],
-            'Updated'         =>$value[34],
-            'Created'         =>$value[35]
-        );
-
-        $order_id = $insert_order['OrderId'];
-
-        $order_data = (new Order($this->db))->findByorder_id($order_id);
-
-        if(empty($order_data))
-        {   
-             $ins_data = (new Order($this->db))->insertdata_by_crone($insert_order);
-        }
-
-    } 
-      
-    }
-     die;
-      }
+        }    
+         
   }
 

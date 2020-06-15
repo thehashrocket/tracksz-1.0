@@ -1403,34 +1403,12 @@ class OrderController
             $pdf_data = (new Order($this->db))->getPackingOrders($form);
             // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
 
-
-            if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
-                $packing_html = $this->loadPackinghtml($pdf_data);
-                $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
-            } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
-                $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
-                $packing_html = $this->loadPackingSmallHtml($pdf_data);
-            } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'self-sticklabel') {
-                $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing_92fold.css"); // external css
-                $packing_html = $this->loadPackingSelfStickHtml($pdf_data);
-            } else if (isset($form['OrderSort']) && $form['OrderSort'] == '92mmfold') {
-                $packing_html = $this->loadPacking92FoldHtml($pdf_data);
-                $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
-            } else {
-                throw new Exception("No PDF layout selected..!", 1);
-            }
-
-            // echo '<pre> Test 1 :: Starts';
-            // print_r($packing_html);
-            // print_r($form);
-            // echo '</pre>';
-            // die('LOOP ENDS HERE');
+            $packing_html = $this->loadPackinghtml($pdf_data);
             $mpdf = new Mpdf();
             $mpdf->use_kwt = true;
-
-
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($packing_html, 2);
+            // $mpdf->showImageErrors = true;
+            // $mpdf->imageVars['myvariable'] = file_get_contents('/assets/images/code39.PNG');
+            $mpdf->WriteHTML($packing_html);
             $mpdf->Output();
         } catch (Exception $e) {
             $res['status'] = false;
