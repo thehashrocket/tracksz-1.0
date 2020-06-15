@@ -95,9 +95,35 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     </div>
                                 </div> <!-- col-sm Group Left Ends -->
                                 <div class="tab-pane fade" id="card-filebrowse">
-                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzoneFrom" id="dropzoneFrom" action="/inventory/importupload" method="POST" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <select name="RequestType" id="RequestType" class="browser-default custom-select request_type_select w-50">
+                                                <option value="" selected disabled><?= _('Select Request Type...') ?></option>
+                                                <option value="regular_import"><?= _('Regular Import') ?></option>
+                                                <option value="pricing_import"><?= _('Pricing Import') ?></option>
+                                                <option value="purge"><?= _('Purge') ?></option>
+                                            </select>
+                                        </div>
 
+                                        <div class="form-group">
+                                            <select name="RequestFormat" id="RequestFormat" class="browser-default custom-select request_format_select w-50">
+                                                <option value="" selected disabled><?= _('Select Request Format..') ?></option>
+                                                <option value="UIEEFile"><?= _('UIEE') ?></option>
+                                                <option value="HomeBase2File"><?= _('HomeBase 2.x - Abebooks') ?></option>
+                                                <option value="Chrislands.com"><?= _('Chrislands Tab/CSV') ?></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="InventoryUpload"><?= _('File Upload') ?></label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary"><?= _('Submit') ?> </button>
                                     </form>
+
                                     <br />
                                     <br />
                                     <br />
@@ -105,7 +131,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 </div>
                                 <div class="tab-pane fade" id="card-filedelete">
                                     <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
-                                    <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
+                                    <form name="dropzone_filedelete" id="dropzone_filedelete" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
 
                                     </form>
                                     <br />

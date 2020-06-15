@@ -31,7 +31,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                 <h1 class="page-title"> <?= _('Packing Listing') ?> </h1>
                 <p class="text-muted"> <?= _('Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
-                    <div class="row text-center">
+                    <div class="row text-center error_class">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
                     </div>
                 <?php endif ?>
@@ -65,9 +65,9 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                     </div> <!-- col-sm -->
                                     <div class="col-sm">
                                         <!-- form starts -->
-                                        <div class="form-group" style="width: 150px;">
-                                            <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="">Packing Slip Version...</option>
+                                        <div class="form-group" style="width: 180px;">
+                                            <select name="OrderLayout" id="OrderLayout" class="browser-default custom-select order_layout_select">
+                                                <option value="" selected="" disabled>Packing Slip Version...</option>
                                                 <option value="full">Full</option>
                                                 <option value="small">Small</option>
                                                 <option value="self-sticklabel">Self-Stick Labels</option>

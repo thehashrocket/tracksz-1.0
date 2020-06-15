@@ -99,6 +99,16 @@ LEFT JOIN marketplace
     }
 
 
+    public function findConfirmFileStatus($FileStatus)
+    {
+        $Status = implode(',', $FileStatus); // WITHOUT WHITESPACES BEFORE AND AFTER THE COMMA
+
+        $stmt = $this->db->prepare("SELECT * FROM confirmation_file WHERE Status IN ($Status)");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     /*
     * DATE RANGE - Find orderinventory by orderinventory record Id
     *
@@ -732,6 +742,27 @@ LEFT JOIN marketplace
         $stmt = $this->db->prepare($query);
 
         if (!$stmt->execute($form)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
+    }
+public function insertdata_by_crone($insert_order)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($insert_order as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO orderinventory (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+
+        if (!$stmt->execute($insert_order)) {
             return false;
         }
         $stmt = null;
