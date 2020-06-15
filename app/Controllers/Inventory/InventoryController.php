@@ -97,42 +97,249 @@ class InventoryController
     *                  Form Field Names MUST MATCH Database Column Names
     * @return boolean
     */
-    public function browseInventoryUpload()
+    // public function browseInventoryUpload()
+    // {
+    //     try {
+    //         $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+
+    //         // if (!isset($market_places) && empty($market_places))
+    //         //     throw new Exception("Error Processing Request", 1);
+
+
+    //         $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+    //         $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
+    //         if (isset($mime_settings[$user_details['FileType']])) {
+    //             if ($mime_settings[$user_details['FileType']] != $user_details['FileType'] && $user_details['FileType'] != 'uiee')
+    //                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+
+    //             if ($user_details['FileType'] == 'uiee' && strstr($_FILES['file']['name'], ".", false) != ".txt")
+    //                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+
+    //             $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //             if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+
+    //                 $arr_file = explode('.', $_FILES['file']['name']);
+    //                 $extension = end($arr_file);
+    //                 if ('csv' == $extension) {
+    //                     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+    //                 } else {
+    //                     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    //                 }
+
+    //                 $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+    //                 $sheetData = $spreadsheet->getActiveSheet()->toArray();
+    //                 $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
+    //                 unset($sheetData[0]);
+    //                 $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
+
+    //                 $is_result = $this->insertOrUpdateInventory($map_data);
+    //                 $temo = 'Files for Inventory Import successfully upload..!';
+    //                 $email_file = $this->_LogGenerator($map_data);
+    //                 // Email Start
+    //                 $message['html']  = $this->view->make('emails/inventoryupdate');
+    //                 $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
+    //                 $mailer = new Email();
+    //                 $mailer->sendEmailAttachment(
+    //                     Session::get('auth_email'),
+    //                     Config::get('company_name'),
+    //                     _('Inventory Update Details'),
+    //                     $message,
+    //                     ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+    //                 );
+    //                 // Email End
+    //                 die(json_encode(['message' => $temo, 'status' => true]));
+    //             } else if ($user_details['FileType'] == 'uiee') { // UIEE Format
+
+    //                 $file = fopen($_FILES['file']['tmp_name'], "r");
+    //                 $uiee_arr = array();
+    //                 while (!feof($file)) {
+    //                     $uiee_arr[] = fgets($file);
+    //                 }
+    //                 fclose($file);
+
+    //                 // UIEEFile , HomeBase2File
+    //                 $marketplace_name = "UIEEFile";
+    //                 if ($marketplace_name == "UIEEFile") {
+    //                     // Background Start
+    //                     // $do_jobs['marketplace'] = "UIEEFile";
+    //                     // $do_jobs['data'] = $uiee_arr;
+    //                     // $do_jobs['market_place_map'] = Config::get('market_place_map');
+    //                     // $do_jobs['UserId'] = Session::get('auth_user_id');
+    //                     // $do_jobs['PDO'] = $this->db;
+    //                     // $this->_doBackgroundJobs($do_jobs);
+    //                     // Background Ends 
+
+    //                     $map_data = $this->mapUIEEFieldsAttributes("UIEEFile", $uiee_arr);
+    //                     $is_result = $this->insertOrUpdateInventory($map_data);
+    //                 } else if ($marketplace_name == "HomeBase2File") {
+    //                     $map_data = $this->mapUIEEFieldsAttributes("HomeBase2File", $uiee_arr);
+    //                     $is_result = $this->insertOrUpdateInventory($map_data);
+    //                 }
+    //                 $temo = 'Files for Inventory Import successfully upload..!';
+    //                 $email_file = $this->_LogGenerator($map_data);
+    //                 // Email Start
+    //                 $message['html']  = $this->view->make('emails/inventoryupdate');
+    //                 $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
+    //                 $mailer = new Email();
+    //                 $mailer->sendEmailAttachment(
+    //                     Session::get('auth_email'),
+    //                     Config::get('company_name'),
+    //                     _('Inventory Update Details'),
+    //                     $message,
+    //                     ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+    //                 );
+    //                 // Email End
+    //                 die(json_encode(['message' => $temo, 'status' => true]));
+    //             } else {
+    //                 throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+    //             }
+    //         } else {
+    //             throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+    //         }
+    //     } catch (Exception $e) {
+    //         $res['status'] = false;
+    //         $res['data'] = [];
+    //         $res['message'] = 'Inventory File not uploaded into server...!';
+    //         $res['ex_message'] = $e->getMessage();
+    //         $res['ex_code'] = $e->getCode();
+    //         $res['ex_file'] = $e->getFile();
+    //         $res['ex_line'] = $e->getLine();
+    //         die(json_encode($res));
+    //     }
+    // }
+
+    public function browseInventoryUpload(ServerRequest $request)
     {
+        $form = $request->getUploadedFiles();
+        $form_2 = $request->getParsedBody();
+        
+        unset($form['__token']);
+        unset($form_2['__token']);
+
         try {
-            $market_places = (new Marketplace($this->db))->findByUserId(Session::get('auth_user_id'), 1);
+                $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
+                //echo "<pre>";print_r($form_2);exit;
+                $request_name=$form_2['RequestFormat'];
+                //echo $request_name;die;
+                if($request_name =='UIEEFile')
+                {
+                    $validator2 = new Extension(['txt']);
+                    if (!$validator2->isValid($_FILES['InventoryUpload'])) {
+                            throw new Exception("Please upload valid file type based on request formate...!", 301);
+                        }
+                    $file = fopen($_FILES['InventoryUpload']['tmp_name'], "r");
+                    $uiee_arr = array();
+                    while (!feof($file)) {
+                        $uiee_arr[] = fgets($file);
+                    }
+                    fclose($file);
+                    $map_data = $this->mapUIEEFieldsAttributes("UIEEFile", $uiee_arr);
+                    //echo "<pre>";print_r($map_data);exit;
+                    $request_type = $form_2['RequestType'];
 
-            // if (!isset($market_places) && empty($market_places))
-            //     throw new Exception("Error Processing Request", 1);
+                    if($request_type =='pricing_import')
+                    {
+                        $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    else
+                    {
+                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    }
 
+                    $temo = 'Files for Inventory Import successfully upload..!';
+                    $email_file = $this->_LogGenerator($map_data);
+                    $message['html']  = $this->view->make('emails/inventoryupdate');
+                    $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
+                    $mailer = new Email();
+                    $mailer->sendEmailAttachment(
+                        Session::get('auth_email'),
+                        Config::get('company_name'),
+                        _('Inventory Update Details'),
+                        $message,
+                        ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+                    );
+                    $validated['alert'] = 'Files for Inventory Import successfully upload..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+                    return $this->view->redirect('/inventory/import');
+                    //die(json_encode(['message' => $temo, 'status' => true]));
+                }
 
-            $user_details = (new InventorySetting($this->db))->findByUserId(Session::get('auth_user_id'));
-            $mime_settings = ['uiee' => 'txt', 'csv' => 'csv', 'xlsx' => 'xlsx'];
-            if (isset($mime_settings[$user_details['FileType']])) {
-                if ($mime_settings[$user_details['FileType']] != $user_details['FileType'] && $user_details['FileType'] != 'uiee')
-                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+                if($request_name =='HomeBase2File')
+                {
+                    $validator2 = new Extension(['txt']);
+                    if (!$validator2->isValid($_FILES['InventoryUpload'])) {
+                            throw new Exception("Please upload valid file type based on request formate...!", 301);
+                        }
+                    $file = fopen($_FILES['InventoryUpload']['tmp_name'], "r");
+                    $uiee_arr = array();
+                    while (!feof($file)) {
+                        $uiee_arr[] = fgets($file);
+                    }
+                    fclose($file);
+                    $map_data = $this->mapUIEEFieldsAttributes("HomeBase2File", $uiee_arr);
+                    $request_type = $form_2['RequestType'];
 
-                if ($user_details['FileType'] == 'uiee' && strstr($_FILES['file']['name'], ".", false) != ".txt")
-                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
+                    if($request_type =='pricing_import')
+                    {
+                        $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    else
+                    {
+                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    }
 
-                $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
+                    $temo = 'Files for Inventory Import successfully upload..!';
+                    $email_file = $this->_LogGenerator($map_data);
+                    $message['html']  = $this->view->make('emails/inventoryupdate');
+                    $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
+                    $mailer = new Email();
+                    $mailer->sendEmailAttachment(
+                        Session::get('auth_email'),
+                        Config::get('company_name'),
+                        _('Inventory Update Details'),
+                        $message,
+                        ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
+                    );
+                    $validated['alert'] = 'Files for Inventory Import successfully upload..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+                    return $this->view->redirect('/inventory/import');
+                    //die(json_encode(['message' => $temo, 'status' => true]));
+                }
+                if($request_name =='Chrislands.com')
+                {
+                    
+                    $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-                    $arr_file = explode('.', $_FILES['file']['name']);
+                    if (isset($_FILES['InventoryUpload']['name']) && in_array($_FILES['InventoryUpload']['type'], $file_mimes)) {
+
+                    $arr_file = explode('.', $_FILES['InventoryUpload']['name']);
                     $extension = end($arr_file);
+                    //echo "<pre>";print_r($extension);exit;
                     if ('csv' == $extension) {
                         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
                     } else {
                         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
                     }
 
-                    $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+                    $spreadsheet = $reader->load($_FILES['InventoryUpload']['tmp_name']);
                     $sheetData = $spreadsheet->getActiveSheet()->toArray();
                     $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
                     unset($sheetData[0]);
                     $map_data = $this->mapFieldsAttributes("Chrislands.com", $headerOnly, $sheetData);
 
-                    $is_result = $this->insertOrUpdateInventory($map_data);
+                    $request_type = $form_2['RequestType'];
+
+                    if($request_type =='pricing_import')
+                    {
+                        $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    else
+                    {
+                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    }
+                    
                     $temo = 'Files for Inventory Import successfully upload..!';
                     $email_file = $this->_LogGenerator($map_data);
                     // Email Start
@@ -147,56 +354,19 @@ class InventoryController
                         ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
                     );
                     // Email End
-                    die(json_encode(['message' => $temo, 'status' => true]));
-                } else if ($user_details['FileType'] == 'uiee') { // UIEE Format
-
-                    $file = fopen($_FILES['file']['tmp_name'], "r");
-                    $uiee_arr = array();
-                    while (!feof($file)) {
-                        $uiee_arr[] = fgets($file);
+                    $validated['alert'] = 'Files for Inventory Import successfully upload..!';
+                    $validated['alert_type'] = 'success';
+                    $this->view->flash($validated);
+                    return $this->view->redirect('/inventory/import');
+                    //die(json_encode(['message' => $temo, 'status' => true]));
                     }
-                    fclose($file);
-
-                    // UIEEFile , HomeBase2File
-                    $marketplace_name = "UIEEFile";
-                    if ($marketplace_name == "UIEEFile") {
-                        // Background Start
-                        // $do_jobs['marketplace'] = "UIEEFile";
-                        // $do_jobs['data'] = $uiee_arr;
-                        // $do_jobs['market_place_map'] = Config::get('market_place_map');
-                        // $do_jobs['UserId'] = Session::get('auth_user_id');
-                        // $do_jobs['PDO'] = $this->db;
-                        // $this->_doBackgroundJobs($do_jobs);
-                        // Background Ends 
-
-                        $map_data = $this->mapUIEEFieldsAttributes("UIEEFile", $uiee_arr);
-                        $is_result = $this->insertOrUpdateInventory($map_data);
-                    } else if ($marketplace_name == "HomeBase2File") {
-                        $map_data = $this->mapUIEEFieldsAttributes("HomeBase2File", $uiee_arr);
-                        $is_result = $this->insertOrUpdateInventory($map_data);
+                    else
+                    {
+                        throw new Exception("Please upload valid file type based on request formate...!", 301);
                     }
-                    $temo = 'Files for Inventory Import successfully upload..!';
-                    $email_file = $this->_LogGenerator($map_data);
-                    // Email Start
-                    $message['html']  = $this->view->make('emails/inventoryupdate');
-                    $message['plain'] = $this->view->make('emails/plain/inventoryupdate');
-                    $mailer = new Email();
-                    $mailer->sendEmailAttachment(
-                        Session::get('auth_email'),
-                        Config::get('company_name'),
-                        _('Inventory Update Details'),
-                        $message,
-                        ['path' =>  getcwd() . "\logs\\$email_file", 'name' => $email_file, 'encoding' => 'base64', 'type' => 'application/json']
-                    );
-                    // Email End
-                    die(json_encode(['message' => $temo, 'status' => true]));
-                } else {
-                    throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
                 }
-            } else {
-                throw new Exception("Files for Inventory Import are supported as per Inventory Settings...!", 301);
-            }
-        } catch (Exception $e) {
+                
+        }catch (Exception $e) {
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = 'Inventory File not uploaded into server...!';
@@ -204,7 +374,11 @@ class InventoryController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-            die(json_encode($res));
+            $validated['alert'] = 'Inventory File not uploaded into server...!';
+                    $validated['alert_type'] = 'danger';
+                    $this->view->flash($validated);
+                    return $this->view->redirect('/inventory/import');
+            //die(json_encode($res));
         }
     }
 
@@ -338,6 +512,20 @@ class InventoryController
                 $data_val['UserId'] = Session::get('auth_user_id');
                 $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
                 $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventory($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventory($data_val);
+            }
+        }
+        return true;
+    }
+
+    public function insertOrUpdateprice($data)
+    {
+        foreach ($data as $data_val) {
+            if (isset($data_val['ProdId']) && !empty($data_val['ProdId'])) {
+                $data_val['AddtionalData'] = json_encode($data_val['AddtionalData']);
+                $data_val['UserId'] = Session::get('auth_user_id');
+                //echo "<pre>";print_r($data_val);exit;
+                $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
+                $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventoryPrice($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventory($data_val);
             }
         }
         return true;

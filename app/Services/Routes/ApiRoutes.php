@@ -8,6 +8,7 @@ namespace App\Services\Routes;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
+use App\Controllers\Api;
 
 class ApiRoutes extends AbstractServiceProvider
 {
@@ -30,7 +31,7 @@ class ApiRoutes extends AbstractServiceProvider
             
             // Use for API Calls, May need authentication of some kind, Need Json results
             $routes->group('/api', function (\League\Route\RouteGroup $route) {
-
+                $route->get('/orderprocess', Api\ScheduleBackgroundJobs::class . '::orderBackgroundProcess');
             
             });
             

@@ -747,4 +747,25 @@ LEFT JOIN marketplace
         $stmt = null;
         return $this->db->lastInsertId();
     }
+public function insertdata_by_crone($insert_order)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($insert_order as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query  = 'INSERT INTO orderinventory (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+
+        if (!$stmt->execute($insert_order)) {
+            return false;
+        }
+        $stmt = null;
+        return $this->db->lastInsertId();
+    }
 }

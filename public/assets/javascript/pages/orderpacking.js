@@ -15,7 +15,7 @@ $(document).ready(function () {
       $.ajax({
         url: BASE_URL + "/order/pdf_packing",
         type: "POST",
-        data: { status: $("#OrderSortBy :selected").val() },
+        data: { status: $("#OrderSortBy :selected").val(),'OrderSort': $('#OrderLayout').val() },
         dataType: "JSON",
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
@@ -25,7 +25,9 @@ $(document).ready(function () {
             location.reload();
           }
         },
-        error: function (jqXHR, textStatus, errorThrown) {},
+        error: function (jqXHR, textStatus, errorThrown) {}, complete: function () {  
+          
+        }
       });
     }
   );
