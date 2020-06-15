@@ -65,9 +65,9 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                     </div> <!-- col-sm -->
                                     <div class="col-sm">
                                         <!-- form starts -->
-                                        <div class="form-group" style="width: 150px;">
-                                            <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="">Packing Slip Version...</option>
+                                        <div class="form-group" style="width: 180px;">
+                                            <select name="OrderLayout" id="OrderLayout" class="browser-default custom-select order_layout_select">
+                                                <option value="" selected="" disabled>Packing Slip Version...</option>
                                                 <option value="full">Full</option>
                                                 <option value="small">Small</option>
                                                 <option value="self-sticklabel">Self-Stick Labels</option>
