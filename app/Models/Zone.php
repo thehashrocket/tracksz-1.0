@@ -14,7 +14,7 @@ class Zone
         $this->db = $db;
     }
     
-    /*
+    /**
     * all - Get all Zomnes
     *
     * @return array of arrays
@@ -26,7 +26,7 @@ class Zone
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /*
+    /**
     * all - Get all countries
     *
     * @return array of arrays
@@ -40,7 +40,7 @@ class Zone
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /*
+    /**
     * all - Get all countries
     *
     * @return array of arrays
@@ -54,7 +54,7 @@ class Zone
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /*
+    /**
      * columnsByIndex - get one or more columns from zone table
      *                  based on $index = value;
      *                  and Id = CountryId
@@ -77,5 +77,33 @@ class Zone
             return false;
         }
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getName - Get name of zone
+     *  @param $id - ID of zone
+     *  @return string - Name of zone
+     */
+    public function getName($id)
+    {
+        $query = 'SELECT `Name` FROM `Zone` WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['Name'];
+    }
+
+    /**
+     *  getCountry - Get country ID of zone
+     *  @param $id - ID of zone
+     *  @return string - ID of country
+     */
+    public function getCountryId($id)
+    {
+        $query = 'SELECT CountryId FROM `Zone` WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['CountryId'];
     }
 }

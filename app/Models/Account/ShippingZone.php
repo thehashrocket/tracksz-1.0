@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use Delight\Cookie\Cookie;
 use App\Models\Country;
+use App\Models\Zone;
 use PDO;
 
 class ShippingZone
@@ -314,6 +315,66 @@ class ShippingZone
                 $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
                 return $stmt->execute();
             }
+        }
+    }
+
+    /**
+     *  getZipCodeAssignments - Get zip code level assignments for state
+     * 
+     *  @param $stateId - ID of state
+     *  @param $storeId - ID of store
+     *  @return array of assignments
+     */
+    public function getZipCodeAssignments($stateId, $storeId)
+    {
+        $query = 'SELECT ShippingZone.Id AS `ZoneId`, ShippingZone.Name, ShippingZoneToRegion.ZipCodeMin, ShippingZoneToRegion.ZipCodeMax FROM ShippingZoneToRegion 
+                  INNER JOIN ShippingZone ON ShippingZoneToRegion.ZoneId = ShippingZone.Id 
+                  WHERE ShippingZone.StoreId = :storeId
+                  AND ShippingZoneToRegion.StateId = :stateId
+                  AND ShippingZoneToRegion.ZipCodeMin IS NOT NULL
+                  AND ShippingZoneToRegion.ZipCodeMax IS NOT NULL
+                  ORDER BY ShippingZoneToRegion.ZipCodeMin';
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  assignToZipRange - Assign shipping zone to zip code range
+     * 
+     *  @param $zoneId - ID of shipping zone
+     *  @param $stateId - ID of state
+     *  @param $zipCodeMin - Lower bound for zip code range
+     *  @param $zipCodeMax - Upper bound for zip code range
+     *  @return array of conflicting entries if assignment failed
+     *  @return bool on success
+     */
+    public function assignToZipRange($zoneId, $stateId, $zipCodeMin, $zipCodeMax)
+    {
+        $query = 'SELECT * FROM ShippingZoneToRegion WHERE StateId = :stateId AND ((:zipMin <= ZipCodeMin AND :zipMax >= ZipCodeMax) OR (:zipMin <= ZipCodeMax AND :zipMax >= ZipCodeMax) OR (:zipMin >= ZipCodeMin AND :zipMax <= ZipCodeMax))';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+        $stmt->bindParam(':zipMin', $zipCodeMin, PDO::PARAM_INT);
+        $stmt->bindParam(':zipMax', $zipCodeMax, PDO::PARAM_INT);
+        $stmt->execute();
+        $conflicts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($conflicts) {
+            return $conflicts;
+        }
+        else {
+            $countryId = (new Zone($this->db))->getCountryId($stateId);
+            $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId, StateId, ZipCodeMin, ZipCodeMax) VALUES (:zoneId, :countryId, :stateId, :zipMin, :zipMax)';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+            $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+            $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+            $stmt->bindParam(':zipMin', $zipCodeMin, PDO::PARAM_INT);
+            $stmt->bindParam(':zipMax', $zipCodeMax, PDO::PARAM_INT);
+            return $stmt->execute();
         }
     }
 }

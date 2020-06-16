@@ -9,6 +9,7 @@ use App\Models\Account\ShippingMethod;
 use App\Models\Account\ShippingZone;
 use App\Models\Account\Store;
 use App\Models\Account\Member;
+use App\Models\Zone;
 use Delight\Auth\Auth;
 use Delight\Cookie\Cookie;
 use Delight\Cookie\Session;
@@ -51,6 +52,7 @@ class ShippingController
     {
         $activeStoreId = Cookie::get('tracksz_active_store');
         $methods = (new ShippingMethod($this->db))->findByStore($activeStoreId);
+
         return $this->view->buildResponse('/account/shipping_method', [
             'shippingMethods' => $methods,
             'activeStoreId' => $activeStoreId
@@ -76,6 +78,7 @@ class ShippingController
     public function viewUpdateMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
+
         if ($shippingMethodObj->belongsToMember($data['Id'], $this->auth->getUserId()))
         {
             $method = $shippingMethodObj->find($data['Id']);
@@ -113,6 +116,7 @@ class ShippingController
     public function viewUpdateZone(ServerRequest $request, array $data)
     {
         $shippingZoneObj = new ShippingZone($this->db);
+
         if ($shippingZoneObj->belongsToMember($data['ZoneId'], $this->auth->getUserId())) {
             $zone = (new ShippingZone($this->db))->find($data['ZoneId']);
             return $this->view->buildResponse('/account/shipping_zone_add', [
@@ -134,6 +138,7 @@ class ShippingController
     {
         $activeStoreId = Cookie::get('tracksz_active_store');
         $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
+
         return $this->view->buildResponse('/account/shipping_zone', [
             'shippingZones' => $zones
         ]);
@@ -151,6 +156,7 @@ class ShippingController
         $zone = (new ShippingZone($this->db))->find($data['ZoneId']);
         $assigned = $shippingMethodObj->getAssignedByZone($data['ZoneId']);
         $unassigned = $shippingMethodObj->getUnassignedByStore($storeId, $data['ZoneId']);
+
         return $this->view->buildResponse('/account/shipping_zone_manage', [
             'zone' => $zone,
             'assignedMethods' => $assigned,
@@ -167,6 +173,7 @@ class ShippingController
     {
         $activeStoreId = Cookie::get('tracksz_active_store');
         $zones = (new ShippingZone($this->db))->findByStore($activeStoreId);
+
         return $this->view->buildResponse('/account/shipping_assign_bulk', [
             'shippingZones' => $zones
         ]);
@@ -179,12 +186,11 @@ class ShippingController
      */
     public function viewAssignZonesIndividualCountries()
     {
-        $countryZones = (new ShippingZone($this->db))->getCountryAssignments();
-        $countries = (new Country($this->db))->all();
         $activeStoreId = Cookie::get('tracksz_active_store');
         $shippingZoneObj = (new ShippingZone($this->db));
         $countryZoneAssignments = $shippingZoneObj->getBulkCountryAssignmentMap($activeStoreId);
         $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
+
         return $this->view->buildResponse('/account/shipping_assign_countries', [
             'countryZoneAssignments' => $countryZoneAssignments,
             'shippingZones' => $shippingZones
@@ -203,9 +209,34 @@ class ShippingController
         $shippingZoneObj = (new ShippingZone($this->db));
         $stateZoneAssignments = $shippingZoneObj->getStateAssignmentMap($activeStoreId, $countryId);
         $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
+
         return $this->view->buildResponse('/account/shipping_assign_states', [
             'countryId' => $countryId,
             'stateZoneAssignments' => $stateZoneAssignments,
+            'shippingZones' => $shippingZones
+        ]);
+    }
+
+    public function viewAssignZonesIndividualZip(ServerRequest $request, array $data)
+    {
+        $activeStoreId = Cookie::get('tracksz_active_store');
+        $stateId = $data['StateId'];
+        $stateName = (new Zone($this->db))->getName($stateId);
+        $zipRanges = include(__DIR__.'/../../../config/zip_codes.php');
+        $zipRangesUS = $zipRanges['US'];
+        $stateZipCodeMin = $zipRangesUS[$stateId]['min'];
+        $stateZipCodeMax = $zipRangesUS[$stateId]['max'];
+
+        $shippingZoneObj = new ShippingZone($this->db);
+        $zipCodeAssignments = $shippingZoneObj->getZipCodeAssignments($stateId, $activeStoreId);
+        $shippingZones = $shippingZoneObj->findByStore($activeStoreId);
+
+        return $this->view->buildResponse('/account/shipping_assign_zip', [
+            'stateId' => $stateId,
+            'stateName' => $stateName,
+            'stateZipCodeMin' => $stateZipCodeMin,
+            'stateZipCodeMax' => $stateZipCodeMax,
+            'zipCodeAssignments' => $zipCodeAssignments,
             'shippingZones' => $shippingZones
         ]);
     }
@@ -215,6 +246,7 @@ class ShippingController
         $methodData = $request->getParsedBody();
         $methodData['StoreId'] = (new Member($this->db))->getActiveStoreId($this->auth->getUserId());
         $newMethod = (new ShippingMethod($this->db))->create($methodData);
+
         if ($newMethod) {
             $this->view->flash([
                 'alert' => 'Successfully created new shipping method.',
@@ -242,6 +274,7 @@ class ShippingController
         $zoneData = $request->getParsedBody();
         $zoneData['StoreId'] = Cookie::get('tracksz_active_store');
         $newZone = (new ShippingZone($this->db))->create($zoneData);
+
         if ($newZone) {
             $this->view->flash([
                 'alert' => 'Successfully created new shipping zone.',
@@ -268,6 +301,7 @@ class ShippingController
     {
         $shippingMethodObj = new ShippingMethod($this->db);
         $methodData = $request->getParsedBody();
+
         if ($shippingMethodObj->belongsToMember($methodData['update_id'], $this->auth->getUserId())) {
             $updated = $shippingMethodObj->update($methodData);
             if ($updated) {
@@ -333,7 +367,7 @@ class ShippingController
     /**
      *  deleteMethod - Delete shipping method via ID
      *
-     *  @param  $data - Contains ID
+     *  @param  $data - Method data
      *  @return view  - Redirect based on success
      */
     public function deleteMethod(ServerRequest $request, array $data)
@@ -351,9 +385,16 @@ class ShippingController
         return $this->view->redirect('/account/shipping-methods');
     }
 
+    /**
+     *  deleteZone - Delete shipping zone
+     * 
+     *  @param $data - Zone data
+     *  @return view - Redirect based on success
+     */
     public function deleteZone(ServerRequest $request, array $data)
     {
         $shippingZoneObj = new ShippingZone($this->db);
+
         if ($shippingZoneObj->belongsToMember($data['Id'], $this->auth->getUserId())) {
             $deleted = $shippingZoneObj->delete($data['Id']);
             $this->view->flash([
@@ -365,9 +406,16 @@ class ShippingController
         return $this->view->redirect('/account/shipping-zones');
     }
 
+    /**
+     *  assignMethod - Assign shipping method to zone
+     * 
+     *  @param $data - Method data
+     *  @return view - Redirect based on success
+     */
     public function assignMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
+
         if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId())) {
             $success = $shippingMethodObj->assign($data['MethodId'], $data['ZoneId']);
             $this->view->flash([
@@ -379,9 +427,16 @@ class ShippingController
         return $this->view->redirect('/account/shipping-zones/manage/' . $data['ZoneId']);
     }
 
+    /**
+     *  unassignMethod - Unassign shipping method from zone
+     * 
+     *  @param $data - Method data
+     *  @return view - Redirect based on success
+     */
     public function unassignMethod(ServerRequest $request, array $data)
     {
         $shippingMethodObj = new ShippingMethod($this->db);
+
         if ($shippingMethodObj->belongsToMember($data['MethodId'], $this->auth->getUserId())) {
             $success = $shippingMethodObj->unassign($data['MethodId'], $data['ZoneId']);
             $this->view->flash([
@@ -393,6 +448,11 @@ class ShippingController
         return $this->view->redirect('/account/shipping-zones/manage/' . $data['ZoneId']);
     }
 
+    /**
+     *  bulkAssign - Bulk assign shipping zone to country
+     * 
+     *  @return view - Redirect based on success
+     */
     public function bulkAssign(ServerRequest $request)
     {
         $data = $request->getParsedBody();
@@ -427,6 +487,11 @@ class ShippingController
         return $this->view->redirect('/account/shipping-assign');
     }
 
+    /**
+     *  assignZoneToState - Bulk assign shipping zone to state
+     * 
+     *  @return view - Redirect based on success
+     */
     public function assignZoneToState(ServerRequest $request)
     {
         $data = $request->getParsedBody();
@@ -436,10 +501,51 @@ class ShippingController
 
         $success = (new ShippingZone($this->db))->bulkAssignToState($zoneId, $countryId, $stateId);
         $this->view->flash([
-            'alert' => $success ? 'Successfully assigned shipping zone to state.' : 'Failed to assign shipping zone to state.',
+            'alert' => ($success ? 'Successfully assigned' : 'Failed to assign') . ' shipping zone to state.',
             'alert_type' => $success ? 'success' : 'danger'
         ]);
 
         return $this->view->redirect('/account/shipping-assign/individual/states/' . $countryId);
+    }
+
+    public function assignZoneToZipRange(ServerRequest $request)
+    {
+        $data = $request->getParsedBody();
+        $stateId = $data['StateId'];
+        $zoneId = $data['ZoneId'];
+        $zipCodeMin = $data['ZipCodeMin'];
+        $zipCodeMax = $data['ZipCodeMax'];
+        $stateZipCodeMin = $data['StateZipCodeMin'];
+        $stateZipCodeMax = $data['StateZipCodeMax'];
+
+        if ($zipCodeMin < 0 || $zipCodeMax < 0 || $zipCodeMin > 99999 || $zipCodeMax > 99999 || $zipCodeMax < $zipCodeMin) {
+            $this->view->flash([
+                'alert' => 'Invalid zip code range.',
+                'alert_type' => 'danger'
+            ]);
+        }
+        else if ($zipCodeMin < $stateZipCodeMin || $zipCodeMax > $stateZipCodeMax) {
+            $this->view->flash([
+                'alert' => 'Zip code range should be between ' . $stateZipCodeMin . ' and ' . $stateZipCodeMax . '.',
+                'alert_type' => 'danger'
+            ]);
+        }
+        else {
+            $result = (new ShippingZone($this->db))->assignToZipRange($zoneId, $stateId, $zipCodeMin, $zipCodeMax);
+            if (gettype($result) === 'array') {
+                $this->view->flash([
+                    'alert' => 'The following entries for this state conflict with the submitted range.',
+                    'alert_type' => 'danger'
+                ]);
+            }
+            else {
+                $this->view->flash([
+                    'alert' => ($result ? 'Successfully assigned' : 'Failed to assign') . ' zone to zip code range.',
+                    'alert_type' => $result ? 'success' : 'danger'
+                ]);
+            }
+        }
+
+        return $this->view->redirect('/account/shipping-assign/individual/zip/' . $stateId);
     }
 }
