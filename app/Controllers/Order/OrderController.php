@@ -1407,31 +1407,36 @@ class OrderController
             if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
                 $packing_html = $this->loadPackinghtml($pdf_data);
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
+                $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $packing_html = $this->loadPackingSmallHtml($pdf_data);
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'self-sticklabel') {
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing_92fold.css"); // external css
                 $packing_html = $this->loadPackingSelfStickHtml($pdf_data);
+                $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == '92mmfold') {
                 $packing_html = $this->loadPacking92FoldHtml($pdf_data);
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
+                $mpdf = new Mpdf(['orientation' => 'L']);
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'mailingslip') {
                 $packing_html = $this->loadPackingMailingHtml($pdf_data);
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing_mailing.css"); // external css
+                $mpdf = new Mpdf();
+            } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'integratedlabel') {
+                $packing_html = $this->loadPackingIntegrateLabel($pdf_data);
+                $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing_integratelabel.css"); // external css
+                $mpdf = new Mpdf();
             } else {
                 throw new Exception("No PDF layout selected..!", 1);
             }
 
-            // echo '<pre> Test 1 :: Starts';
-            // print_r($packing_html);
-            // print_r($form);
-            // echo '</pre>';
-            // die('LOOP ENDS HERE');
-            $mpdf = new Mpdf();
+
+
             $mpdf->use_kwt = true;
-           $mpdf->WriteHTML($stylesheet, 1);
+            $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html, 2);
+            $mpdf->AddPage('L');
             $mpdf->Output();
         } catch (Exception $e) {
             $res['status'] = false;
@@ -1775,16 +1780,23 @@ class OrderController
 
         if (isset($pdf_data) && !empty($pdf_data)) {
             foreach ($pdf_data as $key_data => $val_data) {
-                $html .= "<div class='main_div'>";
-                $html .= "<div class='left_right'>";
-                $html .= "<p style='margin-bottom:50px;font-size:20px;font-weight:bold;'>Order: " . $val_data['OrderId'] . "</p>";
-                $html .= "<img src='" . $image . "' height='250px;' weight='50px;'>";
+                $html .= "<table class='table_left' autosize='1' style='display:block;float:left;width:30%;'>";
+                $html .= "<tr>";
+                $html .= "<td><b>Order# " . $val_data['OrderId'] . "</b></td></br>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td><img src='" . $image . "' style='width:150px;height:150px;'></td></br>";
+                $html .= "<td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td>";
                 $html .= "<p style='margin-bottom:50px;font-size:20px;font-weight:bold;'>Order: " . $val_data['OrderId'] . "</p>";
                 $html .= "<p style='font-size:14px;'>(" . $val_data['MarketplaceName'] . "Order: #" . $val_data['OrderId'] . ")</p>";
                 $html .= "<p style='font-size:14px;'><b>Date Ordered :</b>&nbsp;" . $val_data['OrderDate'] . "</p>";
-                $html .= "</div>";
-                $html .= "</br>";
-                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='60%' >";
+                $html .= "</td>";
+                $html .= "</tr>";
+                $html .= "</table>";
+                $html .= "<table class='table' id='custom_tbl' border='2' style='width:60%;display:block;float:left;'>";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
@@ -1836,8 +1848,7 @@ class OrderController
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
                 $html .= "</tbody>";
-                $html .= "</table>";
-                $html .= "</div>";
+                $html .= "</table><br><br><br><br>";
             } // Loops Ends
         } else {
             $html .= "<h1>No Records found</h1>";
@@ -1925,6 +1936,80 @@ class OrderController
                 $html .= "</tbody>";
                 $html .= "</table>";
                 $html .= "</div>";
+            } // Loops Ends
+        } else {
+            $html .= "<h1>No Records found</h1>";
+        }
+        $html .= "</body>";
+        $html .= "</html>";
+        return $html;
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: 
+     @task_desc :: Integrate Label layout
+     @params    :: 
+     @return    :: 
+    */
+    public function loadPackingIntegrateLabel($pdf_data)
+    {
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
+        $html = "";
+        $html .= "";
+        $html .= "<!DOCTYPE html>";
+        $html .= "<html>";
+        $html .= "<head>";
+        $html .= "<title></title>";
+        $html .= "</head>";
+        $html .= "<body>";
+        if (isset($pdf_data) && !empty($pdf_data)) {
+            foreach ($pdf_data as $key_data => $val_data) {
+                $html .= "<table class='top_letter' style='padding:50px;padding-left:0px;border: 1px solid black;width: 100%;text-align: left;'>";
+                $html .= "<tr>";
+                $html .= "<td style='font-size:28px;'><b>" . $val_data['ShippingName'] . "</b> <br>";
+                $html .= "<span style='font-size:28px;'>" . $val_data['ShippingAddress1'] . "</span> <br>";
+                $html .= "<span style='font-size:28px;'>" . $val_data['ShippingAddress2'] . "</span> <br>";
+                $html .= "<span style='font-size:28px;'>" . $val_data['ShippingAddress3'] . "</span> <br>";
+                $html .= "<span style='font-size:28px;'>" . $val_data['ShippingCity'] . "," . $val_data['ShippingState'] . "," . $val_data['ShippingZipCode'] . "</span> <br>";
+                $html .= "<span style='font-size:28px;'>" . $val_data['ShippingCountry'] . "</span> <br>";
+                $html .= "</tr>";
+                $html .= "</table></br></br></br></br></br></br></br><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
+                $html .= "<div class='main_div'>";
+                $html .= "<span style='font-size:24px;'>Customer Phone #: " . $val_data['ShippingPhone'] . "</span>";
+                $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
+                $html .= "<thead>";
+                $html .= "</thead>";
+                $html .= "<tbody>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td colspan='1' style='border:1px solid black;'><b>QTY</b></td>";
+                $html .= "<td colspan='1' style='border:1px solid black;'><b>ISBN/UPC</b></td>";
+                $html .= "<td scolspan='1' tyle='border:1px solid black;'><b>Condition</b></td>";
+                $html .= "<td colspan='3' width='30%' style='border:1px solid black;'><b>Description</b></td>";
+                $html .= "<td colspan='1' style='border:1px solid black;'><b>Media</b></td>";
+                $html .= "</tr>";
+                $html .= "<tr style='border:1px solid black;'>";
+                $html .= "<td style='border:1px solid black;width:80px;'>" . $val_data['ProductQty'] . "</td>";
+                $html .= "<td style='border:1px solid black;width:100px;'>" . $val_data['ProductISBN'] . "</td>";
+                $html .= "<td style='border:1px solid black;width:150px;'>" . $val_data['ProductCondition'] . "</td>";
+                $html .= "<td colspan='3' width='30%'>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "<td>Hardcover</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='7' style='border:1px solid black;'><b>SKU : </b>" . $val_data['ProductSKU'] . "</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='7' style='border:1px solid black;'><b>Location : </b>" . $val_data['ProductSKU'] . "</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "</tr>";
+                $html .= "</tbody>";
+                $html .= "</table>";
+                $html .= "</div><br><br><br>";
             } // Loops Ends
         } else {
             $html .= "<h1>No Records found</h1>";
