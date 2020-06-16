@@ -22,6 +22,7 @@ class ScheduleBackgroundJobs
     {
         $this->db   = $db;
         error_reporting(E_ALL ^ E_DEPRECATED);
+        error_reporting(0);
     }
 
     public function orderBackgroundProcess()
@@ -40,19 +41,12 @@ class ScheduleBackgroundJobs
          
           $file_list = ftp_nlist($ftp_conn, "/Order");
 
-          // echo"<pre>";
-          // print_r($file_list);
-          // die;
-
           if(!empty($file_list))
            {
 
              foreach($file_list as $value) {
               
               $remoteFile = $value;
-
-              print_r($remoteFile);
-              die('test');
          
               $newname = str_replace("/Order/",'', $remoteFile);
          
@@ -64,29 +58,17 @@ class ScheduleBackgroundJobs
 
               $file = fopen('C:/xamppnew/htdocs/tracksz/orderdata/'.$newname,"w");
 
-              
-
               echo fwrite($file,$data);
           
               fclose($file);
+
+              ftp_delete($ftp_conn, $remoteFile);
             }
             
             }
-         
-        $path = 'C:/xamppnew/htdocs/tracksz/orderdata';
-          $fileArray =array();
 
-        if ($handle = opendir($path)) {
-              while (false !== ($file = readdir($handle))) {
-                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                if($ext=='csv' || $ext=='xls'){
-                      $fileArray[] = $path."/".$file;
-                }
-              
-             }
-             closedir($handle);
-          }
              $path = 'C:/xamppnew/htdocs/tracksz/orderdata';
+
               $fileArray =array();
 
               if ($handle = opendir($path)) {
@@ -100,8 +82,9 @@ class ScheduleBackgroundJobs
                    closedir($handle);
                 }
 
+             if(!empty($fileArray))
 
-
+              {   
 
               foreach($fileArray as $filepath){
 
@@ -174,14 +157,25 @@ class ScheduleBackgroundJobs
                {   
                  $ins_data = (new Order($this->db))->insertdata_by_crone($insert_order);
                }
+
+                unlink($filepath);
             
             }
-        }    
+           
+        }
+
+
+      }
+       else
+       {
+         echo "No pending file in directory";
+       }
+
          
         }
     }
 
-   }
+   
         
          
   
