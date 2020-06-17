@@ -2380,15 +2380,33 @@ class OrderController
         try {
             if ((isset($Id) && is_array($Id)) && sizeof($Id) > 0) {
                 $fileData = (new Order($this->db))->findConfirmFileId($Id['Id']);
-                $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
-                $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                // echo '<pre> Test 1 :: Starts';
+                // print_r($fileData);
+                // echo '</pre>';
+                // die('LOOP ENDS HERE');
+                $error_count = 0;
+                if (isset($fileData['Status']) && $fileData['Status'] == 0) {
+                    if (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) {
+                        $error_count = sizeof(json_decode($fileData['AdditionalData']));
+                    }
+                }
+
+                $success_count = 0;
+                if (isset($fileData['Status']) && $fileData['Status'] == 1) {
+                    if (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) {
+                        $success_count = sizeof(json_decode($fileData['AdditionalData']));
+                    }
+                }
+                // $error_count = (isset($fileData['Status']) && $fileData['Status'] == 0) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
+                // $success_count = (isset($fileData['Status']) && $fileData['Status'] == 1) ? sizeof(json_decode($fileData['AdditionalData'])) : 0;
                 $AdditionalData = (isset($fileData['AdditionalData']) && !empty($fileData['AdditionalData'])) ? json_decode($fileData['AdditionalData']) : null;
+                $AdditionalDataSize = (isset($AdditionalData) && !empty($AdditionalData)) ? sizeof($AdditionalData) : 0;
 
                 if (isset($fileData) && !empty($fileData)) {
                     $fp = fopen(getcwd() . "/assets/" . $fileData['OrderId'] . ".txt", 'w');
                     fwrite($fp, 'File ID: ' . $fileData['OrderId'] . "\n");
                     fwrite($fp, "Summary: \n");
-                    fwrite($fp, 'Total Orders Processed:' . sizeof(json_decode($fileData['AdditionalData'])) . "\n");
+                    fwrite($fp, 'Total Orders Processed:' . $AdditionalDataSize . "\n");
                     fwrite($fp, "Success Count: $success_count \n");
                     fwrite($fp, "Error Count: $error_count \n");
                     fwrite($fp, "\n");
