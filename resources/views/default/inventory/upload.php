@@ -114,7 +114,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                             </select>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group" style="width: 50%;">
                                             <label for="InventoryUpload"><?= _('File Upload') ?></label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>

@@ -241,6 +241,10 @@ class InventoryController
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
                     }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
+                    }
                     else
                     {
                         $is_result = $this->insertOrUpdateInventory($map_data);
@@ -283,6 +287,10 @@ class InventoryController
                     if($request_type =='pricing_import')
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
                     }
                     else
                     {
@@ -334,6 +342,10 @@ class InventoryController
                     if($request_type =='pricing_import')
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
                     }
                     else
                     {
@@ -512,6 +524,19 @@ class InventoryController
                 $data_val['UserId'] = Session::get('auth_user_id');
                 $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
                 $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventory($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventory($data_val);
+            }
+        }
+        return true;
+    }
+
+    public function insertOrUpdateInventorywithdelete($data)
+    {
+        foreach ($data as $data_val) {
+            if (isset($data_val['ProdId']) && !empty($data_val['ProdId'])) {
+                $data_val['AddtionalData'] = json_encode($data_val['AddtionalData']);
+                $data_val['UserId'] = Session::get('auth_user_id');
+                $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
+                $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventorywithdelete($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventorywithdelete($data_val);
             }
         }
         return true;
