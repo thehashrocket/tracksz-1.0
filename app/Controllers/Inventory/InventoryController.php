@@ -241,6 +241,10 @@ class InventoryController
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
                     }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
+                    }
                     else
                     {
                         $is_result = $this->insertOrUpdateInventory($map_data);
@@ -283,6 +287,10 @@ class InventoryController
                     if($request_type =='pricing_import')
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
                     }
                     else
                     {
@@ -334,6 +342,10 @@ class InventoryController
                     if($request_type =='pricing_import')
                     {
                         $is_result = $this->insertOrUpdateprice($map_data);
+                    }
+                    elseif($request_type =='purge')
+                    {
+                        $is_result = $this->insertOrUpdateInventorywithdelete($map_data);
                     }
                     else
                     {
@@ -517,6 +529,19 @@ class InventoryController
         return true;
     }
 
+    public function insertOrUpdateInventorywithdelete($data)
+    {
+        foreach ($data as $data_val) {
+            if (isset($data_val['ProdId']) && !empty($data_val['ProdId'])) {
+                $data_val['AddtionalData'] = json_encode($data_val['AddtionalData']);
+                $data_val['UserId'] = Session::get('auth_user_id');
+                $is_exist = (new Product($this->db))->findByUserProd(Session::get('auth_user_id'), $data_val['ProdId'], [0, 1]);
+                $data = (isset($is_exist) && !empty($is_exist)) ? (new Product($this->db))->updateProdInventorywithdelete($is_exist['Id'], $data_val) : (new Product($this->db))->addProdInventorywithdelete($data_val);
+            }
+        }
+        return true;
+    }
+
     public function insertOrUpdateprice($data)
     {
         foreach ($data as $data_val) {
@@ -608,6 +633,88 @@ class InventoryController
             }
         }
         return $map_uiee;
+    }
+
+    /*
+     @author    :: Tejas
+     @task_id   :: import and download inventtory file into trackz server
+     @task_desc :: 
+     @params    :: 
+    */
+    public function importBackgroundInventoryFTP(ServerRequest $request)
+    {
+        $form = $request->getUploadedFiles();
+        $form_2 = $request->getParsedBody();
+        // $form2 = $request->getUploadedFiles($form['InventoryUpload']);
+        unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        unset($form_2['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.
+        try {
+
+            $validate2 = new ValidateSanitize();
+            $form_2 = $validate2->sanitize($form_2); // only trims & sanitizes strings (other filters available)
+            $validate2->validation_rules(array(
+                'MarketName'    => 'required'
+            ));
+            $validated = $validate2->run($form_2, true);
+            // use validated as it is filtered and validated        
+            if ($validated === false) {
+                throw new Exception("Please Select Marketplace...!", 301);
+            }
+
+            if (isset($_FILES['InventoryUpload']['error']) && $_FILES['InventoryUpload']['error'] > 0) {
+                throw new Exception("Please Upload Inventory file...!", 301);
+            }
+
+            $validator = new FilesSize([
+                'min' => '0kB',  // minimum of 1kB
+                'max' => '10MB', // maximum of 10MB
+            ]);
+
+            // if false than throw Size error 
+            if (!$validator->isValid($_FILES)) {
+                throw new Exception("File upload size is too large...!", 301);
+            }
+            // Using an options array:
+            $validator2 = new Extension(['xlsx,csv,txt']);
+            // if false than throw type error
+            if (!$validator2->isValid($_FILES['InventoryUpload'])) {
+                throw new Exception("Please upload valid file type csv, txt and xlsx...!", 301);
+            }
+
+            $fileDetails = pathinfo($_FILES['InventoryUpload']['name']);
+            $ftp_details = (new Marketplace($this->db))->findFtpDetails($form_2['MarketName'], Session::get('auth_user_id'), 1);
+            $path_to_upload = getcwd() . '/assets/inventory/ftpupload/' . date('dmyhmi') . "_ftpupload_" . $_FILES['InventoryUpload']['name'];
+            $is_upload = move_uploaded_file($_FILES['InventoryUpload']['tmp_name'], $path_to_upload);
+            if (!file_exists($path_to_upload)) {
+                throw new Exception("File is not uploaded...! Please try again", 1);
+            }
+
+            $fp = fopen(getcwd() . "/assets/inventory/ftpupload/" . date('dmyhmi') . "_ftpdetail_" . $fileDetails['filename'] . ".txt", 'w');
+            fwrite($fp, 'FtpAddress:' . $ftp_details['FtpAddress'] . "\n");
+            fwrite($fp, 'FtpUserId:' . $ftp_details['FtpUserId'] . "\n");
+            fwrite($fp, 'FtpPassword:' . $ftp_details['FtpPassword'] . "\n");
+            fwrite($fp, 'FileExtention:' . pathinfo($_FILES['InventoryUpload']['name'], PATHINFO_EXTENSION) . "\n");
+            fwrite($fp, 'FileName:' . date('dmyhmi') . "_ftpupload_" . $_FILES['InventoryUpload']['name']);
+            fclose($fp);
+
+            $validated['alert'] =  'Your file upload is under process..! It will upload soon';
+            $validated['alert_type'] = 'success';
+            $this->view->flash($validated);
+            return $this->view->redirect('/inventory/import');
+        } catch (Exception $e) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = 'Inventory File not uploaded into server...!';
+            $res['ex_message'] = $e->getMessage();
+            $res['ex_code'] = $e->getCode();
+            $res['ex_file'] = $e->getFile();
+            $res['ex_line'] = $e->getLine();
+            $validated['alert'] = $e->getMessage();
+            $validated['alert_type'] = 'danger';
+
+            $this->view->flash($validated);
+            return $this->view->redirect('/inventory/import');
+        }
     }
 
     public function importInventoryFTP(ServerRequest $request)

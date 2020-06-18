@@ -300,6 +300,69 @@ class product
         return true;
     }
 
+    public function updateProdInventorywithdelete($Id, $columns)
+    {
+        $update = '';
+        $values = [];
+        $values['Id'] = $Id;
+        foreach ($columns as $column => $value) {
+            $update .= $column . ' = :' . $column . ', ';
+            $values[$column] = $value;
+        }
+
+        $date = date('Y-m-d H:i:s');
+        $update = substr($update, 0, -2);
+        $query  = 'UPDATE product SET ';
+        $query .= $update . ' ';
+        $query .= 'WHERE Id = :Id';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($values)) {
+            var_dump($stmt->debugDumpParams());
+            //exit();
+            return false;
+        };
+
+        $stmt = null;
+
+        
+        $ids=null;
+        $sth = $this->db->prepare("DELETE FROM product WHERE Updated < '$date';");
+        return $sth->execute($ids);
+
+        return true;
+    }
+
+    public function addProdInventorywithdelete($form)
+    {
+        $insert = '';
+        $values = '';
+        foreach ($form as $key => $value) {
+            $insert .= $key . ', ';
+            $values .= ':' . $key . ', ';
+        }
+
+        $insert = substr($insert, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $date = date('Y-m-d H:i:s');
+
+        $query  = 'INSERT INTO product (' . $insert . ') ';
+        $query .= 'VALUES(' . $values . ')';
+        $stmt = $this->db->prepare($query);
+
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+
+        $ids=null;
+        $sth = $this->db->prepare("DELETE FROM product WHERE Updated < '$date';");
+        return $sth->execute($ids);
+
+        $stmt = null;
+        return $this->db->lastInsertId();
+    }
+
     public function updateProdInventoryPrice($Id, $columns)
     {
         $update = '';
