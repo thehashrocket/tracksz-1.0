@@ -14,16 +14,17 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv as WriteCsv;
 use App\Models\Order\Order;
 use App\Models\Product\Product;
 use Delight\Cookie\Session;
+use Exception;
 
 class ScheduleBackgroundJobs
 {
-    private $db;
-    public function __construct(PDO $db)
-    {
-        $this->db   = $db;
-        error_reporting(E_ALL ^ E_DEPRECATED);
-        error_reporting(0);
-    }
+  private $db;
+  public function __construct(PDO $db)
+  {
+    $this->db   = $db;
+    error_reporting(E_ALL ^ E_DEPRECATED);
+    error_reporting(0);
+  }
 
     public function orderBackgroundProcess()
     {
@@ -174,9 +175,79 @@ class ScheduleBackgroundJobs
          
         }
     }
-
    
         
          
   
 
+  /*
+   @author    :: Tejas
+   @task_id   :: 
+   @task_desc :: 
+   @params    :: 
+   @return    :: 
+  */
+  public function ftpUploadBackgroundProcess()
+  {
+    try {
+      $file_path = getcwd() . '/assets/inventory/ftpupload/';
+      $files = scandir($file_path);
+
+      if (isset($files) && !empty($files)) {
+        foreach ($files as $key_data => $val_data) {
+          if ($key_data == 0 || $key_data == 1)
+            continue;
+
+          if (preg_match('_ftpdetail_', $val_data)) {
+
+            $file = fopen($file_path . "/" . $val_data, "r");
+
+            $readFile = array();
+            while (!feof($file)) {
+              $readFile[] = fgets($file);
+            }
+
+            $connect = str_replace(':', '', strstr($readFile[0], ':', false));
+            $user = str_replace(':', '', strstr($readFile[1], ':', false));
+            $pwd = str_replace(':', '', strstr($readFile[2], ':', false));
+            $ext = str_replace(':', '', strstr($readFile[3], ':', false));
+            $file_name = trim(str_replace(':', '', strstr($readFile[4], ':', false)));
+
+            $ftp_connect = ftp_connect(trim($connect));
+            $ftp_username = trim($user);
+            $ftp_password = trim($pwd);
+            if ($ftp_connect) {
+              $ftp_login = ftp_login($ftp_connect, $ftp_username, $ftp_password);
+
+              if (!$ftp_login) {
+                $file_error_lists[] = 456;
+              } else {
+                $is_file_upload = ftp_put($ftp_connect, 'Inventory/' . $file_name, $file_path . "$file_name", FTP_ASCII);
+                if (!$is_file_upload) {
+                  $file_error_lists[] = 8910;
+                } else {
+                  unlink($file_path . "$file_name");
+                  unlink($file_path . "$val_data");
+                }
+              }
+            } else {
+              $file_error_lists[] = 123;
+            }
+          }
+        } // Loops Ends
+      }
+      $res['status'] = true;
+      $res['message'] = 'Result found successfully...!';
+      $res['data'] = array('data');
+      die(json_encode($res));
+    } catch (Exception $ex) {
+
+      $error_msg = 'ErrorFile -> ' . $ex->getFile() . '</br> :: ErrorLine -> ' . $ex->getLine() . '
+   </br>:: ErrorCode -> ' . $ex->getCode() . '</br> :: ErrorMsg -> ' . $ex->getMessage();
+      $res['status'] = false;
+      $res['message'] = $error_msg;
+      $res['data'] = null;
+      die(json_encode($res));
+    }
+  }
+}

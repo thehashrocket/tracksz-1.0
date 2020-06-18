@@ -1150,6 +1150,9 @@ class OrderController
             $methodData = $request->getParsedBody();
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
+            if (!isset($methodData['ids']) || empty($methodData['ids']))
+                throw new Exception("Please select checkbox", 1);
+
             $map_data = $this->_mapOrderStatusUpdate($methodData);
 
             if (isset($map_data) && !empty($map_data)) {
@@ -2133,104 +2136,120 @@ class OrderController
 
     public function export_Orderlist(ServerRequest $request)
     {
-        $form = $request->getParsedBody();
-        unset($form['__token']);
+        try {
+            $form = $request->getParsedBody();
+            unset($form['__token']);
+            $export_type = $form['export_formate'];
 
-        $export_type = $form['export_formate'];
+            if (!isset($form['ids']) || empty($form['ids']))
+                throw new Exception("Please select checkbox", 1);
 
-        $result_data = (new Order($this->db))->select_multiple_ids($form['ids']);
+            $result_data = (new Order($this->db))->select_multiple_ids($form['ids']);
 
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'MarketPlaceId');
-        $sheet->setCellValue('B1', 'OrderId');
-        $sheet->setCellValue('C1', 'Status');
-        $sheet->setCellValue('D1', 'Currency');
-        $sheet->setCellValue('E1', 'PaymentStatus');
-        $sheet->setCellValue('F1', 'PaymentMethod');
-        $sheet->setCellValue('G1', 'BuyerNote');
-        $sheet->setCellValue('H1', 'SellerNote');
-        $sheet->setCellValue('I1', 'ShippingMethod');
-        $sheet->setCellValue('J1', 'Tracking');
-        $sheet->setCellValue('K1', 'Carrier');
-        $sheet->setCellValue('L1', 'ShippingName');
-        $sheet->setCellValue('M1', 'ShippingPhone');
-        $sheet->setCellValue('N1', 'ShippingEmail');
-        $sheet->setCellValue('O1', 'ShippingAddress1');
-        $sheet->setCellValue('P1', 'ShippingAddress2');
-        $sheet->setCellValue('Q1', 'ShippingAddress3');
-        $sheet->setCellValue('R1', 'ShippingCity');
-        $sheet->setCellValue('S1', 'ShippingState');
-        $sheet->setCellValue('T1', 'ShippingZipCode');
-        $sheet->setCellValue('U1', 'ShippingCountry');
-        $sheet->setCellValue('V1', 'BillingName');
-        $sheet->setCellValue('W1', 'BillingPhone');
-        $sheet->setCellValue('X1', 'BillingEmail');
-        $sheet->setCellValue('Y1', 'BillingAddress1');
-        $sheet->setCellValue('Z1', 'BillingAddress2');
-        $sheet->setCellValue('AA1', 'BillingAddress3');
-        $sheet->setCellValue('AB1', 'BillingCity');
-        $sheet->setCellValue('AC1', 'BillingState');
-        $sheet->setCellValue('AD1', 'BillingZipCode');
-        $sheet->setCellValue('AE1', 'BillingCountry');
-        $rows = 2;
-        foreach ($result_data as $orderd) {
-            $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
-            $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
-            $sheet->setCellValue('C' . $rows, $orderd['Status']);
-            $sheet->setCellValue('D' . $rows, $orderd['Currency']);
-            $sheet->setCellValue('E' . $rows, $orderd['PaymentStatus']);
-            $sheet->setCellValue('F' . $rows, $orderd['PaymentMethod']);
-            $sheet->setCellValue('G' . $rows, $orderd['BuyerNote']);
-            $sheet->setCellValue('H' . $rows, $orderd['SellerNote']);
-            $sheet->setCellValue('I' . $rows, $orderd['ShippingMethod']);
-            $sheet->setCellValue('J' . $rows, $orderd['Tracking']);
-            $sheet->setCellValue('K' . $rows, $orderd['Carrier']);
-            $sheet->setCellValue('L' . $rows, $orderd['ShippingName']);
-            $sheet->setCellValue('M' . $rows, $orderd['ShippingPhone']);
-            $sheet->setCellValue('N' . $rows, $orderd['ShippingEmail']);
-            $sheet->setCellValue('O' . $rows, $orderd['ShippingAddress1']);
-            $sheet->setCellValue('P' . $rows, $orderd['ShippingAddress2']);
-            $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
-            $sheet->setCellValue('R' . $rows, $orderd['ShippingCity']);
-            $sheet->setCellValue('S' . $rows, $orderd['ShippingState']);
-            $sheet->setCellValue('T' . $rows, $orderd['ShippingZipCode']);
-            $sheet->setCellValue('U' . $rows, $orderd['ShippingCountry']);
-            $sheet->setCellValue('V' . $rows, $orderd['BillingName']);
-            $sheet->setCellValue('W' . $rows, $orderd['BillingPhone']);
-            $sheet->setCellValue('X' . $rows, $orderd['BillingEmail']);
-            $sheet->setCellValue('Y' . $rows, $orderd['BillingAddress1']);
-            $sheet->setCellValue('Z' . $rows, $orderd['BillingAddress2']);
-            $sheet->setCellValue('AA' . $rows, $orderd['BillingAddress3']);
-            $sheet->setCellValue('AB' . $rows, $orderd['BillingCity']);
-            $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
-            $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
-            $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'MarketPlaceId');
+            $sheet->setCellValue('B1', 'OrderId');
+            $sheet->setCellValue('C1', 'Status');
+            $sheet->setCellValue('D1', 'Currency');
+            $sheet->setCellValue('E1', 'PaymentStatus');
+            $sheet->setCellValue('F1', 'PaymentMethod');
+            $sheet->setCellValue('G1', 'BuyerNote');
+            $sheet->setCellValue('H1', 'SellerNote');
+            $sheet->setCellValue('I1', 'ShippingMethod');
+            $sheet->setCellValue('J1', 'Tracking');
+            $sheet->setCellValue('K1', 'Carrier');
+            $sheet->setCellValue('L1', 'ShippingName');
+            $sheet->setCellValue('M1', 'ShippingPhone');
+            $sheet->setCellValue('N1', 'ShippingEmail');
+            $sheet->setCellValue('O1', 'ShippingAddress1');
+            $sheet->setCellValue('P1', 'ShippingAddress2');
+            $sheet->setCellValue('Q1', 'ShippingAddress3');
+            $sheet->setCellValue('R1', 'ShippingCity');
+            $sheet->setCellValue('S1', 'ShippingState');
+            $sheet->setCellValue('T1', 'ShippingZipCode');
+            $sheet->setCellValue('U1', 'ShippingCountry');
+            $sheet->setCellValue('V1', 'BillingName');
+            $sheet->setCellValue('W1', 'BillingPhone');
+            $sheet->setCellValue('X1', 'BillingEmail');
+            $sheet->setCellValue('Y1', 'BillingAddress1');
+            $sheet->setCellValue('Z1', 'BillingAddress2');
+            $sheet->setCellValue('AA1', 'BillingAddress3');
+            $sheet->setCellValue('AB1', 'BillingCity');
+            $sheet->setCellValue('AC1', 'BillingState');
+            $sheet->setCellValue('AD1', 'BillingZipCode');
+            $sheet->setCellValue('AE1', 'BillingCountry');
+            $rows = 2;
+            foreach ($result_data as $orderd) {
+                $sheet->setCellValue('A' . $rows, $orderd['MarketPlaceId']);
+                $sheet->setCellValue('B' . $rows, $orderd['OrderId']);
+                $sheet->setCellValue('C' . $rows, $orderd['Status']);
+                $sheet->setCellValue('D' . $rows, $orderd['Currency']);
+                $sheet->setCellValue('E' . $rows, $orderd['PaymentStatus']);
+                $sheet->setCellValue('F' . $rows, $orderd['PaymentMethod']);
+                $sheet->setCellValue('G' . $rows, $orderd['BuyerNote']);
+                $sheet->setCellValue('H' . $rows, $orderd['SellerNote']);
+                $sheet->setCellValue('I' . $rows, $orderd['ShippingMethod']);
+                $sheet->setCellValue('J' . $rows, $orderd['Tracking']);
+                $sheet->setCellValue('K' . $rows, $orderd['Carrier']);
+                $sheet->setCellValue('L' . $rows, $orderd['ShippingName']);
+                $sheet->setCellValue('M' . $rows, $orderd['ShippingPhone']);
+                $sheet->setCellValue('N' . $rows, $orderd['ShippingEmail']);
+                $sheet->setCellValue('O' . $rows, $orderd['ShippingAddress1']);
+                $sheet->setCellValue('P' . $rows, $orderd['ShippingAddress2']);
+                $sheet->setCellValue('Q' . $rows, $orderd['ShippingAddress3']);
+                $sheet->setCellValue('R' . $rows, $orderd['ShippingCity']);
+                $sheet->setCellValue('S' . $rows, $orderd['ShippingState']);
+                $sheet->setCellValue('T' . $rows, $orderd['ShippingZipCode']);
+                $sheet->setCellValue('U' . $rows, $orderd['ShippingCountry']);
+                $sheet->setCellValue('V' . $rows, $orderd['BillingName']);
+                $sheet->setCellValue('W' . $rows, $orderd['BillingPhone']);
+                $sheet->setCellValue('X' . $rows, $orderd['BillingEmail']);
+                $sheet->setCellValue('Y' . $rows, $orderd['BillingAddress1']);
+                $sheet->setCellValue('Z' . $rows, $orderd['BillingAddress2']);
+                $sheet->setCellValue('AA' . $rows, $orderd['BillingAddress3']);
+                $sheet->setCellValue('AB' . $rows, $orderd['BillingCity']);
+                $sheet->setCellValue('AC' . $rows, $orderd['BillingState']);
+                $sheet->setCellValue('AD' . $rows, $orderd['BillingZipCode']);
+                $sheet->setCellValue('AE' . $rows, $orderd['BillingCountry']);
 
-            $rows++;
-        }
-
-        if ($export_type == 'xlsx' || $export_type == 'csv') {
-            $this->view->flash([
-                'alert' => 'Order Data sucessfully export..!',
-                'alert_type' => 'success'
-            ]);
-
-            if ($export_type == 'xlsx') {
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="order.xlsx"');
-                header('Cache-Control: max-age=0');
-                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-                $writer->save('order.xlsx');
-
-                die(json_encode(['status' => true, 'filename' => '/order.xlsx']));
-            } else if ($export_type == 'csv') {
-                $writer = new WriteCsv($spreadsheet);
-                header('Content-Type: application/csv');
-                header('Content-Disposition: attachment; filename="order.csv"');
-                $writer->save("order.csv");
-                die(json_encode(['status' => true, 'filename' => '/order.csv']));
+                $rows++;
             }
+
+            if ($export_type == 'xlsx' || $export_type == 'csv') {
+                $this->view->flash([
+                    'alert' => 'Order Data sucessfully export..!',
+                    'alert_type' => 'success'
+                ]);
+
+                if ($export_type == 'xlsx') {
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment; filename="order.xlsx"');
+                    header('Cache-Control: max-age=0');
+                    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+                    $writer->save('order.xlsx');
+
+                    die(json_encode(['status' => true, 'filename' => '/order.xlsx']));
+                } else if ($export_type == 'csv') {
+                    $writer = new WriteCsv($spreadsheet);
+                    header('Content-Type: application/csv');
+                    header('Content-Disposition: attachment; filename="order.csv"');
+                    $writer->save("order.csv");
+                    die(json_encode(['status' => true, 'filename' => '/order.csv']));
+                }
+            }
+        } catch (Exception $ex) {
+            $res['status'] = false;
+            $res['data'] = [];
+            $res['message'] = $ex->getMessage();
+            $res['ex_message'] = $ex->getMessage();
+            $res['ex_code'] = $ex->getCode();
+            $res['ex_file'] = $ex->getFile();
+            $res['ex_line'] = $ex->getLine();
+            $validated['alert'] = $ex->getMessage();
+            $validated['alert_type'] = 'danger';
+            $this->view->flash($validated);
+            die(json_encode($res));
         }
     }
 
