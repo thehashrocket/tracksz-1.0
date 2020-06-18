@@ -34,19 +34,19 @@ if (substr($page, 0, 12) == 'example-page') {
                     $orders_menu = [
                         'order-browse', 'order-add', 'order-edit', 'order-batch-move', 'order-confirm_status', 'order-confirmation-file', 'order-export-order',
                         'order-shipping', 'order-order-settings', 'order-postage-settings', 'order-label-settings', 'order-add_update_postage_setting',
-                        'order-order_update_settings', 'order-add_update_label_setting'
+                        'order-order_update_settings', 'order-add_update_label_setting', 'order-filter_order', 'order-update-batchmove'
                     ];
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $orders_menu)) echo ' has-active'; ?>"><a href="/order/browse" class="menu-link menu-item" title="<?= _('Active Store Orders') ?>"><span class="menu-icon fa fa-dollar-sign"></span> <span class="menu-text"><?= _('Orders') ?></span></a>
                         <!-- child menu -->
                         <ul class="menu">
-                            <li class="menu-item<?php if ($page == 'order-browse' || $page == 'order-add' || $page == 'order-edit' || $page == 'order-confirm_status') echo ' has-active'; ?>">
+                            <li class="menu-item<?php if ($page == 'order-browse' || $page == 'order-filter_order'  || $page == 'order-add' || $page == 'order-edit') echo ' has-active'; ?>">
                                 <a href="/order/browse" title="<?= _('View, Add, Edit, Delete Orders') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
-                            <li class="menu-item<?php if ($page == 'order-batch-move') echo ' has-active'; ?>">
+                            <li class="menu-item<?php if ($page == 'order-batch-move' || $page == 'order-update-batchmove') echo ' has-active'; ?>">
                                 <a href="/order/batch-move" title="<?= _('Orders Batch Move') ?>" class="menu-link"><?= _('Batch Move') ?></a>
                             </li>
-                            <li class="menu-item<?php if ($page == 'order-confirmation-file') echo ' has-active'; ?>">
+                            <li class="menu-item<?php if ($page == 'order-confirmation-file' || $page == 'order-confirm_status') echo ' has-active'; ?>">
                                 <a href="/order/confirmation-file" title="<?= _('Orders Confirmation File') ?>" class="menu-link"><?= _('Confirmation File') ?></a>
                             </li>
                             <li class="menu-item<?php if ($page == 'order-export-order') echo ' has-active'; ?>">
@@ -104,7 +104,7 @@ if (substr($page, 0, 12) == 'example-page') {
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings'];
+                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings', 'product-change_marketplace'];
                     if (strpos($page, 'product-edit') !== false) {
                         $page = 'product-edit';
                     }
@@ -114,12 +114,13 @@ if (substr($page, 0, 12) == 'example-page') {
                     if (strpos($page, 'inventory-update_settings') !== false) {
                         $page = 'inventory-update_settings';
                     }
+
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $inventory_menu)) {
                                                         echo ' has-active';
                                                     } ?>"><a href="/inventory/browse" class="menu-link" title="<?= _('Active Store Inventory') ?>"><span class="menu-icon fas fa-dolly-flatbed" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Inventory') ?></span></a> <!-- child menu -->
                         <ul class="menu">
-                            <li class="menu-item<?php if ($page == 'inventory-browse' || $page == 'product-add' || $page == 'product-edit') {
+                            <li class="menu-item<?php if ($page == 'inventory-browse' || $page == 'product-add' || $page == 'product-edit' || $page == 'product-change_marketplace') {
                                                     echo ' has-active';
                                                 } ?>">
                                 <a href="/inventory/browse" title="<?= _('View, Add, Edit, Delete Inventory') ?>" class="menu-link"><?= _('Browse') ?></a>
@@ -376,7 +377,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                         echo ' has-active';
                                                     }
                                                     ?>">
-                        <a href="/marketplace/dashboard" class="menu-link" title="<?= _('Martketplace Module') ?>"><span class="menu-icon fa fa-store" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Marketplace') ?></span></a> <!-- child menu -->
+                        <a href="/marketplace/list" class="menu-link" title="<?= _('Martketplace Module') ?>"><span class="menu-icon fa fa-store" title="<?= _('Active Store Inventory') ?>"></span> <span class="menu-text"><?= _('Marketplace') ?></span></a> <!-- child menu -->
                         <ul class="menu">
                             <li class="menu-item<?php if ($page == 'marketplace-list' || $page == 'marketplace-dashboard' || $page == 'marketplace-edit' || $page == 'marketplace-update' || $page == 'marketplace-dashboard-step2' || $page == 'marketplace-dashboard-step3') {
                                                     echo ' has-active';

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Services\Routes;
 
@@ -18,7 +20,6 @@ class ApiRoutes extends AbstractServiceProvider
     protected $provides = [
         Router::class
     ];
-    
     /**
      * Register method,.
      */
@@ -28,13 +29,11 @@ class ApiRoutes extends AbstractServiceProvider
         $this->container->add(Router::class, function () {
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
             $routes   = (new Router)->setStrategy($strategy);
-            
             // Use for API Calls, May need authentication of some kind, Need Json results
             $routes->group('/api', function (\League\Route\RouteGroup $route) {
                 $route->get('/orderprocess', Api\ScheduleBackgroundJobs::class . '::orderBackgroundProcess');
-            
+                $route->get('/ftpuploadprocess', Api\ScheduleBackgroundJobs::class . '::ftpUploadBackgroundProcess');
             });
-            
             return $routes;
         })->setShared(true);
     }

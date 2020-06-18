@@ -169,13 +169,13 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <label for="Barcode Type"><?= _('Barcode Type') ?></label>
                                                 <select name="BarcodeType" id="BarcodeType" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Barcode Type') ?></option>
-                                                    <option value="code128" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code128') {
+                                                    <option value="code128" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'code128') {
                                                                                 echo 'selected';
                                                                             } ?>>Code 128</option>
-                                                    <option value="code39" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'Code39') {
+                                                    <option value="code39" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'code39') {
                                                                                 echo 'selected';
                                                                             } ?>>Code 39</option>
-                                                    <option value="itf" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'ITF') {
+                                                    <option value="itf" <?php if (isset($all_order['BarcodeType']) && $all_order['BarcodeType'] == 'itf') {
                                                                             echo 'selected';
                                                                         } ?>>ITF</option>
                                                 </select>
@@ -273,7 +273,7 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="card-title"><?= _('Paking Slips') ?></h5>
+                                            <h5 class="card-title"><?= _('Packing Slips') ?></h5>
                                             <hr>
                                         </div>
                                     </div>
