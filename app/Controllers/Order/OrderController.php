@@ -1888,7 +1888,7 @@ class OrderController
                 $html .= "</td>";
                 $html .= "</tr>";
                 $html .= "</table>";
-                $html .= "<table class='table' id='custom_tbl' border='2' style='width:60%;display:block;float:left;'>";
+                $html .= "<table class='table' id='custom_tbl' border='2' style='display:block;float:right;margin-left:40%;margin-top:-25%;'>";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
