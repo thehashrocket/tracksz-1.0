@@ -18,13 +18,21 @@ use Exception;
 
 class ScheduleBackgroundJobs
 {
-  private $db;
-  public function __construct(PDO $db)
-  {
-    $this->db   = $db;
-    error_reporting(E_ALL ^ E_DEPRECATED);
-    error_reporting(0);
-  }
+    private $db;
+    public function __construct(PDO $db)
+    {
+        $this->db   = $db;
+        error_reporting(E_ALL ^ E_DEPRECATED);
+        error_reporting(0);
+    }
+
+
+     /*
+         @author    :: Mukesh 
+         @task_id   :: 
+         @task_desc :: Background Jobs
+         @params    :: 
+     */
 
     public function orderBackgroundProcess()
     {
@@ -32,7 +40,13 @@ class ScheduleBackgroundJobs
          $ftpUsername  = 'chrislands_348442';
          $ftpPassword  = 'F23MRTJ8';
        
-          $file_list = array();
+         $file_list = array();
+         $count_fail = array();
+         $count_success = array();
+
+          $dir_path = getcwd(); // Path variable 
+
+          $new_path = rtrim($dir_path,'public');
 
           // open an FTP connection
 
@@ -57,18 +71,18 @@ class ScheduleBackgroundJobs
               $data = ob_get_contents();
               ob_end_clean();
 
-              $file = fopen('C:/xamppnew/htdocs/tracksz/orderdata/'.$newname,"w");
+              $file = fopen($new_path.'orderdata/'.$newname,"w");
 
               echo fwrite($file,$data);
           
               fclose($file);
 
-              ftp_delete($ftp_conn, $remoteFile);
+              //ftp_delete($ftp_conn, $remoteFile); // Delete file on server 
             }
             
             }
 
-             $path = 'C:/xamppnew/htdocs/tracksz/orderdata';
+             $path = $new_path.'orderdata';  //  directory's path
 
               $fileArray =array();
 
@@ -83,171 +97,124 @@ class ScheduleBackgroundJobs
                    closedir($handle);
                 }
 
-             if(!empty($fileArray))
+             if(!empty($fileArray)){   
 
-              {   
+                 foreach($fileArray as $filepath){
 
-              foreach($fileArray as $filepath){
+                   $ext = pathinfo($filepath, PATHINFO_EXTENSION);
 
-               $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+                   if($ext == 'csv')
+                   {
+                     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                   }
+                   else
+                   {
+                     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                   }
 
-               if($ext == 'csv')
-               {
-                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-               }
-               else
-               {
-                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-               }
+                   $spreadsheet = $reader->load($filepath);
 
-               $spreadsheet = $reader->load($filepath);
+                   $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
-               $sheetData = $spreadsheet->getActiveSheet()->toArray();
+                   $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
 
-              $headerOnly = (isset($sheetData) && is_array($sheetData) && !empty($sheetData['0'])) ? $sheetData['0'] : null;
+                   unset($sheetData[0]);
 
-              unset($sheetData[0]);
+                foreach ($sheetData as  $value) {
+                     
+                      $count = count($headerOnly);
 
-              foreach ($sheetData as  $value) {
-               
-               $insert_order = array(
+                      for($i=0;$i<$count;$i++)
+                      {
+                        if($i==2)
+                        {
+                          $insert_order['StoreProductId'] = '';
+                        }
+                         else if($i==1)
+                        {
+                          unset($insert_order['MarketPlaceOrder']);
+                        }
+                        else if($i==3)
+                        {
+                          $insert_order['Status'] = '';
+                        }
+                         else if($i==0)
+                        {
+                          unset($insert_order['MarketPlaceName']);
+                        }
+                        else
+                        {
+                          $insert_order[$headerOnly[$i]] = $value[$i];
+                        }
+                      }
+                      
 
-                'MarketPlaceId'   =>$value[0],
-                'OrderId'         =>$value[1],
-                'StoreProductId'  =>$value[2],
-                'Status'          =>$value[3],
-                'Currency'        =>$value[4],
-                'PaymentStatus'   =>$value[5],
-                'PaymentMethod'   =>$value[6],
-                'BuyerNote'       =>$value[7],
-                'SellerNote'      =>$value[8],
-                'ShippingMethod'  =>$value[9],
-                'Tracking'        =>$value[10],
-                'Carrier'         =>$value[11],
-                'ShippingName'    =>$value[12],
-                'ShippingPhone'   =>$value[13],
-                'ShippingEmail'   =>$value[14],
-                'ShippingAddress1'=>$value[15],
-                'ShippingAddress2'=>$value[16],
-                'ShippingAddress3'=>$value[17],
-                'ShippingCity'    =>$value[18],
-                'ShippingState'   =>$value[19],
-                'ShippingZipCode' =>$value[20],
-                'ShippingCountry' =>$value[21],
-                'BillingName'     =>$value[22],
-                'BillingPhone'    =>$value[23],
-                'BillingEmail'    =>$value[24],
-                'BillingAddress1' =>$value[25],
-                'BillingAddress2' =>$value[26],
-                'BillingAddress3' =>$value[27],
-                'BillingCity'     =>$value[28],
-                'BillingState'    =>$value[29],
-                'BillingZipCode'  =>$value[30],
-                'BillingCountry'  =>$value[31],
-                'UserId'          =>$value[32],
-                'StoreId'         =>$value[33],
-                'Updated'         =>$value[34],
-                'Created'         =>$value[35]
-            ); 
+                      $order_id        = $value[1];
+                      $product_id      = $value[2];
+                      $MarketPlaceName = $value[0];
 
-               $order_id = $insert_order['OrderId'];
+                      $marketplace_id   =  (new Order($this->db))->get_marketplace_id($MarketPlaceName);
 
-               $order_data = (new Order($this->db))->findByorder_id($order_id);
+                      $market_id =  $marketplace_id ['Id'];
 
-               if(empty($order_data))
-               {   
-                 $ins_data = (new Order($this->db))->insertdata_by_crone($insert_order);
-               }
+                      $qty = $value[3];
 
-                unlink($filepath);
-            
-            }
+                      $order_data = (new Order($this->db))->findByorder_id($order_id);
+
+                      $insert_order['OrderId']       = $value[1];
+                      $insert_order['MarketPlaceId'] = $market_id;
+                      $insert_order['UserId']        = Session::get('auth_user_id');
+                      $insert_order['StoreId']       = $this->storeid;
+                      $insert_order['Updated']       = date('Y-m-d H:I:s');
+                      $insert_order['Created']       = date('Y-m-d H:I:s');
+
+                     if(empty($order_data))
+                      { 
+                       
+                        $order_qty = (new Order($this->db))->select_qty_by_product_id($product_id);
+
+                         if($order_qty['Qty'] > $qty)
+                          {
+                             $total_qty = 0 ;
+
+                             $update_id = $order_qty['Id'];
+                          
+                             $total_qty = $order_qty['Qty'] - $qty;
+
+                             $update_qty = (new Order($this->db))->update_qty_by_product_id($total_qty,$update_id);
+                        
+                             $ins_data = (new Order($this->db))->insert_data_by_crone($insert_order);
+
+                             $count_success[] = $order_id;
+                          }
+                      }
+                     else
+                     {
+                         $count_fail[] = $order_id;
+                     }
+
+                      unlink($filepath);
+                  
+                  }
            
-        }
+             }
+         }
 
+         else
+         {
+           echo "No pending file in directory";
+         }
 
-      }
-       else
-       {
-         echo "No pending file in directory";
-       }
+         $res['status'] = true;
+         $res['message'] = 'Orders are exceuted successfully';
+         $res['count_order_success'] = $count_success;
+         $res['count_order_fail'] = $count_fail;
 
+         die(json_encode($res));
          
-        }
     }
-   
-        
-         
-  
 
-  /*
-   @author    :: Tejas
-   @task_id   :: 
-   @task_desc :: 
-   @params    :: 
-   @return    :: 
-  */
-  public function ftpUploadBackgroundProcess()
-  {
-    try {
-      $file_path = getcwd() . '/assets/inventory/ftpupload/';
-      $files = scandir($file_path);
-
-      if (isset($files) && !empty($files)) {
-        foreach ($files as $key_data => $val_data) {
-          if ($key_data == 0 || $key_data == 1)
-            continue;
-
-          if (preg_match('_ftpdetail_', $val_data)) {
-
-            $file = fopen($file_path . "/" . $val_data, "r");
-
-            $readFile = array();
-            while (!feof($file)) {
-              $readFile[] = fgets($file);
-            }
-
-            $connect = str_replace(':', '', strstr($readFile[0], ':', false));
-            $user = str_replace(':', '', strstr($readFile[1], ':', false));
-            $pwd = str_replace(':', '', strstr($readFile[2], ':', false));
-            $ext = str_replace(':', '', strstr($readFile[3], ':', false));
-            $file_name = trim(str_replace(':', '', strstr($readFile[4], ':', false)));
-
-            $ftp_connect = ftp_connect(trim($connect));
-            $ftp_username = trim($user);
-            $ftp_password = trim($pwd);
-            if ($ftp_connect) {
-              $ftp_login = ftp_login($ftp_connect, $ftp_username, $ftp_password);
-
-              if (!$ftp_login) {
-                $file_error_lists[] = 456;
-              } else {
-                $is_file_upload = ftp_put($ftp_connect, 'Inventory/' . $file_name, $file_path . "$file_name", FTP_ASCII);
-                if (!$is_file_upload) {
-                  $file_error_lists[] = 8910;
-                } else {
-                  unlink($file_path . "$file_name");
-                  unlink($file_path . "$val_data");
-                }
-              }
-            } else {
-              $file_error_lists[] = 123;
-            }
-          }
-        } // Loops Ends
-      }
-      $res['status'] = true;
-      $res['message'] = 'Result found successfully...!';
-      $res['data'] = array('data');
-      die(json_encode($res));
-    } catch (Exception $ex) {
-
-      $error_msg = 'ErrorFile -> ' . $ex->getFile() . '</br> :: ErrorLine -> ' . $ex->getLine() . '
-   </br>:: ErrorCode -> ' . $ex->getCode() . '</br> :: ErrorMsg -> ' . $ex->getMessage();
-      $res['status'] = false;
-      $res['message'] = $error_msg;
-      $res['data'] = null;
-      die(json_encode($res));
+      
     }
   }
 }
