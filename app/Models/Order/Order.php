@@ -759,7 +759,6 @@ LEFT JOIN marketplace
     */
     public function addConfirmFileHandle($form)
     {
-
         $insert = '';
         $values = '';
         foreach ($form as $key => $value) {
@@ -780,10 +779,8 @@ LEFT JOIN marketplace
         $stmt = null;
         return $this->db->lastInsertId();
     }
-
-   public function insert_data_by_crone($insert_order)
+public function insert_data_by_crone($insert_order)
     {
-
         $insert = '';
         $values = '';
         foreach ($insert_order as $key => $value) {
