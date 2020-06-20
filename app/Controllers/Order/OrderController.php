@@ -1204,16 +1204,105 @@ class OrderController
 
             $mail_data = (new Order($this->db))->findById($value);
 
-            $message['html']  = $this->view->make('emails/orderconfirm');
-            $message['plain'] = $this->view->make('emails/plain/orderconfirm');
-            $mailer = new Email();
-            $mailer->sendEmail(
-                $mail_data['ShippingEmail'],
-                Config::get('company_name'),
-                _('Order Confirmation'),
-                $message,
-                ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
-            );
+            $all_data = (new OrderSetting($this->db))->getAllRecord();
+            
+            if(!empty($all_data))
+            {
+                if($status_data['status']=='shipped')
+                {
+                    $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['ConfirmEmail']);
+                    $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
+                    $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
+                    $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
+                    $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
+                    $string = str_replace('%MYEMAIL%', $mail_data['ShippingEmail'], $string);
+
+                    //echo "<pre>";print_r($string);exit;
+
+                    $mailer = new Email();
+                    $mailer->sendEmaildynamic(
+                        $mail_data['ShippingEmail'],
+                        Config::get('company_name'),
+                        _('Order Confirmation'),
+                        $string
+                    );
+                }
+                elseif($status_data['status']=='deferred')
+                {
+                    $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['DeferEmail']);
+                    $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
+                    $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
+                    $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
+                    $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
+                    $string = str_replace('%MYEMAIL%', $mail_data['ShippingEmail'], $string);
+
+                    //echo "<pre>";print_r($string);exit;
+
+                    $mailer = new Email();
+                    $mailer->sendEmaildynamic(
+                        $mail_data['ShippingEmail'],
+                        Config::get('company_name'),
+                        _('Order deferred'),
+                        $string
+                    );
+                }
+                elseif($status_data['status']=='cancelled')
+                {
+                    $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['CancelEmail']);
+                    $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
+                    $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
+                    $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
+                    $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
+                    $string = str_replace('%MYEMAIL%', $mail_data['ShippingEmail'], $string);
+
+                    $mailer = new Email();
+                    $mailer->sendEmaildynamic(
+                        $mail_data['ShippingEmail'],
+                        Config::get('company_name'),
+                        _('Order Cancelled'),
+                        $string
+                    );
+                }
+                else
+                {
+                    $message['html']  = $this->view->make('emails/orderconfirm');
+                    $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+                    $mailer = new Email();
+                    $mailer->sendEmail(
+                        $mail_data['ShippingEmail'],
+                        Config::get('company_name'),
+                        _('Order Confirmation'),
+                        $message,
+                        ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+                    );
+                    return true;
+                }
+            }
+            else
+            {
+                $message['html']  = $this->view->make('emails/orderconfirm');
+                $message['plain'] = $this->view->make('emails/plain/orderconfirm');
+                $mailer = new Email();
+                $mailer->sendEmail(
+                    $mail_data['ShippingEmail'],
+                    Config::get('company_name'),
+                    _('Order Confirmation'),
+                    $message,
+                    ['OrderId' => $mail_data['OrderId'], 'BillingName' => $mail_data['BillingName'], 'Carrier' => $mail_data['Carrier'], 'Tracking' => $mail_data['Tracking']]
+                );
+            }
         } // Loops Ends
         return true;
     }
