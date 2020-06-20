@@ -56,11 +56,10 @@ class ScheduleBackgroundJobs
     $file_list = array();
     $count_fail = array();
     $count_success = array();
-    $dir_path = getcwd(); // Path variable 
-    $new_path = rtrim($dir_path, 'public');
+    $new_path = getcwd() . '/assets/order/';
 
     // open an FTP connection
-    $ftp_conn = ftp_connect($ftpHost) or die("Could not connect to $ftp_server");
+    $ftp_conn = ftp_connect($ftpHost) or die("Could not connect to $ftpHost");
     $login = ftp_login($ftp_conn, $ftpUsername, $ftpPassword);
     $file_list = ftp_nlist($ftp_conn, "/Order");
     if (!empty($file_list)) {
@@ -71,14 +70,14 @@ class ScheduleBackgroundJobs
         ftp_get($ftp_conn, 'php://output', $remoteFile, FTP_ASCII);
         $data = ob_get_contents();
         ob_end_clean();
-        $file = fopen($new_path . 'orderdata/' . $newname, "w");
+        $file = fopen($new_path . 'orderimport/' . $newname, "w");
         echo fwrite($file, $data);
         fclose($file);
-        //ftp_delete($ftp_conn, $remoteFile); // Delete file on server 
+        ftp_delete($ftp_conn, $remoteFile); // Delete file on server 
       }
     }
 
-    $path = $new_path . 'orderdata';  //  directory's path
+    $path = $new_path . 'orderimport';  //  directory's path
     $fileArray = array();
     if ($handle = opendir($path)) {
       while (false !== ($file = readdir($handle))) {
@@ -147,7 +146,7 @@ class ScheduleBackgroundJobs
           } else {
             $count_fail[] = $order_id;
           }
-          unlink($filepath);
+          // unlink($filepath);
         }
       }
     } else {
@@ -538,5 +537,45 @@ class ScheduleBackgroundJobs
       }
     }
     return $map_uiee;
+  }
+
+
+  /*
+   @author    :: Tejas
+   @task_id   :: 
+   @task_desc :: browse files remove for background jobs
+   @params    :: 
+   @return    :: 
+  */
+  public function browseInventoryBackgroundRemove()
+  {
+    try {
+      $file_path = getcwd() . '/assets/order/orderimport/';
+      $files = scandir($file_path);
+      if (isset($files) && !empty($files)) {
+        foreach ($files as $key_data => $val_data) {
+          if ($key_data == 0 || $key_data == 1)
+            continue;
+          $now = time(); // or your date as well
+          $your_date = strtotime(date("d-m-Y", filemtime($file_path . $val_data)));
+          $datediff = $now - $your_date;
+          die(round($datediff / (60 * 60 * 24)));
+          if (round($datediff / (60 * 60 * 24)) > 20) {
+            unlink($file_path . $val_data);
+          }
+        } // Loops Ends
+      }
+      $res['status'] = true;
+      $res['message'] = 'Result found successfully...!';
+      $res['data'] = array('data');
+      die(json_encode($res));
+    } catch (Exception $ex) {
+      $error_msg = 'ErrorFile -> ' . $ex->getFile() . '</br> :: ErrorLine -> ' . $ex->getLine() . '
+   </br>:: ErrorCode -> ' . $ex->getCode() . '</br> :: ErrorMsg -> ' . $ex->getMessage();
+      $res['status'] = false;
+      $res['message'] = $error_msg;
+      $res['data'] = null;
+      die(json_encode($res));
+    }
   }
 }

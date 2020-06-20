@@ -34,6 +34,7 @@ class ApiRoutes extends AbstractServiceProvider
                 $route->get('/orderprocess', Api\ScheduleBackgroundJobs::class . '::orderBackgroundProcess');
                 $route->get('/ftpuploadprocess', Api\ScheduleBackgroundJobs::class . '::ftpUploadBackgroundProcess');
                 $route->get('/browseruploadprocess', Api\ScheduleBackgroundJobs::class . '::browseInventoryBackgroundUpload');
+                $route->get('/browserremoveprocess', Api\ScheduleBackgroundJobs::class . '::browseInventoryBackgroundRemove');
             });
             return $routes;
         })->setShared(true);

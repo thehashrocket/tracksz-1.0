@@ -1,0 +1,3 @@
+RequestType:regular_import
+RequestFormat:UIEEFile
+FileName:200620120617_browserupload_SampleUIEEFile_test1.txt
