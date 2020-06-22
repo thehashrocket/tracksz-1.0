@@ -43,6 +43,21 @@ class Email
         return true;
     }
 
+    public function sendEmaildynamic($to, $name, $subject,  $data)
+    {
+        //Recipients
+        $this->mailer->addAddress($to, $name);  // Add a recipient
+        // Content
+        $this->mailer->isHTML(true);
+        $this->mailer->Subject = $subject;
+        $this->mailer->Body    = $data;
+        $this->mailer->AltBody = '';
+        if (!$this->mailer->send()) {
+            return false;
+        }
+        return true;
+    }
+
     public function sendEmailAttachment($to, $name, $subject, $message, $is_attachment = array())
     {
         //Recipients

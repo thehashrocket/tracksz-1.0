@@ -46,7 +46,7 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->get('/defaults', Inventory\InventoryController::class . '::defaults');
                 $route->post('/ftpupload', Inventory\InventoryController::class . '::importBackgroundInventoryFTP');
                 $route->post('/csvupload', Inventory\InventoryController::class . '::updateCsvInventory');
-                $route->post('/importupload', Inventory\InventoryController::class . '::browseInventoryUpload');
+                $route->post('/importupload', Inventory\InventoryController::class . '::importBackgroundInventoryBrowser');
                 $route->post('/importdelete', Inventory\InventoryController::class . '::browseInventoryDelete');
                 $route->post('/defaults', Inventory\InventoryController::class . '::updateDefaults');
                 $route->get('/inventory-settings', Inventory\InventoryController::class . '::inventorySettingsBrowse');

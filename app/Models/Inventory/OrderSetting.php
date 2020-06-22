@@ -81,4 +81,11 @@ class OrderSetting
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAllRecord()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM `ordersettings` ORDER BY `ID` ASC');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

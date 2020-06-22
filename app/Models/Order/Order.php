@@ -131,6 +131,38 @@ LEFT JOIN marketplace
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
+    public function select_qty_by_product_id($product_id)
+    {
+
+       $stmt = $this->db->prepare('SELECT Qty,Id FROM  product WHERE SKU = :SKU OR Name =:Name OR ProdId = :ProdId');
+       $stmt->execute(['SKU' => $product_id,'Name' => $product_id,'ProdId' => $product_id]);
+
+       return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function get_marketplace_id($MarketPlaceName)
+    {
+        $stmt = $this->db->prepare('SELECT Id FROM marketplace WHERE MarketName = :MarketName');
+        $stmt->execute(['MarketName' => $MarketPlaceName]);
+
+       return $stmt->fetch(PDO::FETCH_ASSOC);
+
+    }
+
+    public function update_qty_by_product_id($total_qty,$update_id)
+    {
+           $data = [
+             'Qty' => $total_qty,
+              'Id' => $update_id,
+            ];
+        $sql = "UPDATE product SET Qty =:Qty WHERE Id=:Id";
+        $stmt= $this->db->prepare($sql);
+        $stmt->execute($data);
+        return true;
+     }
+
     // public function allorderSearchByOrderData()
     // {
     //     $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
@@ -747,7 +779,7 @@ LEFT JOIN marketplace
         $stmt = null;
         return $this->db->lastInsertId();
     }
-public function insertdata_by_crone($insert_order)
+public function insert_data_by_crone($insert_order)
     {
         $insert = '';
         $values = '';

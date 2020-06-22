@@ -1,0 +1,3 @@
+RequestType:regular_import
+RequestFormat:Chrislands.com
+FileName:200620120633_browserupload_confirmation_files.csv
