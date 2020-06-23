@@ -1,5 +1,5 @@
 <?php
-$title_meta = 'Category Add for Your Tracksz Store, a Multiple Market Product Management Service';
+$title_meta = 'parent Category Add for Your Tracksz Store, a Multiple Market Product Management Service';
 $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Product Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
@@ -20,19 +20,19 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                 <a href="/account/panel" title="Tracksz Account Dashboard"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i><?= ('Dashboard') ?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/inventory/browse" title="Inventory Listings"><?= ('Inventory') ?></a>
+                                <a href="/inventory/parent_category" title="Inventory Listings"><?= ('Inventory') ?></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/category/browse" title="Categories"><?= ('Categories') ?></a>
+                                <a href="/category/parent_category" title="Categories"><?= ('Parent Categories') ?></a>
                             </li>
-                            <li class="breadcrumb-item active"><?= ('Add') ?></li>
+                            <li class="breadcrumb-item active"><?= ('Add Parent') ?></li>
                         </ol>
                     </nav>
                     <!-- Insert Active Store Header -->
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <!-- title -->
-                <h1 class="page-title"> <?= _('Category Add') ?> </h1>
+                <h1 class="page-title"> <?= _('Parent Category Add') ?> </h1>
                 <p class="text-muted">
                     <?= _('This is where you can add, modify, and delete Category for the current Active Store: ') ?><strong><?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
@@ -49,43 +49,22 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                         <div class="card-body">
                             <!-- .card-body starts -->
 
-                            <form name="category_market_request" id="category_market_request" action="/category/insert_category" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                            <form name="category_market_request" id="category_market_request" action="/category/insert_parent_category" method="POST" enctype="multipart/form-data" data-parsley-validate>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-sm">
                                             <div class="form-group">
                                                 <label for="CategoryName">Category Name</label>
-                                                <input type="text" class="form-control" id="CategoryName" name="CategoryName" placeholder="Enter Category Name" data-parsley-required-message="<?= _('Enter Category Name') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['CategoryName']) && !empty($form['CategoryName'])) ? $form['CategoryName'] : ''; ?>">
+                                                <input type="text" class="form-control" id="ParentCategoryName" name="ParentCategoryName" placeholder="Enter Parent Category Name" data-parsley-required-message="<?= _('Enter Parent Category Name') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['ParentCategoryName']) && !empty($form['ParentCategoryName'])) ? $form['ParentCategoryName'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="CategoryDescription">Category Description</label>
-                                                <textarea class="form-control" id="CategoryDescription" name="CategoryDescription" rows="3" data-parsley-required-message="<?= _('Enter Category Description') ?>" placeholder="Enter Category Description" data-parsley-group="fieldset01" required><?php echo (isset($form['CategoryDescription']) && !empty($form['CategoryDescription'])) ? $form['CategoryDescription'] : ''; ?></textarea>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="ParentCategory"><?= _('Parent Category') ?></label>
-                                                </div>
-                                                <select class="custom-select" id="ParentCategory" name="ParentCategory">
-                                                    <option value="" selected disabled><?= _('Select Parent Category...') ?>
-                                                        
-                                                    </option> <?php if (isset($all_parent_category) && !empty($all_parent_category)) {
-                                                        foreach ($all_parent_category as $key => $value) {
-                                
-                                                          ?> 
-                                          
-                                                      <option value="<?php echo $value['Id']; ?>" ><?php echo $value['Name']; ?> </option>
-                                                          
-                                                     
-                                                    <?php 
-                                                       }
-                                                      }
-                                                     ?>
-                                                </select>
+                                                <textarea class="form-control" id="ParentCategoryDescription" name="ParentCategoryDescription" rows="3" data-parsley-required-message="<?= _('Enter Parent Category Description') ?>" placeholder="Enter Parent Category Description" data-parsley-group="fieldset01" required><?php echo (isset($form['ParentCategoryDescription']) && !empty($form['ParentCategoryDescription'])) ? $form['ParentCategoryDescription'] : ''; ?></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label for="CategoryImage"><?= _('Category Image') ?></label>
+                                                <label for="CategoryImage"><?= _('Parent Category Image') ?></label>
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="CategoryImage" name="CategoryImage" multiple="" data-parsley-required-message="<?= _('Select Category Image') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" data-parsley-filemimetypes="image/jpeg, image/png" required> <label class="custom-file-label" for="CategoryImage"><?= _('Choose file') ?></label>
+                                                    <input type="file" class="custom-file-input" id="ParentCategoryImage" name="ParentCategoryImage" multiple="" data-parsley-required-message="<?= _('Select Category Image') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" data-parsley-filemimetypes="image/jpeg, image/png" required> <label class="custom-file-label" for="CategoryImage"><?= _('Choose file') ?></label>
                                                 </div>
                                             </div>
                                         </div> <!-- col-sm -->

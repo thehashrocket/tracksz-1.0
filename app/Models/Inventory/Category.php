@@ -74,6 +74,14 @@ class Category
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+     public function get_all_parent_ActiveUserAll($UserId = 0, $Status = array())
+    {
+        $Status = implode(',', $Status); 
+        $stmt = $this->db->prepare("SELECT * FROM parent_category WHERE UserId = :UserId AND Status IN ($Status) ORDER BY `Id` DESC");
+        $stmt->execute(['UserId' => $UserId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
     /*
      * findParents - get top level categories
@@ -84,6 +92,19 @@ class Category
     {
         $stmt = $this->db->prepare('SELECT Id, `Name` FROM Category WHERE ParentId = 0 ORDER BY `Name`');
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+     /*
+     * findParents - get top level categories
+     *
+     * @return array of arrays
+    */
+    public function findParent_id($UserId = 0)
+    {
+        $stmt = $this->db->prepare('SELECT Id,Name FROM parent_category WHERE UserId = :UserId');
+        $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -111,6 +132,20 @@ class Category
         return true;
     }
 
+     public function addParentCateogry($form = array())
+    {
+        $query  = 'INSERT INTO parent_category (Name, Description, Image, Status, UserId';
+        $query .= ') VALUES (';
+        $query .= ':Name, :Description, :Image, :Status, :UserId';
+        $query .= ')';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($form)) {
+            return false;
+        }
+        return true;
+    }
+
 
     /*
     * delete - delete a category records
@@ -125,6 +160,8 @@ class Category
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+   
 
     /*
     * find - Find category by category record Id
@@ -166,4 +203,50 @@ class Category
         $stmt = null;
         return $form['Id'];
     }
+
+
+    public function findById_parentcategory($Id)
+    {
+
+        $stmt = $this->db->prepare('SELECT * FROM parent_category WHERE Id = :Id');
+        $stmt->execute(['Id' => $Id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);  
+    }
+
+    public function editParentCategory($form)
+    {
+        $query  = 'UPDATE parent_category SET ';
+        $query .= 'Name = :Name, ';
+        $query .= 'Description = :Description, ';
+        $query .= 'Image = :Image, ';
+        $query .= 'Status = :Status, ';
+        $query .= 'UserId = :UserId, ';
+        $query .= 'Updated = :Updated ';
+        $query .= 'WHERE Id = :Id ';
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt->execute($form)) {
+            return 0;
+        }
+        $stmt = null;
+        return $form['Id'];
+    }
+
+
+    public function delete_parent($Id = null)
+    {
+        $query = 'DELETE FROM parent_category WHERE Id = :Id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+   
+    public function delete_parentId($Id = null)
+    {
+        $query = 'DELETE FROM category WHERE ParentId  = :ParentId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':ParentId', $Id, PDO::PARAM_INT);
+        return $stmt->execute();  
+    }
+
 }

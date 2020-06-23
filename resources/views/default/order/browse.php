@@ -182,7 +182,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" name="select_all_chkbox" class="select_all_chkbox" value="0" id="select_all_chkbox"></th>
-                                        <th><?= _('MarketName') ?></th>
+                                        <th><?= _('Market Name') ?></th>
                                         <th><?= _('OrderStatus') ?></th>
                                         <th><?= _('Currency') ?></th>
                                         <th><?= _('PaymentStatus') ?></th>

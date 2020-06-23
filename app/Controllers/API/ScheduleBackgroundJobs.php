@@ -58,6 +58,7 @@ class ScheduleBackgroundJobs
     $count_success = array();
     $new_path = getcwd() . '/assets/order/';
 
+
     // open an FTP connection
     $ftp_conn = ftp_connect($ftpHost) or die("Could not connect to $ftpHost");
     $login = ftp_login($ftp_conn, $ftpUsername, $ftpPassword);

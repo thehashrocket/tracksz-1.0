@@ -9,6 +9,7 @@ use Sodium;
 
 class Encryption
 {
+    
 
     public function __construct()
     {

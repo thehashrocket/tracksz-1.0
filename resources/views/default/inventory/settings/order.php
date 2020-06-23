@@ -58,7 +58,7 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="DontSendCopy" id="DontSendCopy" data-parsley-required-message="<?= _('Enter DontSendCopy') ?>" data-parsley-group="fieldset01" <?php echo (isset($order_details['DontSendCopy']) && $order_details['DontSendCopy'] == 1) ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="DontSendCopy">
-                                                        <?= _('Do not send me a copy of any confirmation,cancellation or deferal emails') ?>
+                                                        <?= _('Do not send me a copy of any confirmation, cancellation or deferal emails') ?>
                                                     </label>
                                                 </div>
                                             </div>

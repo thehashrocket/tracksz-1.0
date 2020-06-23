@@ -56,7 +56,7 @@ $description_meta = 'Inventory Settings for your Tracksz Store, a Multiple Marke
                                                     <label class="input-group-text" for="FileName"><?= _('Inventory Upload') ?></label>
                                                 </div>
                                                 <select class="custom-select" id="FileName" name="FileName">
-                                                    <option value=""><?= _('Select FileType...') ?></option>
+                                                    <option value=""><?= _('Select File Type...') ?></option>
                                                     <option value="uiee" <?php echo (isset($all_settings['FileType']) && $all_settings['FileType'] == 'uiee') ? 'selected' : '' ?>><?= _('UIEE') ?></option>
                                                     <option value="csv" <?php echo (isset($all_settings['FileType']) && $all_settings['FileType'] == 'csv') ? 'selected' : '' ?>><?= _('CSV') ?></option>
                                                     <option value="xlsx" <?php echo (isset($all_settings['FileType']) && $all_settings['FileType'] == 'xlsx') ? 'selected' : '' ?>><?= _('Excel') ?></option>

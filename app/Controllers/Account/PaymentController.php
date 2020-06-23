@@ -36,6 +36,7 @@ class PaymentController
      */
     public function __construct(Views $view, Auth $auth, PDO $db)
     {
+        error_reporting(0);
         $this->view = $view;
         $this->auth = $auth;
         $this->db   = $db;
@@ -43,7 +44,7 @@ class PaymentController
         // currently using Stripe. Can add options for gateways in the future
         $this->gateway = new StripeController();
         $this->encrypt = new Encryption();
-    
+       
         // get gateway id and member key
         $this->member = new Member($this->db);
         $keys = $this->member->gateway($this->auth->getUserId());

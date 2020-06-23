@@ -104,17 +104,24 @@ if (substr($page, 0, 12) == 'example-page') {
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings', 'product-change_marketplace'];
+                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings', 'product-change_marketplace','category-parent_category','category-add_parent_category','category-edit_parent_category','category-update_parent_category','category-update'];
                     if (strpos($page, 'product-edit') !== false) {
                         $page = 'product-edit';
                     }
-                    if (strpos($page, 'category-edit') !== false) {
+                    if (strpos($page, 'category-edit_parent_category') !== false) {
+                        $page = 'category-edit_parent_category';
+                    }
+                    if (strpos($page, 'category-edit-') !== false) {
                         $page = 'category-edit';
                     }
+                    if (preg_match('/\category-edit_parent_category\b/', $page)) {
+                         $page = 'category-edit_parent_category';
+                    }
+                                  
                     if (strpos($page, 'inventory-update_settings') !== false) {
                         $page = 'inventory-update_settings';
-                    }
-
+                    }                   
+                   
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $inventory_menu)) {
                                                         echo ' has-active';
@@ -145,21 +152,29 @@ if (substr($page, 0, 12) == 'example-page') {
                             <!-- .menu-item -->
                             <?php
                             // determine if sub-menu has active page - set up array for in_array
-                            $category_menu = ['category-browse', 'category-add', 'category-edit'];
-
+                            $category_menu = ['category-browse', 'category-add', 'category-edit','category-parent_category','category-update','category-add_parent_category','category-edit_parent_category','category-update_parent_category'];
+                            
                             ?>
                             <li class="menu-item has-child<?php if (in_array($page, $category_menu)) {
                                                                 echo ' has-active';
                                                             }
                                                             ?>">
-                                <a href="/category/browse" class="menu-link" title="<?= _('Active Store Cateogry') ?>"><span class="menu-icon fa fa-database" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Category') ?></span></a> <!-- child menu -->
+                                <a href="/category/parent_category" class="menu-link" title="<?= _('Active Store Cateogry') ?>"><span class="menu-icon fa fa-database" title="<?= _('Active Store Categories') ?>"></span> <span class="menu-text"><?= _('Category') ?></span></a> <!-- child menu -->
                                 <ul class="menu">
-                                    <li class="menu-item<?php if ($page == 'category-browse'  || $page == 'category-add' || $page == 'category-edit') {
+                                    <li class="menu-item<?php if ($page == 'category-parent_category'  || $page == 'category-edit_parent_category' || $page == 'category-add_parent_category' || $page == 'category-update_parent_category') {
                                                             echo ' has-active';
                                                         }
                                                         ?>">
-                                        <a href="/category/browse" title="<?= _('View, Add, Edit, Delete Cateogry') ?>" class="menu-link"><?= _('Browse') ?></a>
+                                        <a href="/category/parent_category" title="<?= _('View, Add, Edit, Delete Cateogry') ?>" class="menu-link"><?= _('Parent Cateogry') ?></a>
                                     </li>
+                                    <li class="menu-item<?php if ($page == 'category-browse'  || $page == 'category-add' || $page == 'category-edit' || $page == 'category-update') {
+                                                            echo ' has-active';
+                                                        }
+                                                        ?>">
+                                        <a href="/category/browse" title="<?= _('View, Add, Edit, Delete Cateogry') ?>" class="menu-link"><?= _('Sub Category') ?></a>
+                                    </li>
+
+                                   
 
                                 </ul><!-- /child menu -->
                             </li><!-- /.menu-item -->
@@ -383,7 +398,7 @@ if (substr($page, 0, 12) == 'example-page') {
                                                     echo ' has-active';
                                                 }
                                                 ?>">
-                                <a href="/marketplace/list" title="<?= _('Marketplace List') ?>" class="menu-link"><?= _('browse') ?></a>
+                                <a href="/marketplace/list" title="<?= _('Marketplace List') ?>" class="menu-link"><?= _('Browse') ?></a>
                             </li>
                         </ul><!-- /child menu -->
                     </li><!-- /.menu-item -->
