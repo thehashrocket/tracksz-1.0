@@ -273,7 +273,6 @@ class ProductController
             unset($methodData['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.        
 
             $result = (new Inventory($this->db))->searchInventoryFilter($methodData);
-        
             if (isset($result) && !empty($result)) {
                 $this->view->flash([
                     'alert' => 'Inventory result get successfully..!',
@@ -284,7 +283,6 @@ class ProductController
                 throw new Exception("Search result not found...!", 301);
             }
         } catch (Exception $e) {
-           
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = $e->getMessage();
@@ -782,7 +780,7 @@ class ProductController
             ]);
 
             if ($export_type == 'xlsx') {
-                ob_clean();
+               
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 header('Content-Disposition: attachment; filename="inventory.xlsx"');
                 header('Cache-Control: max-age=0');

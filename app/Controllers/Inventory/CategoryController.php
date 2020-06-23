@@ -28,8 +28,6 @@ class CategoryController
     {
         $this->browse = $browse;
         $this->db = $db;
-         error_reporting(E_ALL ^ E_DEPRECATED);
-         error_reporting(0);
     }
 
     /*

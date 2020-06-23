@@ -54,7 +54,7 @@ $description_meta = 'Order Export for your store\'s product listings at Tracksz,
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Select export Formate:</label>
+                                        <label>Select Export Format:</label>
                                         <select class="form-control" id="export_format" name="export_format" required="">
                                             <option value="" selected><?= _('Select Export Format...') ?></option>
                                             <option value="xlsx">Xlsx</option>
@@ -67,7 +67,7 @@ $description_meta = 'Order Export for your store\'s product listings at Tracksz,
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Select export type:</label>
+                                    <label>Select Export type:</label>
                                     <select class="form-control" id="exportType" name="exportType" required="">
                                         <option value="">Select Export Type</option>
                                         <option label="New" value="new">New Since Last Export</option>
