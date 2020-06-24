@@ -28,6 +28,7 @@ class CategoryController
     {
         $this->browse = $browse;
         $this->db = $db;
+        error_reporting(0);
     }
 
     /*

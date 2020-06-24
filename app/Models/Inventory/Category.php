@@ -36,6 +36,7 @@ class Category
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
     /*
     * all - Get all Zomnes
     *
@@ -81,6 +82,7 @@ class Category
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     /*
      * findParents - get top level categories
      *
@@ -108,6 +110,7 @@ class Category
 
 
 
+    
     /*
     * addCateogry - add a new cateogry for a user
     *
@@ -158,6 +161,7 @@ class Category
         return $stmt->execute();
     }
 
+   
 
     /*
     * find - Find category by category record Id
@@ -236,6 +240,7 @@ class Category
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+   
     public function delete_parentId($Id = null)
     {
         $query = 'DELETE FROM category WHERE ParentId  = :ParentId';

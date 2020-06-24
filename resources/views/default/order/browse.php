@@ -5,6 +5,26 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
 <?= $this->start('page_content') ?>
+<style type="text/css">
+    span.pre_paid {
+    background: green;
+    padding: 6px;
+    border-radius: 4px;
+    color: #fff;
+}
+ span.pending  {
+    background: #f5b548;
+    padding: 6px;
+    border-radius: 4px;
+    color: #fff;
+}
+ span.paid {
+    background: yellow;
+    padding: 6px;
+    border-radius: 4px;
+    color: #fff;
+}
+</style>
 <!-- .wrapper -->
 <div class="wrapper">
     <!-- .page -->
@@ -94,7 +114,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                     </div> <!-- col-sm -->
                                 </div> <!-- Row -->
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <button type="submit" class="btn btn-primary btn_clear">Clear</button>
+                                <button type="submit" class="btn btn-primary btn_clear">Clear Filter</button>
                             </form>
                         </div> <!-- Container -->
                     </div> <!-- Card Body -->
@@ -197,7 +217,27 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                             <td><?php echo $order['MarketplaceName']; ?></td>
                                             <td><?php echo $order['OrderStatus']; ?></td>
                                             <td><?php echo $order['OrderCurrency']; ?></td>
-                                            <td><?php echo $order['OrderPaymentStatus']; ?></td>
+                                            <td>
+                                                <?php
+                                                $class = '';
+                                                if($order['OrderPaymentStatus'] =='pre-paid')
+                                                {
+                                                   $class = 'pre_paid';
+                                                }
+                                               if($order['OrderPaymentStatus'] =='pending')
+                                                {
+                                                   $class = 'pending';
+                                                }
+
+                                                if($order['OrderPaymentStatus'] =='paid')
+                                                {
+                                                   $class = 'paid';
+                                                }
+
+
+                                                  ?>
+
+                                                <span class="<?php echo $class; ?>"><?php echo $order['OrderPaymentStatus']; ?></span></td>
                                             <td> <?php
                                                     $button = '';
                                                     $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/order/edit/' . $order['OrderId'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';

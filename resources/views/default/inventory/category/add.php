@@ -79,7 +79,12 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                     <?php 
                                                        }
                                                       }
-                                                     ?>
+                                                      else{
+                                                        ?>
+                                                        <option selected>No Parent Category found...</option>
+                                                        <?php
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="form-group">

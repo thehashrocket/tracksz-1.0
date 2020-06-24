@@ -1114,7 +1114,7 @@ class OrderController
             $result = (new Product($this->db))->searchProductFilter($methodData);
             if (isset($result) && !empty($result)) {
                 $this->view->flash([
-                    'alert' => 'Order result get successfully..!',
+                    'alert' => 'Order result retrieved successfully..!',
                     'alert_type' => 'success'
                 ]);
                 return $this->view->buildResponse('order/browse', ['all_order' => $result]);

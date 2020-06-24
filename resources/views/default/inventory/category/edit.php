@@ -75,14 +75,14 @@ $description_meta = 'Category Edit for your Tracksz Store, a Multiple Market Pro
                                                 </div>
 
                                                 <select class="custom-select" id="ParentCategory" name="ParentCategory" data-parsley-required-message="<?= _('Select Parent Category') ?>" data-parsley-group="fieldset01">
-                                                    <option value="" selected>Select Category...</option>
+                                                    <option value="" selected>Select Parent Category...</option>
                                                     <?php
                                                     if (isset($all_parent_category) && !empty($all_parent_category)) {
                                                         foreach ($all_parent_category as $cat_key => $cat_val) { ?>
                                                             <option value="<?php echo $cat_val['Id']; ?>" <?php echo (isset($form['ParentCategory']) && $form['ParentCategory'] == $cat_val['Id']) ? 'selected' : (isset($form['ParentId']) && $form['ParentId'] == $cat_val['Id']) ? 'selected' : ''; ?>><?php echo $cat_val['Name']; ?></option>
                                                         <?php }
                                                     } else { ?>
-                                                        <option selected>No Category found...</option>
+                                                        <option selected>No Parent Category found...</option>
                                                     <?php } ?>
                                                 </select>
                                             </div>

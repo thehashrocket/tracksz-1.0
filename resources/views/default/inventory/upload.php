@@ -54,9 +54,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 <li class="nav-item">
                                     <a class="nav-link show" data-toggle="tab" href="#card-filedelete"><?= _('Delete Inventory') ?></a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#">Disabled</a>
-                                </li>
+
                             </ul>
                         </div><!-- /.card-header -->
                         <!-- .card-body -->
