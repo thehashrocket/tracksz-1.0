@@ -460,20 +460,16 @@ class ShippingController
         $countryCode = $data['Country'];
         
         if ($zoneId !== 'null') {
-            if (array_key_exists($countryCode, $this->countryCodes))
-            {
+            if (array_key_exists($countryCode, $this->countryCodes)) {
                 $countryIDs = [$this->countryCodes[$countryCode]];
-            }
-            else if ($countryCode === 'US_CA') 
-            {
+            } 
+            else if ($countryCode === 'US_CA') {
                 $countryIDs = [$this->countryCodes['US'], $this->countryCodes['CA']];
             }
-            else if ($countryCode === 'GB_AU') 
-            {
+            else if ($countryCode === 'GB_AU') {
                 $countryIDs = [$this->countryCodes['GB'], $this->countryCodes['AU']];
             }
-            else 
-            {
+            else {
                 $countryIDs = array_values($this->countryCodes);
             }
 
@@ -483,8 +479,15 @@ class ShippingController
                 'alert_type' => $success ? 'success' : 'danger'
             ]);
         }
+        else {
+            $success = (new ShippingZone($this->db))->deleteBulkCountryAssignment(Cookie::get('tracksz_active_store'), $this->countryCodes[$countryCode]);
+            $this->view->flash([
+                'alert' => $success ? 'Successfully assigned shipping zone to region(s).' : 'Failed to assign shipping zone to region(s).',
+                'alert_type' => $success ? 'success' : 'danger'
+            ]);
+        }
 
-        return $this->view->redirect('/account/shipping-assign');
+        return $this->view->redirect('/account/shipping-assign/individual/countries');
     }
 
     /**
@@ -523,7 +526,7 @@ class ShippingController
                 'alert' => 'Invalid zip code range.',
                 'alert_type' => 'danger'
             ]);
-        }
+        } 
         else if ($zipCodeMin < $stateZipCodeMin || $zipCodeMax > $stateZipCodeMax) {
             $this->view->flash([
                 'alert' => 'Zip code range should be between ' . $stateZipCodeMin . ' and ' . $stateZipCodeMax . '.',
@@ -531,11 +534,25 @@ class ShippingController
             ]);
         }
         else {
-            $result = (new ShippingZone($this->db))->assignToZipRange($zoneId, $stateId, $zipCodeMin, $zipCodeMax);
+            $shippingZoneObj = new ShippingZone($this->db);
+            $result = $shippingZoneObj->assignToZipRange($zoneId, $stateId, $zipCodeMin, $zipCodeMax);
+            $zipCodeAssignments = $shippingZoneObj->getZipCodeAssignments($stateId, Cookie::get('tracksz_active_store'));
+            $shippingZones = $shippingZoneObj->findByStore(Cookie::get('tracksz_active_store'));
+
             if (gettype($result) === 'array') {
                 $this->view->flash([
-                    'alert' => 'The following entries for this state conflict with the submitted range.',
+                    'alert' => 'One or more entries below conflict with the submitted range.',
                     'alert_type' => 'danger'
+                ]);
+
+                return $this->view->buildResponse('/account/shipping_assign_zip', [
+                    'stateId' => $stateId,
+                    'stateName' => (new Zone($this->db))->getName($stateId),
+                    'stateZipCodeMin' => $stateZipCodeMin,
+                    'stateZipCodeMax' => $stateZipCodeMax,
+                    'zipCodeAssignments' => $zipCodeAssignments,
+                    'shippingZones' => $shippingZones,
+                    'conflicts' => $result
                 ]);
             }
             else {
@@ -547,5 +564,17 @@ class ShippingController
         }
 
         return $this->view->redirect('/account/shipping-assign/individual/zip/' . $stateId);
+    }
+
+    public function deleteZipCodeAssignment(ServerRequest $request, array $data)
+    {
+        $assignmentId = $data['AssignmentId'];
+        $success = (new ShippingZone($this->db))->deleteZipCodeAssignment($assignmentId);
+        $this->view->flash([
+            'alert' => ($success ? 'Successfully deleted' : 'Failed to delete') . ' assignment.',
+            'alert_type' => $success ? 'success' : 'danger'
+        ]);
+
+        return $this->viewAssignZonesIndividualZip($request, $data);
     }
 }

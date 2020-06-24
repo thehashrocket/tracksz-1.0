@@ -20,7 +20,7 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                 <div class="mb-3 d-flex justify-content-between">
                     <h1 class="page-title"> <?=_('Assign Shipping Zones to ' . $stateName)?> </h1>
                 </div>
-                <p class="text-muted"> <?=_('Here you can assign shipping zones to zip code ranges within states.')?></p>
+                <p class="text-muted"> <?=_('Here you can assign shipping zones to zip code ranges within a state.')?></p>
                 <?php if(isset($alert) && $alert):?>
                     <div class="col-sm-12 alert alert-<?=$alert_type?> text-center"><?=$alert?></div>
                 <?php endif ?>
@@ -52,14 +52,22 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                                     <th>Shipping Zone</th>
                                     <th>Zip Range Start</th>
                                     <th>Zip Range End</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($zipCodeAssignments as $assignment): ?>
-                                <tr>
+                                <?php if(isset($conflicts) && in_array($assignment['Id'], $conflicts)): ?>
+                                    <tr style="background: #ff00004f">
+                                <?php else: ?>
+                                    <tr>
+                                <?php endif; ?>
                                     <td><?= $assignment['Name'] ?></td>
                                     <td><?= $assignment['ZipCodeMin'] ?></td>
                                     <td><?= $assignment['ZipCodeMax'] ?></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-secondary btn-icon" href="/account/shipping-assign/individual/zip/delete/<?= $assignment['Id'] ?>/<?= $stateId ?>"><i class="fa fa-trash-alt"></i></a>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

@@ -96,6 +96,7 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/', Account\ShippingController::class.'::viewAssignZonesBulk');
                 $route->get('/individual/countries', Account\ShippingController::class.'::viewAssignZonesIndividualCountries');
                 $route->get('/individual/states/{CountryId:number}', Account\ShippingController::class.'::viewAssignZonesIndividualStates');
+                $route->get('/individual/zip/delete/{AssignmentId:number}/{StateId:number}', Account\ShippingController::class.'::deleteZipCodeAssignment');
                 $route->get('/individual/zip/{StateId:number}', Account\ShippingController::class.'::viewAssignZonesIndividualZip');
 
                 $route->post('/bulk-assign', Account\ShippingController::class.'::bulkAssign');

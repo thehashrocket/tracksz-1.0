@@ -109,3 +109,8 @@ select.parsley-error:focus {
 #shipping-assign-zip + blockquote table {
     width: 60%;
 }
+
+#shipping-assign-zip + blockquote td {
+    border-left: none;
+    border-right: none;
+}
