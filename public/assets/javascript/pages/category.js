@@ -1,6 +1,4 @@
 $(document).ready(function () {
-  console.log("document ready test..!");
-
   $("#category_table").DataTable({
     responsive: true,
     order: [[0, "desc"]],

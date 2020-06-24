@@ -1,6 +1,5 @@
 $(document).ready(function () {
-  console.log("document ready test..!");
-
+  
   $("#parent_category_table").DataTable({
     responsive: true,
     order: [[0, "desc"]],

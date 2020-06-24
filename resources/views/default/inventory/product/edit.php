@@ -67,7 +67,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                             </div>
                                             <div class="form-group">
                                                 <label for="ProductBasePriceInput"><?= _('Base Price') ?></label>
-                                                <input type="number" class="form-control" id="ProductBasePriceInput" name="ProductBasePriceInput" placeholder="Enter Product Base Price" value="<?php echo (isset($form['ProductBasePriceInput']) && !empty($form['ProductBasePriceInput'])) ? $form['ProductBasePriceInput'] : $form['BasePrice']; ?>">
+                                                <input type="number" data-parsley-maxlength="14" class="form-control" id="ProductBasePriceInput" name="ProductBasePriceInput" placeholder="Enter Product Base Price" value="<?php echo (isset($form['ProductBasePriceInput']) && !empty($form['ProductBasePriceInput'])) ? $form['ProductBasePriceInput'] : $form['BasePrice']; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group mb-3">

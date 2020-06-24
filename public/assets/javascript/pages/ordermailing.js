@@ -1,6 +1,5 @@
 $(document).ready(function () {
-  console.log("document ready pick..!");
-
+  
   // Handle click on "btn_mailing_download" control Starts
   $(document).on(
     "click",

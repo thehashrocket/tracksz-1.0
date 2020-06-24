@@ -1,6 +1,5 @@
 $(document).ready(function () {
-  console.log("document ready test..!");
-
+  
   $(document).on("change", "#NoAdditionalOrder", function () {
     var selectObj = $(this);
     var selectedOption = selectObj.find(":selected");

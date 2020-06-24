@@ -53,7 +53,7 @@ $description_meta = 'Postage Settings for your store\'s product listings at Trac
                                             <!-- form starts -->
                                             <h5 class="card-title"><?= _('Postage (Endicia/DAZzle)') ?></h5>
                                             <div class="form-group">
-                                                <label for="OperatingSystem"><?= _('Operating System') ?></label>
+                                                <label for="OperatingSystem"><?= _('Operating System') ?> <i class="fa fa-question-circle" title="<?= _('Select Operating System use want to use.') ?>" data-toggle="tooltip" data-placement="right"></i></label>
                                                 <select name="OperatingSystem" id="OperatingSystem" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Operating System...') ?></option>
                                                     <option value="Windows" <?php if (isset($all_order['OperatingSystem']) && $all_order['OperatingSystem'] == 'Windows') {

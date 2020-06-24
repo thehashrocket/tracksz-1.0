@@ -13,7 +13,7 @@ class Category
     // Contains Resources
     private $db;
     private $adapter;
-   public function __construct(PDO $db,Adapter $adapter = null)
+    public function __construct(PDO $db, Adapter $adapter = null)
     {
         $this->db = $db;
         // $this->adapter = new Adapter([
@@ -36,7 +36,6 @@ class Category
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
     /*
     * all - Get all Zomnes
     *
@@ -75,14 +74,13 @@ class Category
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-     public function get_all_parent_ActiveUserAll($UserId = 0, $Status = array())
+    public function get_all_parent_ActiveUserAll($UserId = 0, $Status = array())
     {
-        $Status = implode(',', $Status); 
+        $Status = implode(',', $Status);
         $stmt = $this->db->prepare("SELECT * FROM parent_category WHERE UserId = :UserId AND Status IN ($Status) ORDER BY `Id` DESC");
         $stmt->execute(['UserId' => $UserId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
     /*
      * findParents - get top level categories
      *
@@ -96,7 +94,7 @@ class Category
     }
 
 
-     /*
+    /*
      * findParents - get top level categories
      *
      * @return array of arrays
@@ -110,7 +108,6 @@ class Category
 
 
 
-    
     /*
     * addCateogry - add a new cateogry for a user
     *
@@ -132,7 +129,7 @@ class Category
         return true;
     }
 
-     public function addParentCateogry($form = array())
+    public function addParentCateogry($form = array())
     {
         $query  = 'INSERT INTO parent_category (Name, Description, Image, Status, UserId';
         $query .= ') VALUES (';
@@ -161,7 +158,6 @@ class Category
         return $stmt->execute();
     }
 
-   
 
     /*
     * find - Find category by category record Id
@@ -210,7 +206,7 @@ class Category
 
         $stmt = $this->db->prepare('SELECT * FROM parent_category WHERE Id = :Id');
         $stmt->execute(['Id' => $Id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);  
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function editParentCategory($form)
@@ -240,13 +236,11 @@ class Category
         $stmt->bindParam(':Id', $Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
-   
     public function delete_parentId($Id = null)
     {
         $query = 'DELETE FROM category WHERE ParentId  = :ParentId';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':ParentId', $Id, PDO::PARAM_INT);
-        return $stmt->execute();  
+        return $stmt->execute();
     }
-
 }

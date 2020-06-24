@@ -1,15 +1,12 @@
 $(document).ready(function() {
-    console.log('document ready test..!');
-
+    
     $('#downloads_table').DataTable({
         responsive: true,
         "order": [
             [0, "desc"]
         ]
     });
-
-
-
+    
     $(document).on("click", ".btn_delete", function() {
         if (!confirm("Do you want to delete ?")) {
             return false;
