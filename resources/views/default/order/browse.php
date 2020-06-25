@@ -7,23 +7,25 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
 <?= $this->start('page_content') ?>
 <style type="text/css">
     span.pre_paid {
-    background: green;
-    padding: 6px;
-    border-radius: 4px;
-    color: #fff;
-}
- span.pending  {
-    background: #f5b548;
-    padding: 6px;
-    border-radius: 4px;
-    color: #fff;
-}
- span.paid {
-    background: yellow;
-    padding: 6px;
-    border-radius: 4px;
-    color: #fff;
-}
+        background: green;
+        padding: 6px;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    span.pending {
+        background: #f5b548;
+        padding: 6px;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    span.paid {
+        background: yellow;
+        padding: 6px;
+        border-radius: 4px;
+        color: #fff;
+    }
 </style>
 <!-- .wrapper -->
 <div class="wrapper">
@@ -203,9 +205,9 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                     <tr>
                                         <th><input type="checkbox" name="select_all_chkbox" class="select_all_chkbox" value="0" id="select_all_chkbox"></th>
                                         <th><?= _('Market Name') ?></th>
-                                        <th><?= _('OrderStatus') ?></th>
+                                        <th><?= _('Order Status') ?></th>
                                         <th><?= _('Currency') ?></th>
-                                        <th><?= _('PaymentStatus') ?></th>
+                                        <th><?= _('Payment Status') ?></th>
                                         <th><?= _('Action') ?></th>
                                     </tr>
                                 </thead>
@@ -220,22 +222,19 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                             <td>
                                                 <?php
                                                 $class = '';
-                                                if($order['OrderPaymentStatus'] =='pre-paid')
-                                                {
-                                                   $class = 'pre_paid';
+                                                if ($order['OrderPaymentStatus'] == 'pre-paid') {
+                                                    $class = 'pre_paid';
                                                 }
-                                               if($order['OrderPaymentStatus'] =='pending')
-                                                {
-                                                   $class = 'pending';
+                                                if ($order['OrderPaymentStatus'] == 'pending') {
+                                                    $class = 'pending';
                                                 }
 
-                                                if($order['OrderPaymentStatus'] =='paid')
-                                                {
-                                                   $class = 'paid';
+                                                if ($order['OrderPaymentStatus'] == 'paid') {
+                                                    $class = 'paid';
                                                 }
 
 
-                                                  ?>
+                                                ?>
 
                                                 <span class="<?php echo $class; ?>"><?php echo $order['OrderPaymentStatus']; ?></span></td>
                                             <td> <?php
