@@ -63,7 +63,8 @@ class MarketplaceController
         $validated = $validate->run($form, true);
         // use validated as it is filtered and validated        
         if ($validated === false) {
-            $validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
+            //$validated['alert'] = 'Sorry, we could not got to next step.  Please try again.';
+            $validated['alert'] = 'Sorry, we could not got to next step. Please try again. Need to change got to go';
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
             return $this->view->redirect('/marketplace/dashboard');

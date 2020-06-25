@@ -5,6 +5,11 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
 <?= $this->start('page_content') ?>
+<style type="text/css">
+    label.enter_order_labelk {
+    margin-left: -150px;
+}
+</style>
 <!-- .wrapper -->
 <div class="wrapper">
     <!-- .page -->
@@ -29,7 +34,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <h1 class="page-title"> <?= _('Packing Listing') ?> </h1>
-                <p class="text-muted"> <?= _('Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+                <p class="text-muted"> <?= _('Packing Listing Page Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center error_class">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
@@ -50,6 +55,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
+                                           <label for="OrderSortBy">Sort By</label>
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="" disabled>Sort By...</option>
                                                 <option value="order">Order #</option>
@@ -66,6 +72,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 180px;">
+                                             <label for="OrderLayout">Packing Slip Version</label>
                                             <select name="OrderLayout" id="OrderLayout" class="browser-default custom-select order_layout_select">
                                                 <option value="" selected="" disabled>Packing Slip Version...</option>
                                                 <option value="full">Full</option>
@@ -78,7 +85,9 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                         </div>
                                     </div> <!-- col-sm -->
                                     <div class="col-sm">
-                                        <div class="form-group" style="width: 150px;float: left;display: -webkit-inline-box;">
+                                        <label for="enter_order_labelk" class="enter_order_labelk">Enter Order</label>
+                                        <div class="form-group enter_order" style="width: 150px;float: left;display: -webkit-inline-box; padding-top: 27px;">
+
                                             <input type="text" class="form-control" id="OrderID" name="OrderID" placeholder="Enter Order #" value=""> &nbsp; <button type="submit" class="btn btn-primary">Go To Order</button>
                                         </div>
                                     </div> <!-- col-sm -->

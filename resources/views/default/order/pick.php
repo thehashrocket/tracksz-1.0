@@ -29,7 +29,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <h1 class="page-title"> <?= _('Pick Listing') ?> </h1>
-                <p class="text-muted"> <?= _('Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+                <p class="text-muted"> <?= _('Pick Listing Page Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
@@ -50,6 +50,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
+                                           <label for="OrderStatus">Order Status</label>
                                             <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="" disabled>In Status...</option>
                                                 <option value="all">All</option>
@@ -65,6 +66,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
+                                             <label for="OrderSortBy">Sort By</label>
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="" disabled>Sort By...</option>
                                                 <option value="all">All</option>
@@ -74,6 +76,7 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                     </div> <!-- col-sm -->
                                     <div class="col-sm">
                                         <div class="form-group">
+                                              <label for="Split_Order"></label>
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="ckb7"> <label class="custom-control-label" for="ckb7"><?= _('Split Order') ?></label>
                                             </div>
