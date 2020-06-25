@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Payments;
 
@@ -7,7 +9,6 @@ use Stripe\Customer;
 
 class StripeController
 {
-    
     /**
      * _construct - create object
      *
@@ -18,7 +19,6 @@ class StripeController
         $key = getenv('STRIPE_SECRET');
         Stripe::setApiKey($key);
     }
-    
     /**
      * createMember - used first time member adds a card.  Gets' new customer id at Stripe.
      *
@@ -61,10 +61,9 @@ class StripeController
         if (!$valid) {
             return false;
         }
-        
         return $result;
     }
-    
+
     /**
      * addMemberCard - add a card to a current stripe member
      *
@@ -75,7 +74,7 @@ class StripeController
     public function addMemberCard($form, $id)
     {
         $valid = true;
-        
+
         $customer = Customer::retrieve($id);
         $duplicate = $this->duplicateCard($customer, $id, $form['stripeToken'], false);
         if (!$duplicate) {
@@ -105,11 +104,11 @@ class StripeController
         if (!$valid) {
             return false;
         }
-    
+
         return $result;
     }
 
-    
+
     /**
      * updateCardDetails - called after Add Card to add name, address, zip, email to
      *                     a new card.  For some reason when adding a card to a current customer
@@ -145,7 +144,7 @@ class StripeController
                 $paymentId,
                 $update
             );
-        } catch(\Stripe\Error\Card $e) {
+        } catch (\Stripe\Error\Card $e) {
             $valid = false;
         } catch (\Stripe\Error\RateLimit $e) {
             $valid = false;
@@ -165,7 +164,7 @@ class StripeController
         }
         return $result;
     }
-    
+
     /**
      * deleteCustomerCard - delete a card to a current stripe customers
      *
@@ -181,7 +180,7 @@ class StripeController
                 $gatewayUserId,
                 $paymentId
             );
-        } catch(\Stripe\Error\Card $e) {
+        } catch (\Stripe\Error\Card $e) {
             $valid = false;
         } catch (\Stripe\Error\RateLimit $e) {
             $valid = false;
@@ -201,7 +200,7 @@ class StripeController
         }
         return $result;
     }
-    
+
     /**
      * retrieveCards - retrieve all cards for a user from gateway
      *
@@ -213,9 +212,9 @@ class StripeController
         $valid = true;
         try {
             $result = $customer = \Stripe\Customer::allSources(
-                $gatewayUserId,
-                );
-        } catch(\Stripe\Error\Card $e) {
+                $gatewayUserId
+            );
+        } catch (\Stripe\Error\Card $e) {
             $valid = false;
         } catch (\Stripe\Error\RateLimit $e) {
             $valid = false;
@@ -235,7 +234,7 @@ class StripeController
         }
         return $result;
     }
-    
+
     /**
      * retrieveCard - retrieve one card for a user from gateway
      *
@@ -247,7 +246,7 @@ class StripeController
         $valid = true;
         try {
             $result = \Stripe\Customer::retrieveSource($gatewayUserId, $gatewayPaymentId);
-        } catch(\Stripe\Error\Card $e) {
+        } catch (\Stripe\Error\Card $e) {
             $valid = false;
         } catch (\Stripe\Error\RateLimit $e) {
             $valid = false;
@@ -267,8 +266,8 @@ class StripeController
         }
         return $result;
     }
-    
-    
+
+
     /**
      * error - decypher error, create error array and return
      *
@@ -283,8 +282,9 @@ class StripeController
     }
 
 
-    function duplicateCard($customer, $stripe_account, $token, $check_exp) {
-        try  {
+    function duplicateCard($customer, $stripe_account, $token, $check_exp)
+    {
+        try {
             // get token data
             $response = \Stripe\Token::retrieve(
                 $token
@@ -298,7 +298,7 @@ class StripeController
                 $fingerprint = $value->fingerprint;
                 $exp_month = $value->exp_month;
                 $exp_year = $value->exp_year;
-                
+
                 if ($fingerprint == $token_fingerprint) {
                     if ($check_exp) {
                         if (($exp_month == $token_exp_month) && ($exp_year == $token_exp_year)) {
@@ -316,5 +316,4 @@ class StripeController
         }
         return $duplicate_found;
     }
-    
 }

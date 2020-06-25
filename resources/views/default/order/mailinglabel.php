@@ -29,7 +29,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                     <?php $this->insert('partials/active_store'); ?>
                 </div>
                 <h1 class="page-title"> <?= _('Mailing Label') ?> </h1>
-                <p class="text-muted"> <?= _('Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
+                <p class="text-muted"> <?= _('Mailing Label Page Browse, add, edit, or delete Orders received by the current store: ') ?><strong> <?= urldecode(\Delight\Cookie\Cookie::get('tracksz_active_name')) ?></strong></p>
                 <?php if (isset($alert) && $alert) : ?>
                     <div class="row text-center">
                         <div class="col-sm-12 alert alert-<?= $alert_type ?> text-center"><?= $alert ?></div>
@@ -50,6 +50,7 @@ $description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inv
                                     <div class="col-sm">
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
+                                            <label>Sort By</label>
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="" disabled>Sort By...</option>
                                                 <option value="order">Order #</option>

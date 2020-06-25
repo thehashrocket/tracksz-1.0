@@ -1,6 +1,4 @@
 $(document).ready(function () {
-  console.log("document ready test..!");
-
   $("#attributes_table").DataTable({
     responsive: true,
     order: [[0, "desc"]],

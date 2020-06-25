@@ -126,19 +126,19 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                         <div class="form-group">
                                             <!-- form-group starts -->
                                             <label for="FtpAddress"><?= _('FTP Address') ?></label>
-                                            <input type="text" class="form-control" id="FtpAddress" name="FtpAddress" placeholder="Enter Ftp Address" data-parsley-required-message="<?= _('Enter Ftp Address') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpAddress']) && !empty($form['FtpAddress'])) ? $form['FtpAddress'] : ''; ?>">
+                                            <input type="url" class="form-control" id="FtpAddress" name="FtpAddress" placeholder="Enter FTP Address" data-parsley-required-message="<?= _('Enter Ftp Address') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpAddress']) && !empty($form['FtpAddress'])) ? $form['FtpAddress'] : ''; ?>">
                                         </div> <!-- form-group ends -->
 
                                         <div class="form-group">
                                             <!-- form-group starts -->
                                             <label for="FtpId"><?= _('FTP ID') ?></label>
-                                            <input type="text" class="form-control" id="FtpId" name="FtpId" placeholder="Enter Ftp Id" data-parsley-required-message="<?= _('Enter Ftp Id') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpId']) && !empty($form['FtpId'])) ? $form['FtpId'] : ''; ?>">
+                                            <input type="text" class="form-control" id="FtpId" name="FtpId" placeholder="Enter FTP Id" data-parsley-required-message="<?= _('Enter Ftp Id') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpId']) && !empty($form['FtpId'])) ? $form['FtpId'] : ''; ?>">
                                         </div> <!-- form-group ends -->
 
                                         <div class="form-group">
                                             <!-- form-group starts -->
                                             <label for="FtpPwd"><?= _('FTP Pwd') ?></label>
-                                            <input type="password" class="form-control" id="FtpPwd" name="FtpPwd" placeholder="Enter Ftp Password" data-parsley-required-message="<?= _('Enter Ftp Password') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpPwd']) && !empty($form['FtpPwd'])) ? $form['FtpPwd'] : ''; ?>">
+                                            <input type="password" class="form-control" id="FtpPwd" name="FtpPwd" placeholder="Enter FTP Password" data-parsley-required-message="<?= _('Enter Ftp Password') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpPwd']) && !empty($form['FtpPwd'])) ? $form['FtpPwd'] : ''; ?>">
                                             <small id="FtpHelp" class="form-text text-muted" aria-describedby="FtpHelp"><?= _('Note: Value will always appear as asterisks for security purposes') ?></small>
                                         </div> <!-- form-group ends -->
                                     </div> <!-- col-sm Group Right Ends -->
@@ -169,7 +169,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                         </div>
                                         <div class="form-group">
                                             <label for="AppendVenue"><?= _('Append venue-specific text to item note:') ?></label>
-                                            <input type="text" class="form-control" id="AppendVenue" name="AppendVenue" placeholder="Enter Ftp Append Venue" data-parsley-required-message="<?= _('Enter Append Venue') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['AppendVenue']) && !empty($form['AppendVenue'])) ? $form['AppendVenue'] : ''; ?>">
+                                            <input type="text" class="form-control" id="AppendVenue" name="AppendVenue" placeholder="Enter FTP Append Venue" data-parsley-required-message="<?= _('Enter Append Venue') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['AppendVenue']) && !empty($form['AppendVenue'])) ? $form['AppendVenue'] : ''; ?>">
                                         </div>
 
                                         <div class="form-group">
@@ -190,7 +190,7 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
 
                                         <div class="form-group">
                                             <label for="FtpAppendVenue"><?= _('Order retrieval interval:') ?></label>
-                                            <input type="number" class="form-control" id="FtpAppendVenue" name="FtpAppendVenue" placeholder="Enter Ftp Append Venue" data-parsley-required-message="<?= _('Enter Ftp Append Venue') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpAppendVenue']) && !empty($form['FtpAppendVenue'])) ? $form['FtpAppendVenue'] : ''; ?>">
+                                            <input type="number" class="form-control" id="FtpAppendVenue" name="FtpAppendVenue" placeholder="Enter FTP Append Venue" data-parsley-required-message="<?= _('Enter Ftp Append Venue') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['FtpAppendVenue']) && !empty($form['FtpAppendVenue'])) ? $form['FtpAppendVenue'] : ''; ?>">
                                             <small id="FtpHelp" class="form-text text-muted" aria-describedby="FtpHelp">Enter off to turn off automatic retrieval</small>
                                         </div>
                                         <div class="form-group">
@@ -256,15 +256,15 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><?= _('( Price +') ?></span>
                                             </div>
-                                            <input type="text" class="form-control" name="MarketAcceptPriceVal" id="MarketAcceptPriceVal" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceVal']) && !empty($form['MarketAcceptPriceVal'])) ? $form['MarketAcceptPriceVal'] : '0.00'; ?>">
+                                            <input type="number" min="0" class="form-control" name="MarketAcceptPriceVal" id="MarketAcceptPriceVal" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceVal']) && !empty($form['MarketAcceptPriceVal'])) ? $form['MarketAcceptPriceVal'] : '0.00'; ?>">
                                             <div class="input-group-append">
                                                 <span class="input-group-text"><?= _(') X') ?></span>
                                             </div>
-                                            <input type="text" class="form-control" name="MarketAcceptPriceValMulti" id="MarketAcceptPriceValMulti" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceValMulti']) && !empty($form['MarketAcceptPriceValMulti'])) ? $form['MarketAcceptPriceValMulti'] : '1.00000'; ?>">
+                                            <input type="number" min="0" class="form-control" name="MarketAcceptPriceValMulti" id="MarketAcceptPriceValMulti" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceValMulti']) && !empty($form['MarketAcceptPriceValMulti'])) ? $form['MarketAcceptPriceValMulti'] : '1.00000'; ?>">
                                         </div>
 
                                         <div class="form-group">
-                                            <p class="market_price"><a href="http://www.fillz.com/help/glossary.html#m_market_specific_prices" target="_blank"><?= _('Market-specific price') ?></a>
+                                            <p class="market_price"><a href="#"><?= _('Market-specific price') ?></a>
                                                 <select name="MarketSpecificPrice" id="MarketSpecificPrice" class="browser-default market_price custom-select">
                                                     <?php
                                                     if (isset($market_price) && !empty($market_price)) {
@@ -283,11 +283,11 @@ $description_meta = 'Marketplace Add for your Tracksz Store, a Multiple Market P
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><?= _('( Price +') ?></span>
                                             </div>
-                                            <input type="text" class="form-control" name="MarketAcceptPriceVal2" id="MarketAcceptPriceVal2" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceVal2']) && !empty($form['MarketAcceptPriceVal2'])) ? $form['MarketAcceptPriceVal2'] : '0.00'; ?>">
+                                            <input type="number" min="0" class="form-control" name="MarketAcceptPriceVal2" id="MarketAcceptPriceVal2" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceVal2']) && !empty($form['MarketAcceptPriceVal2'])) ? $form['MarketAcceptPriceVal2'] : '0.00'; ?>">
                                             <div class="input-group-append">
                                                 <span class="input-group-text market_price_wise"><?= _(') X') ?></span>
                                             </div>
-                                            <input type="text" class="form-control" name="MarketAcceptPriceValMulti2" id="MarketAcceptPriceValMulti2" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceValMulti2']) && !empty($form['MarketAcceptPriceValMulti2'])) ? $form['MarketAcceptPriceValMulti2'] : '1.00000'; ?>">
+                                            <input type="number" min="0" class="form-control" name="MarketAcceptPriceValMulti2" id="MarketAcceptPriceValMulti2" aria-label="Amount (to the nearest dollar)" data-parsley-required-message="<?= _('Enter Marketplace Accept Price') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['MarketAcceptPriceValMulti2']) && !empty($form['MarketAcceptPriceValMulti2'])) ? $form['MarketAcceptPriceValMulti2'] : '1.00000'; ?>">
                                         </div>
                                     </div>
                                 </div> <!-- row -->

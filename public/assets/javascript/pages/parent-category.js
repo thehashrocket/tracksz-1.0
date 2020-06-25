@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  $("#category_table").DataTable({
+  
+  $("#parent_category_table").DataTable({
     responsive: true,
     order: [[0, "desc"]],
     columns: [
@@ -45,7 +46,7 @@ $(document).ready(function () {
     } else {
       $.ajax({
         type: "POST",
-        url: BASE_URL + "/category/delete",
+        url: BASE_URL + "/category/delete_parent_category",
         data: { Id: $(this).attr("delete_id") },
         dataType: "json",
         success: function (resultData) {

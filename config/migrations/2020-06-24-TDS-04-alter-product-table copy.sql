@@ -1,0 +1,1 @@
+ALTER TABLE `product` CHANGE `BasePrice` `BasePrice` DOUBLE(16,2) NULL DEFAULT NULL;

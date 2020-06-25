@@ -110,9 +110,9 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
 <?= $this->stop() ?>
 
 <?php $this->start('plugin_js') ?>
-<script src="/assets/vendor/pace/pace.min.js"></script>
+<!-- <script src="/assets/vendor/pace/pace.min.js"></script>
 <script src="/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
-<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
 <script src="/assets/javascript/pages/confirmationfiles.js"></script>
 <?= $this->stop() ?>
 

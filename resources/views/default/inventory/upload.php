@@ -54,9 +54,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                 <li class="nav-item">
                                     <a class="nav-link show" data-toggle="tab" href="#card-filedelete"><?= _('Delete Inventory') ?></a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#">Disabled</a>
-                                </li>
+
                             </ul>
                         </div><!-- /.card-header -->
                         <!-- .card-body -->
@@ -115,7 +113,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                         </div>
 
                                         <div class="form-group" style="width: 50%;">
-                                            <label for="InventoryUpload"><?= _('File Upload') ?></label>
+                                            <label for="InventoryUpload"><i class="fas fa-download"></i> &nbsp;&nbsp;<?= _('File Upload') ?></label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
                                             </div>

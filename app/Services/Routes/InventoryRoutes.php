@@ -98,6 +98,12 @@ class InventoryRoutes extends AbstractServiceProvider
                 $route->post('/delete', Inventory\CategoryController::class . '::deleteCategoryData');
                 $route->get('/edit/{Id:number}', Inventory\CategoryController::class . '::editCategory');
                 $route->post('/update', Inventory\CategoryController::class . '::updateCategory');
+                $route->get('/parent_category', Inventory\CategoryController::class . '::parent_category');
+                $route->get('/add_parent_category', Inventory\CategoryController::class . '::add_parent_category');
+                $route->post('/insert_parent_category', Inventory\CategoryController::class . '::addParentCategory');
+                $route->get('/edit_parent_category/{Id:number}', Inventory\CategoryController::class . '::editParentCategory');
+                $route->post('/update_parent_category', Inventory\CategoryController::class . '::updateParentCategory');
+               $route->post('/delete_parent_category', Inventory\CategoryController::class . '::deleteParentCategoryData');
             })->middleware($this->container->get('Csrf'))
                 ->middleware($this->container->get('Auth'))
                 ->middleware($this->container->get('Store'));
