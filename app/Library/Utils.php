@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Library;
 /**
@@ -17,19 +19,18 @@ use PDO;
 
 class Utils
 {
-    
     public function __construct()
     {
         //
     }
-    
-    public function sanitizeFileName($filename){
+
+    public function sanitizeFileName($filename)
+    {
         $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $filename);
         $file = mb_ereg_replace("([\.]{2,})", '', $file);
         $file = trim(preg_replace('/\s+/', '', $file));
         return $file;
     }
-    
     /**
      * curlGet alias for request method
      *
@@ -39,10 +40,10 @@ class Utils
      * @param array $userOptions
      * @return mixed
      */
-    public function curlGet($url, $params = array(), $headers = array(), $userOptions = array()) {
-        return $this->curlRequest('GET',$url,$params,$headers,$userOptions);
+    public function curlGet($url, $params = array(), $headers = array(), $userOptions = array())
+    {
+        return $this->curlRequest('GET', $url, $params, $headers, $userOptions);
     }
-    
     /**
      * curlPost alis for request method
      *
@@ -52,8 +53,9 @@ class Utils
      * @param array $userOptions
      * @return mixed
      */
-    public function curlPost($url, $params = array(), $headers = array(), $userOptions = array()) {
-        return $this->curlRequest('POST',$url,$params,$headers,$userOptions);
+    public function curlPost($url, $params = array(), $headers = array(), $userOptions = array())
+    {
+        return $this->curlRequest('POST', $url, $params, $headers, $userOptions);
     }
     /**
      * Curl run request
@@ -66,18 +68,19 @@ class Utils
      * @return mixed
      * @throws Exception
      */
-    private function curlRequest($method, $url, $params = array(), $headers = array(), $userOptions = array()) {
+    private function curlRequest($method, $url, $params = array(), $headers = array(), $userOptions = array())
+    {
         $ch = curl_init();
         $method = strtoupper($method);
         $options = array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => $headers
         );
-        array_merge($options,$userOptions);
+        array_merge($options, $userOptions);
         switch ($method) {
             case 'GET':
-                if($params) {
-                    $url = $url.'?'.http_build_query($params);
+                if ($params) {
+                    $url = $url . '?' . http_build_query($params);
                 }
                 break;
             case 'POST':
@@ -91,13 +94,12 @@ class Utils
         $options[CURLOPT_URL] = $url;
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
-        if($errno = curl_errno($ch)) {
+        if ($errno = curl_errno($ch)) {
             return false;
         }
         curl_close($ch);
         return $response;
     }
-    
     // SyncLogin
     public function syncLoginSession(PDO $db, $userId)
     {
@@ -127,5 +129,4 @@ class Utils
         }
         return true;
     }
-    
 }

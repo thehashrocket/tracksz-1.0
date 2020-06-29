@@ -8,6 +8,7 @@
     <!-- Begin SEO tag -->
     <title><?= $this->e($title) ?></title>
     <meta name="description" content="<?= $this->e($description) ?>">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
     <!-- End SEO tag -->
     <!-- FAVICONS -->
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/images/favicons/apple-icon-57x57.png">
