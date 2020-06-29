@@ -2,6 +2,7 @@ $(document).ready(function () {
   
   $("#marketplace_table").DataTable({
     responsive: true,
+    scrollX: true,
     order: [[0, "desc"]],
   });
 

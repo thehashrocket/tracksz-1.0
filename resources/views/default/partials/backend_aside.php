@@ -104,7 +104,7 @@ if (substr($page, 0, 12) == 'example-page') {
                     <!-- .menu-item -->
                     <?php
                     // determine if sub-menu has active page - set up array for in_array
-                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings', 'product-change_marketplace','category-parent_category','category-add_parent_category','category-edit_parent_category','category-update_parent_category','category-update'];
+                    $inventory_menu = ['category-edit', 'product-add', 'product-edit', 'product-view', 'product-defaults', 'product-categories', 'inventory-add', 'product-place_market', 'product-upload', 'inventory-browse', 'inventory-defaults', 'inventory-categories', 'inventory-import', 'inventory-export', 'inventory-update', 'category-browse', 'category-add', 'inventory-condition-price', 'inventory-inventory-settings', 'inventory-advanced-settings', 'inventory-re-price', 'inventory-update_settings', 'product-change_marketplace', 'category-parent_category', 'category-add_parent_category', 'category-edit_parent_category', 'category-update_parent_category', 'category-update'];
                     if (strpos($page, 'product-edit') !== false) {
                         $page = 'product-edit';
                     }
@@ -115,13 +115,12 @@ if (substr($page, 0, 12) == 'example-page') {
                         $page = 'category-edit';
                     }
                     if (preg_match('/\category-edit_parent_category\b/', $page)) {
-                         $page = 'category-edit_parent_category';
+                        $page = 'category-edit_parent_category';
                     }
-                                  
                     if (strpos($page, 'inventory-update_settings') !== false) {
                         $page = 'inventory-update_settings';
-                    }                   
-                   
+                    }
+
                     ?>
                     <li class="menu-item has-child<?php if (in_array($page, $inventory_menu)) {
                                                         echo ' has-active';
@@ -152,8 +151,8 @@ if (substr($page, 0, 12) == 'example-page') {
                             <!-- .menu-item -->
                             <?php
                             // determine if sub-menu has active page - set up array for in_array
-                            $category_menu = ['category-browse', 'category-add', 'category-edit','category-parent_category','category-update','category-add_parent_category','category-edit_parent_category','category-update_parent_category'];
-                            
+                            $category_menu = ['category-browse', 'category-add', 'category-edit', 'category-parent_category', 'category-update', 'category-add_parent_category', 'category-edit_parent_category', 'category-update_parent_category'];
+
                             ?>
                             <li class="menu-item has-child<?php if (in_array($page, $category_menu)) {
                                                                 echo ' has-active';
@@ -174,7 +173,6 @@ if (substr($page, 0, 12) == 'example-page') {
                                         <a href="/category/browse" title="<?= _('View, Add, Edit, Delete Cateogry') ?>" class="menu-link"><?= _('Sub Category') ?></a>
                                     </li>
 
-                                   
 
                                 </ul><!-- /child menu -->
                             </li><!-- /.menu-item -->

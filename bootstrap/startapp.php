@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 error_reporting(E_ALL);
 
@@ -27,7 +29,7 @@ putenv("LANG=$locale");
 putenv("LC_ALL=$locale");
 setlocale(LC_ALL, $locale);
 $domain = 'messages';
-bindtextdomain($domain, __DIR__ .'/../resources/language');
+bindtextdomain($domain, __DIR__ . '/../resources/language');
 textdomain($domain);
 bind_textdomain_codeset($domain, 'UTF-8');
 
