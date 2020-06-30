@@ -89,3 +89,28 @@ select.parsley-error:focus {
     width: 60%;
     display: inline-block;
 }
+
+#shipping-assign-zip {
+    margin-bottom: 30px;
+}
+
+#shipping-assign-zip select {
+    width: 260px;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#shipping-assign-zip input {
+    width: 126px;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#shipping-assign-zip + blockquote table {
+    width: 60%;
+}
+
+#shipping-assign-zip + blockquote td {
+    border-left: none;
+    border-right: none;
+}

@@ -60,12 +60,10 @@ class ShippingMethod
         $stmt->execute();
         $storeId = $stmt->fetch(PDO::FETCH_ASSOC)['StoreId'];
 
-        if ($storeId == NULL)
-        {
+        if ($storeId == NULL) {
             return false;
         }
-        else
-        {
+        else {
             $query = 'SELECT MemberId FROM Store WHERE Id = :storeId';
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
@@ -129,31 +127,32 @@ class ShippingMethod
     }
 
     /**
-     *  getAssigned - Get a store's assigned methods
+     *  getAssignedByZone - Get a zones's assigned shipping methods
      * 
-     *  @param  $storeId - Store ID
+     *  @param  $zoneId - Zone ID
      *  @return list - Assigned shipping methods
      */
-    public function getAssigned($storeId)
+    public function getAssignedByZone($zoneId)
     {
-        $query = 'SELECT * FROM ShippingMethod INNER JOIN ShippingMethodToZone ON ShippingMethod.Id = ShippingMethodToZone.MethodId WHERE ShippingMethod.StoreId = :storeId';
+        $query = 'SELECT * FROM ShippingMethod INNER JOIN ShippingMethodToZone ON ShippingMethod.Id = ShippingMethodToZone.MethodId WHERE ShippingMethodToZone.ZoneId = :zoneId';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_STR);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     *  getUnassigned - Get a store's unassigned methods
+     *  getUnassignedByStore - Get a store's unassigned shipping methods
      * 
      *  @param  $storeId - Store ID
      *  @return list - Unassigned shipping methods
      */
-    public function getUnassigned($storeId)
+    public function getUnassignedByStore($storeId, $zoneId)
     {
-        $query = 'SELECT * FROM ShippingMethod WHERE ShippingMethod.StoreId = :storeId AND NOT EXISTS (SELECT NULL FROM ShippingMethodToZone WHERE ShippingMethod.Id = ShippingMethodToZone.MethodId)';
+        $query = 'SELECT * FROM ShippingMethod WHERE StoreId = :storeId AND NOT EXISTS (SELECT Id FROM ShippingMethodToZone WHERE ShippingMethod.Id = ShippingMethodToZone.MethodId AND ShippingMethodToZone.ZoneId = :zoneId)';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_STR);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

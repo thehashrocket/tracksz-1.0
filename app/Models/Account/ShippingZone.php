@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use Delight\Cookie\Cookie;
 use App\Models\Country;
+use App\Models\Zone;
 use PDO;
 
 class ShippingZone
@@ -145,7 +146,28 @@ class ShippingZone
     }
 
     /**
-     *  getBulkCountryAssignments - Get mapping of countries to bulk assigned shipping zones
+     *  getBulkCountryAssignment - Get bulk assignment to country if it exists
+     * 
+     *  @param $storeId - ID of country
+     *  @return array
+     */
+    public function getBulkCountryAssignment($storeId, $countryId)
+    {
+        $query = 'SELECT * FROM ShippingZoneToRegion INNER JOIN ShippingZone ON ShippingZone.Id = ShippingZoneToRegion.ZoneId
+                  WHERE ShippingZone.StoreId = :storeId
+                  AND ShippingZoneToRegion.CountryId = :countryId
+                  AND ShippingZoneToRegion.StateId IS NULL
+                  AND ShippingZoneToRegion.ZipCodeMin IS NULL
+                  AND ShippingZoneToRegion.ZipCodeMax IS NULL';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  getBulkCountryAssignmentMap - Get mapping of countries to bulk assigned shipping zones
      * 
      *  @param $storeId - ID of store
      *  @return array
@@ -237,6 +259,23 @@ class ShippingZone
      *  bulkAssignToCountry - Assign a shipping zone to an entire region
      * 
      *  @param $zoneId - Shipping zone ID
+     *  @param $countryID - ID of country to assign zone to
+     *  @return bool - Indicates success
+     */
+    public function deleteBulkCountryAssignment($storeId, $countryId)
+    {
+        $currentAssignment = $this->getBulkCountryAssignment($storeId, $countryId);
+        $query = 'DELETE FROM ShippingZoneToRegion WHERE ZoneId = :zoneId AND CountryId = :countryId';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':zoneId', $currentAssignment['ZoneId'], PDO::PARAM_INT);
+        $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    /**
+     *  bulkAssignToCountry - Assign a shipping zone to an entire region
+     * 
+     *  @param $zoneId - Shipping zone ID
      *  @param $countryIDs - Array of countries to assign zone to
      *  @return bool - Indicates success
      */
@@ -315,5 +354,79 @@ class ShippingZone
                 return $stmt->execute();
             }
         }
+    }
+
+    /**
+     *  getZipCodeAssignments - Get zip code level assignments for state
+     * 
+     *  @param $stateId - ID of state
+     *  @param $storeId - ID of store
+     *  @return array of assignments
+     */
+    public function getZipCodeAssignments($stateId, $storeId)
+    {
+        $query = 'SELECT ShippingZoneToRegion.Id, ShippingZoneToRegion.ZoneId, ShippingZone.Name, ShippingZoneToRegion.ZipCodeMin, ShippingZoneToRegion.ZipCodeMax FROM ShippingZoneToRegion 
+                  INNER JOIN ShippingZone ON ShippingZoneToRegion.ZoneId = ShippingZone.Id 
+                  WHERE ShippingZone.StoreId = :storeId
+                  AND ShippingZoneToRegion.StateId = :stateId
+                  AND ShippingZoneToRegion.ZipCodeMin IS NOT NULL
+                  AND ShippingZoneToRegion.ZipCodeMax IS NOT NULL
+                  ORDER BY ShippingZoneToRegion.ZipCodeMin';
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':storeId', $storeId, PDO::PARAM_INT);
+        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     *  assignToZipRange - Assign shipping zone to zip code range
+     * 
+     *  @param $zoneId - ID of shipping zone
+     *  @param $stateId - ID of state
+     *  @param $zipCodeMin - Lower bound for zip code range
+     *  @param $zipCodeMax - Upper bound for zip code range
+     *  @return array of conflicting entries (if any exist)
+     *  @return bool to indicate success of insert
+     */
+    public function assignToZipRange($zoneId, $stateId, $zipCodeMin, $zipCodeMax)
+    {
+        $query = 'SELECT Id FROM ShippingZoneToRegion WHERE StateId = :stateId AND ((:zipMin <= ZipCodeMin AND :zipMax >= ZipCodeMax) OR (:zipMin <= ZipCodeMax AND :zipMax >= ZipCodeMax) OR (:zipMin >= ZipCodeMin AND :zipMax <= ZipCodeMax) OR (:zipMin <= ZipCodeMin AND :zipMax >= ZipCodeMin))';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+        $stmt->bindParam(':zipMin', $zipCodeMin, PDO::PARAM_INT);
+        $stmt->bindParam(':zipMax', $zipCodeMax, PDO::PARAM_INT);
+        $stmt->execute();
+        $conflicts = array_map(function($conflict) { return $conflict['Id']; }, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        if ($conflicts) {
+            return $conflicts;
+        }
+        else {
+            $countryId = (new Zone($this->db))->getCountryId($stateId);
+            $query = 'INSERT INTO ShippingZoneToRegion (ZoneId, CountryId, StateId, ZipCodeMin, ZipCodeMax) VALUES (:zoneId, :countryId, :stateId, :zipMin, :zipMax)';
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':zoneId', $zoneId, PDO::PARAM_INT);
+            $stmt->bindParam(':countryId', $countryId, PDO::PARAM_INT);
+            $stmt->bindParam(':stateId', $stateId, PDO::PARAM_INT);
+            $stmt->bindParam(':zipMin', $zipCodeMin, PDO::PARAM_INT);
+            $stmt->bindParam(':zipMax', $zipCodeMax, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+    }
+
+    /**
+     *  deleteZipCodeAssignment - Delete zip code level shipping zone assignment
+     * 
+     *  @param $assignmentId - ID of assignment
+     *  @return bool to indicate success
+     */
+    public function deleteZipCodeAssignment($assignmentId)
+    {
+        $query = 'DELETE FROM ShippingZoneToRegion WHERE Id = :id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $assignmentId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }

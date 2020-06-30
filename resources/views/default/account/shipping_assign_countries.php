@@ -52,14 +52,15 @@ $description_meta = 'Assign Shipping Zones at Tracksz, a Multiple Market Invento
                                             <input type="hidden" name="Country" value="<?= $country['IsoCode2'] ?>">
                                             <select class="form-control" name="ZoneId" style="display: inline-block">
                                             <?php if(!$zone): ?>
-                                                <option value="null">--</option>
+                                                <option value="null" selected>--</option>
                                                 <?php foreach($shippingZones as $shippingZone): ?>
                                                     <option value="<?= $shippingZone['Id'] ?>"><?= $shippingZone['Name'] ?></option>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
-                                                <option value="<?= $zone['Id'] ?>"><?= $zone['Name'] ?></option> 
+                                                <option value="null">--</option>
+                                                <option value="<?= $zone['ZoneId'] ?>" selected><?= $zone['Name'] ?></option> 
                                                 <?php foreach($shippingZones as $shippingZone): ?>
-                                                    <?php if($shippingZone['Id'] != $zone['Id']): ?>
+                                                    <?php if($shippingZone['Id'] != $zone['ZoneId']): ?>
                                                         <option value="<?= $shippingZone['Id'] ?>"><?= $shippingZone['Name'] ?></option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
