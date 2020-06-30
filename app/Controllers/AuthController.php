@@ -30,9 +30,15 @@ class AuthController
      */
     public function __construct(Views $view, Auth $auth, PDO $db)
     {
+        error_reporting(0);
         $this->view = $view;
         $this->auth = $auth;
         $this->db   = $db;
+        //$httponly = true;
+
+setcookie('Tracksz','cookie_value', ['samesite' => 'Strict','httponly' => 'true']);
+
+
     }
     /**
      * login - user login
