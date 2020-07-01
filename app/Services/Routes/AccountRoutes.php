@@ -19,7 +19,7 @@ class AccountRoutes extends AbstractServiceProvider
     protected $provides = [
         Router::class
     ];
-
+    
     /**
      * Register method,.
      */
@@ -29,16 +29,16 @@ class AccountRoutes extends AbstractServiceProvider
         $this->container->add(Router::class, function () {
             $strategy = (new ApplicationStrategy)->setContainer($this->container);
             $routes   = (new Router)->setStrategy($strategy);
-
+    
             // stripe connect response uri for setting up new stripe connect account
             $routes->get('/account/connect/{response}', Account\StoreController::class.'::connect')
                 ->middleware($this->container->get('Auth'));
-
+            
             // Main Account routes
             $routes->group('/account', function (\League\Route\RouteGroup $route) {
                 $route->get('/panel', Account\AccountController::class . '::index');
                 $route->get('/', Account\AccountController::class . '::index');
-
+                
                 // these are done less often, put later in list
                 $route->get('/profile', Account\AccountController::class . '::profile');
                 $route->get('/profile/edit', Account\AccountController::class . '::editProfile');
@@ -68,7 +68,7 @@ class AccountRoutes extends AbstractServiceProvider
                 $route->get('/', Account\ShippingController::class.'::viewMethods');
                 $route->get('/add', Account\ShippingController::class.'::viewAddMethod');
                 $route->get('/edit/{Id:number}', Account\ShippingController::class.'::viewUpdateMethod');
-
+        
                 $route->post('/create', Account\ShippingController::class.'::createMethod');
                 $route->post('/delete/{Id:number}', Account\ShippingController::class.'::deleteMethod');
                 $route->post('/edit', Account\ShippingController::class.'::updateMethod');
@@ -77,7 +77,7 @@ class AccountRoutes extends AbstractServiceProvider
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
-
+    
             // Create/manage shipping zones
             $routes->group('/account/shipping-zones', function (\League\Route\RouteGroup $route) {
                 $route->get('/', Account\ShippingController::class.'::viewZones');
@@ -112,7 +112,7 @@ class AccountRoutes extends AbstractServiceProvider
             })->middleware($this->container->get('Csrf'))
               ->middleware($this->container->get('Store'))
               ->middleware($this->container->get('Auth'));
-
+            
             return $routes;
         })->setShared(true);
     }

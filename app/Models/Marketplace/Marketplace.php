@@ -160,10 +160,31 @@ class Marketplace
     */
     public function findFtpDetails($MarketName, $UserId = 0,  $Status = 0)
     {
+    
         $stmt = $this->db->prepare('SELECT * FROM marketplace WHERE MarketName = :MarketName AND UserId = :UserId AND Status = :Status');
         $stmt->execute(['MarketName' => $MarketName, 'UserId' => $UserId, 'Status' => $Status]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /*
+    * find - Find MarketName by UserId and Status
+    *
+    * @param  UserId  - Table record Id of marketplace to find
+    * @param  Status  - Table record Status of marketplace to find
+    * @return market place name associative array.
+    */
+
+     public function get_market_place_name($UserId = 0,  $Status = 0)
+    {
+    
+        $stmt = $this->db->prepare('SELECT MarketName FROM marketplace WHERE UserId = :UserId AND Status = :Status');
+        $stmt->execute(['UserId' => $UserId, 'Status' => $Status]);
+         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
     /*
     * addMarketplace - add a new marketplace for a user
     *

@@ -23,6 +23,7 @@ use Laminas\Validator\File\Extension;
 use App\Models\Inventory\Category;
 use App\Models\Inventory\Inventory;
 use App\Models\Inventory\InventorySetting;
+use App\Models\Marketplace\Marketplace;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Stream;
 use Laminas\Log\Formatter\Json;
@@ -42,10 +43,11 @@ class ScheduleBackgroundJobs
   }
 
   /*
-    @author    :: Mukesh 
-    @task_id   :: 
-    @task_desc :: Background Jobs
-    @params    :: 
+   @author    :: Mukesh 
+   @task_id   :: Background Job
+   @task_desc :: ftp files upload for all market place
+   @params    :: none
+   @return    :: json data
   */
   public function orderBackgroundProcess()
   {
@@ -57,27 +59,24 @@ class ScheduleBackgroundJobs
     $count_fail = array();
     $count_success = array();
     $new_path = getcwd() . '/assets/order/';
-
-    // open an FTP connection
-    $ftp_conn = ftp_connect($ftpHost) or die("Could not connect to $ftpHost");
-    $login = ftp_login($ftp_conn, $ftpUsername, $ftpPassword);
-    $file_list = ftp_nlist($ftp_conn, "/Order");
+    $login = ftp_login($ftp_connect, $ftp_username, $ftp_password);
+    $file_list = ftp_nlist($ftp_connect, "/Order");
     if (!empty($file_list)) {
       foreach ($file_list as $value) {
         $remoteFile = $value;
         $newname = str_replace("/Order/", '', $remoteFile);
         ob_start();
-        ftp_get($ftp_conn, 'php://output', $remoteFile, FTP_ASCII);
+        ftp_get($ftp_connect, 'php://output', $remoteFile, FTP_ASCII);
         $data = ob_get_contents();
         ob_end_clean();
         $file = fopen($new_path . 'orderimport/' . $newname, "w");
         echo fwrite($file, $data);
         fclose($file);
-        ftp_delete($ftp_conn, $remoteFile); // Delete file on server 
+        ftp_delete($ftp_connect, $remoteFile); // Delete file on server 
       }
     }
-
-    $path = $new_path . 'orderimport';  //  directory's path
+  
+   $path = $new_path . 'orderimport';  //  directory's path
     $fileArray = array();
     if ($handle = opendir($path)) {
       while (false !== ($file = readdir($handle))) {
@@ -158,6 +157,7 @@ class ScheduleBackgroundJobs
     $res['count_order_fail'] = $count_fail;
     die(json_encode($res));
   }
+}
 
 
   /*
