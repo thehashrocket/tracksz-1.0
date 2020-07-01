@@ -160,7 +160,6 @@ class Marketplace
     */
     public function findFtpDetails($MarketName, $UserId = 0,  $Status = 0)
     {
-    
         $stmt = $this->db->prepare('SELECT * FROM marketplace WHERE MarketName = :MarketName AND UserId = :UserId AND Status = :Status');
         $stmt->execute(['MarketName' => $MarketName, 'UserId' => $UserId, 'Status' => $Status]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
