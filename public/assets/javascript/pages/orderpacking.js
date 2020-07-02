@@ -19,9 +19,9 @@ $(document).ready(function () {
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
           if (data.status) {
-            location.reload();
+            // location.reload();
           } else {
-            location.reload();
+            // location.reload();
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {}, complete: function () {  

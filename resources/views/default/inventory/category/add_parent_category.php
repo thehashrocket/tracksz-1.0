@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'parent Category Add for Your Tracksz Store, a Multiple Market Product Management Service';
-$description_meta = 'Category Add for your Tracksz Store, a Multiple Market Product Management Service';
+$title_meta = 'Parent Category Add for Your Tracksz Store, a Multiple Market Product Management Service';
+$description_meta = 'Parent Category Add for your Tracksz Store, a Multiple Market Product Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 
@@ -62,7 +62,7 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                 <textarea class="form-control" id="ParentCategoryDescription" name="ParentCategoryDescription" rows="3" data-parsley-required-message="<?= _('Enter Parent Category Description') ?>" placeholder="Enter Parent Category Description" data-parsley-group="fieldset01" required><?php echo (isset($form['ParentCategoryDescription']) && !empty($form['ParentCategoryDescription'])) ? $form['ParentCategoryDescription'] : ''; ?></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label for="CategoryImage"><?= _('Parent Category Image') ?></label>
+                                                <label for="CategoryImage"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Parent Category Image') ?></label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="ParentCategoryImage" name="ParentCategoryImage" multiple="" data-parsley-required-message="<?= _('Select Category Image') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" data-parsley-filemimetypes="image/jpeg, image/png" required> <label class="custom-file-label" for="CategoryImage"><?= _('Choose file') ?></label>
                                                 </div>

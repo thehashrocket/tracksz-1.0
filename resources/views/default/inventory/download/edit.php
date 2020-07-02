@@ -63,7 +63,7 @@ $description_meta = 'Download Edit for your Tracksz Store, a Multiple Market Pro
                                                 $file_path = '';
                                                 $file_path = \App\Library\Config::get('company_url') . '/assets/inventory/download/' . $form['Filename'];
                                                 ?>
-                                                <label for="DownloadFilename"><?= _('Filename') ?> &nbsp;&nbsp; <a href="<?= $file_path; ?>" class="download_file" target="_blank"><i class="fas fa-file"></i></a></label>
+                                                <label for="DownloadFilename"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Filename') ?> &nbsp;&nbsp; <a href="<?= $file_path; ?>" class="download_file" target="_blank"><i class="fas fa-file"></i></a></label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="DownloadFilename" name="DownloadFilename" multiple="" data-parsley-required-message="<?= _('Select File') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" data-parsley-filemimetypes="image/jpeg, image/png"> <label class="custom-file-label" for="DownloadFilename"><?= _('Choose file') ?></label>
                                                     <input type="hidden" class="form-control" id="DownloadFilenameHidden" name="DownloadFilenameHidden" value="<?php echo (isset($form['DownloadFilename']) && !empty($form['DownloadFilename'])) ? $form['DownloadFilename'] : $form['Filename']; ?>">

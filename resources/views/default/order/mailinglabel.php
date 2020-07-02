@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Packing Slips for Your Tracksz Store, a Multiple Market Inventory Management Service';
-$description_meta = 'Packing Slips for your Tracksz Store, a Multiple Market Inventory Management Service';
+$title_meta = 'Mailing Label for Your Tracksz Store, a Multiple Market Inventory Management Service';
+$description_meta = 'Mailing Label for your Tracksz Store, a Multiple Market Inventory Management Service';
 ?>
 <?= $this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta]) ?>
 

@@ -1556,7 +1556,10 @@ class OrderController
     public function loadPackinghtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+          $image = '';
+          if(isset($all_order) && !empty($all_order)){
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1586,7 +1589,9 @@ class OrderController
                 $html .= "</div>";
                 $html .= "</div>";
                 $html .= "</td>";
-                $html .= "<td><img src='" . $image . "' height='250px;'></td>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<td><img src='" . $image . "' height='250px;'></td>";
+                }
                 $html .= "</tr>";
                 $html .= "<br>";
                 $html .= "<tr class='border_top_radius'>";
@@ -1656,7 +1661,13 @@ class OrderController
     public function loadPackingSmallHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        // echo "<pre> test";
+        // print_r($all_order);
+        // exit;
+        $image = '';
+        if(isset($all_order) && !empty($all_order)){
+              $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+          }      
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1683,7 +1694,9 @@ class OrderController
                 $html .= "</tr>";
                 $html .= "<br>";
                 $html .= "<tr>";
+                if(isset($image) && !empty($image)){
                 $html .= "<td colspan='5' class='img_barcode'><center><img class='img_barcode' src='" . $image . "' height='250px;'></center></td>";
+                }
                 $html .= "</tr>";
                 $html .= "<br>";
                 $html .= "<br>";
@@ -1755,7 +1768,10 @@ class OrderController
     public function loadPackingSelfStickHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         $image = '';
+         if(isset($all_order) && !empty($all_order)){
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1786,7 +1802,9 @@ class OrderController
                 $html .= " <p class='text_left'>" . $val_data['ShippingCity'] . "," . $val_data['ShippingState'] . "</p>";
                 $html .= " <p class='text_left'>" . $val_data['ShippingCountry'] . "</p>";
                 $html .= " <p class='text_left'>" . $val_data['ShippingPhone'] . "</p>";
-                $html .= "<img src='" . $image . "' height='250px;'>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<img src='" . $image . "' height='250px;'>";
+                }
                 $html .= "</td>";
                 $html .= "</div>";
                 $html .= "</tr>";
@@ -1858,7 +1876,10 @@ class OrderController
     public function loadPacking92FoldHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         $image = '';
+         if(isset($all_order) && !empty($all_order)){
+          $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1877,7 +1898,9 @@ class OrderController
                 $html .= "<td><b>Order# " . $val_data['OrderId'] . "</b></td></br>";
                 $html .= "</tr>";
                 $html .= "<tr>";
-                $html .= "<td><img src='" . $image . "' style='width:150px;height:150px;'></td></br>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<td><img src='" . $image . "' style='width:150px;height:150px;'></td></br>";
+                }
                 $html .= "<td>";
                 $html .= "</tr>";
                 $html .= "<tr>";
@@ -1961,7 +1984,10 @@ class OrderController
     public function loadPackingMailingHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         $image = '';
+         if(isset($all_order) && !empty($all_order)){
+          $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+          }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1976,7 +2002,9 @@ class OrderController
         if (isset($pdf_data) && !empty($pdf_data)) {
             foreach ($pdf_data as $key_data => $val_data) {
                 $html .= "<div class='main_div'>";
-                $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                }
                 $html .= "</br>";
                 $html .= "</br>";
                 $html .= "</br>";
@@ -2047,7 +2075,10 @@ class OrderController
     public function loadPackingIntegrateLabel($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         $image = '';
+         if(isset($all_order) && !empty($all_order)){
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -2071,7 +2102,9 @@ class OrderController
                 $html .= "</table></br></br></br></br></br></br></br><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
                 $html .= "<div class='main_div'>";
                 $html .= "<span style='font-size:24px;'>Customer Phone #: " . $val_data['ShippingPhone'] . "</span>";
-                $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                }
                 $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
                 $html .= "<thead>";
                 $html .= "</thead>";
@@ -2160,7 +2193,10 @@ class OrderController
     {
 
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = '';
+         if(isset($all_order) && !empty($all_order)){
         $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         //$img_barcode = 'test';
         $html = "";
@@ -2202,7 +2238,9 @@ class OrderController
                 $html .= "<td style='border:1px solid black;'></td>";
                 $html .= "</tr>";
                 $html .= "<tr>";
-                $html .= "<td><img src='" . $image . "' width='150'/></td>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<td><img src='" . $image . "' width='150'/></td>";
+                }
                 $html .= "<td>" . $val_data['ProductSKU'] . "</td>";
                 $html .= "<td>" . $val_data['ProductISBN'] . "<br>" . $val_data['ProductDescription'] . "<br>" . $val_data['BillingCity'] . " ," . $val_data['BillingState'];
                 $html .= "</td>";

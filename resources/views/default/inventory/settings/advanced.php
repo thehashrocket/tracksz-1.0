@@ -87,7 +87,7 @@ $description_meta = 'Category Add for your Tracksz Store, a Multiple Market Prod
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="CategoryImage"><?= _('Category Image') ?></label>
+                                                <label for="CategoryImage"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Category Image') ?></label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="CategoryImage" name="CategoryImage" multiple="" data-parsley-required-message="<?= _('Select Category Image') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" data-parsley-filemimetypes="image/jpeg, image/png" required> <label class="custom-file-label" for="CategoryImage"><?= _('Choose file') ?></label>
                                                 </div>

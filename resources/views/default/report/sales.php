@@ -1,6 +1,6 @@
 <?php
-$title_meta = 'Inventory Listing for Your Tracksz Store, a Multiple Market Inventory Management Service';
-$description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market Inventory Management Service';
+$title_meta = 'Sales Listing for Your Tracksz Store, a Multiple Market Inventory Management Service';
+$description_meta = 'Sales Listing for your Tracksz Store, a Multiple Market Inventory Management Service';
 ?>
 <?=$this->layout('layouts/backend', ['title' => $title_meta, 'description' => $description_meta])?>
 

@@ -105,7 +105,7 @@ $description_meta = 'Product Add for your Tracksz Store, a Multiple Market Produ
                                      <div class="form-group">
                                      <div class="input-group mb-3">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="productImage">Upload</span>
+                                                <span class="input-group-text" id="productImage"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;Upload</span>
                                             </div>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="productImage" name="productImage" aria-describedby="productImage">

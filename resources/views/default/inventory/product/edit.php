@@ -155,7 +155,7 @@ $description_meta = 'Product Edit for your Tracksz Store, a Multiple Market Prod
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <label for="ProdImage"><?= _('Product Image') ?></label>
+                                                                    <label for="ProdImage"><i class="fas fa-cloud-upload-alt"></i> &nbsp;&nbsp;<?= _('Product Image') ?></label>
                                                                     <div class="custom-file">
                                                                         <input type="file" class="custom-file-input" id="ProdImage" name="ProdImage" multiple=""> <label class="custom-file-label" for="CategoryImage" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
                                                                         <input type="hidden" class="form-control" id="ProductImageHidden" name="ProductImageHidden" value="<?php echo (isset($form['Image']) && !empty($form['Image'])) ? $form['Image'] : ''; ?>">

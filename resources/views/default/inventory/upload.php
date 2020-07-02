@@ -83,7 +83,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="InventoryUpload"><?= _('Inventory File Upload') ?></label>
+                                                <label for="InventoryUpload"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Inventory File Upload') ?></label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
                                                 </div>
@@ -113,7 +113,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                         </div>
 
                                         <div class="form-group" style="width: 50%;">
-                                            <label for="InventoryUpload"><i class="fas fa-download"></i> &nbsp;&nbsp;<?= _('File Upload') ?></label>
+                                            <label for="InventoryUpload"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('File Upload') ?></label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="InventoryUpload" name="InventoryUpload" multiple=""> <label class="custom-file-label" for="InventoryUpload" data-parsley-required-message="<?= _('Select Inventory File Upload') ?>" data-parsley-group="fieldset01" required><?= _('Choose file') ?></label>
                                             </div>
@@ -128,7 +128,7 @@ $description_meta = 'Inventory Listing for your Tracksz Store, a Multiple Market
                                     <!-- <button type="submit" class="btn btn-primary" id="submit-all">Upload</button> -->
                                 </div>
                                 <div class="tab-pane fade" id="card-filedelete">
-                                    <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
+                                    <a href="<?php echo \App\Library\Config::get('company_url') . '/assets/inventory/InventoryRemove.csv' ?>"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Sample File') ?></a>
                                     <form name="dropzone_filedelete" id="dropzone_filedelete" class="dropzone" action="/inventory/importdelete" method="POST" enctype="multipart/form-data">
 
                                     </form>

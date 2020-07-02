@@ -42,7 +42,7 @@ $description_meta = 'Order Confirm Files for your store\'s product listings at T
             <div class="page-section">
                 <!-- .card -->
                 <div class="card card-fluid">
-                    <h6 class="card-header"> <?= _('Confirmation Files') ?></h6><!-- .card-body -->
+                    <h6 class="card-header"><i class="fas fa-cloud-upload-alt"></i> <?= _('Confirmation Files') ?></h6><!-- .card-body -->
                     <div class="card-body">
                         <div id="card-filebrowse">
                             <form name="dropzone_request" id="dropzone_request" class="dropzone" action="/order/confirmation_files" method="POST" enctype="multipart/form-data">

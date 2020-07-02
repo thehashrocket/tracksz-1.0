@@ -58,7 +58,7 @@ $description_meta = 'Download Add for your Tracksz Store, a Multiple Market Prod
                                                 <input type="text" class="form-control" id="DownloadName" name="DownloadName" placeholder="Enter Download Name" data-parsley-required-message="<?= _('Enter Download Name') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($form['DownloadName']) && !empty($form['DownloadName'])) ? $form['DownloadName'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
-                                                <label for="DownloadFilename"><?= _('Filename') ?></label>
+                                                <label for="DownloadFilename"><i class="fas fa-cloud-upload-alt"></i>&nbsp;&nbsp;<?= _('Filename') ?></label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="DownloadFilename" name="DownloadFilename" multiple="" data-parsley-required-message="<?= _('Select File') ?>" data-parsley-group="fieldset01" data-parsley-trigger="change" required> <label class="custom-file-label" for="DownloadFilename"><?= _('Choose file') ?></label>
                                                 </div>
