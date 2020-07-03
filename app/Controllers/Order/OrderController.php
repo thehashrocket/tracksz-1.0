@@ -1490,7 +1490,7 @@ class OrderController
   */
     public function pdfGeneratePackingLoad(ServerRequest $request)
     {
-        error_reporting(0);
+
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
@@ -1503,8 +1503,7 @@ class OrderController
 
             if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
                 $packing_html = $this->loadPackinghtml($pdf_data);
-               // print_r($packing_html);
-               //  die('om');
+
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
@@ -1536,11 +1535,9 @@ class OrderController
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html, 2);
             $mpdf->AddPage('L');
-            //$mpdf->Output();
 
-            //$mpdf->WriteHTML($packing_html, \Mpdf\HTMLParserMode::HTML_BODY);
             $mpdf->Output('packing.pdf');
-            die;
+            die();
            
         } catch (Exception $e) {
             $res['status'] = false;
@@ -1567,7 +1564,8 @@ class OrderController
     */
     public function loadPackinghtml($pdf_data)
     {
-        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+      
           $image = '';
           if(isset($all_order) && !empty($all_order)){
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
@@ -1672,10 +1670,8 @@ class OrderController
     */
     public function loadPackingSmallHtml($pdf_data)
     {
-        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-        // echo "<pre> test";
-        // print_r($all_order);
-        // exit;
+       $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+
         $image = '';
         if(isset($all_order) && !empty($all_order)){
               $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
@@ -1780,7 +1776,7 @@ class OrderController
     public function loadPackingSelfStickHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-         $image = '';
+        $image = '';
          if(isset($all_order) && !empty($all_order)){
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
         }
@@ -2212,7 +2208,7 @@ class OrderController
         $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
          }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
-        //$img_barcode = 'test';
+
         $html = "";
         $html .= "";
         $html .= "<!DOCTYPE html>";
