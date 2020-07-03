@@ -1396,7 +1396,9 @@ class OrderController
 
             $mpdf = new Mpdf();
             $mpdf->WriteHTML($mailing_html);
-            $mpdf->Output();
+            $mpdf->Output('mailing.pdf');
+            die();
+
         } catch (Exception $e) {
 
             $res['status'] = false;
@@ -1488,16 +1490,21 @@ class OrderController
   */
     public function pdfGeneratePackingLoad(ServerRequest $request)
     {
+        error_reporting(0);
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
             // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
             $pdf_data = (new Order($this->db))->getPackingOrders($form);
+            //print_r($pdf_data);
+            //die;
             // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
 
 
             if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
                 $packing_html = $this->loadPackinghtml($pdf_data);
+               // print_r($packing_html);
+               //  die('om');
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
@@ -1529,7 +1536,12 @@ class OrderController
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html, 2);
             $mpdf->AddPage('L');
-            $mpdf->Output();
+            //$mpdf->Output();
+
+            //$mpdf->WriteHTML($packing_html, \Mpdf\HTMLParserMode::HTML_BODY);
+            $mpdf->Output('packing.pdf');
+            die;
+           
         } catch (Exception $e) {
             $res['status'] = false;
             $res['data'] = [];
@@ -2165,7 +2177,9 @@ class OrderController
             $mpdf = new Mpdf();
             $mpdf->use_kwt = true;
             $mpdf->WriteHTML($packing_html);
-            $mpdf->Output();
+            //$mpdf->Output();
+            $mpdf->Output('pick.pdf');
+            die();
         } catch (\Mpdf\MpdfException $e) {
             $res['status'] = false;
             $res['data'] = [];

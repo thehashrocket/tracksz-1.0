@@ -15,14 +15,19 @@ $(document).ready(function () {
         status: $("#OrderStatus :selected").val(),
         sortorder: $("#OrderSortBy :selected").val(),
       },
-      dataType: "JSON",
+      //dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-        if (data.status) {
-          location.reload();
-        } else {
-          location.reload();
-        }
+        var csvFile;
+        var downloadLink;
+        downloadLink = document.createElement("a");
+        downloadLink.download = 'pick.pdf';
+        downloadLink.href = BASE_URL+"/pick.pdf";
+
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+       
       },
       error: function (jqXHR, textStatus, errorThrown) {},
     });
