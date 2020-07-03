@@ -362,6 +362,14 @@ LEFT JOIN marketplace
     }
 
 
+     public function pdf_sorting_parameter($UserId)
+    {
+        $stmt = $this->db->prepare("SELECT SortOrders,DefaultTemplate FROM labelsettings WHERE UserId = :UserId");
+        $stmt->execute(['UserId' => $UserId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
     /*
     * findBySKUProd - Find orderinventory by orderinventory record UserId and Status
     *

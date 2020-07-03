@@ -90,34 +90,34 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <label for="Sort Orders By (Mailing Labels and Packing Slips)"><?= _(' Sort Orders By (Mailing Labels and Packing Slips)') ?></label>
                                                 <select name="SortOrders" id="SortOrders" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Sort Orders') ?></option>
-                                                    <option value="Order#" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Order#') {
+                                                    <option value="order" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'order') {
                                                                                 echo 'selected';
                                                                             } ?>>Order#</option>
-                                                    <option value="Location/SKU" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Location/SKU') {
+                                                    <option value="location/sku" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'location/sku') {
                                                                                         echo 'selected';
                                                                                     } ?>>Location/SKU</option>
-                                                    <option value="SKU" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'SKU') {
+                                                    <option value="sku" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'sku') {
                                                                             echo 'selected';
                                                                         } ?>>SKU</option>
-                                                    <option value="Zip Code" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Zip Code') {
+                                                    <option value="zip code" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'zip code') {
                                                                                     echo 'selected';
                                                                                 } ?>>Zip Code</option>
-                                                    <option value="Country/Zip" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Country/Zip') {
+                                                    <option value="country/zip" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'country/zip') {
                                                                                     echo 'selected';
                                                                                 } ?>>Country/Zip</option>
-                                                    <option value="Author" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Author') {
+                                                    <option value="author" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'author') {
                                                                                 echo 'selected';
                                                                             } ?>>Author</option>
-                                                    <option value="Title" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Title') {
+                                                    <option value="title" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'title') {
                                                                                 echo 'selected';
                                                                             } ?>>Title</option>
-                                                    <option value="Marketplace/Order#" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Marketplace/Order#') {
+                                                    <option value="marketplace/order#" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'marketplace/order#') {
                                                                                             echo 'selected';
                                                                                         } ?>>Marketplace/Order#</option>
-                                                    <option value="Marketplace/Location" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Marketplace/Location') {
+                                                    <option value="marketplace/location" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'marketplace/location') {
                                                                                                 echo 'selected';
                                                                                             } ?>>Marketplace/Location</option>
-                                                    <option value="Shipping Method" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'Shipping Method') {
+                                                    <option value="shipping method" <?php if (isset($all_order['SortOrders']) && $all_order['SortOrders'] == 'shipping method') {
                                                                                         echo 'selected';
                                                                                     } ?>>Shipping Method</option>
                                                 </select>
@@ -184,13 +184,13 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <label for="Sort Pick List By"><?= _('Sort Pick List By') ?></label>
                                                 <select name="SortPickList" id="SortPickList" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Pick List') ?></option>
-                                                    <option value="Location/SKU" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'Location/SKU') {
+                                                    <option value="location/sku" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'location/sku') {
                                                                                         echo 'selected';
                                                                                     } ?>>Location/SKU</option>
-                                                    <option value="Author" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'Author') {
+                                                    <option value="author" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'author') {
                                                                                 echo 'selected';
                                                                             } ?>>Author</option>
-                                                    <option value="Title" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'Title') {
+                                                    <option value="title" <?php if (isset($all_order['SortPickList']) && $all_order['SortPickList'] == 'title') {
                                                                                 echo 'selected';
                                                                             } ?>>Title</option>
                                                 </select>
@@ -283,22 +283,22 @@ $description_meta = 'Label Settings for your store\'s product listings at Tracks
                                                 <label for="Default Template"><?= _('Default Template') ?></label>
                                                 <select name="DefaultTemplate" id="DefaultTemplate" class="browser-default custom-select order_carrier_select">
                                                     <option value="" selected disabled><?= _('Select Default Template') ?></option>
-                                                    <option value="Full" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'Full') {
+                                                    <option value="full" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'full') {
                                                                                 echo 'selected';
                                                                             } ?>>Full</option>
-                                                    <option value="Small" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'Small') {
+                                                    <option value="small" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'small') {
                                                                                 echo 'selected';
                                                                             } ?>>Small</option>
-                                                    <option value="Self-Stick Labels" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'Self-Stick Labels') {
+                                                    <option value="self-stick labels" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'self-stick labels') {
                                                                                             echo 'selected';
                                                                                         } ?>>Self-Stick Labels</option>
-                                                    <option value="92mm Fold" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == '92mm Fold') {
+                                                    <option value="92mmfold" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == '92mmfold') {
                                                                                     echo 'selected';
                                                                                 } ?>>92mm Fold</option>
-                                                    <option value="Mailing Slip" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'Mailing Slip') {
+                                                    <option value="mailingslip" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'mailingslip') {
                                                                                         echo 'selected';
                                                                                     } ?>>Mailing Slip</option>
-                                                    <option value="Integrated Label" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'Integrated Label') {
+                                                    <option value="integratedlabel" <?php if (isset($all_order['DefaultTemplate']) && $all_order['DefaultTemplate'] == 'integratedlabel') {
                                                                                             echo 'selected';
                                                                                         } ?>>Integrated Label</option>
                                                 </select>

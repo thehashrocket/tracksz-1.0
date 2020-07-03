@@ -1353,7 +1353,9 @@ class OrderController
     */
     public function packingOrder()
     {
-        return $this->view->buildResponse('order/packingslip', []);
+         $UserId = Session::get('auth_user_id');
+         $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
+         return $this->view->buildResponse('order/packingslip', ['pdf_parameter' => $pdf_parameter]);
     }
 
     /*
@@ -1364,7 +1366,9 @@ class OrderController
     */
     public function mailingOrder()
     {
-        return $this->view->buildResponse('order/mailinglabel', []);
+         $UserId = Session::get('auth_user_id');
+         $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
+        return $this->view->buildResponse('order/mailinglabel', ['pdf_parameter' => $pdf_parameter]);
     }
 
 

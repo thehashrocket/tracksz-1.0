@@ -58,14 +58,22 @@ $description_meta = 'Packing Listing for your Tracksz Store, a Multiple Market I
                                             <label for="OrderSortBy">Sort By</label>
                                             <select name="OrderSortBy" id="OrderSortBy" class="browser-default custom-select market_stores_select">
                                                 <option value="" selected="" disabled>Sort By...</option>
-                                                <option value="order">Order #</option>
-                                                <option value="location/sku">Location/SKU</option>
-                                                <option value="zipcode">ZIP Code</option>
-                                                <option value="country/zip">Country/ZIP</option>
-                                                <option value="author">Author</option>
-                                                <option value="title">Title</option>
-                                                <option value="marketplace/order">Marketplace/Order #</option>
-                                                <option value="shippingmethod">Shipping Method</option>
+                                                <option value="order" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'order'){ echo 'selected' ;} ?>>Order #</option>
+                                                <option value="location/sku" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'Olocation/sku'){ echo 'selected' ;} ?>>Location/SKU</option>
+                                                <option value="zipcode" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'zipcode'){ echo 'selected' ;} ?>>ZIP Code</option>
+                                                <option value="country/zip" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'country/zip'){ echo 'selected' ;} ?>>Country/ZIP</option>
+                                                <option value="author" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'author'){ echo 'selected' ;} ?>>Author</option>
+                                                <option value="title" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'title'){ echo 'selected' ;} ?>>Title</option>
+                                                <option value="marketplace/order" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'marketplace/order'){ echo 'selected' ;} ?>>Marketplace/Order #</option>
+                                                <option value="shippingmethod" <?php
+                                                 if(isset($pdf_parameter['SortOrders']) && $pdf_parameter['SortOrders'] == 'shippingmethod'){ echo 'selected' ;} ?>>Shipping Method</option>
                                             </select>
                                         </div>
                                     </div> <!-- col-sm -->
@@ -75,12 +83,18 @@ $description_meta = 'Packing Listing for your Tracksz Store, a Multiple Market I
                                             <label for="OrderLayout">Packing Slip Version</label>
                                             <select name="OrderLayout" id="OrderLayout" class="browser-default custom-select order_layout_select">
                                                 <option value="" selected="" disabled>Packing Slip Version...</option>
-                                                <option value="full">Full</option>
-                                                <option value="small">Small</option>
-                                                <option value="self-sticklabel">Self-Stick Labels</option>
-                                                <option value="92mmfold">92mm Fold</option>
-                                                <option value="mailingslip">Mailing Slip</option>
-                                                <option value="integratedlabel">Integrated Label</option>
+                                                <option value="full" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'full'){ echo 'selected' ;} ?>>Full</option>
+                                                <option value="small" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'small'){ echo 'selected' ;} ?>>Small</option>
+                                                <option value="self-sticklabel" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'self-sticklabel'){ echo 'selected' ;} ?>>Self-Stick Labels</option>
+                                                <option value="92mmfold" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == '92mmfold'){ echo 'selected' ;} ?>>92mm Fold</option>
+                                                <option value="mailingslip" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'mailingslip'){ echo 'selected' ;} ?>>Mailing Slip</option>
+                                                <option value="integrated label" <?php
+                                                 if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'integratedlabel'){ echo 'selected' ;} ?>>Integrated Label</option>
                                             </select>
                                         </div>
                                     </div> <!-- col-sm -->
