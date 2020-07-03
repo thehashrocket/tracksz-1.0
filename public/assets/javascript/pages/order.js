@@ -105,10 +105,10 @@ $(document).ready(function () {
       dataType: "JSON",
       beforeSend: function () {},
       success: function (data, textStatus, jqXHR) {
-
         if(data.status){
           var origin = window.location.origin;
           var link = document.createElement("a");
+          link.setAttribute("download", data.filename);
           document.body.appendChild(link);
           link.href = origin + data.filename;
           link.click();
