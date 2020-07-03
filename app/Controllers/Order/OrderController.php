@@ -1205,17 +1205,15 @@ class OrderController
             $mail_data = (new Order($this->db))->findById($value);
 
             $all_data = (new OrderSetting($this->db))->getAllRecord();
-            
-            if(!empty($all_data))
-            {
-                if($status_data['status']=='shipped')
-                {
+
+            if (!empty($all_data)) {
+                if ($status_data['status'] == 'shipped') {
                     $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['ConfirmEmail']);
                     $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
                     $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
                     $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
-                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
-                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'] . ',' . $mail_data['ShippingAddress2'] . ',' . $mail_data['ShippingAddress3'], $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'], $string);
                     $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
                     $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
                     $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
@@ -1230,15 +1228,13 @@ class OrderController
                         _('Order Confirmation'),
                         $string
                     );
-                }
-                elseif($status_data['status']=='deferred')
-                {
+                } elseif ($status_data['status'] == 'deferred') {
                     $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['DeferEmail']);
                     $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
                     $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
                     $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
-                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
-                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'] . ',' . $mail_data['ShippingAddress2'] . ',' . $mail_data['ShippingAddress3'], $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'], $string);
                     $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
                     $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
                     $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
@@ -1253,15 +1249,13 @@ class OrderController
                         _('Order deferred'),
                         $string
                     );
-                }
-                elseif($status_data['status']=='cancelled')
-                {
+                } elseif ($status_data['status'] == 'cancelled') {
                     $string = str_replace('%ORDERID%', $mail_data['OrderId'], $all_data[0]['CancelEmail']);
                     $string = str_replace('%BILLNAME%', $mail_data['BillingName'], $string);
                     $string = str_replace('%SOURCE%', $mail_data['MarketPlaceId'], $string);
                     $string = str_replace('%MARKETID%', $mail_data['MarketPlaceId'], $string);
-                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'].','.$mail_data['ShippingAddress2'].','.$mail_data['ShippingAddress3'] , $string);
-                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'] , $string);
+                    $string = str_replace('%SHIPTO%', $mail_data['ShippingAddress1'] . ',' . $mail_data['ShippingAddress2'] . ',' . $mail_data['ShippingAddress3'], $string);
+                    $string = str_replace('%TITLESNOTES%', $mail_data['BuyerNote'], $string);
                     $string = str_replace('%METHOD%', $mail_data['ShippingMethod'], $string);
                     $string = str_replace('%TRACKING%', $mail_data['Tracking'], $string);
                     $string = str_replace('%MYNAME%', $mail_data['ShippingName'], $string);
@@ -1274,9 +1268,7 @@ class OrderController
                         _('Order Cancelled'),
                         $string
                     );
-                }
-                else
-                {
+                } else {
                     $message['html']  = $this->view->make('emails/orderconfirm');
                     $message['plain'] = $this->view->make('emails/plain/orderconfirm');
                     $mailer = new Email();
@@ -1289,9 +1281,7 @@ class OrderController
                     );
                     return true;
                 }
-            }
-            else
-            {
+            } else {
                 $message['html']  = $this->view->make('emails/orderconfirm');
                 $message['plain'] = $this->view->make('emails/plain/orderconfirm');
                 $mailer = new Email();
@@ -1396,9 +1386,8 @@ class OrderController
 
             $mpdf = new Mpdf();
             $mpdf->WriteHTML($mailing_html);
-            $mpdf->Output('mailing.pdf');
-            die();
-
+            $mpdf->Output('assets/order/mailing/mailing.pdf', 'F');
+            die(json_encode(['status' => true, 'message' => 'File downloaded successfully..!', 'data' => null, 'filename' => '/mailing.pdf']));
         } catch (Exception $e) {
 
             $res['status'] = false;
@@ -1408,11 +1397,11 @@ class OrderController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->buildResponse('order/mailing', []);
+            die(json_encode(['status' => false, 'message' => 'File not downloaded', 'data' => null]));
+            // return $this->view->buildResponse('order/mailing', []);
         }
     }
 
@@ -1490,25 +1479,19 @@ class OrderController
   */
     public function pdfGeneratePackingLoad(ServerRequest $request)
     {
-
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
-            // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
             $pdf_data = (new Order($this->db))->getPackingOrders($form);
-            //print_r($pdf_data);
-            //die;
             // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
-
-
             if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
                 $packing_html = $this->loadPackinghtml($pdf_data);
-
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $packing_html = $this->loadPackingSmallHtml($pdf_data);
+                $mpdf = new Mpdf();
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'self-sticklabel') {
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing_92fold.css"); // external css
                 $packing_html = $this->loadPackingSelfStickHtml($pdf_data);
@@ -1529,16 +1512,12 @@ class OrderController
                 throw new Exception("No PDF layout selected..!", 1);
             }
 
-
-
             $mpdf->use_kwt = true;
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html, 2);
             $mpdf->AddPage('L');
-
-            $mpdf->Output('packing.pdf');
-            die();
-           
+            $mpdf->Output('assets\order\packing\packing.pdf', 'F');
+            die(json_encode(['status' => true, 'message' => 'File downloaded successfully..!', 'data' => null, 'filename' => '/packing.pdf']));
         } catch (Exception $e) {
             $res['status'] = false;
             $res['data'] = [];
@@ -1564,10 +1543,9 @@ class OrderController
     */
     public function loadPackinghtml($pdf_data)
     {
-         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-      
-          $image = '';
-          if(isset($all_order) && !empty($all_order)){
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $image = '';
+        if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
@@ -1599,7 +1577,7 @@ class OrderController
                 $html .= "</div>";
                 $html .= "</div>";
                 $html .= "</td>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<td><img src='" . $image . "' height='250px;'></td>";
                 }
                 $html .= "</tr>";
@@ -1670,12 +1648,11 @@ class OrderController
     */
     public function loadPackingSmallHtml($pdf_data)
     {
-       $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
-        if(isset($all_order) && !empty($all_order)){
-              $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-          }      
+        if (isset($all_order) && !empty($all_order)) {
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1702,8 +1679,8 @@ class OrderController
                 $html .= "</tr>";
                 $html .= "<br>";
                 $html .= "<tr>";
-                if(isset($image) && !empty($image)){
-                $html .= "<td colspan='5' class='img_barcode'><center><img class='img_barcode' src='" . $image . "' height='250px;'></center></td>";
+                if (isset($image) && !empty($image)) {
+                    $html .= "<td colspan='5' class='img_barcode'><center><img class='img_barcode' src='" . $image . "' height='250px;'></center></td>";
                 }
                 $html .= "</tr>";
                 $html .= "<br>";
@@ -1777,7 +1754,7 @@ class OrderController
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
-         if(isset($all_order) && !empty($all_order)){
+        if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
@@ -1810,7 +1787,7 @@ class OrderController
                 $html .= " <p class='text_left'>" . $val_data['ShippingCity'] . "," . $val_data['ShippingState'] . "</p>";
                 $html .= " <p class='text_left'>" . $val_data['ShippingCountry'] . "</p>";
                 $html .= " <p class='text_left'>" . $val_data['ShippingPhone'] . "</p>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<img src='" . $image . "' height='250px;'>";
                 }
                 $html .= "</td>";
@@ -1884,10 +1861,10 @@ class OrderController
     public function loadPacking92FoldHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-         $image = '';
-         if(isset($all_order) && !empty($all_order)){
-          $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-         }
+        $image = '';
+        if (isset($all_order) && !empty($all_order)) {
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1906,7 +1883,7 @@ class OrderController
                 $html .= "<td><b>Order# " . $val_data['OrderId'] . "</b></td></br>";
                 $html .= "</tr>";
                 $html .= "<tr>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<td><img src='" . $image . "' style='width:150px;height:150px;'></td></br>";
                 }
                 $html .= "<td>";
@@ -1992,10 +1969,10 @@ class OrderController
     public function loadPackingMailingHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-         $image = '';
-         if(isset($all_order) && !empty($all_order)){
-          $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-          }
+        $image = '';
+        if (isset($all_order) && !empty($all_order)) {
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -2010,7 +1987,7 @@ class OrderController
         if (isset($pdf_data) && !empty($pdf_data)) {
             foreach ($pdf_data as $key_data => $val_data) {
                 $html .= "<div class='main_div'>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
                 }
                 $html .= "</br>";
@@ -2083,8 +2060,8 @@ class OrderController
     public function loadPackingIntegrateLabel($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-         $image = '';
-         if(isset($all_order) && !empty($all_order)){
+        $image = '';
+        if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
@@ -2110,7 +2087,7 @@ class OrderController
                 $html .= "</table></br></br></br></br></br></br></br><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
                 $html .= "<div class='main_div'>";
                 $html .= "<span style='font-size:24px;'>Customer Phone #: " . $val_data['ShippingPhone'] . "</span>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
                 }
                 $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
@@ -2164,19 +2141,29 @@ class OrderController
         $form = $request->getParsedBody();
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
-            // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
-            $pdf_data = (new Order($this->db))->getPickOrderStatus($form);
+            // Sanitize and Validate
+            $validate = new ValidateSanitize();
+            $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
+            $validate->validation_rules(array(
+                'status'    => 'required'
+            ));
 
+            $validated = $validate->run($form);
+            // use validated as it is filtered and validated        
+            if ($validated === false) {
+                throw new Exception("Please select required fields...!", 301);
+            }
+
+            $pdf_data = (new Order($this->db))->getPickOrderStatus($form);
             // $view = $this->view->buildResponse('order/pdf_pick', ['pdf_data' => $pdf_data]);
             $packing_html = $this->loadPickinghtml($pdf_data);
 
             $mpdf = new Mpdf();
             $mpdf->use_kwt = true;
             $mpdf->WriteHTML($packing_html);
-            //$mpdf->Output();
-            $mpdf->Output('pick.pdf');
-            die();
-        } catch (\Mpdf\MpdfException $e) {
+            $mpdf->Output('assets/order/picking/picking.pdf', 'F');
+            die(json_encode(['status' => true, 'message' => 'File downloaded successfully..!', 'data' => null, 'filename' => '/picking.pdf']));
+        } catch (Exception $e) {
             $res['status'] = false;
             $res['data'] = [];
             $res['message'] = $e->getMessage();
@@ -2184,11 +2171,10 @@ class OrderController
             $res['ex_code'] = $e->getCode();
             $res['ex_file'] = $e->getFile();
             $res['ex_line'] = $e->getLine();
-
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            return $this->view->buildResponse('order/packingslip', []);
+            die(json_encode(['status' => false, 'message' => 'File not downloaded', 'data' => null]));
         }
     }
 
@@ -2204,11 +2190,9 @@ class OrderController
 
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
-         if(isset($all_order) && !empty($all_order)){
-        $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-         }
-        // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
-
+        if (isset($all_order) && !empty($all_order)) {
+            $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+        }
         $html = "";
         $html .= "";
         $html .= "<!DOCTYPE html>";
@@ -2248,7 +2232,7 @@ class OrderController
                 $html .= "<td style='border:1px solid black;'></td>";
                 $html .= "</tr>";
                 $html .= "<tr>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<td><img src='" . $image . "' width='150'/></td>";
                 }
                 $html .= "<td>" . $val_data['ProductSKU'] . "</td>";
