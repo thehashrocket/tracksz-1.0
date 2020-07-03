@@ -2087,26 +2087,26 @@ class OrderController
                 $html .= "</table></br></br></br></br></br></br></br><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
                 $html .= "<div class='main_div'>";
                 $html .= "<span style='font-size:24px;'>Customer Phone #: " . $val_data['ShippingPhone'] . "</span>";
-                if (isset($image) && !empty($image)) {
-                    $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
+                if(isset($image) && !empty($image)){
+                    $html .= "<p><img class='product_image_barcode' src='" . $image . "'  weight='50px;'> </p></br>";
                 }
                 $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
                 $html .= "<tr style='border:1px solid black;'>";
-                $html .= "<td colspan='1' style='border:1px solid black;'><b>QTY</b></td>";
-                $html .= "<td colspan='1' style='border:1px solid black;'><b>ISBN/UPC</b></td>";
-                $html .= "<td scolspan='1' tyle='border:1px solid black;'><b>Condition</b></td>";
-                $html .= "<td colspan='3' width='30%' style='border:1px solid black;'><b>Description</b></td>";
-                $html .= "<td colspan='1' style='border:1px solid black;'><b>Media</b></td>";
+                $html .= "<td class='second_table_head' colspan='1' style='border:1px solid black;'><b>QTY</b></td>";
+                $html .= "<td class='second_table_head' colspan='1' style='border:1px solid black;'><b>ISBN/UPC</b></td>";
+                $html .= "<td class='second_table_head' scolspan='1' style='border:1px solid black;'><b>Condition</b></td>";
+                $html .= "<td class='second_table_head' colspan='3' width='30%' style='border:1px solid black;'><b>Description</b></td>";
+                $html .= "<td class='second_table_head' colspan='1' style='border:1px solid black;'><b>Media</b></td>";
                 $html .= "</tr>";
                 $html .= "<tr style='border:1px solid black;'>";
                 $html .= "<td style='border:1px solid black;width:80px;'>" . $val_data['ProductQty'] . "</td>";
                 $html .= "<td style='border:1px solid black;width:100px;'>" . $val_data['ProductISBN'] . "</td>";
                 $html .= "<td style='border:1px solid black;width:150px;'>" . $val_data['ProductCondition'] . "</td>";
-                $html .= "<td colspan='3' width='30%'>" . $val_data['ProductDescription'] . "</td>";
-                $html .= "<td>Hardcover</td>";
+                $html .= "<td colspan='3' style='border:1px solid black;width:150px;'>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "<td style='border:1px solid black;width:150px;'>Hardcover</td>";
                 $html .= "</tr>";
                 $html .= "<tr>";
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>SKU : </b>" . $val_data['ProductSKU'] . "</td>";

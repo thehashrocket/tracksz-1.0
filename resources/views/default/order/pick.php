@@ -51,8 +51,8 @@ $description_meta = 'Pick Listing for your Tracksz Store, a Multiple Market Inve
                                         <!-- form starts -->
                                         <div class="form-group" style="width: 150px;">
                                            <label for="OrderStatus">Order Status</label>
-                                            <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select market_stores_select">
-                                                <option value="" selected="" disabled>In Status...</option>
+                                            <select name="OrderStatus" id="OrderStatus" class="browser-default custom-select market_stores_select" required="">
+                                                <option value="" selected="" disabled>Order Status...</option>
                                                 <option value="all">All</option>
                                                 <option value="new">New</option>
                                                 <option value="packed">In Process</option>
