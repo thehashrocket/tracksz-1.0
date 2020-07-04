@@ -93,7 +93,7 @@ $description_meta = 'Packing Listing for your Tracksz Store, a Multiple Market I
                                                  if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == '92mmfold'){ echo 'selected' ;} ?>>92mm Fold</option>
                                                 <option value="mailingslip" <?php
                                                  if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'mailingslip'){ echo 'selected' ;} ?>>Mailing Slip</option>
-                                                <option value="integrated label" <?php
+                                                <option value="integratedlabel" <?php
                                                  if(isset($pdf_parameter['DefaultTemplate']) && $pdf_parameter['DefaultTemplate'] == 'integratedlabel'){ echo 'selected' ;} ?>>Integrated Label</option>
                                             </select>
                                         </div>
