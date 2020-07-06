@@ -32,8 +32,16 @@ $(document).ready(function () {
   });
 });
 
-$(document).ready(function () {
-  $(".input-daterange").datepicker({
-    format: "yyyy-mm-dd",
+
+$(function () {
+
+  $("#from_date, #to_date").datepicker({
+
+    changeMonth: true,
+
+    changeYear: true,
+
+    dateFormat: 'yy-mm-dd'
+
   });
 });

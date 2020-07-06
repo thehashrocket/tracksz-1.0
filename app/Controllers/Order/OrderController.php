@@ -229,6 +229,17 @@ class OrderController
             $export_val   = $form['exportType'];
             $from_date    = $form['from_date'];
             $to_date         = $form['to_date'];
+
+            if($from_date == '')
+            {
+              $from_date = date('Y-m-d',strtotime("-7 days"));
+            }
+
+            if($to_date == '')
+            {
+              $to_date = date('Y-m-d');  
+            }
+
             $orderStatus  = $form['orderStatus'];
 
             if ($export_val == 'new') {
@@ -247,7 +258,7 @@ class OrderController
             }
 
             if ($export_val == 'All') {
-                $order_data = (new Order($this->db))->allorderSearchByOrderData();
+                $order_data = (new Order($this->db))->allorderSearchByOrderData_export_order();
             }
 
             $spreadsheet = new Spreadsheet();

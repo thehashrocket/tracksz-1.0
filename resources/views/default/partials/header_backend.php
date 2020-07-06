@@ -3,13 +3,18 @@
     <script>
         var BASE_URL = '<?php echo \App\Library\Config::get('company_url'); ?>';
     </script>
+	 <style type="text/css">
+    img.tracksz_logo {
+        padding-left: 15px;
+    }
+</style>
     <!-- .top-bar -->
     <div class="top-bar">
         <!-- .top-bar-brand -->
         <div class="top-bar-brand">
             <!-- toggle aside menu -->
-            <button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> <!-- /toggle aside menu -->
-            <a href="/account/panel"><img src="/assets/images/logo4.png" title="Logo for Tracksz.com Mutlimarket Inventory and Order Management Service"></a>
+            <!--<button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>--> <!-- /toggle aside menu -->
+            <a href="/account/panel"><img src="/assets/images/logo4.png" class="tracksz_logo" title="Logo for Tracksz.com Mutlimarket Inventory and Order Management Service"></a>
         </div><!-- /.top-bar-brand -->
         <!-- .top-bar-list -->
         <div class="top-bar-list">

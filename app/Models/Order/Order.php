@@ -163,13 +163,13 @@ LEFT JOIN marketplace
         return true;
      }
 
-    // public function allorderSearchByOrderData()
-    // {
-    //     $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
-    //     $stmt->execute();
+    public function allorderSearchByOrderData_export_order()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM orderinventory ORDER BY `Id` DESC');
+        $stmt->execute();
 
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function allorderSearchByOrderData($filter_data)
     {
        $query = 'SELECT orderinventory.Id AS `OrderTableId`,
