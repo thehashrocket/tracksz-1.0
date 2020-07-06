@@ -22,6 +22,8 @@ $(document).ready(function () {
           downloadLink.style.display = "none";
           document.body.appendChild(downloadLink);
           downloadLink.click();
+        } else {
+          location.reload(true);
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {},
@@ -43,7 +45,7 @@ $(document).ready(function () {
       data: { status: $("#OrderSortBy :selected").val() },
       // dataType: "JSON",
       beforeSend: function () {},
-      success: function (data, textStatus, jqXHR) {        
+      success: function (data, textStatus, jqXHR) {
         var downloadLink;
         downloadLink = document.createElement("a");
         downloadLink.download = "mailing.pdf";

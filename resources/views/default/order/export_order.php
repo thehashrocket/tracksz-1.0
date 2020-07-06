@@ -131,7 +131,6 @@ $description_meta = 'Order Export for your store\'s product listings at Tracksz,
 
 <?php $this->start('footer_extras') ?>
 <script src="/assets/javascript/pages/orderexport.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script> -->
 <link rel="stylesheet" href="/assets/datepickercss/jquery-ui.css">
 
 <script src="/assets/datepickerjs/jquery-ui.js"></script>

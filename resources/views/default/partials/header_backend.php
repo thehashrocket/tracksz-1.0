@@ -3,11 +3,6 @@
     <script>
         var BASE_URL = '<?php echo \App\Library\Config::get('company_url'); ?>';
     </script>
-	 <style type="text/css">
-    img.tracksz_logo {
-        padding-left: 15px;
-    }
-</style>
     <!-- .top-bar -->
     <div class="top-bar">
         <!-- .top-bar-brand -->

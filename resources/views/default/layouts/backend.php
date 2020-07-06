@@ -8,7 +8,7 @@
     <!-- Begin SEO tag -->
     <title><?= $this->e($title) ?></title>
     <meta name="description" content="<?= $this->e($description) ?>">
-   <!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self'"> -->
+    <!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self'"> -->
     <!-- End SEO tag -->
     <!-- FAVICONS -->
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/images/favicons/apple-icon-57x57.png">
@@ -28,8 +28,8 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/images/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' js.stripe.com 'unsafe-inline';"/> 
-       
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' js.stripe.com 'unsafe-inline';" />
+
 
     <!-- End FAVICONS -->
     <!-- GOOGLE FONT -->
@@ -102,7 +102,6 @@
     <!-- END THEME JS -->
 
     <!-- BEGIN PAGE LEVEL JS -->
-    
     <?= $this->section('footer_extras') ?>
     <!-- END PAGE LEVEL JS -->
 

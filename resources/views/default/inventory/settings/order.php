@@ -64,15 +64,15 @@ $description_meta = 'Order Settings for your Tracksz Store, a Multiple Market Pr
                                             </div>
                                             <div class="form-group">
                                                 <label for="ConfirmationMail">Confirmation Mail</label>
-                                                <input type="email" class="form-control" id="ConfirmEmail" name="ConfirmEmail" placeholder="Enter Confirm Email" data-parsley-required-message="<?= _('Enter Confirm Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['ConfirmEmail']) && !empty($order_details['ConfirmEmail'])) ? $order_details['ConfirmEmail'] : ''; ?>">
+                                                <input type="text" class="form-control" id="ConfirmEmail" name="ConfirmEmail" placeholder="Enter Confirm Email" data-parsley-required-message="<?= _('Enter Confirm Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['ConfirmEmail']) && !empty($order_details['ConfirmEmail'])) ? $order_details['ConfirmEmail'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="CancellationMail">Cancellation Mail</label>
-                                                <input type="email" class="form-control" id="CancelEmail" name="CancelEmail" placeholder="Enter Cancel Email" data-parsley-required-message="<?= _('Enter Cancel Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['CancelEmail']) && !empty($order_details['CancelEmail'])) ? $order_details['CancelEmail'] : ''; ?>">
+                                                <input type="text" class="form-control" id="CancelEmail" name="CancelEmail" placeholder="Enter Cancel Email" data-parsley-required-message="<?= _('Enter Cancel Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['CancelEmail']) && !empty($order_details['CancelEmail'])) ? $order_details['CancelEmail'] : ''; ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="DeferMail">Defer(Backorder) Mail</label>
-                                                <input type="email" class="form-control" id="DeferEmail" name="DeferEmail" placeholder="Enter Defer Email" data-parsley-required-message="<?= _('Enter Defer Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['DeferEmail']) && !empty($order_details['DeferEmail'])) ? $order_details['DeferEmail'] : ''; ?>">
+                                                <input type="text" class="form-control" id="DeferEmail" name="DeferEmail" placeholder="Enter Defer Email" data-parsley-required-message="<?= _('Enter Defer Email') ?>" data-parsley-group="fieldset01" required value="<?php echo (isset($order_details['DeferEmail']) && !empty($order_details['DeferEmail'])) ? $order_details['DeferEmail'] : ''; ?>">
                                             </div>
                                             <h6 class="card-header"> <?= _('Order Folders') ?></h6>
                                             <br>

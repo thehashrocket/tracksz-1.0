@@ -35,7 +35,9 @@ $(document).ready(function () {
 
 $(function () {
 
+
   $("#from_date, #to_date").datepicker({
+
 
     changeMonth: true,
 

@@ -1364,9 +1364,9 @@ class OrderController
     */
     public function packingOrder()
     {
-         $UserId = Session::get('auth_user_id');
-         $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
-         return $this->view->buildResponse('order/packingslip', ['pdf_parameter' => $pdf_parameter]);
+        $UserId = Session::get('auth_user_id');
+        $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
+        return $this->view->buildResponse('order/packingslip', ['pdf_parameter' => $pdf_parameter]);
     }
 
     /*
@@ -1377,8 +1377,8 @@ class OrderController
     */
     public function mailingOrder()
     {
-         $UserId = Session::get('auth_user_id');
-         $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
+        $UserId = Session::get('auth_user_id');
+        $pdf_parameter = (new Order($this->db))->pdf_sorting_parameter($UserId);
         return $this->view->buildResponse('order/mailinglabel', ['pdf_parameter' => $pdf_parameter]);
     }
 
@@ -1396,6 +1396,18 @@ class OrderController
         unset($form['__token']); // remove CSRF token or PDO bind fails, too many arguments, Need to do everytime.      
         try {
             // require(dirname(dirname(dirname(dirname(__FILE__)))) . '\resources\views\default\order\pdf_mailinglabel.php')
+            // Sanitize and Validate
+            $validate = new ValidateSanitize();
+            $form = $validate->sanitize($form); // only trims & sanitizes strings (other filters available)
+            $validate->validation_rules(array(
+                'status'    => 'required'
+            ));
+
+            $validated = $validate->run($form);
+            // use validated as it is filtered and validated        
+            if ($validated === false) {
+                throw new Exception("Please select required fields...!", 301);
+            }
             $pdf_data = (new Order($this->db))->allorderSearchByOrderData($form);
             $mailing_html = $this->loadMailinghtml($pdf_data);
 
@@ -1415,7 +1427,7 @@ class OrderController
             $validated['alert'] = $e->getMessage();
             $validated['alert_type'] = 'danger';
             $this->view->flash($validated);
-            die(json_encode(['status' => false, 'message' => 'File not downloaded', 'data' => null]));
+            die(json_encode($res));
             // return $this->view->buildResponse('order/mailing', []);
         }
     }
@@ -2102,7 +2114,7 @@ class OrderController
                 $html .= "</table></br></br></br></br></br></br></br><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
                 $html .= "<div class='main_div'>";
                 $html .= "<span style='font-size:24px;'>Customer Phone #: " . $val_data['ShippingPhone'] . "</span>";
-                if(isset($image) && !empty($image)){
+                if (isset($image) && !empty($image)) {
                     $html .= "<p><img class='product_image_barcode' src='" . $image . "'  weight='50px;'> </p></br>";
                 }
                 $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
