@@ -62,15 +62,18 @@ $description_meta = 'Category Listing for your Tracksz Store, a Multiple Marketp
                                             <td><?= $category['Name'] ?></td>
                                             <td><?= $category['Description'] ?></td>
                                             <td><?= (isset($category['Image']) && !empty($category['Image'])) ? "<img height=50 width=50 src='" . $img_path . "' >" : ""; ?></td>
-                                            <td> <?php
+                                            <td>
+                                              <?php
                                                     $button = '';
-                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/category/edit/' . $category['Id'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
-                                                    $delete_button = '<a href="#delete-' . $category['Id'] . '" delete_id="' . $category['Id'] . '" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
+                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/category/edit/' . $category['Id'] . '" class="btn btn-sm btn-icon btn-secondary btn_edit" title="edit"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="Edit this Sub Category"></i></a> &nbsp;';
+                                                    $delete_button = '<a href="#delete-' . $category['Id'] . '" delete_id="' . $category['Id'] . '" class="btn btn-sm btn-icon btn-danger btn_delete" title="delete"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="left" title="Delete this Sub Category"></i> </a>';
                                                     $button .= $edit_button;
                                                     $button .= $delete_button;
                                                     echo $button;
 
-                                                    ?></td>
+                                                    ?> 
+
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

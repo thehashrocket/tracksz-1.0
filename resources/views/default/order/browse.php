@@ -233,20 +233,22 @@ $description_meta = 'Order Listing for your Tracksz Store, a Multiple Market Inv
                                                 {
                                                    $class = 'paid';
                                                 }
-
-
-                                                  ?>
+                                                
+                                                ?>
 
                                                 <span class="<?php echo $class; ?>"><?php echo $order['OrderPaymentStatus']; ?></span></td>
-                                            <td> <?php
+                                            <td> 
+                                              <?php
                                                     $button = '';
-                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/order/edit/' . $order['OrderId'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
-                                                    $delete_button = '<a href="#delete-' . $order['OrderId'] . '" delete_id="' . $order['OrderId'] . '" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
+                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/order/edit/' . $order['OrderId'] . '" class="btn btn-sm btn-icon btn-secondary btn_edit" title="edit"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="Edit this Order"></i></a> &nbsp;';
+                                                    $delete_button = '<a href="#delete-' . $order['OrderId'] . '" delete_id="' . $order['OrderId'] . '" class="btn btn-sm btn-icon btn-danger btn_delete" title="delete"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="left" title="Delete this Order"></i> </a>';
                                                     $button .= $edit_button;
                                                     $button .= $delete_button;
                                                     echo $button;
 
-                                                    ?></td>
+                                                    ?>
+                                            </td>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

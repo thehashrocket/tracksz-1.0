@@ -196,14 +196,18 @@ $description_meta = 'Product Listing for your Tracksz Store, a Multiple Marketpa
                                             <td><?= $product['Qty'] ?></td>
                                             <td><?= $product['ProdCondition'] ?></td>
                                             <td><?= $product['Notes'] ?></td>
-                                            <td> <?php
+                                            <td> 
+                                              <?php
                                                     $button = '';
-                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/product/edit/' . $product['Id'] . '" class="btn btn-xs btn-warning btn_edit"><i class="far fa-edit"></i> Edit</a> &nbsp;';
-                                                    $delete_button = '<a href="#delete-' . $product['Id'] . '" delete_id="' . $product['Id'] . '" class="btn btn-xs btn-danger btn_delete"><i class="far fa-trash-alt"></i> Delete</a>';
+                                                    $edit_button = '<a href="' . \App\Library\Config::get('company_url') . '/product/edit/' . $product['Id']. '" class="btn btn-sm btn-icon btn-secondary btn_edit" title="edit"><i class="fa fa-pencil-alt" data-toggle="tooltip" data-placement="left" title="Edit this Product"></i></a> &nbsp;';
+                                                    $delete_button = '<a href="#delete-' . $product['Id'] . '" delete_id="' . $product['Id'] . '" class="btn btn-sm btn-icon btn-danger btn_delete" title="delete"><i class="far fa-trash-alt" data-toggle="tooltip" data-placement="left" title="Delete this Product"></i> </a>';
                                                     $button .= $edit_button;
                                                     $button .= $delete_button;
                                                     echo $button;
-                                                    ?></td>
+
+                                                    ?> 
+
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
