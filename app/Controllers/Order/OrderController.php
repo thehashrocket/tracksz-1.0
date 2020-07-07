@@ -1539,7 +1539,7 @@ class OrderController
             $mpdf->use_kwt = true;
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html);
-            $mpdf->Output('assets\order\packing\packing.pdf', 'F');
+            $mpdf->Output('assets/order/packing/packing.pdf', 'F');
             die(json_encode(['status' => true, 'message' => 'File downloaded successfully..!', 'data' => null, 'filename' => '/packing.pdf']));
         } catch (Exception $e) {
             $res['status'] = false;
