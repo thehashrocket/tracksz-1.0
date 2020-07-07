@@ -1,5 +1,24 @@
-.table{border-collapse: collapse;page-break-after: always;border-top-left-radius: 150pt;}
-.border_top_radius{border:1px solid black !important;border-radius: 25%;}
-.img_barcode{display:block;border:1px dashed black;}
-.right_div{display: block;padding: 50px;border: 1px dashed black;}
-.img_barcode > .text_left{text-align: left !important;padding-left: 25px;}
+.table {
+  border-collapse: collapse;
+  border-top-left-radius: 150pt;
+}
+.page-break {
+  page-break-after: always;
+}
+.border_top_radius {
+  border: 1px solid black !important;
+  border-radius: 25%;
+}
+.img_barcode {
+  display: block;
+  border: 1px dashed black;
+}
+.right_div {
+  display: block;
+  padding: 50px;
+  border: 1px dashed black;
+}
+.img_barcode > .text_left {
+  text-align: left !important;
+  padding-left: 25px;
+}
