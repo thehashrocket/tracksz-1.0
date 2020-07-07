@@ -1,3 +1,4 @@
 .product_image_barcode{float: left;}
 .table{color: #000;}
+.page-break { display:block; clear:both; page-break-after: avoid;}
 .second_table_head{color: #000; font-weight: bold; font-size: 18px;}

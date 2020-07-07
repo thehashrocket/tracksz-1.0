@@ -230,14 +230,12 @@ class OrderController
             $from_date    = $form['from_date'];
             $to_date         = $form['to_date'];
 
-            if($from_date == '')
-            {
-              $from_date = date('Y-m-d',strtotime("-7 days"));
+            if ($from_date == '') {
+                $from_date = date('Y-m-d', strtotime("-7 days"));
             }
 
-            if($to_date == '')
-            {
-              $to_date = date('Y-m-d');  
+            if ($to_date == '') {
+                $to_date = date('Y-m-d');
             }
 
             $orderStatus  = $form['orderStatus'];
@@ -1514,7 +1512,7 @@ class OrderController
             if (isset($form['OrderSort']) && $form['OrderSort'] == 'full') {
                 $packing_html = $this->loadPackinghtml($pdf_data);
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
-                $mpdf = new Mpdf();
+                $mpdf = new Mpdf(['UTF-8', 'A4', '', '', 20, 15, 48, 25, 10, 10]);
             } else if (isset($form['OrderSort']) && $form['OrderSort'] == 'small') {
                 $stylesheet = file_get_contents(getcwd() . "/assets/stylesheets/pdf_packing.css"); // external css
                 $packing_html = $this->loadPackingSmallHtml($pdf_data);
@@ -1542,7 +1540,6 @@ class OrderController
             $mpdf->use_kwt = true;
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($packing_html, 2);
-            $mpdf->AddPage('L');
             $mpdf->Output('assets\order\packing\packing.pdf', 'F');
             die(json_encode(['status' => true, 'message' => 'File downloaded successfully..!', 'data' => null, 'filename' => '/packing.pdf']));
         } catch (Exception $e) {
@@ -1585,8 +1582,11 @@ class OrderController
         $html .= "</head>";
         $html .= "<body>";
         if (isset($pdf_data) && !empty($pdf_data)) {
+            end($pdf_data);
+            $key = key($pdf_data);
             foreach ($pdf_data as $key_data => $val_data) {
-                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' style=''>";
+                $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
+                $html .= "<table class='table " . $class_break . "' cellpadding='8' id='custom_tbl' border='2' width='100%' style=''>";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
@@ -1690,8 +1690,11 @@ class OrderController
         $html .= "</head>";
         $html .= "<body>";
         if (isset($pdf_data) && !empty($pdf_data)) {
+            end($pdf_data);
+            $key = key($pdf_data);
             foreach ($pdf_data as $key_data => $val_data) {
-                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' style=''>";
+                $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
+                $html .= "<table class='table " . $class_break . "' autosize='1' id='custom_tbl' border='2' width='100%' style=''>";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
@@ -1794,8 +1797,11 @@ class OrderController
         $html .= "</head>";
         $html .= "<body>";
         if (isset($pdf_data) && !empty($pdf_data)) {
+            end($pdf_data);
+            $key = key($pdf_data);
             foreach ($pdf_data as $key_data => $val_data) {
-                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' style=''>";
+                $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
+                $html .= "<table class='table " . $class_break . "' autosize='1' id='custom_tbl' border='2' width='100%' style=''>";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
@@ -1901,8 +1907,6 @@ class OrderController
         $html .= "<title></title>";
         $html .= "</head>";
         $html .= "<body>";
-
-
         if (isset($pdf_data) && !empty($pdf_data)) {
             foreach ($pdf_data as $key_data => $val_data) {
                 $html .= "<table class='table_left' autosize='1' style='display:block;float:left;width:30%;'>";
@@ -2009,10 +2013,11 @@ class OrderController
         $html .= "<title></title>";
         $html .= "</head>";
         $html .= "<body>";
-
-
         if (isset($pdf_data) && !empty($pdf_data)) {
+            end($pdf_data);
+            $key = key($pdf_data);
             foreach ($pdf_data as $key_data => $val_data) {
+                $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
                 $html .= "<div class='main_div'>";
                 if (isset($image) && !empty($image)) {
                     $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
@@ -2038,7 +2043,7 @@ class OrderController
                 $html .= "<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>";
                 $html .= "<p style='margin-left:155px;margin-right:155px;border:1px solid black;width:100px !important;'></p>";
                 $html .= "</br>";
-                $html .= "<table class='table' autosize='1' id='custom_tbl' border='2' width='100%' >";
+                $html .= "<table class='table " . $class_break . "' autosize='1' id='custom_tbl' border='2' width='100%' >";
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
@@ -2101,8 +2106,11 @@ class OrderController
         $html .= "</head>";
         $html .= "<body>";
         if (isset($pdf_data) && !empty($pdf_data)) {
+            end($pdf_data);
+            $key = key($pdf_data);
             foreach ($pdf_data as $key_data => $val_data) {
-                $html .= "<table class='top_letter' style='padding:50px;padding-left:0px;border: 1px solid black;width: 100%;text-align: left;'>";
+                $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
+                $html .= "<table class='top_letter " . $class_break . "' style='padding:50px;padding-left:0px;border: 1px solid black;width: 100%;text-align: left;'>";
                 $html .= "<tr>";
                 $html .= "<td style='font-size:28px;'><b>" . $val_data['ShippingName'] . "</b> <br>";
                 $html .= "<span style='font-size:28px;'>" . $val_data['ShippingAddress1'] . "</span> <br>";
