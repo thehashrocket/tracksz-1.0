@@ -2262,6 +2262,7 @@ class OrderController
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
+        
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
