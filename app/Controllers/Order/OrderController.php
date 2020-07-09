@@ -1567,10 +1567,18 @@ class OrderController
     public function loadPackinghtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-        }
+             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
+
+         }
+
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
         $html .= "";
@@ -1590,9 +1598,25 @@ class OrderController
                 $html .= "</thead>";
                 $html .= "<tbody>";
                 $html .= "<tr>";
+                $html .= "<td colspan='3'>";
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                   
+                }
+                $html .= "</td>";
+                 $html .= "<td colspan='3'>";
+                 $html .= "<p style='font-size:20px;'><b>" . $PackingSlipHeader . "</b></p>";
+                 $html .= "</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
                 $html .= "<td colspan='4'>";
                 $html .= "<div class='main_packing'>";
+                
+                
                 $html .= "<div class='main_packing_left'>";
+                
+                 $html .= "<br>";
                 $html .= "<h2 style='margin-bottom:50px;'>Order: " . $val_data['OrderId'] . "</h2>";
                 $html .= "<br>";
                 $html .= "<p style='font-size:18px;'>(" . $val_data['MarketplaceName'] . "Order: #" . $val_data['OrderId'] . ")</p>";
@@ -1653,6 +1677,21 @@ class OrderController
                 $html .= "</tr>";
                 $html .= "<tr>";
                 $html .= "<td colspan='5' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
+                $html .= "<br>";
+                $html .= "<br>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
                 $html .= "</tr>";
                 $html .= "</tbody>";
                 $html .= "</table>";
@@ -1675,9 +1714,16 @@ class OrderController
     public function loadPackingSmallHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+         $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+            
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -1697,6 +1743,18 @@ class OrderController
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
+                $html .= "<tr>";
+                $html .= "<td colspan='3'>";
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                   
+                }
+                $html .= "</td>";
+                 $html .= "<td colspan='3'>";
+                 $html .= "<p style='font-size:20px;'><b>" . $PackingSlipHeader . "</b></p>";
+                 $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "<tr>";
                 $html .= "<td colspan='5'>";
                 $html .= "<p style='margin-bottom:50px;font-size:30px;font-weight:bold;'>Order: " . $val_data['OrderId'] . "</p>";
@@ -1760,6 +1818,19 @@ class OrderController
                 $html .= "<tr>";
                 $html .= "<td colspan='5' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
+                 $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "</tbody>";
                 $html .= "</table>";
             } // Loops Ends
@@ -1782,9 +1853,15 @@ class OrderController
     public function loadPackingSelfStickHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -1804,6 +1881,18 @@ class OrderController
                 $html .= "<thead>";
                 $html .= "</thead>";
                 $html .= "<tbody>";
+                $html .= "<tr>";
+                $html .= "<td colspan='3'>";
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                   
+                }
+                $html .= "</td>";
+                 $html .= "<td colspan='3'>";
+                 $html .= "<p style='font-size:20px;'><b>" . $PackingSlipHeader . "</b></p>";
+                 $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "<tr>";
                 $html .= "<td colspan='5'>";
                 $html .= "<p style='margin-bottom:50px;font-size:24px;font-weight:bold;'>Order: " . $val_data['OrderId'] . "</p>";
@@ -1872,6 +1961,19 @@ class OrderController
                 $html .= "<tr>";
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "</tbody>";
                 $html .= "</table>";
             } // Loops Ends
@@ -1893,9 +1995,15 @@ class OrderController
     public function loadPacking92FoldHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -1912,6 +2020,18 @@ class OrderController
             foreach ($pdf_data as $key_data => $val_data) {
                 $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
                 $html .= "<table class='table_left' autosize='1' style='display:block;float:left;width:20%;'>";
+                $html .= "<tr>";
+                $html .= "<td colspan='3'>";
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                   
+                }
+                $html .= "</td>";
+                 $html .= "<td colspan='3'>";
+                 $html .= "<p style='font-size:20px;'><b>" . $PackingSlipHeader . "</b></p>";
+                 $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "<tr>";
                 $html .= "<td><b>Order# " . $val_data['OrderId'] . "</b></td></br>";
                 $html .= "</tr>";
@@ -1980,6 +2100,19 @@ class OrderController
                 $html .= "<tr>";
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "</tbody>";
                 $html .= "</table><br><br><br><br>";
             } // Loops Ends
@@ -2002,9 +2135,15 @@ class OrderController
     public function loadPackingMailingHtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -2021,6 +2160,20 @@ class OrderController
             foreach ($pdf_data as $key_data => $val_data) {
                 $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
                 $html .= "<div class='main_div'>";
+
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipHeader . "</b>";
+                        $html .= "</br>";
+                        $html .= "</br>";
+                        $html .= "</br>"; 
+                        $html .= "</br>";
+                        $html .= "</br>";
+                        $html .= "</br>";
+                }
+               
+                
+               
                 if (isset($image) && !empty($image)) {
                     $html .= "<p><img src='" . $image . "'  weight='50px;'> </p></br>";
                 }
@@ -2072,6 +2225,19 @@ class OrderController
                 $html .= "<tr>";
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
+                $html .= "</tr>";
                 $html .= "</tbody>";
                 $html .= "</table>";
                 $html .= "</div>";
@@ -2094,9 +2260,15 @@ class OrderController
     public function loadPackingIntegrateLabel($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+        $lsetting = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
+            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['HeaderImageURL'] . '.png'));
+             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $lsetting['FooterImageURL'] . '.png'));
+             $PackingSlipHeader = $lsetting['PackingSlipHeader'];
+
+             $PackingSlipFooter = $lsetting['PackingSlipFooter'];
         }
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -2113,6 +2285,18 @@ class OrderController
             foreach ($pdf_data as $key_data => $val_data) {
                 $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
                 $html .= "<table class='top_letter' style='padding:50px;padding-left:0px;border: 1px solid black;width: 100%;text-align: left;'>";
+                 $html .= "<tr>";
+                $html .= "<td colspan='3'>";
+                if (isset($headerimage) && !empty($headerimage)) {
+                   
+                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;";
+                   
+                }
+                $html .= "</td>";
+                 $html .= "<td colspan='3'>";
+                 $html .= "<p style='font-size:20px;'><b>" . $PackingSlipHeader . "</b></p>";
+                 $html .= "</td>";
+                $html .= "</tr><br><br>";
                 $html .= "<tr>";
                 $html .= "<td style='font-size:28px;'><b>" . $val_data['ShippingName'] . "</b> <br>";
                 $html .= "<span style='font-size:28px;'>" . $val_data['ShippingAddress1'] . "</span> <br>";
@@ -2154,6 +2338,20 @@ class OrderController
                 $html .= "<tr>";
                 $html .= "<td colspan='7' style='border:1px solid black;'><b>Note : </b>" . $val_data['ProductDescription'] . "</td>";
                 $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td colspan='4'></td>";
+                $html .= "<td colspan='4'>";
+                $html .= "<br>";
+                $html .= "<br>";
+                if (isset($Footerimage) && !empty($Footerimage)) {
+                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                    $html .= "&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
+                }
+                $html .= "</td>";
+                $html .= "<td colspan='2'>";
+                $html .= "</td>";
+                $html .= "</tr>";
+
                 $html .= "</tbody>";
                 $html .= "</table>";
                 $html .= "</div><br><br><br>";
