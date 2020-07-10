@@ -1439,6 +1439,24 @@ class OrderController
     */
     public function loadMailinghtml($pdf_data)
     {
+        $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+
+        $font_size = '12px';
+        if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'xx-small') {
+            $font_size = '6px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'x-small') {
+            $font_size = '8px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'small') {
+            $font_size = '10px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'medium') {
+            $font_size = '12px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'large') {
+            $font_size = '14px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'x-large') {
+            $font_size = '16px';
+        } else if (isset($all_order['FontSize']) && !empty($all_order['FontSize']) && $all_order['FontSize'] == 'xx-large') {
+            $font_size = '18px';
+        }
         $html = "";
         $html .= "";
         $html .= "<!DOCTYPE html>";
@@ -1461,7 +1479,7 @@ class OrderController
             border-right: none;
         }</style>";
         $html .= "<body>";
-        $html .= "<table class='table' id='custom_tbl' border='2' width='100%' style='border-collapse: collapse;'>";
+        $html .= "<table class='table' id='custom_tbl' border='2' width='100%' style='border-collapse: collapse;font-size:" . $font_size . "'>";
         $html .= "<thead>";
         $html .= "<th style='border:1px solid black;'>";
         $html .= "</th>";
@@ -1567,9 +1585,6 @@ class OrderController
     public function loadPackinghtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-       /* echo '<pre>';
-        print_r($all_order);
-        print_r($all_order['IncludeOrderBarcodes']);*/
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
