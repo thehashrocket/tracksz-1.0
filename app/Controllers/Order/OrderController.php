@@ -1585,16 +1585,18 @@ class OrderController
     public function loadPackinghtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
+       
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+             
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
 
+
          }
+
 
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
         $html = "";
@@ -1616,12 +1618,21 @@ class OrderController
                 $html .= "<tbody>";
                 $html .= "<tr>";
                 $html .= "<td colspan='3'>";
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
-                   
-                }
-                $html .= "</td>";
+               if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) 
+                    {
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                    }  
+                    else
+                    {
+                        $html .= "";
+                    }
+                    
+                   }
+                 $html .= "</td>";
                  $html .= "<td colspan='3'>";
                  if($all_order['CentreHeaderText'] == '1')
                  {
@@ -1725,8 +1736,17 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                    } 
+                    else
+                    {
+                        $html .= "";
+                    }
                     if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px; text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -1766,8 +1786,7 @@ class OrderController
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+            
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
@@ -1792,12 +1811,20 @@ class OrderController
                 $html .= "<tbody>";
                 $html .= "<tr>";
                 $html .= "<td colspan='3'>";
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
-                   
-                }
-                $html .= "</td>";
+                 if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) {
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                    
+                    }  
+                    else
+                    {
+                        $html .= "";
+                    }
+                   }
+                 $html .= "</td>";
                  $html .= "<td colspan='3'>";
                 if($all_order['CentreHeaderText'] == '1')
                  {
@@ -1887,8 +1914,18 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                    }
+                    else
+                    {
+                        $html .= "";
+                    }
+                    } 
                     if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -1898,7 +1935,7 @@ class OrderController
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
                     }
                     
-                }
+                
                 $html .= "</td>";
                 $html .= "<td colspan='2'>";
                 $html .= "</td>";
@@ -1929,8 +1966,7 @@ class OrderController
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-             $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+            
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
@@ -1955,12 +1991,21 @@ class OrderController
                 $html .= "<tbody>";
                 $html .= "<tr>";
                 $html .= "<td colspan='3'>";
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
-                   
-                }
-                $html .= "</td>";
+                 if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) 
+                    {
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                    
+                    }  
+                    else
+                    {
+                        $html .= "";
+                    }
+                   }
+                 $html .= "</td>";
                  $html .= "<td colspan='3'>";
                   if($all_order['CentreHeaderText'] == '1')
                  {
@@ -2054,8 +2099,18 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                     }
+                     else
+                    {
+                        $html .= "";
+                    }
+                    } 
                     if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -2065,7 +2120,7 @@ class OrderController
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
                     }
                    
-                }
+                
                 $html .= "</td>";
                 $html .= "<td colspan='2'>";
                 $html .= "</td>";
@@ -2095,8 +2150,7 @@ class OrderController
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+            
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
@@ -2118,11 +2172,20 @@ class OrderController
                 $html .= "<table class='table_left' autosize='1' style='display:block;float:left;width:20%;'>";
                 $html .= "<tr>";
                 $html .= "<td colspan='3'>";
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
-                   
-                }
+                 if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) 
+                     {   
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                    }  
+                    else
+                    {
+                        $html .= "";
+                    }
+                   }
+               
                 $html .= "</td>";
                  $html .= "<td colspan='3'>";
                  if($all_order['CentreHeaderText'] == '1')
@@ -2218,8 +2281,18 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+                if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                     }
+                     else
+                    {
+                        $html .= "";
+                    }
+                    } 
                     if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -2228,7 +2301,7 @@ class OrderController
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
                     }
-                }
+                
                 $html .= "</td>";
                 $html .= "<td colspan='2'>";
                 $html .= "</td>";
@@ -2259,8 +2332,7 @@ class OrderController
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+           
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
@@ -2280,18 +2352,26 @@ class OrderController
             foreach ($pdf_data as $key_data => $val_data) {
                 $class_break = (isset($key_data) && $key_data == $key) ? '' : 'page-break';
                 $html .= "<div class='main_div'>";
-
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipHeader . "</b>";
+if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) {
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipHeader . "</b>";
                         $html .= "</br>";
                         $html .= "</br>";
                         $html .= "</br>"; 
                         $html .= "</br>";
                         $html .= "</br>";
                         $html .= "</br>";
-                }
-               
+                    }
+                    else
+                    {
+                        $html .= "";
+                    }  
+                    
+                   }
+                
                 
                if($all_order['IncludeOrderBarcodes'] == '1')
                 {
@@ -2352,8 +2432,18 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+               if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                     }
+                     else
+                    {
+                        $html .= "";
+                    }
+                    } 
                    if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -2362,7 +2452,7 @@ class OrderController
                     {
                         $html .= "&nbsp;&nbsp;&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
                     }
-                }
+                
                 $html .= "</td>";
                 $html .= "<td colspan='2'>";
                 $html .= "</td>";
@@ -2394,8 +2484,7 @@ class OrderController
         
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-            $headerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['HeaderImageURL'] . '.png'));
-             $Footerimage = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['FooterImageURL'] . '.png'));
+            
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
@@ -2417,11 +2506,19 @@ class OrderController
                 $html .= "<table class='top_letter' style='padding:50px;padding-left:0px;border: 1px solid black;width: 100%;text-align: left;'>";
                  $html .= "<tr>";
                 $html .= "<td colspan='3'>";
-                if (isset($headerimage) && !empty($headerimage)) {
-                   
-                    $html .= "<img src='" . $headerimage . "' height='250px;'>&nbsp;";
-                   
-                }
+                 if (isset($all_order['HeaderImageURL']) && !empty($all_order['HeaderImageURL'])) {
+                    $headerimageurl = $all_order['HeaderImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $url_info = pathinfo($headerimageurl);
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) {
+                        $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;";
+                    }  
+                    else
+                    {
+                        $html .= "";
+                    }
+                   }
+                
                 $html .= "</td>";
                  $html .= "<td colspan='3'>";
                  if($all_order['CentreHeaderText'] == '1')
@@ -2483,8 +2580,18 @@ class OrderController
                 $html .= "<td colspan='4'>";
                 $html .= "<br>";
                 $html .= "<br>";
-                if (isset($Footerimage) && !empty($Footerimage)) {
-                    $html .= "<img src='" . $Footerimage . "' height='250px;'>";
+               if (isset($all_order['FooterImageURL']) && !empty($all_order['FooterImageURL'])) {
+                    $footerimageurl = $all_order['FooterImageURL'];
+                    $allow = ['gif', 'jpg', 'png'];  // allowed extensions
+                    $footer_url_info = pathinfo($footerimageurl);
+                    if(in_array(isset($footer_url_info['extension']), $allow) && !empty($footer_url_info['extension'])) {
+                        $html .= "<img src='" . $footerimageurl . "' height='250px;'>";
+                     }
+                     else
+                    {
+                        $html .= "";
+                    }
+                    } 
                     if($all_order['CentreFooter'] == '1')
                     {
                         $html .= "&nbsp;<b style='font-size:20px;text-align:center;'>" . $PackingSlipFooter . "</b>";
@@ -2494,7 +2601,7 @@ class OrderController
                         $html .= "&nbsp;<b style='font-size:20px;'>" . $PackingSlipFooter . "</b>";
                     }
                     
-                }
+                
                 $html .= "</td>";
                 $html .= "<td colspan='2'>";
                 $html .= "</td>";
