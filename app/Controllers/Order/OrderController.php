@@ -1585,17 +1585,15 @@ class OrderController
     public function loadPackinghtml($pdf_data)
     {
         $all_order = (new LabelSetting($this->db))->LabelSettingfindByUserId(Session::get('auth_user_id'));
-       
+        
         $image = '';
         if (isset($all_order) && !empty($all_order)) {
             $image = 'data:image/png;base64,' . base64_encode(file_get_contents(getcwd() . '/assets/images/' . $all_order['BarcodeType'] . '.png'));
-             
+            
              $PackingSlipHeader = $all_order['PackingSlipHeader'];
 
              $PackingSlipFooter = $all_order['PackingSlipFooter'];
-
-
-         }
+        }
 
 
         // $img_barcode = \App\Library\Config::get('company_url') . '/assets/images/code39.PNG';
@@ -1622,15 +1620,14 @@ class OrderController
                     $headerimageurl = $all_order['HeaderImageURL'];
                     $allow = ['gif', 'jpg', 'png'];  // allowed extensions
                     $url_info = pathinfo($headerimageurl);
-                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) 
-                    {
+                    if(in_array(isset($url_info['extension']), $allow) && !empty($url_info['extension'])) {
                         $html .= "<img src='" . $headerimageurl . "' height='250px;'>&nbsp;&nbsp;&nbsp;";
+                    
                     }  
                     else
                     {
                         $html .= "";
                     }
-                    
                    }
                  $html .= "</td>";
                  $html .= "<td colspan='3'>";
@@ -1663,7 +1660,7 @@ class OrderController
                 $html .= "</div>";
                 $html .= "</div>";
                 $html .= "</td>";
-                if($all_order['IncludeOrderBarcodes'] == 1)
+                if($all_order['IncludeOrderBarcodes'] == '1')
                 {
                     if (isset($image) && !empty($image)) {
                     $html .= "<td><img src='" . $image . "' height='250px;'></td>";
@@ -1671,7 +1668,7 @@ class OrderController
                 }
                 else
                 {
-                   $html .= ""; 
+                    $html .= "<td></td>";
                 }
                 
                 $html .= "</tr>";
